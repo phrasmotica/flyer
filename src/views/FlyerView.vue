@@ -30,8 +30,6 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 1">
-            <h3>Table</h3>
-
             <TableView :players="players" />
 
             <div class="btn-group w-100">
