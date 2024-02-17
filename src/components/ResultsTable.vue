@@ -85,8 +85,8 @@ const getResultClass = (player1: string, player2: string) => {
                             </span>
 
                             <span v-else>
-                                <button class="btn btn-success" @click="() => emit('addResult', p, q)">
-                                    +
+                                <button class="btn btn-success w-100" @click="() => emit('addResult', p, q)">
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </span>
                         </div>

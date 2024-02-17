@@ -18,8 +18,6 @@ const start = (p: string[]) => {
     setPhase(1)
 }
 
-const addDefaultResult = () => addResult("Julian", "Roy")
-
 const addResult = (player1: string, player2: string) => {
     results.value = [...results.value, {
         scores: [
@@ -50,10 +48,7 @@ const restart = () => {
         <div v-else-if="phase === 1">
             <ResultsTable :players="players" :results="results" @addResult="addResult" />
 
-            <div class="btn-group w-100">
-                <button class="btn btn-success w-50" @click="addDefaultResult">Add Result</button>
-                <button class="btn btn-primary w-50" @click="() => setPhase(2)">Finish</button>
-            </div>
+            <button class="btn btn-primary w-100" @click="() => setPhase(2)">Finish</button>
         </div>
 
         <div v-else-if="phase === 2">
