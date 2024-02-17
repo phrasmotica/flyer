@@ -4,8 +4,11 @@ import { ref } from "vue"
 import PlayersForm from "../components/PlayersForm.vue"
 import TableView from "../components/TableView.vue"
 
+import type { Result } from "../models/Result"
+
 const phase = ref(0)
 const players = ref<string[]>([])
+const results = ref<Result[]>([])
 
 const setPhase = (p: number) => phase.value = p
 
@@ -14,12 +17,26 @@ const start = (p: string[]) => {
     setPhase(1)
 }
 
-const addResult = () => {
+const addDefaultResult = () => addResult("Julian", "Roy")
 
+const addResult = (player1: string, player2: string) => {
+    results.value = [...results.value, {
+        scores: [
+            {
+                player: player1,
+                score: 1,
+            },
+            {
+                player: player2,
+                score: 0,
+            },
+        ]
+    }]
 }
 
 const restart = () => {
     setPhase(0)
+    results.value = []
 }
 </script>
 
@@ -30,10 +47,10 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 1">
-            <TableView :players="players" />
+            <TableView :players="players" :results="results" @addResult="addResult" />
 
             <div class="btn-group w-100">
-                <button class="btn btn-success w-50" @click="addResult">Add Result</button>
+                <button class="btn btn-success w-50" @click="addDefaultResult">Add Result</button>
                 <button class="btn btn-primary w-50" @click="() => setPhase(2)">Finish</button>
             </div>
         </div>

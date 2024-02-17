@@ -1,14 +1,55 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
+
+import type { Result } from "../models/Result"
 
 const props = defineProps<{
     players: string[]
+    results: Result[]
 }>()
 
-const results = ref([])
+const emit = defineEmits<{
+    addResult: [player1: string, player2: string]
+}>()
 
 const expectedResults = computed(() => props.players.length * (props.players.length - 1) / 2)
-const resultsRemaining = computed(() => expectedResults.value - results.value.length)
+const resultsRemaining = computed(() => expectedResults.value - props.results.length)
+
+const hasResult = (player1: string, player2: string) => {
+    return props.results.some(r => r.scores.some(s => s.player === player1) && r.scores.some(s => s.player === player2))
+}
+
+const getResult = (player1: string, player2: string) => {
+    return props.results.find(r => r.scores.some(s => s.player === player1) && r.scores.some(s => s.player === player2))
+}
+
+const getScore = (player1: string, player2: string) => {
+    const result = getResult(player1, player2)
+    if (!result) {
+        return null
+    }
+
+    return result.scores.find(s => s.player === player1)!.score
+}
+
+const getResultClass = (player1: string, player2: string) => {
+    const score1 = getScore(player1, player2)
+    const score2 = getScore(player2, player1)
+
+    if (score1 === null || score2 === null) {
+        return ""
+    }
+
+    if (score1 > score2) {
+        return "table-success"
+    }
+
+    if (score1 < score2) {
+        return "table-danger"
+    }
+
+    return "table-warning"
+}
 </script>
 
 <template>
@@ -34,8 +75,23 @@ const resultsRemaining = computed(() => expectedResults.value - results.value.le
                         <strong>{{ p }}</strong>
                     </th>
     
-                    <td v-for="q in props.players" :class="[q === p && 'not-played']">
-                        <div v-if="q !== p">-</div>
+                    <td v-for="q in props.players" :class="[
+                        q === p && 'table-secondary', 
+                        q !== p && hasResult(p, q) && getResultClass(p, q)
+                    ]">
+                        <div v-if="q !== p">
+                            <span v-if="hasResult(p, q)">
+                                {{ getScore(p, q) }}-{{ getScore(q, p) }}
+                            </span>
+
+                            <span v-else>
+                                <button class="btn btn-success" @click="() => emit('addResult', p, q)">
+                                    +
+                                </button>
+                            </span>
+                        </div>
+
+                        <div v-else>-</div>
                     </td>
                 </tr>
             </tbody>
@@ -50,9 +106,5 @@ h3 {
 
 th {
     width: 120px;
-}
-
-.not-played {
-    background-color: lightgrey;
 }
 </style>
