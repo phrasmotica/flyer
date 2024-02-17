@@ -49,13 +49,17 @@ const restart = () => {
         <div v-else-if="phase === 1">
             <ResultsTable :players="actualPlayers" :results="results" @addResult="addResult" />
 
-            <Button class="w-100" label="Finish" @click="() => setPhase(2)" />
+            <div class="p-fluid mt-2">
+                <Button label="Finish" @click="() => setPhase(2)" />
+            </div>
         </div>
 
         <div v-else-if="phase === 2">
             <ResultsSummary :players="actualPlayers" :results="results" />
 
-            <Button class="w-100" label="Restart" @click="restart" />
+            <div class="p-fluid mt-2">
+                <Button label="Restart" @click="restart" />
+            </div>
         </div>
     </main>
 </template>

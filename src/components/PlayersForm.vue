@@ -21,14 +21,15 @@ const start = () => emit('start', actualPlayers.value)
 </script>
 
 <template>
-    <div class="d-flex justify-content-between mb-2">
-        <h3>Players</h3>
+    <h1>Players</h1>
 
+    <div class="p-fluid mb-2">
         <InputNumber
             v-model="playerCount"
             showButtons buttonLayout="horizontal"
             :min="2" :max="10"
-            suffix=" players">
+            suffix=" players"
+            :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>
@@ -47,5 +48,7 @@ const start = () => emit('start', actualPlayers.value)
             @setName="n => emit('setName', i, n)" />
     </div>
 
-    <Button class="w-100" label="Start" :disabled="actualPlayers.some(p => !p)" @click="start" />
+    <div class="p-fluid">
+        <Button label="Start" :disabled="actualPlayers.some(p => !p)" @click="start" />
+    </div>
 </template>

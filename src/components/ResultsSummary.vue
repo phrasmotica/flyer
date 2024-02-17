@@ -60,38 +60,36 @@ const sortPlayers = (player1: string, player2: string, results: Result[]) => {
 }
 
 const sortedPlayers = computed(() => props.players.sort((a, b) => sortPlayers(a, b, props.results)))
+
+const tableData = computed(() => sortedPlayers.value.map((p, i) => ({
+    rank: i + 1,
+    name: p,
+    wins: getWins(p, props.results),
+    draws: getDraws(p, props.results),
+    losses: getLosses(p, props.results),
+    incomplete: isIncomplete(p, props.results),
+})))
+
+const rowClass = (data: any) => {
+    return [
+        {
+            'bg-primary': !data.incomplete && data.rank === 1,
+            'bg-gray-400': data.incomplete,
+        },
+    ]
+}
 </script>
 
 <template>
-    <div>
-        <div class="d-flex justify-content-between align-items-end">
-            <h3>Results</h3>
-        </div>
+    <h1>Results</h1>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Player</th>
-                    <th>Won</th>
-                    <th>Drew</th>
-                    <th>Lost</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="p, i in sortedPlayers" :class="[
-                    isIncomplete(p, props.results) && 'table-secondary fst-italic',
-                    i === 0 && !isIncomplete(p, props.results) && 'table-success',
-                ]">
-                    <td>{{ i + 1 }}</td>
-                    <td><strong>{{ p }}</strong></td>
-                    <td>{{ getWins(p, props.results) }}</td>
-                    <td>{{ getDraws(p, props.results) }}</td>
-                    <td>{{ getLosses(p, props.results) }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <DataTable :value="tableData" :rowClass="rowClass">
+        <Column field="rank" header="#"></Column>
+        <Column field="name" header="Name"></Column>
+        <Column field="wins" header="Won"></Column>
+        <Column field="draws" header="Drew"></Column>
+        <Column field="losses" header="Lost"></Column>
+    </DataTable>
 </template>
 
 <style scoped>
