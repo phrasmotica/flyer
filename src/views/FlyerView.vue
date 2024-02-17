@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import PlayersForm from "@/components/PlayersForm.vue"
+import PlayersForm from "../components/PlayersForm.vue"
+import TableView from "../components/TableView.vue"
 
 const phase = ref(0)
 const players = ref<string[]>([])
@@ -25,12 +26,9 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 1">
-            <p>Running the flyer with:</p>
-            <ul>
-                <li v-for="p in players">
-                    {{ p }}
-                </li>
-            </ul>
+            <h3>Table</h3>
+
+            <TableView :players="players" />
 
             <button class="btn btn-primary w-100" @click="() => setPhase(2)">Finish</button>
         </div>

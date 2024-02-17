@@ -7,7 +7,7 @@ const emit = defineEmits<{
     start: [players: string[]]
 }>()
 
-const DEFAULT_PLAYERS = ["", "", "", "", "", "", "", "", "", ""]
+const DEFAULT_PLAYERS = ["Julian", "Roy", "Emile", "Luis", "", "", "", "", "", ""]
 
 const playerCount = ref(4)
 const players = ref(DEFAULT_PLAYERS)
