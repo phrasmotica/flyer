@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref } from "vue"
+
+import RecordResultModal from "../components/RecordResultModal.vue"
 
 import type { Result } from "../models/Result"
 
@@ -11,6 +13,9 @@ const props = defineProps<{
 const emit = defineEmits<{
     addResult: [player1: string, player2: string]
 }>()
+
+const player1 = ref("")
+const player2 = ref("")
 
 const expectedResults = computed(() => props.players.length * (props.players.length - 1) / 2)
 const resultsRemaining = computed(() => expectedResults.value - props.results.length)
@@ -50,6 +55,15 @@ const getResultClass = (player1: string, player2: string) => {
 
     return "table-warning"
 }
+
+const selectForRecording = (p: string, q: string) => {
+    player1.value = p
+    player2.value = q
+}
+
+const confirmResult = () => {
+    emit('addResult', player1.value, player2.value)
+}
 </script>
 
 <template>
@@ -74,9 +88,9 @@ const getResultClass = (player1: string, player2: string) => {
                     <th scope="row">
                         <strong>{{ p }}</strong>
                     </th>
-    
+
                     <td v-for="q in props.players" :class="[
-                        q === p && 'table-secondary', 
+                        q === p && 'table-secondary',
                         q !== p && hasResult(p, q) && getResultClass(p, q)
                     ]">
                         <div v-if="q !== p">
@@ -85,7 +99,12 @@ const getResultClass = (player1: string, player2: string) => {
                             </span>
 
                             <span v-else>
-                                <button class="btn btn-success w-100" @click="() => emit('addResult', p, q)">
+                                <button
+                                    type="button"
+                                    class="btn btn-success w-100"
+                                    @click="() => selectForRecording(p, q)"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#recordResultModal">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </span>
@@ -96,6 +115,12 @@ const getResultClass = (player1: string, player2: string) => {
                 </tr>
             </tbody>
         </table>
+
+        <RecordResultModal
+            id="recordResultModal"
+            :player1="player1"
+            :player2="player2"
+            @confirm="confirmResult" />
     </div>
 </template>
 
