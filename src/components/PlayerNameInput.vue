@@ -11,12 +11,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <div class="player-name-input">
-        <input 
-            class="form-control" 
+    <div class="player-name-input p-fluid">
+        <InputText
             :placeholder="props.placeholder"
-            :disabled="props.disabled" 
-            :value="props.name" 
-            @input="(e: any) => emit('setName', e.target.value)" />
+            :disabled="props.disabled"
+            :modelValue="props.name"
+            @update:modelValue="v => emit('setName', v || '')" />
     </div>
 </template>

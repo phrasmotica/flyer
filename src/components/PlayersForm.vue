@@ -47,8 +47,5 @@ const start = () => emit('start', actualPlayers.value)
             @setName="n => emit('setName', i, n)" />
     </div>
 
-    <button
-        class="btn btn-success w-100"
-        :disabled="actualPlayers.some(p => !p)"
-        @click="start">Start</button>
+    <Button class="w-100" label="Start" :disabled="actualPlayers.some(p => !p)" @click="start" />
 </template>

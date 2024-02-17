@@ -43,20 +43,25 @@ const confirmResult = () => {
                 </div>
 
                 <div class="modal-body">
-                    <form>
-                        <div v-for="p, i in props.players" class="mb-2">
-                            <label :for="'score-' + p" class="form-label">
-                                {{ p }}
-                            </label>
-
-                            <input
-                                class="form-control"
-                                type="number"
-                                :id="'score-' + p"
-                                :value="scores[i]"
-                                @input="(e: any) => setScore(i, Number(e.target.value))" />
+                    <div v-for="p, i in props.players" class="d-flex align-items-center justify-content-between mb-2">
+                        <div>
+                            {{ p }}
                         </div>
-                    </form>
+
+                        <InputNumber
+                            showButtons
+                            buttonLayout="horizontal"
+                            :modelValue="scores[i]"
+                            :min="0" :max="3"
+                            @update:modelValue="v => setScore(i, v)">
+                            <template #incrementbuttonicon>
+                                <span class="pi pi-plus" />
+                            </template>
+                            <template #decrementbuttonicon>
+                                <span class="pi pi-minus" />
+                            </template>
+                        </InputNumber>
+                    </div>
                 </div>
 
                 <div class="modal-footer">

@@ -99,14 +99,12 @@ const confirmResult = (result: Result) => {
                             </span>
 
                             <span v-else>
-                                <button
-                                    type="button"
-                                    class="btn btn-success w-100"
+                                <Button
+                                    class="w-100"
+                                    icon="pi pi-file-edit"
                                     @click="() => selectForRecording(p, q)"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#recordResultModal">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
+                                    data-bs-target="#recordResultModal" />
                             </span>
                         </div>
 
