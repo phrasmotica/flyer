@@ -2,6 +2,7 @@
 import { ref } from "vue"
 
 import PlayersForm from "../components/PlayersForm.vue"
+import ResultsSummary from "../components/ResultsSummary.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import type { Result } from "../models/Result"
@@ -56,12 +57,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 2">
-            <p>Flyer complete</p>
-            <ul>
-                <li v-for="p in players">
-                    {{ p }}
-                </li>
-            </ul>
+            <ResultsSummary :players="players" :results="results" />
 
             <button class="btn btn-primary w-100" @click="restart">Restart</button>
         </div>
