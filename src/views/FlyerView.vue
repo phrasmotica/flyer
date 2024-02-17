@@ -11,7 +11,6 @@ const DEFAULT_PLAYERS = ["Julian", "Roy", "Emile", "Luis", "", "", "", "", "", "
 
 const phase = ref(0)
 const players = ref(DEFAULT_PLAYERS)
-const playerCount = ref(4)
 
 const actualPlayers = ref<string[]>([])
 const results = ref<Result[]>([])
@@ -21,8 +20,6 @@ const setPhase = (p: number) => phase.value = p
 const setName = (index: number, name: string) => {
     players.value = players.value.map((v, i) => i === index ? name : v)
 }
-
-const setPlayerCount = (count: number) => playerCount.value = count
 
 const start = (p: string[]) => {
     actualPlayers.value = p
@@ -45,9 +42,7 @@ const restart = () => {
         <div v-if="phase === 0">
             <PlayersForm
                 :players="players"
-                :playerCount="playerCount"
                 @setName="setName"
-                @setPlayerCount="setPlayerCount"
                 @start="start" />
         </div>
 
