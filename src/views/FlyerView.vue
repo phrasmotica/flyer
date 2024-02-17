@@ -13,6 +13,7 @@ const phase = ref(0)
 const players = ref(DEFAULT_PLAYERS)
 
 const actualPlayers = ref<string[]>([])
+const raceTo = ref(0)
 const results = ref<Result[]>([])
 
 const setPhase = (p: number) => phase.value = p
@@ -21,8 +22,9 @@ const setName = (index: number, name: string) => {
     players.value = players.value.map((v, i) => i === index ? name : v)
 }
 
-const start = (p: string[]) => {
+const start = (p: string[], r: number) => {
     actualPlayers.value = p
+    raceTo.value = r
     setPhase(1)
 }
 
@@ -33,6 +35,7 @@ const addResult = (result: Result) => {
 const restart = () => {
     setPhase(0)
     actualPlayers.value = []
+    raceTo.value = 0
     results.value = []
 }
 </script>
@@ -47,7 +50,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 1">
-            <ResultsTable :players="actualPlayers" :results="results" @addResult="addResult" />
+            <ResultsTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="addResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(2)" />

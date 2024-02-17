@@ -6,6 +6,7 @@ import type { Result } from "../models/Result"
 const props = defineProps<{
     visible: boolean
     players: string[]
+    raceTo: number
 }>()
 
 const emit = defineEmits<{
@@ -47,7 +48,7 @@ const confirmResult = () => {
                     showButtons
                     buttonLayout="horizontal"
                     :modelValue="scores[i]"
-                    :min="0" :max="3"
+                    :min="0" :max="props.raceTo"
                     @update:modelValue="v => setScore(i, v)">
                     <template #incrementbuttonicon>
                         <span class="pi pi-plus" />

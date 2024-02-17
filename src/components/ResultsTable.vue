@@ -7,6 +7,7 @@ import type { Result } from "../models/Result"
 
 const props = defineProps<{
     players: string[]
+    raceTo: number
     results: Result[]
 }>()
 
@@ -115,6 +116,7 @@ const hideModal = () => {
     <RecordResultModal
         :visible="showModal"
         :players="[player1, player2]"
+        :raceTo="props.raceTo"
         @confirm="confirmResult"
         @cancel="hideModal" />
 </template>

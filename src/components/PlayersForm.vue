@@ -8,16 +8,17 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    start: [players: string[]]
+    start: [players: string[], raceTo: number]
     setName: [index: number, name: string]
     reset: []
 }>()
 
 const playerCount = ref(4)
+const raceTo = ref(3)
 
 const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
 
-const start = () => emit('start', actualPlayers.value)
+const start = () => emit('start', actualPlayers.value, raceTo.value)
 </script>
 
 <template>
@@ -29,6 +30,22 @@ const start = () => emit('start', actualPlayers.value)
             showButtons buttonLayout="horizontal"
             :min="2" :max="10"
             suffix=" players"
+            :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
+            <template #incrementbuttonicon>
+                <span class="pi pi-plus" />
+            </template>
+            <template #decrementbuttonicon>
+                <span class="pi pi-minus" />
+            </template>
+        </InputNumber>
+    </div>
+
+    <div class="p-fluid mb-2">
+        <InputNumber
+            v-model="raceTo"
+            showButtons buttonLayout="horizontal"
+            :min="1" :max="5"
+            prefix="Race to "
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
