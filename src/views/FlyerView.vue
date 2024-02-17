@@ -2,7 +2,7 @@
 import { ref } from "vue"
 
 import PlayersForm from "../components/PlayersForm.vue"
-import TableView from "../components/TableView.vue"
+import ResultsTable from "../components/ResultsTable.vue"
 
 import type { Result } from "../models/Result"
 
@@ -47,7 +47,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 1">
-            <TableView :players="players" :results="results" @addResult="addResult" />
+            <ResultsTable :players="players" :results="results" @addResult="addResult" />
 
             <div class="btn-group w-100">
                 <button class="btn btn-success w-50" @click="addDefaultResult">Add Result</button>
