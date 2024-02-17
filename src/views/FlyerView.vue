@@ -18,19 +18,8 @@ const start = (p: string[]) => {
     setPhase(1)
 }
 
-const addResult = (player1: string, player2: string) => {
-    results.value = [...results.value, {
-        scores: [
-            {
-                player: player1,
-                score: 1,
-            },
-            {
-                player: player2,
-                score: 0,
-            },
-        ]
-    }]
+const addResult = (result: Result) => {
+    results.value = [...results.value, result]
 }
 
 const restart = () => {

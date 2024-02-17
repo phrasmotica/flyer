@@ -11,7 +11,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    addResult: [player1: string, player2: string]
+    addResult: [result: Result]
 }>()
 
 const player1 = ref("")
@@ -61,8 +61,8 @@ const selectForRecording = (p: string, q: string) => {
     player2.value = q
 }
 
-const confirmResult = () => {
-    emit('addResult', player1.value, player2.value)
+const confirmResult = (result: Result) => {
+    emit('addResult', result)
 }
 </script>
 
@@ -118,8 +118,7 @@ const confirmResult = () => {
 
         <RecordResultModal
             id="recordResultModal"
-            :player1="player1"
-            :player2="player2"
+            :players="[player1, player2]"
             @confirm="confirmResult" />
     </div>
 </template>
