@@ -1,57 +1,48 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
 
 import PlayerNameInput from "../components/PlayerNameInput.vue"
 
-const emit = defineEmits<{
-    start: [players: string[]]
+const props = defineProps<{
+    players: string[]
+    playerCount: number
 }>()
 
-const DEFAULT_PLAYERS = ["Julian", "Roy", "Emile", "Luis", "", "", "", "", "", ""]
+const emit = defineEmits<{
+    start: [players: string[]]
+    setPlayerCount: [count: number]
+    setName: [index: number, name: string]
+    reset: []
+}>()
 
-const playerCount = ref(4)
-const players = ref(DEFAULT_PLAYERS)
-
-const setPlayerCount = (count: number) => playerCount.value = count
-
-const setName = (index: number, name: string) => {
-    players.value = players.value.map((v, i) => i === index ? name : v)
-}
-
-const actualPlayers = computed(() => players.value.slice(0, playerCount.value))
+const actualPlayers = computed(() => props.players.slice(0, props.playerCount))
 
 const start = () => emit('start', actualPlayers.value)
-
-const reset = () => {
-    players.value = DEFAULT_PLAYERS
-}
 </script>
 
 <template>
     <div class="d-flex justify-content-between mb-2">
         <h3>Players</h3>
 
-        <input class="form-control w-auto" type="number" min="2" max="10" :value="playerCount" @input="(e: any) => setPlayerCount(Number(e.target.value))" />
+        <input
+            class="form-control w-auto"
+            type="number"
+            min="2" max="10"
+            :value="props.playerCount"
+            @input="(e: any) => emit('setPlayerCount', Number(e.target.value))" />
     </div>
 
     <div v-for="p, i in players">
         <PlayerNameInput
-            class="mb-2" 
-            :placeholder="'Player ' + (i + 1)" 
-            :disabled="i >= playerCount" 
-            :name="p" 
-            @setName="n => setName(i, n)" />
+            class="mb-2"
+            :placeholder="'Player ' + (i + 1)"
+            :disabled="i >= props.playerCount"
+            :name="p"
+            @setName="n => emit('setName', i, n)" />
     </div>
 
-    <div class="btn-group w-100">
-        <button 
-            class="btn btn-success w-50" 
-            :disabled="actualPlayers.some(p => !p)"
-            @click="start">Start</button>
-
-        <button 
-            class="btn btn-danger w-50" 
-            :disabled="actualPlayers.every(p => !p)"
-            @click="reset">Reset</button>
-    </div>
+    <button
+        class="btn btn-success w-100"
+        :disabled="actualPlayers.some(p => !p)"
+        @click="start">Start</button>
 </template>

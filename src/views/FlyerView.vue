@@ -7,14 +7,25 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import type { Result } from "../models/Result"
 
+const DEFAULT_PLAYERS = ["Julian", "Roy", "Emile", "Luis", "", "", "", "", "", ""]
+
 const phase = ref(0)
-const players = ref<string[]>([])
+const players = ref(DEFAULT_PLAYERS)
+const playerCount = ref(4)
+
+const actualPlayers = ref<string[]>([])
 const results = ref<Result[]>([])
 
 const setPhase = (p: number) => phase.value = p
 
+const setName = (index: number, name: string) => {
+    players.value = players.value.map((v, i) => i === index ? name : v)
+}
+
+const setPlayerCount = (count: number) => playerCount.value = count
+
 const start = (p: string[]) => {
-    players.value = p
+    actualPlayers.value = p
     setPhase(1)
 }
 
@@ -24,6 +35,7 @@ const addResult = (result: Result) => {
 
 const restart = () => {
     setPhase(0)
+    actualPlayers.value = []
     results.value = []
 }
 </script>
@@ -31,17 +43,22 @@ const restart = () => {
 <template>
     <main>
         <div v-if="phase === 0">
-            <PlayersForm @start="start" />
+            <PlayersForm
+                :players="players"
+                :playerCount="playerCount"
+                @setName="setName"
+                @setPlayerCount="setPlayerCount"
+                @start="start" />
         </div>
 
         <div v-else-if="phase === 1">
-            <ResultsTable :players="players" :results="results" @addResult="addResult" />
+            <ResultsTable :players="actualPlayers" :results="results" @addResult="addResult" />
 
             <button class="btn btn-primary w-100" @click="() => setPhase(2)">Finish</button>
         </div>
 
         <div v-else-if="phase === 2">
-            <ResultsSummary :players="players" :results="results" />
+            <ResultsSummary :players="actualPlayers" :results="results" />
 
             <button class="btn btn-primary w-100" @click="restart">Restart</button>
         </div>
@@ -50,6 +67,6 @@ const restart = () => {
 
 <style scoped>
 main {
-    width: 600px;
+    min-width: 600px;
 }
 </style>
