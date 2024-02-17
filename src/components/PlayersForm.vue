@@ -45,12 +45,12 @@ const reset = () => {
 
     <div class="btn-group w-100">
         <button 
-            class="btn btn-success" 
+            class="btn btn-success w-50" 
             :disabled="actualPlayers.some(p => !p)"
             @click="start">Start</button>
 
         <button 
-            class="btn btn-danger" 
+            class="btn btn-danger w-50" 
             :disabled="actualPlayers.every(p => !p)"
             @click="reset">Reset</button>
     </div>

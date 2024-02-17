@@ -14,6 +14,10 @@ const start = (p: string[]) => {
     setPhase(1)
 }
 
+const addResult = () => {
+
+}
+
 const restart = () => {
     setPhase(0)
 }
@@ -30,7 +34,10 @@ const restart = () => {
 
             <TableView :players="players" />
 
-            <button class="btn btn-primary w-100" @click="() => setPhase(2)">Finish</button>
+            <div class="btn-group w-100">
+                <button class="btn btn-success w-50" @click="addResult">Add Result</button>
+                <button class="btn btn-primary w-50" @click="() => setPhase(2)">Finish</button>
+            </div>
         </div>
 
         <div v-else-if="phase === 2">
