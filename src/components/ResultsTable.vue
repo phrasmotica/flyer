@@ -47,14 +47,14 @@ const getResultClass = (player1: string, player2: string) => {
     }
 
     if (score1 > score2) {
-        return "table-success"
+        return "bg-primary"
     }
 
     if (score1 < score2) {
-        return "table-danger"
+        return "bg-red-500"
     }
 
-    return "table-warning"
+    return "bg-yellow-200"
 }
 
 const selectForRecording = (p: string, q: string) => {
@@ -81,43 +81,36 @@ const hideModal = () => {
         <h3>Results remaining: {{ resultsRemaining }}</h3>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th></th>
-                <th v-for="p, i in props.players" scope="col">
-                    <strong>{{ p }}</strong>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="p in props.players">
-                <th scope="row">
-                    <strong>{{ p }}</strong>
-                </th>
+    <DataTable :value="props.players">
+        <Column>
+            <template #body="slotProps">
+                {{ slotProps.data }}
+            </template>
+        </Column>
 
-                <td v-for="q in props.players" :class="[
-                    q === p && 'table-secondary',
-                    q !== p && hasResult(p, q) && getResultClass(p, q)
-                ]">
-                    <div v-if="q !== p">
-                        <span v-if="hasResult(p, q)">
-                            {{ getScore(p, q) }}-{{ getScore(q, p) }}
-                        </span>
+        <Column v-for="(q, i) in props.players" :header="q">
+            <template #body="slotProps">
+                <div v-if="slotProps.index === i" class="flex justify-content-center">
+                    -
+                </div>
 
-                        <span v-else>
-                            <Button
-                                class="w-100"
-                                icon="pi pi-file-edit"
-                                @click="() => selectForRecording(p, q)" />
-                        </span>
-                    </div>
+                <div v-else-if="hasResult(slotProps.data, q)"
+                    class="flex justify-content-center"
+                    :class="getResultClass(slotProps.data, q)">
+                    {{ getScore(slotProps.data, q) }}-{{ getScore(q, slotProps.data) }}
+                </div>
 
-                    <div v-else>-</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                <div v-else class="p-fluid">
+                    <Button
+                        class="flex justify-content-center"
+                        severity="info"
+                        @click="() => selectForRecording(slotProps.data, q)">
+                        <i class="pi pi-file-edit" />
+                    </Button>
+                </div>
+            </template>
+        </Column>
+    </DataTable>
 
     <RecordResultModal
         :visible="showModal"
@@ -125,9 +118,3 @@ const hideModal = () => {
         @confirm="confirmResult"
         @cancel="hideModal" />
 </template>
-
-<style scoped>
-th {
-    width: 120px;
-}
-</style>
