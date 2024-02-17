@@ -37,6 +37,10 @@ const getDraws = (player: string, results: Result[]) => results.filter(r => isDr
 
 const getLosses = (player: string, results: Result[]) => results.filter(r => getLoser(r) === player).length
 
+const isIncomplete = (player: string, results: Result[]) => {
+    return results.filter(r => r.scores.some(s => s.player === player)).length < props.players.length - 1
+}
+
 const sortPlayers = (player1: string, player2: string, results: Result[]) => {
     const wins1 = getWins(player1, results)
     const wins2 = getWins(player2, results)
@@ -75,7 +79,10 @@ const sortedPlayers = computed(() => props.players.sort((a, b) => sortPlayers(a,
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="p, i in sortedPlayers" :class="[i === 0 && 'table-success']">
+                <tr v-for="p, i in sortedPlayers" :class="[
+                    isIncomplete(p, props.results) && 'table-secondary fst-italic',
+                    i === 0 && !isIncomplete(p, props.results) && 'table-success',
+                ]">
                     <td>{{ i + 1 }}</td>
                     <td><strong>{{ p }}</strong></td>
                     <td>{{ getWins(p, props.results) }}</td>
