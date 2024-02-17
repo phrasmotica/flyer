@@ -45,6 +45,13 @@ const sortPlayers = (player1: string, player2: string, results: Result[]) => {
         return wins2 - wins1
     }
 
+    const losses1 = getLosses(player1, results)
+    const losses2 = getLosses(player2, results)
+
+    if (losses1 !== losses2) {
+        return losses2 - losses1
+    }
+
     return 0
 }
 
