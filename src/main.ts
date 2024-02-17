@@ -11,6 +11,7 @@ import PrimeVue from 'primevue/config'
 import Button from "primevue/button"
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
+import Dialog from 'primevue/dialog'
 import InputNumber from "primevue/inputnumber"
 import InputText from "primevue/inputtext"
 
@@ -26,6 +27,7 @@ app.use(PrimeVue)
 app.component("Button", Button)
 app.component("Column", Column)
 app.component("DataTable", DataTable)
+app.component("Dialog", Dialog)
 app.component("InputNumber", InputNumber)
 app.component("InputText", InputText)
 

@@ -4,10 +4,12 @@ import { ref } from "vue"
 import type { Result } from "../models/Result"
 
 const props = defineProps<{
+    visible: boolean
     players: string[]
 }>()
 
 const emit = defineEmits<{
+    cancel: []
     confirm: [result: Result]
 }>()
 
@@ -34,46 +36,32 @@ const confirmResult = () => {
 </script>
 
 <template>
-    <div class="modal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Record Result</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+    <Dialog v-model:visible="props.visible" modal header="Record Result">
+        <div v-for="p, i in props.players" class="flex align-items-center justify-content-between mb-2">
+            <div class="font-bold">
+                {{ p }}
+            </div>
 
-                <div class="modal-body">
-                    <div v-for="p, i in props.players" class="d-flex align-items-center justify-content-between mb-2">
-                        <div>
-                            {{ p }}
-                        </div>
-
-                        <InputNumber
-                            showButtons
-                            buttonLayout="horizontal"
-                            :modelValue="scores[i]"
-                            :min="0" :max="3"
-                            @update:modelValue="v => setScore(i, v)">
-                            <template #incrementbuttonicon>
-                                <span class="pi pi-plus" />
-                            </template>
-                            <template #decrementbuttonicon>
-                                <span class="pi pi-minus" />
-                            </template>
-                        </InputNumber>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="confirmResult">
-                        Confirm
-                    </button>
-                </div>
+            <div class="ml-3">
+                <InputNumber
+                    showButtons
+                    buttonLayout="horizontal"
+                    :modelValue="scores[i]"
+                    :min="0" :max="3"
+                    @update:modelValue="v => setScore(i, v)">
+                    <template #incrementbuttonicon>
+                        <span class="pi pi-plus" />
+                    </template>
+                    <template #decrementbuttonicon>
+                        <span class="pi pi-minus" />
+                    </template>
+                </InputNumber>
             </div>
         </div>
-    </div>
+
+        <div class="flex justify-content-end gap-2">
+            <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
+            <Button type="button" label="Save" @click="confirmResult"></Button>
+        </div>
+    </Dialog>
 </template>
