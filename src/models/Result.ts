@@ -1,4 +1,5 @@
 export interface Result {
+    id: string
     scores: Score[]
 }
 
