@@ -15,8 +15,8 @@ const emit = defineEmits<{
 
 const playerCount = ref(4)
 const format = ref('Round Robin')
-const formatOptions = ref(['Round Robin', 'Knockout'])
-const raceTo = ref(3)
+const formatOptions = ref(['Round Robin'])
+const raceTo = ref(1)
 
 const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
 
@@ -28,26 +28,10 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="playerCount"
-            showButtons buttonLayout="horizontal"
-            :min="2" :max="10"
-            suffix=" players"
-            :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
-            <template #incrementbuttonicon>
-                <span class="pi pi-plus" />
-            </template>
-            <template #decrementbuttonicon>
-                <span class="pi pi-minus" />
-            </template>
-        </InputNumber>
-    </div>
-
-    <div class="p-fluid mb-2">
-        <InputNumber
             v-model="raceTo"
             showButtons buttonLayout="horizontal"
             :min="1" :max="5"
-            prefix="Race to "
+            prefix="Races to "
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
@@ -64,6 +48,22 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
     </div>
 
     <h1 class="border-bottom-1 mb-2">Players</h1>
+
+    <div class="p-fluid mb-2">
+        <InputNumber
+            v-model="playerCount"
+            showButtons buttonLayout="horizontal"
+            :min="2" :max="10"
+            suffix=" players"
+            :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
+            <template #incrementbuttonicon>
+                <span class="pi pi-plus" />
+            </template>
+            <template #decrementbuttonicon>
+                <span class="pi pi-minus" />
+            </template>
+        </InputNumber>
+    </div>
 
     <div v-for="p, i in players">
         <PlayerNameInput
