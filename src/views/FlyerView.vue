@@ -4,7 +4,7 @@ import { ref } from "vue"
 
 import PlayersForm from "../components/PlayersForm.vue"
 import ResultsSummary from "../components/ResultsSummary.vue"
-import ResultsTable from "../components/ResultsTable.vue"
+import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
@@ -56,7 +56,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 1">
-            <ResultsTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="addResult" />
+            <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="addResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(2)" />
