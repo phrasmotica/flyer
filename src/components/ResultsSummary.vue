@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
 const props = defineProps<{
-    players: string[]
+    players: Player[]
     results: Result[]
 }>()
 
@@ -14,7 +15,7 @@ const getWinner = (r: Result) => {
     }
 
     const maxScore = r.scores.reduce((s, t) => s.score > t.score ? s : t)
-    return maxScore.player
+    return maxScore.playerId
 }
 
 const isDraw = (r: Result) => {
@@ -28,17 +29,17 @@ const getLoser = (r: Result) => {
     }
 
     const minScore = r.scores.reduce((s, t) => s.score < t.score ? s : t)
-    return minScore.player
+    return minScore.playerId
 }
 
 const getWins = (player: string, results: Result[]) => results.filter(r => getWinner(r) === player).length
 
-const getDraws = (player: string, results: Result[]) => results.filter(r => isDraw(r) && r.scores.some(s => s.player === player)).length
+const getDraws = (player: string, results: Result[]) => results.filter(r => isDraw(r) && r.scores.some(s => s.playerId === player)).length
 
 const getLosses = (player: string, results: Result[]) => results.filter(r => getLoser(r) === player).length
 
 const isIncomplete = (player: string, results: Result[]) => {
-    return results.filter(r => r.scores.some(s => s.player === player)).length < props.players.length - 1
+    return results.filter(r => r.scores.some(s => s.playerId === player)).length < props.players.length - 1
 }
 
 const sortPlayers = (player1: string, player2: string, results: Result[]) => {
@@ -59,15 +60,15 @@ const sortPlayers = (player1: string, player2: string, results: Result[]) => {
     return 0
 }
 
-const sortedPlayers = computed(() => props.players.sort((a, b) => sortPlayers(a, b, props.results)))
+const sortedPlayers = computed(() => props.players.sort((a, b) => sortPlayers(a.id, b.id, props.results)))
 
 const tableData = computed(() => sortedPlayers.value.map((p, i) => ({
     rank: i + 1,
-    name: p,
-    wins: getWins(p, props.results),
-    draws: getDraws(p, props.results),
-    losses: getLosses(p, props.results),
-    incomplete: isIncomplete(p, props.results),
+    name: p.name,
+    wins: getWins(p.id, props.results),
+    draws: getDraws(p.id, props.results),
+    losses: getLosses(p.id, props.results),
+    incomplete: isIncomplete(p.id, props.results),
 })))
 
 const rowClass = (data: any) => {

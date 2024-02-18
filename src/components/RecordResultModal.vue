@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
 const props = defineProps<{
     visible: boolean
-    players: string[]
+    players: Player[]
     raceTo: number
 }>()
 
@@ -25,7 +26,7 @@ const setScore = (index: number, score: number) => {
 const confirmResult = () => {
     const result = <Result>{
         scores: props.players.map((p, i) => ({
-            player: p,
+            playerId: p.id,
             score: scores.value[i],
         }))
     }
@@ -40,7 +41,7 @@ const confirmResult = () => {
     <Dialog v-model:visible="props.visible" modal header="Record Result">
         <div v-for="p, i in props.players" class="flex align-items-center justify-content-between mb-2">
             <div class="font-bold">
-                {{ p }}
+                {{ p.name }}
             </div>
 
             <div class="ml-3">

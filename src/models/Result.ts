@@ -3,6 +3,6 @@ export interface Result {
 }
 
 export interface Score {
-    player: string
+    playerId: string
     score: number
 }
