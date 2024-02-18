@@ -11,14 +11,20 @@ import type { Result } from "../models/Result"
 
 const DEFAULT_PLAYERS = ["Julian", "Roy", "Emile", "Luis", "", "", "", "", "", ""]
 
-const phase = ref(0)
+enum Phase {
+    Setup,
+    InProgress,
+    Finished,
+}
+
+const phase = ref(Phase.Setup)
 const players = ref(DEFAULT_PLAYERS)
 
 const actualPlayers = ref<Player[]>([])
 const raceTo = ref(0)
 const results = ref<Result[]>([])
 
-const setPhase = (p: number) => phase.value = p
+const setPhase = (p: Phase) => phase.value = p
 
 const setName = (index: number, name: string) => {
     players.value = players.value.map((v, i) => i === index ? name : v)
@@ -31,7 +37,7 @@ const start = (players: string[], r: number) => {
     }))
 
     raceTo.value = r
-    setPhase(1)
+    setPhase(Phase.InProgress)
 }
 
 const getExistingResult = (result: Result) => {
@@ -55,7 +61,7 @@ const addResult = (newResult: Result) => {
 }
 
 const restart = () => {
-    setPhase(0)
+    setPhase(Phase.Setup)
     actualPlayers.value = []
     raceTo.value = 0
     results.value = []
@@ -64,22 +70,22 @@ const restart = () => {
 
 <template>
     <main>
-        <div v-if="phase === 0">
+        <div v-if="phase === Phase.Setup">
             <FlyerForm
                 :players="players"
                 @setName="setName"
                 @start="start" />
         </div>
 
-        <div v-else-if="phase === 1">
+        <div v-else-if="phase === Phase.InProgress">
             <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="addResult" />
 
             <div class="p-fluid mt-2">
-                <Button label="Finish" @click="() => setPhase(2)" />
+                <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
             </div>
         </div>
 
-        <div v-else-if="phase === 2">
+        <div v-else-if="phase === Phase.Finished">
             <ResultsTable :players="actualPlayers" :results="results" />
 
             <div class="p-fluid mt-2">
