@@ -25,6 +25,12 @@ const DEFAULT_SCORES = props.players.map((_, i) => i === 0 ? 1 : 0)
 const selectedPlayers = ref(props.selected.map(p => p.id))
 const scores = ref<number[]>(DEFAULT_SCORES)
 
+// hack to stop InputNumber elements from focusing after pressing their buttons.
+// Important for mobile UX
+watch([scores], () => {
+    (<any>document.activeElement)?.blur()
+})
+
 watch(props, () => {
     selectedPlayers.value = props.selected.map(p => p.id)
 })

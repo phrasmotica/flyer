@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 
 import PlayerNameInput from "../components/PlayerNameInput.vue"
 
@@ -17,6 +17,12 @@ const playerCount = ref(4)
 const format = ref('Round Robin')
 const formatOptions = ref(['Round Robin'])
 const raceTo = ref(1)
+
+// hack to stop InputNumber elements from focusing after pressing their buttons.
+// Important for mobile UX
+watch([playerCount, raceTo], () => {
+    (<any>document.activeElement)?.blur()
+})
 
 const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
 
