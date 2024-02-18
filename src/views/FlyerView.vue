@@ -34,8 +34,24 @@ const start = (players: string[], r: number) => {
     setPhase(1)
 }
 
-const addResult = (result: Result) => {
-    results.value = [...results.value, result]
+const getExistingResult = (result: Result) => {
+    const newPlayerIds = result.scores.map(s => s.playerId)
+
+    return results.value.findIndex(r => {
+        const playerIds = r.scores.map(s => s.playerId)
+        return playerIds.length === newPlayerIds.length
+            && playerIds.every(id => newPlayerIds.includes(id))
+    })
+}
+
+const addResult = (newResult: Result) => {
+    const existingResultIndex = getExistingResult(newResult)
+    if (existingResultIndex >= 0) {
+        results.value = results.value.map((r, i) => i === existingResultIndex ? newResult : r)
+    }
+    else {
+        results.value = [...results.value, newResult]
+    }
 }
 
 const restart = () => {

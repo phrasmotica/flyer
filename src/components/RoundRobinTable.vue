@@ -116,7 +116,9 @@ const hideModal = () => {
 
     <RecordResultModal
         :visible="showModal"
-        :players="[player1, player2]"
+        :players="props.players"
+        :selected="[player1, player2]"
+        :results="props.results"
         :raceTo="props.raceTo"
         @confirm="confirmResult"
         @cancel="hideModal" />
