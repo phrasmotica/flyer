@@ -6,6 +6,7 @@ import mkcert from'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/flyer",
   plugins: [
     vue(),
     mkcert(),
@@ -14,5 +15,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
 })
