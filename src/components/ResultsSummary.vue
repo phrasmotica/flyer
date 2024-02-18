@@ -79,6 +79,8 @@ const rowClass = (data: any) => {
         },
     ]
 }
+
+const incompleteCount = tableData.value.filter(d => d.incomplete).length
 </script>
 
 <template>
@@ -91,6 +93,10 @@ const rowClass = (data: any) => {
         <Column field="draws" header="Drew"></Column>
         <Column field="losses" header="Lost"></Column>
     </DataTable>
+
+    <h4 v-if="incompleteCount > 0">
+        <em>{{ incompleteCount }} player(s) have incomplete results!</em>
+    </h4>
 </template>
 
 <style scoped>
