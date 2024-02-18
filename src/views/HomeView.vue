@@ -9,16 +9,25 @@ import RoundRobinTable from "../components/RoundRobinTable.vue"
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
-const DEFAULT_PLAYERS = ["Julian", "Roy", "Emile", "Luis", "", "", "", "", "", ""]
-
 enum Phase {
     Setup,
     InProgress,
     Finished,
 }
 
+const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
+
+let defaultPlayers = <string[]>[]
+if (defaultPlayersEnv) {
+    defaultPlayers = String(defaultPlayersEnv).split(";")
+}
+
+if (defaultPlayers.length < 10) {
+    defaultPlayers = [...defaultPlayers, ...new Array(10 - defaultPlayers.length).fill("")]
+}
+
 const phase = ref(Phase.Setup)
-const players = ref(DEFAULT_PLAYERS)
+const players = ref(defaultPlayers)
 
 const actualPlayers = ref<Player[]>([])
 const raceTo = ref(0)
