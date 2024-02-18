@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 
 import PlayerNameInput from "../components/PlayerNameInput.vue"
 
@@ -20,8 +20,14 @@ const raceTo = ref(1)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
-watch([playerCount, raceTo], () => {
-    (<any>document.activeElement)?.blur()
+onMounted(() => {
+    const buttons = document.getElementsByClassName("p-inputnumber-button")
+    for (const b of buttons) {
+        b.addEventListener("mouseup", () => {
+            console.log(<any>document.activeElement);
+            (<any>document.activeElement)?.blur()
+        })
+    }
 })
 
 const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
@@ -84,3 +90,9 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
         <Button label="Start" :disabled="actualPlayers.some(p => !p)" @click="start" />
     </div>
 </template>
+
+<style>
+.p-inputnumber-button.p-disabled {
+    pointer-events: auto;
+}
+</style>
