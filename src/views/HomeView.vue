@@ -2,8 +2,8 @@
 import { v4 as uuidv4 } from "uuid"
 import { ref } from "vue"
 
-import PlayersForm from "../components/PlayersForm.vue"
-import ResultsSummary from "../components/ResultsSummary.vue"
+import FlyerForm from "../components/FlyerForm.vue"
+import ResultsTable from "../components/ResultsTable.vue"
 import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import type { Player } from "../models/Player"
@@ -65,7 +65,7 @@ const restart = () => {
 <template>
     <main>
         <div v-if="phase === 0">
-            <PlayersForm
+            <FlyerForm
                 :players="players"
                 @setName="setName"
                 @start="start" />
@@ -80,7 +80,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === 2">
-            <ResultsSummary :players="actualPlayers" :results="results" />
+            <ResultsTable :players="actualPlayers" :results="results" />
 
             <div class="p-fluid mt-2">
                 <Button label="Restart" @click="restart" />
