@@ -77,10 +77,10 @@ const hideModal = () => {
 </script>
 
 <template>
-    <div class="flex justify-content-between align-items-end border-bottom-1">
+    <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
         <h1>Round-Robin</h1>
 
-        <h3>Results remaining: {{ resultsRemaining }}</h3>
+        <h4>Results remaining: {{ resultsRemaining }}</h4>
     </div>
 
     <DataTable :value="props.players">

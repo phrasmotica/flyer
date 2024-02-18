@@ -82,7 +82,7 @@ const rowClass = (data: any) => {
 </script>
 
 <template>
-    <h1>Results</h1>
+    <h1 class="border-bottom-1">Results</h1>
 
     <DataTable :value="tableData" :rowClass="rowClass">
         <Column field="rank" header="#"></Column>

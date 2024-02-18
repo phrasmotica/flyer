@@ -39,12 +39,12 @@ const confirmResult = () => {
 
 <template>
     <Dialog v-model:visible="props.visible" modal header="Record Result">
-        <div v-for="p, i in props.players" class="flex align-items-center justify-content-between mb-2">
+        <div v-for="p, i in props.players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold">
                 {{ p.name }}
             </div>
 
-            <div class="ml-3">
+            <div class="md:ml-3">
                 <InputNumber
                     showButtons
                     buttonLayout="horizontal"

@@ -24,7 +24,7 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
 </script>
 
 <template>
-    <h1>Format</h1>
+    <h1 class="border-bottom-1 mb-2">Format</h1>
 
     <div class="p-fluid mb-2">
         <InputNumber
@@ -60,10 +60,10 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
 
     <!-- TODO: allow selecting round-robin (existing) or knockout format (implement that!) -->
     <div class="p-fluid mb-2">
-        <SelectButton v-model="format" :options="formatOptions" aria-labelledby="basic" />
+        <SelectButton v-model="format" :options="formatOptions" :allowEmpty="false" aria-labelledby="basic" />
     </div>
 
-    <h1>Players</h1>
+    <h1 class="border-bottom-1 mb-2">Players</h1>
 
     <div v-for="p, i in players">
         <PlayerNameInput

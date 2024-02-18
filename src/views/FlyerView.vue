@@ -74,7 +74,15 @@ const restart = () => {
 </template>
 
 <style scoped>
-main {
-    min-width: 600px;
+@media screen and (max-width: 767px) {
+    main {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    main {
+        width: 600px;
+    }
 }
 </style>
