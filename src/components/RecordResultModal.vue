@@ -50,6 +50,21 @@ const confirmResult = () => {
 
     scores.value = DEFAULT_SCORES
 }
+
+const disableSubmit = computed(() => {
+    const uniquePlayers = [...new Set(selectedPlayers.value)]
+    if (uniquePlayers.length !== selectedPlayers.value.length) {
+        return true
+    }
+
+    if (scores.value.every(s => s < props.raceTo)) {
+        return true
+    }
+
+    // TODO: prevent submitting a draw, configurable?
+
+    return false
+})
 </script>
 
 <template>
@@ -78,7 +93,7 @@ const confirmResult = () => {
 
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
-            <Button type="button" label="Save" @click="confirmResult"></Button>
+            <Button type="button" label="Save" :disabled="disableSubmit" @click="confirmResult"></Button>
         </div>
     </Dialog>
 </template>
