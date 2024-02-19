@@ -49,7 +49,8 @@ const confirmResult = () => {
         scores: selectedPlayers.value.map((id, i) => ({
             playerId: id,
             score: scores.value[i],
-        }))
+        })),
+        startTime: Date.now(),
     }
 
     emit('confirm', result)
@@ -69,10 +70,12 @@ const disableSubmit = computed(() => {
 
     return false
 })
+
+const header = computed(() => `Record Result (${props.result.startTime ? "in progress" : "not started"})`)
 </script>
 
 <template>
-    <Dialog v-model:visible="props.visible" modal header="Record Result">
+    <Dialog v-model:visible="props.visible" modal :header="header">
         <div v-for="p, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold p-fluid mb-2 md:mb-0">
                 <PlayerDropdown :players="playerOptions" :selectedPlayerId="p" @select="id => setPlayer(i, id)" />

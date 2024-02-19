@@ -60,7 +60,8 @@ const generateFixtures = (players: Player[]) => {
                 scores: [p, players[j]].map(x => ({
                     playerId: x.id,
                     score: 0,
-                }))
+                })),
+                startTime: null,
             })
         }
     })

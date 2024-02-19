@@ -47,6 +47,11 @@ const getResultClass = (player1: string, player2: string) => {
         return ""
     }
 
+    const result = getResult(player1, player2)
+    if (!result?.startTime) {
+        return "bg-cyan-100"
+    }
+
     if (score1 > score2) {
         return "bg-primary"
     }
@@ -98,7 +103,12 @@ const hideModal = () => {
                     class="flex justify-content-center cursor-pointer"
                     :class="getResultClass(slotProps.data.id, q.id)"
                     @click="() => selectForRecording(slotProps.data, q)">
-                    {{ getScore(slotProps.data.id, q.id) }}-{{ getScore(q.id, slotProps.data.id) }}
+                    <span v-if="getResult(slotProps.data.id, q.id)!.startTime">
+                        {{ getScore(slotProps.data.id, q.id) }}-{{ getScore(q.id, slotProps.data.id) }}
+                    </span>
+                    <span v-else>
+                        ?-?
+                    </span>
                 </div>
 
                 <div v-else class="flex justify-content-center">
