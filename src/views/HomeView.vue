@@ -2,6 +2,7 @@
 import { v4 as uuidv4 } from "uuid"
 import { ref } from "vue"
 
+import FixtureList from "../components/FixtureList.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import RoundRobinTable from "../components/RoundRobinTable.vue"
@@ -98,6 +99,8 @@ const restart = () => {
 
         <div v-else-if="phase === Phase.InProgress">
             <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+
+            <FixtureList :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />

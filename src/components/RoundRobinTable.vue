@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 
-import RecordResultModal from "../components/RecordResultModal.vue"
+import RecordResultModal from "./RecordResultModal.vue"
 
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
