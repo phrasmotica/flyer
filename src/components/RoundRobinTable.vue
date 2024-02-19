@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    addResult: [result: Result]
+    updateResult: [result: Result]
 }>()
 
 const selectedResult = ref<Result>()
@@ -68,8 +68,8 @@ const selectForRecording = (p: Player, q: Player) => {
     showModal.value = true
 }
 
-const confirmResult = (result: Result) => {
-    emit('addResult', result)
+const updateResult = (result: Result) => {
+    emit('updateResult', result)
     hideModal()
 }
 
@@ -123,6 +123,6 @@ const hideModal = () => {
         :players="props.players"
         :result="selectedResult"
         :raceTo="props.raceTo"
-        @confirm="confirmResult"
+        @confirm="updateResult"
         @cancel="hideModal" />
 </template>

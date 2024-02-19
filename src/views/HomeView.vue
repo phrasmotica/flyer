@@ -97,7 +97,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === Phase.InProgress">
-            <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="updateResult" />
+            <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />

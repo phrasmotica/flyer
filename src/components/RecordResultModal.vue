@@ -44,7 +44,7 @@ const setScore = (index: number, score: number) => {
     scores.value = scores.value.map((s, i) => i === index ? score : s)
 }
 
-const confirmResult = () => {
+const updateResult = () => {
     const result = <Result>{
         id: props.result.id,
         scores: selectedPlayers.value.map((id, i) => ({
@@ -101,7 +101,7 @@ const header = computed(() => `Record Result (${props.result.startTime ? "in pro
 
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
-            <Button type="button" label="Save" :disabled="disableSubmit" @click="confirmResult"></Button>
+            <Button type="button" label="Save" :disabled="disableSubmit" @click="updateResult"></Button>
         </div>
     </Dialog>
 </template>
