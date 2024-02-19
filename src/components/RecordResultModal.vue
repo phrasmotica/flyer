@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid"
 import { computed, ref, watch } from "vue"
 
 import PlayerDropdown from "./PlayerDropdown.vue"
@@ -47,12 +46,12 @@ const setScore = (index: number, score: number) => {
 
 const confirmResult = () => {
     const result = <Result>{
-        id: uuidv4(),
+        id: props.result.id,
         scores: selectedPlayers.value.map((id, i) => ({
             playerId: id,
             score: scores.value[i],
         })),
-        startTime: Date.now(),
+        startTime: props.result.startTime || Date.now(),
     }
 
     emit('confirm', result)

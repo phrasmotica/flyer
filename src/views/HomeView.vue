@@ -69,18 +69,8 @@ const generateFixtures = (players: Player[]) => {
     return fixtures
 }
 
-const getExistingResult = (result: Result) => {
-    const newPlayerIds = result.scores.map(s => s.playerId)
-
-    return results.value.findIndex(r => {
-        const playerIds = r.scores.map(s => s.playerId)
-        return playerIds.length === newPlayerIds.length
-            && playerIds.every(id => newPlayerIds.includes(id))
-    })
-}
-
-const addResult = (newResult: Result) => {
-    const existingResultIndex = getExistingResult(newResult)
+const updateResult = (newResult: Result) => {
+    const existingResultIndex = results.value.findIndex(r => r.id === newResult.id)
     if (existingResultIndex >= 0) {
         results.value = results.value.map((r, i) => i === existingResultIndex ? newResult : r)
     }
@@ -107,7 +97,7 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === Phase.InProgress">
-            <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="addResult" />
+            <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @addResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
