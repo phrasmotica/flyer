@@ -19,6 +19,7 @@ const emit = defineEmits<{
     confirm: [result: Result]
 }>()
 
+const visible = ref(props.visible)
 const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
 const scores = ref(props.result.scores.map(r => r.score))
 
@@ -29,6 +30,7 @@ watch([scores], () => {
 })
 
 watch(props, () => {
+    visible.value = props.visible
     selectedPlayers.value = props.result.scores.map(r => r.playerId)
     scores.value = props.result.scores.map(r => r.score)
 })
@@ -75,7 +77,7 @@ const header = computed(() => `Record Result (${props.result.startTime ? "in pro
 </script>
 
 <template>
-    <Dialog v-model:visible="props.visible" modal :header="header">
+    <Dialog v-model:visible="visible" modal :header="header">
         <div v-for="p, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold p-fluid mb-2 md:mb-0">
                 <PlayerDropdown :players="playerOptions" :selectedPlayerId="p" @select="id => setPlayer(i, id)" />
