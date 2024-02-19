@@ -24,7 +24,6 @@ onMounted(() => {
     const buttons = document.getElementsByClassName("p-inputnumber-button")
     for (const b of buttons) {
         b.addEventListener("mouseup", () => {
-            console.log(<any>document.activeElement);
             (<any>document.activeElement)?.blur()
         })
     }

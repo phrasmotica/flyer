@@ -46,7 +46,26 @@ const start = (players: string[], r: number) => {
     }))
 
     raceTo.value = r
+    results.value = generateFixtures(actualPlayers.value)
     setPhase(Phase.InProgress)
+}
+
+const generateFixtures = (players: Player[]) => {
+    const fixtures = <Result[]>[]
+
+    players.forEach((p, i) => {
+        for (let j = i + 1; j < players.length; j++) {
+            fixtures.push({
+                id: uuidv4(),
+                scores: [p, players[j]].map(x => ({
+                    playerId: x.id,
+                    score: 0,
+                }))
+            })
+        }
+    })
+
+    return fixtures
 }
 
 const getExistingResult = (result: Result) => {

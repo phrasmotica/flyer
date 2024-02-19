@@ -10,8 +10,7 @@ import type { Result } from "../models/Result"
 const props = defineProps<{
     visible: boolean
     players: Player[]
-    selected: Player[]
-    results: Result[]
+    result: Result
     raceTo: number
 }>()
 
@@ -20,10 +19,8 @@ const emit = defineEmits<{
     confirm: [result: Result]
 }>()
 
-const DEFAULT_SCORES = props.players.map((_, i) => i === 0 ? 1 : 0)
-
-const selectedPlayers = ref(props.selected.map(p => p.id))
-const scores = ref<number[]>(DEFAULT_SCORES)
+const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
+const scores = ref(props.result.scores.map(r => r.score))
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -32,7 +29,8 @@ watch([scores], () => {
 })
 
 watch(props, () => {
-    selectedPlayers.value = props.selected.map(p => p.id)
+    selectedPlayers.value = props.result.scores.map(r => r.playerId)
+    scores.value = props.result.scores.map(r => r.score)
 })
 
 const playerOptions = computed(() => props.players)
@@ -55,8 +53,6 @@ const confirmResult = () => {
     }
 
     emit('confirm', result)
-
-    scores.value = DEFAULT_SCORES
 }
 
 const disableSubmit = computed(() => {

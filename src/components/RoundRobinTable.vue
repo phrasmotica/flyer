@@ -16,8 +16,7 @@ const emit = defineEmits<{
     addResult: [result: Result]
 }>()
 
-const player1 = ref(props.players[0])
-const player2 = ref(props.players[1])
+const selectedResult = ref<Result>()
 const showModal = ref(false)
 
 const expectedResults = computed(() => props.players.length * (props.players.length - 1) / 2)
@@ -60,8 +59,7 @@ const getResultClass = (player1: string, player2: string) => {
 }
 
 const selectForRecording = (p: Player, q: Player) => {
-    player1.value = p
-    player2.value = q
+    selectedResult.value = getResult(p.id, q.id)
 
     showModal.value = true
 }
@@ -97,28 +95,24 @@ const hideModal = () => {
                 </div>
 
                 <div v-else-if="hasResult(slotProps.data.id, q.id)"
-                    class="flex justify-content-center"
-                    :class="getResultClass(slotProps.data.id, q.id)">
+                    class="flex justify-content-center cursor-pointer"
+                    :class="getResultClass(slotProps.data.id, q.id)"
+                    @click="() => selectForRecording(slotProps.data, q)">
                     {{ getScore(slotProps.data.id, q.id) }}-{{ getScore(q.id, slotProps.data.id) }}
                 </div>
 
-                <div v-else class="p-fluid">
-                    <Button
-                        class="flex justify-content-center"
-                        severity="info"
-                        @click="() => selectForRecording(slotProps.data, q)">
-                        <i class="pi pi-file-edit" />
-                    </Button>
+                <div v-else class="flex justify-content-center">
+                    ?
                 </div>
             </template>
         </Column>
     </DataTable>
 
     <RecordResultModal
+        v-if="selectedResult"
         :visible="showModal"
         :players="props.players"
-        :selected="[player1, player2]"
-        :results="props.results"
+        :result="selectedResult"
         :raceTo="props.raceTo"
         @confirm="confirmResult"
         @cancel="hideModal" />
