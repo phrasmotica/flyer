@@ -16,6 +16,11 @@ enum Phase {
     Finished,
 }
 
+enum Display {
+    Table = "Table",
+    List = "List",
+}
+
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 
 let defaultPlayers = <string[]>[]
@@ -33,6 +38,8 @@ const players = ref(defaultPlayers)
 const actualPlayers = ref<Player[]>([])
 const raceTo = ref(0)
 const results = ref<Result[]>([])
+
+const display = ref(Display.Table)
 
 const setPhase = (p: Phase) => phase.value = p
 
@@ -98,9 +105,13 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === Phase.InProgress">
-            <RoundRobinTable :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+            <div class="p-fluid">
+                <SelectButton v-model="display" :options="[Display.Table, Display.List]" :allowEmpty="false" aria-labelledby="basic" />
+            </div>
 
-            <FixtureList :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+            <RoundRobinTable v-if="display === Display.Table" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+
+            <FixtureList v-if="display === Display.List" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
