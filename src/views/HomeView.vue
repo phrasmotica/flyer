@@ -7,7 +7,7 @@ import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import RoundRobinTable from "../components/RoundRobinTable.vue"
 
-import { Scheduler, type Round } from "../data/Scheduler"
+import { RoundRobinScheduler, type Round } from "../data/RoundRobinScheduler"
 
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
@@ -62,7 +62,7 @@ const start = (players: string[], r: number, t: number) => {
 
     raceTo.value = r
     tableCount.value = t
-    rounds.value = new Scheduler(actualPlayers.value).generateRoundRobinFixtures()
+    rounds.value = new RoundRobinScheduler(actualPlayers.value).generateFixtures()
     setPhase(Phase.InProgress)
 }
 
@@ -128,3 +128,4 @@ const restart = () => {
     }
 }
 </style>
+../data/RoundRobinScheduler

@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from "vue"
 
 import PlayerNameInput from "../components/PlayerNameInput.vue"
 
-import { Scheduler } from "../data/Scheduler"
+import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 const props = defineProps<{
     players: string[]
@@ -21,8 +21,8 @@ const formatOptions = ref(['Round Robin'])
 const raceTo = ref(1)
 const tableCount = ref(1)
 
-const estimatedDuration = computed(() => new Scheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
-const durationPerFrame = new Scheduler([]).frameTimeEstimateMins
+const estimatedDuration = computed(() => new RoundRobinScheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
+const durationPerFrame = new RoundRobinScheduler([]).frameTimeEstimateMins
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -121,3 +121,4 @@ const start = () => emit('start', actualPlayers.value, raceTo.value, tableCount.
     pointer-events: auto;
 }
 </style>
+../data/RoundRobinScheduler

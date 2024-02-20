@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
-export class Scheduler {
+export class RoundRobinScheduler {
     frameTimeEstimateMins: number = 7
 
     constructor(private players: Player[]) {
@@ -20,7 +20,7 @@ export class Scheduler {
         return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tables)
     }
 
-    generateRoundRobinFixtures() {
+    generateFixtures() {
         let attempts = 0
 
         const oddPlayerCount = this.players.length % 2 !== 0
