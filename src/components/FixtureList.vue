@@ -22,7 +22,7 @@ const emit = defineEmits<{
 const selectedResult = ref<Result>()
 const showModal = ref(false)
 
-const resultsRemaining = computed(() => props.rounds.flatMap(r => r.fixtures).filter(f => !f.startTime).length)
+const resultsRemaining = computed(() => props.rounds.flatMap(r => r.fixtures).filter(f => !f.finishTime).length)
 
 const selectForRecording = (r: Result) => {
     selectedResult.value = r

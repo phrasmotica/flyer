@@ -19,7 +19,7 @@ const emit = defineEmits<{
 const selectedResult = ref<Result>()
 const showModal = ref(false)
 
-const resultsRemaining = computed(() => props.results.filter(r => !r.startTime).length)
+const resultsRemaining = computed(() => props.results.filter(r => !r.finishTime).length)
 
 const hasResult = (player1: string, player2: string) => {
     return props.results.some(r => r.scores.some(s => s.playerId === player1) && r.scores.some(s => s.playerId === player2))
