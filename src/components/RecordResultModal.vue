@@ -36,12 +36,6 @@ watch(props, () => {
     scores.value = props.result.scores.map(r => r.score)
 })
 
-const playerOptions = computed(() => props.players)
-
-const setPlayer = (index: number, newId: string) => {
-    selectedPlayers.value = selectedPlayers.value.map((id, i) => i === index ? newId : id)
-}
-
 const setScore = (index: number, score: number) => {
     scores.value = scores.value.map((s, i) => i === index ? score : s)
 }
