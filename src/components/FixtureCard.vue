@@ -17,7 +17,7 @@ const getResultClass = (result: Result) => {
     }
 
     if (result.startTime) {
-        return "bg-cyan-400"
+        return "in-progress"
     }
 
     return "bg-cyan-100"
@@ -34,10 +34,10 @@ const getPlayerName = (id: string) => {
             {{ getPlayerName(props.result.scores[0].playerId) }}
         </div>
 
-        <div class="col-2 text-center cursor-pointer"
+        <div class="col-2 text-center cursor-pointer border-round-md"
             :class="getResultClass(props.result)"
             @click="() => emit('showResultModal', props.result)">
-            <span v-if="props.result?.startTime">
+            <span v-if="props.result.startTime">
                 {{ props.result.scores.map(s => s.score).join("-") }}
             </span>
             <span v-else>
@@ -50,3 +50,11 @@ const getPlayerName = (id: string) => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.in-progress {
+    color: #ffffff;
+    background: #0ea5e9;
+    border: 1px solid #0ea5e9;
+}
+</style>

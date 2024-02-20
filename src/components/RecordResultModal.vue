@@ -101,8 +101,8 @@ const header = computed(() => `Record Result (${props.result.startTime ? "in pro
 
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
-            <Button type="button" label="Update" @click="() => updateResult(false)"></Button>
-            <Button type="button" label="Finish" severity="warning" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
+            <Button type="button" label="Update" severity="info" @click="() => updateResult(false)"></Button>
+            <Button type="button" label="Finish" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
         </div>
     </Dialog>
 </template>
