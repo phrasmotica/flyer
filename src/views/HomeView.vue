@@ -59,20 +59,7 @@ const start = (players: string[], r: number) => {
 }
 
 const generateFixtures = (players: Player[]) => {
-    const fixtures = <Result[]>[]
-
-    players.forEach((p, i) => {
-        for (let j = i + 1; j < players.length; j++) {
-            fixtures.push({
-                id: uuidv4(),
-                scores: [p, players[j]].map(x => ({
-                    playerId: x.id,
-                    score: 0,
-                })),
-                startTime: null,
-            })
-        }
-    })
+    const fixtures = new Scheduler(players).generateFixtures()
 
     return fixtures
 }
