@@ -4,7 +4,7 @@ import { computed, ref } from "vue"
 import FixtureCard from "./FixtureCard.vue"
 import RecordResultModal from "./RecordResultModal.vue"
 
-import type { Round } from "../data/Scheduler"
+import type { Round } from "../data/RoundRobinScheduler"
 
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
