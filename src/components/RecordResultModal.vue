@@ -116,12 +116,32 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
         </div>
 
         <div class="p-fluid">
-            <div class="p-buttonset">
-                <Button type="button" label="Close" severity="secondary" @click="emit('cancel')"></Button>
-                <Button v-if="!props.result.startTime" type="button" label="Start" :disabled="disableStart" @click="startFixture"></Button>
-                <Button v-if="props.result.startTime" type="button" label="Update" severity="info" @click="() => updateResult(false)"></Button>
-                <Button v-if="props.result.startTime" type="button" label="Finish" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
-            </div>
+            <Button v-if="!props.result.startTime"
+                class="mb-2"
+                type="button"
+                label="Start"
+                :disabled="disableStart"
+                @click="startFixture" />
+
+            <Button v-if="props.result.startTime && !props.result.finishTime"
+                class="mb-2"
+                type="button"
+                label="Update"
+                severity="info"
+                @click="() => updateResult(false)" />
+
+            <Button v-if="props.result.startTime && !props.result.finishTime"
+                class="mb-2"
+                type="button"
+                label="Finish"
+                :disabled="disableFinish"
+                @click="() => updateResult(true)" />
+
+            <Button
+                type="button"
+                label="Close"
+                severity="secondary"
+                @click="emit('cancel')" />
         </div>
     </Dialog>
 </template>
