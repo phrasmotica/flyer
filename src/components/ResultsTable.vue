@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
+import { usePlayersStore } from "../stores/players"
+
 const props = defineProps<{
-    players: Player[]
     results: Result[]
 }>()
+
+const playersStore = usePlayersStore()
 
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {
@@ -46,34 +48,26 @@ const isIncomplete = (player: string, results: Result[]) => {
     return results.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
 }
 
-const sortPlayers = (player1: string, player2: string, results: Result[]) => {
-    const wins1 = getWins(player1, results)
-    const wins2 = getWins(player2, results)
+const tableData = computed(() =>
+    playersStore.players.map((p, i) => ({
+        rank: i + 1,
+        name: p.name,
+        wins: getWins(p.id, props.results),
+        draws: getDraws(p.id, props.results),
+        losses: getLosses(p.id, props.results),
+        incomplete: isIncomplete(p.id, props.results),
+    })).sort((p, q) => {
+        if (p.wins !== q.wins) {
+            return q.wins - p.wins
+        }
 
-    if (wins1 !== wins2) {
-        return wins2 - wins1
-    }
+        if (p.losses !== q.losses) {
+            return q.losses - p.losses
+        }
 
-    const losses1 = getLosses(player1, results)
-    const losses2 = getLosses(player2, results)
-
-    if (losses1 !== losses2) {
-        return losses2 - losses1
-    }
-
-    return 0
-}
-
-const sortedPlayers = computed(() => props.players.sort((a, b) => sortPlayers(a.id, b.id, props.results)))
-
-const tableData = computed(() => sortedPlayers.value.map((p, i) => ({
-    rank: i + 1,
-    name: p.name,
-    wins: getWins(p.id, props.results),
-    draws: getDraws(p.id, props.results),
-    losses: getLosses(p.id, props.results),
-    incomplete: isIncomplete(p.id, props.results),
-})))
+        return 0
+    })
+)
 
 const rowClass = (data: any) => {
     return [
@@ -108,3 +102,4 @@ h3 {
     margin: 0px;
 }
 </style>
+../stores/players

@@ -6,11 +6,9 @@ import RecordResultModal from "./RecordResultModal.vue"
 
 import type { Round } from "../data/RoundRobinScheduler"
 
-import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
 const props = defineProps<{
-    players: Player[]
     raceTo: number
     currentRound: number
     rounds: Round[]
@@ -64,7 +62,6 @@ const hideModal = () => {
 
         <div v-for="f, j in r.fixtures" class="mt-1 pt-1 mb-1" :class="[j > 0 && 'border-gray-200 border-top-1']">
             <FixtureCard
-                :players="props.players"
                 :result="f"
                 @showResultModal="() => selectForRecording(f)" />
         </div>
@@ -73,7 +70,6 @@ const hideModal = () => {
     <RecordResultModal
         v-if="round && selectedResult"
         :visible="showModal"
-        :players="props.players"
         :currentRound="props.currentRound"
         :round="round"
         :result="selectedResult"

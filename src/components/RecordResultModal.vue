@@ -3,12 +3,12 @@ import { computed, ref, watch } from "vue"
 
 import type { Round } from "../data/RoundRobinScheduler"
 
-import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
+
+import { usePlayersStore } from "../stores/players"
 
 const props = defineProps<{
     visible: boolean
-    players: Player[]
     currentRound: number
     round: Round
     result: Result
@@ -20,6 +20,8 @@ const emit = defineEmits<{
     start: []
     confirm: [result: Result, finish: boolean]
 }>()
+
+const playersStore = usePlayersStore()
 
 const visible = ref(props.visible)
 const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
@@ -75,9 +77,7 @@ const disableFinish = computed(() => {
     return false
 })
 
-const getPlayerName = (id: string) => props.players.find(p => p.id === id)?.name
-
-const description = computed(() => props.result.scores.map(s => getPlayerName(s.playerId)!).join(" v "))
+const description = computed(() => props.result.scores.map(s => playersStore.getName(s.playerId)!).join(" v "))
 
 const header = computed(() => `${props.round.name} - ${description.value}`)
 </script>
@@ -86,13 +86,13 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
     <Dialog v-model:visible="visible" modal :header="header">
         <div v-if="props.result.finishTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold">
-                {{ getPlayerName(id) }}: {{ scores[i] }}
+                {{ playersStore.getName(id) }}: {{ scores[i] }}
             </div>
         </div>
 
         <div v-else-if="props.result.startTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold">
-                {{ getPlayerName(id) }}
+                {{ playersStore.getName(id) }}
             </div>
 
             <div class="md:ml-3">
@@ -142,3 +142,4 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
         </div>
     </Dialog>
 </template>
+../stores/players

@@ -10,8 +10,9 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import { RoundRobinScheduler, type Round } from "../data/RoundRobinScheduler"
 
-import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
+
+import { usePlayersStore } from "../stores/players"
 
 enum Phase {
     Setup,
@@ -38,7 +39,7 @@ if (defaultPlayers.length < 10) {
 const phase = ref(Phase.Setup)
 const players = ref(defaultPlayers)
 
-const actualPlayers = ref<Player[]>([])
+const playersStore = usePlayersStore()
 const raceTo = ref(0)
 
 // TODO: use this to assign fixtures to tables
@@ -60,15 +61,15 @@ const setName = (index: number, name: string) => {
 }
 
 const start = (players: string[], r: number, t: number) => {
-    actualPlayers.value = players.map(p => ({
+    playersStore.setPlayers(players.map(p => ({
         id: uuidv4(),
         name: p,
-    }))
+    })))
 
     raceTo.value = r
     tableCount.value = t
 
-    scheduler = new RoundRobinScheduler(actualPlayers.value)
+    scheduler = new RoundRobinScheduler(playersStore.players)
     rounds.value = scheduler.generateFixtures()
 
     setPhase(Phase.InProgress)
@@ -101,7 +102,7 @@ const confirmRestart = () => {
 
 const restart = () => {
     setPhase(Phase.Setup)
-    actualPlayers.value = []
+    playersStore.clear()
     raceTo.value = 0
     rounds.value = []
 }
@@ -126,7 +127,6 @@ const hideRestartModal = () => {
             </div> -->
 
             <FixtureList v-if="display === Display.Fixtures"
-                :players="actualPlayers"
                 :raceTo="raceTo"
                 :currentRound="scheduler.getCurrentRound()"
                 :rounds="rounds"
@@ -154,7 +154,7 @@ const hideRestartModal = () => {
         </div>
 
         <div v-else-if="phase === Phase.Finished">
-            <ResultsTable :players="actualPlayers" :results="results" />
+            <ResultsTable :results="results" />
 
             <div class="p-fluid mt-2">
                 <Button label="Restart" @click="confirmRestart" />
@@ -188,3 +188,4 @@ const hideRestartModal = () => {
 }
 </style>
 ../data/RoundRobinScheduler
+../stores/players
