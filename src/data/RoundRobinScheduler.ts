@@ -136,12 +136,17 @@ export class Round {
                 score: 0,
             })),
             startTime: null,
+            finishTime: null,
         })
     }
 
-    updateResult(newResult: Result) {
+    updateResult(newResult: Result, finish: boolean) {
         const idx = this.fixtures.findIndex(f => f.id === newResult.id)
         if (idx >= 0) {
+            if (finish) {
+                newResult.finishTime = Date.now()
+            }
+
             this.fixtures[idx] = newResult
         }
 

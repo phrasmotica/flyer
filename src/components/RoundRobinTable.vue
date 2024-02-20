@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    updateResult: [result: Result]
+    updateResult: [result: Result, finish: boolean]
 }>()
 
 const selectedResult = ref<Result>()
@@ -68,8 +68,8 @@ const selectForRecording = (p: Player, q: Player) => {
     showModal.value = true
 }
 
-const updateResult = (result: Result) => {
-    emit('updateResult', result)
+const updateResult = (result: Result, finish: boolean) => {
+    emit('updateResult', result, finish)
     hideModal()
 }
 

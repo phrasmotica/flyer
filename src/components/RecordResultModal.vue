@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     cancel: []
-    confirm: [result: Result]
+    confirm: [result: Result, finish: boolean]
 }>()
 
 const visible = ref(props.visible)
@@ -44,7 +44,7 @@ const setScore = (index: number, score: number) => {
     scores.value = scores.value.map((s, i) => i === index ? score : s)
 }
 
-const updateResult = () => {
+const updateResult = (finish: boolean) => {
     const result = <Result>{
         id: props.result.id,
         scores: selectedPlayers.value.map((id, i) => ({
@@ -54,10 +54,10 @@ const updateResult = () => {
         startTime: props.result.startTime || Date.now(),
     }
 
-    emit('confirm', result)
+    emit('confirm', result, finish)
 }
 
-const disableSubmit = computed(() => {
+const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
     if (uniquePlayers.length !== selectedPlayers.value.length) {
         return true
@@ -101,7 +101,8 @@ const header = computed(() => `Record Result (${props.result.startTime ? "in pro
 
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
-            <Button type="button" label="Save" :disabled="disableSubmit" @click="updateResult"></Button>
+            <Button type="button" label="Update" @click="() => updateResult(false)"></Button>
+            <Button type="button" label="Finish" severity="warning" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
         </div>
     </Dialog>
 </template>

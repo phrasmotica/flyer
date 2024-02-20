@@ -66,8 +66,8 @@ const start = (players: string[], r: number, t: number) => {
     setPhase(Phase.InProgress)
 }
 
-const updateResult = (newResult: Result) => {
-    rounds.value = rounds.value.map(r => r.updateResult(newResult))
+const updateResult = (newResult: Result, finish: boolean) => {
+    rounds.value = rounds.value.map(r => r.updateResult(newResult, finish))
 }
 
 const restart = () => {

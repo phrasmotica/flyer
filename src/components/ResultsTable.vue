@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const getWinner = (r: Result) => {
-    if (isDraw(r)) {
+    if (!r.finishTime || isDraw(r)) {
         return null
     }
 
@@ -19,12 +19,16 @@ const getWinner = (r: Result) => {
 }
 
 const isDraw = (r: Result) => {
+    if (!r.finishTime) {
+        return false
+    }
+
     const maxScore = r.scores.map(s => s.score).reduce((x, y) => Math.max(x, y))
     return r.scores.every(s => s.score === maxScore)
 }
 
 const getLoser = (r: Result) => {
-    if (isDraw(r)) {
+    if (!r.finishTime || isDraw(r)) {
         return null
     }
 
@@ -39,7 +43,7 @@ const getDraws = (player: string, results: Result[]) => results.filter(r => isDr
 const getLosses = (player: string, results: Result[]) => results.filter(r => getLoser(r) === player).length
 
 const isIncomplete = (player: string, results: Result[]) => {
-    return results.filter(r => r.scores.some(s => s.playerId === player)).length < props.players.length - 1
+    return results.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
 }
 
 const sortPlayers = (player1: string, player2: string, results: Result[]) => {

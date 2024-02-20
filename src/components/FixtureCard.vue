@@ -12,11 +12,15 @@ const emit = defineEmits<{
 }>()
 
 const getResultClass = (result: Result) => {
-    if (!result?.startTime) {
-        return "bg-cyan-100"
+    if (result.finishTime) {
+        return "bg-primary"
     }
 
-    return "bg-cyan-400"
+    if (result.startTime) {
+        return "bg-cyan-400"
+    }
+
+    return "bg-cyan-100"
 }
 
 const getPlayerName = (id: string) => {
