@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 import FixtureList from "../components/FixtureList.vue"
 import FlyerForm from "../components/FlyerForm.vue"
@@ -42,9 +42,7 @@ const raceTo = ref(0)
 
 // TODO: turn Round into a class that can do all the result-recording behind the scenes
 const rounds = ref<Round[]>([])
-
-// TODO: remove this
-const results = ref<Result[]>([])
+const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
 const display = ref(Display.Table)
 
@@ -62,19 +60,10 @@ const start = (players: string[], r: number) => {
 
     raceTo.value = r
     rounds.value = new Scheduler(actualPlayers.value).generateRoundRobinFixtures()
-    results.value = rounds.value.flatMap(r => r.fixtures)
     setPhase(Phase.InProgress)
 }
 
 const updateResult = (newResult: Result) => {
-    const existingResultIndex = results.value.findIndex(r => r.id === newResult.id)
-    if (existingResultIndex >= 0) {
-        results.value = results.value.map((r, i) => i === existingResultIndex ? newResult : r)
-    }
-    else {
-        results.value = [...results.value, newResult]
-    }
-
     rounds.value = rounds.value.map(r => {
         const idx = r.fixtures.findIndex(f => f.id === newResult.id)
         if (idx >= 0) {
@@ -90,7 +79,6 @@ const restart = () => {
     actualPlayers.value = []
     raceTo.value = 0
     rounds.value = []
-    results.value = []
 }
 </script>
 
