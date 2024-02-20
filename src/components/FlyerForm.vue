@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 
-import PlayerNameInput from "../components/PlayerNameInput.vue"
+import PlayerNameInput from "./PlayerNameInput.vue"
+import ConfirmStartModal from "./ConfirmStartModal.vue"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
@@ -20,6 +21,7 @@ const format = ref('Round Robin')
 const formatOptions = ref(['Round Robin'])
 const raceTo = ref(1)
 const tableCount = ref(1)
+const showModal = ref(false)
 
 const estimatedDuration = computed(() => new RoundRobinScheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
 const durationPerFrame = new RoundRobinScheduler([]).frameTimeEstimateMins
@@ -37,7 +39,18 @@ onMounted(() => {
 
 const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
 
-const start = () => emit('start', actualPlayers.value, raceTo.value, tableCount.value)
+const confirmStart = () => {
+    showModal.value = true
+}
+
+const start = () => {
+    emit('start', actualPlayers.value, raceTo.value, tableCount.value)
+    hideModal()
+}
+
+const hideModal = () => {
+    showModal.value = false
+}
 </script>
 
 <template>
@@ -112,8 +125,13 @@ const start = () => emit('start', actualPlayers.value, raceTo.value, tableCount.
     </div>
 
     <div class="p-fluid">
-        <Button label="Start" :disabled="actualPlayers.some(p => !p)" @click="start" />
+        <Button label="Start" :disabled="actualPlayers.some(p => !p)" @click="confirmStart" />
     </div>
+
+    <ConfirmStartModal
+        :visible="showModal"
+        @start="start"
+        @cancel="hideModal" />
 </template>
 
 <style>
@@ -121,4 +139,3 @@ const start = () => emit('start', actualPlayers.value, raceTo.value, tableCount.
     pointer-events: auto;
 }
 </style>
-../data/RoundRobinScheduler
