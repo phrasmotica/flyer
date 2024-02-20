@@ -80,7 +80,7 @@ const hideModal = () => {
 
 <template>
     <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
-        <h1>Round-Robin</h1>
+        <h1>Head-to-Head</h1>
 
         <h4>Results remaining: {{ resultsRemaining }}</h4>
     </div>
