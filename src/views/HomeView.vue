@@ -50,7 +50,8 @@ const rounds = ref<Round[]>([])
 const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
 const display = ref(Display.Fixtures)
-const showModal = ref(false)
+const showFinishModal = ref(false)
+const showRestartModal = ref(false)
 
 const setPhase = (p: Phase) => phase.value = p
 
@@ -82,7 +83,7 @@ const updateResult = (newResult: Result, finish: boolean) => {
 }
 
 const confirmFinish = () => {
-    showModal.value = true
+    showFinishModal.value = true
 }
 
 const finish = () => {
@@ -91,7 +92,11 @@ const finish = () => {
 }
 
 const hideModal = () => {
-    showModal.value = false
+    showFinishModal.value = false
+}
+
+const confirmRestart = () => {
+    showRestartModal.value = true
 }
 
 const restart = () => {
@@ -99,6 +104,10 @@ const restart = () => {
     actualPlayers.value = []
     raceTo.value = 0
     rounds.value = []
+}
+
+const hideRestartModal = () => {
+    showRestartModal.value = false
 }
 </script>
 
@@ -137,7 +146,7 @@ const restart = () => {
             </div>
 
             <ConfirmModal
-                :visible="showModal"
+                :visible="showFinishModal"
                 header="Finish Flyer"
                 message="Are you ready to finish the flyer?"
                 @confirm="finish"
@@ -148,8 +157,15 @@ const restart = () => {
             <ResultsTable :players="actualPlayers" :results="results" />
 
             <div class="p-fluid mt-2">
-                <Button label="Restart" @click="restart" />
+                <Button label="Restart" @click="confirmRestart" />
             </div>
+
+            <ConfirmModal
+                :visible="showRestartModal"
+                header="Restart"
+                message="Are you sure you want to restart? All data for the current flyer will be lost!"
+                @confirm="restart"
+                @cancel="hideRestartModal" />
         </div>
     </main>
 
