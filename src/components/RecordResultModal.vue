@@ -3,12 +3,15 @@ import { computed, ref, watch } from "vue"
 
 import PlayerDropdown from "./PlayerDropdown.vue"
 
+import type { Round } from "../data/RoundRobinScheduler"
+
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
 const props = defineProps<{
     visible: boolean
     players: Player[]
+    round: Round
     result: Result
     raceTo: number
 }>()
@@ -77,12 +80,17 @@ const disableFinish = computed(() => {
     return false
 })
 
-const header = computed(() => `Record Result (${props.result.startTime ? "in progress" : "not started"})`)
+const description = computed(() => props.result.scores.map(s => {
+    const player = props.players.find(p => p.id === s.playerId)!
+    return player.name
+}).join(" v "))
+
+const header = computed(() => `${props.round.name} - ${description.value}`)
 </script>
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header">
-        <div v-for="p, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+        <div v-if="props.result.startTime" v-for="p, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold p-fluid mb-2 md:mb-0">
                 <PlayerDropdown :players="playerOptions" :selectedPlayerId="p" @select="id => setPlayer(i, id)" />
             </div>
@@ -104,11 +112,13 @@ const header = computed(() => `Record Result (${props.result.startTime ? "in pro
             </div>
         </div>
 
-        <div class="flex justify-content-end gap-2">
-            <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
-            <Button v-if="!props.result.startTime" type="button" label="Start" :disabled="disableStart" @click="startFixture"></Button>
-            <Button v-if="props.result.startTime" type="button" label="Update" severity="info" @click="() => updateResult(false)"></Button>
-            <Button v-if="props.result.startTime" type="button" label="Finish" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
+        <div class="p-fluid">
+            <div class="p-buttonset">
+                <Button type="button" label="Close" severity="secondary" @click="emit('cancel')"></Button>
+                <Button v-if="!props.result.startTime" type="button" label="Start" :disabled="disableStart" @click="startFixture"></Button>
+                <Button v-if="props.result.startTime" type="button" label="Update" severity="info" @click="() => updateResult(false)"></Button>
+                <Button v-if="props.result.startTime" type="button" label="Finish" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
+            </div>
         </div>
     </Dialog>
 </template>

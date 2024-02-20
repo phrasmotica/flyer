@@ -24,6 +24,7 @@ const selectedResult = ref<Result>()
 const showModal = ref(false)
 
 const resultsRemaining = computed(() => props.rounds.flatMap(r => r.fixtures).filter(f => !f.finishTime).length)
+const round = computed(() => props.rounds.find(r => r.fixtures.some(f => f.id === selectedResult.value?.id)))
 
 // TODO: fix bug where clicking on a fixture's score, closing the modal via the
 // 'X' button, then clicking on the same fixture's score doesn't cause the
@@ -69,9 +70,10 @@ const hideModal = () => {
     </div>
 
     <RecordResultModal
-        v-if="selectedResult"
+        v-if="round && selectedResult"
         :visible="showModal"
         :players="props.players"
+        :round="round"
         :result="selectedResult"
         :raceTo="props.raceTo"
         @start="startFixture"
