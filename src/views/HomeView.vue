@@ -97,9 +97,9 @@ const restart = () => {
         </div>
 
         <div v-else-if="phase === Phase.InProgress">
-            <div class="p-fluid">
+            <!-- <div class="p-fluid">
                 <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
-            </div>
+            </div> -->
 
             <FixtureList v-if="display === Display.Fixtures"
                 :players="actualPlayers"
@@ -109,13 +109,13 @@ const restart = () => {
                 @start="startFixture"
                 @updateResult="updateResult" />
 
-            <RoundRobinTable v-if="display === Display.HeadToHead"
+            <!-- <RoundRobinTable v-if="display === Display.HeadToHead"
                 :players="actualPlayers"
                 :raceTo="raceTo"
                 :rounds="rounds"
                 :results="results"
                 @start="startFixture"
-                @updateResult="updateResult" />
+                @updateResult="updateResult" /> -->
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
