@@ -24,6 +24,9 @@ const showModal = ref(false)
 
 const resultsRemaining = computed(() => props.rounds.flatMap(r => r.fixtures).filter(f => !f.finishTime).length)
 
+// TODO: fix bug where clicking on a fixture's score, closing the modal via the
+// 'X' button, then clicking on the same fixture's score doesn't cause the
+// modal to open...
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
     showModal.value = true
