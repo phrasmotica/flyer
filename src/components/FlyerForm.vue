@@ -17,6 +17,7 @@ const playerCount = ref(4)
 const format = ref('Round Robin')
 const formatOptions = ref(['Round Robin'])
 const raceTo = ref(1)
+const tableCount = ref(1)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -43,6 +44,22 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
             showButtons buttonLayout="horizontal"
             :min="1" :max="5"
             prefix="Races to "
+            :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
+            <template #incrementbuttonicon>
+                <span class="pi pi-plus" />
+            </template>
+            <template #decrementbuttonicon>
+                <span class="pi pi-minus" />
+            </template>
+        </InputNumber>
+    </div>
+
+    <div class="p-fluid mb-2">
+        <InputNumber
+            v-model="tableCount"
+            showButtons buttonLayout="horizontal"
+            :min="1" :max="Math.floor(playerCount / 2)"
+            suffix=" table(s)"
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
