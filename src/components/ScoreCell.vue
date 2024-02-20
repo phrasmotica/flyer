@@ -23,7 +23,7 @@ const getResultClass = (result: Result) => {
 </script>
 
 <template>
-    <div class="col-2 text-center cursor-pointer border-round-md"
+    <div class="p-2 text-center cursor-pointer border-round-md"
         :class="getResultClass(props.result)"
         @click="() => emit('showResultModal')">
         <span v-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
@@ -34,3 +34,11 @@ const getResultClass = (result: Result) => {
         </span>
     </div>
 </template>
+
+<style scoped>
+.in-progress {
+    color: #ffffff;
+    background: #0ea5e9;
+    border: 1px solid #0ea5e9;
+}
+</style>

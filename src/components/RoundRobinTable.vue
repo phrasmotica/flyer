@@ -2,6 +2,7 @@
 import { computed, ref } from "vue"
 
 import RecordResultModal from "./RecordResultModal.vue"
+import ScoreCell from "./ScoreCell.vue"
 
 import type { Round } from "../data/RoundRobinScheduler"
 
@@ -110,16 +111,10 @@ const hideModal = () => {
                     -
                 </div>
 
-                <div v-else-if="hasResult(slotProps.data.id, q.id)"
-                    class="flex justify-content-center cursor-pointer"
-                    :class="getResultClass(slotProps.data.id, q.id)"
-                    @click="() => selectForRecording(slotProps.data, q)">
-                    <span v-if="getResult(slotProps.data.id, q.id)!.startTime">
-                        {{ getScore(slotProps.data.id, q.id) }}-{{ getScore(q.id, slotProps.data.id) }}
-                    </span>
-                    <span v-else>
-                        ?-?
-                    </span>
+                <div v-else-if="hasResult(slotProps.data.id, q.id)">
+                    <ScoreCell
+                        :result="getResult(slotProps.data.id, q.id)!"
+                        @showResultModal="() => selectForRecording(slotProps.data, q)" />
                 </div>
 
                 <div v-else class="flex justify-content-center">

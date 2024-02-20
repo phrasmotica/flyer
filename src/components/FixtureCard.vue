@@ -24,18 +24,14 @@ const getPlayerName = (id: string) => {
             {{ getPlayerName(props.result.scores[0].playerId) }}
         </div>
 
-        <ScoreCell :result="props.result" @showResultModal="() => emit('showResultModal', props.result)" />
+        <div class="col-2 p-0">
+            <ScoreCell
+                :result="props.result"
+                @showResultModal="() => emit('showResultModal', props.result)" />
+        </div>
 
         <div class="col-5 text-right">
             {{ getPlayerName(props.result.scores[1].playerId) }}
         </div>
     </div>
 </template>
-
-<style scoped>
-.in-progress {
-    color: #ffffff;
-    background: #0ea5e9;
-    border: 1px solid #0ea5e9;
-}
-</style>
