@@ -15,6 +15,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     cancel: []
+    start: []
     confirm: [result: Result, finish: boolean]
 }>()
 
@@ -44,6 +45,8 @@ const setScore = (index: number, score: number) => {
     scores.value = scores.value.map((s, i) => i === index ? score : s)
 }
 
+const startFixture = () => emit('start')
+
 const updateResult = (finish: boolean) => {
     const result = <Result>{
         id: props.result.id,
@@ -51,11 +54,13 @@ const updateResult = (finish: boolean) => {
             playerId: id,
             score: scores.value[i],
         })),
-        startTime: props.result.startTime || Date.now(),
+        startTime: props.result.startTime,
     }
 
     emit('confirm', result, finish)
 }
+
+const disableStart = computed(() => false)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
@@ -101,8 +106,9 @@ const header = computed(() => `Record Result (${props.result.startTime ? "in pro
 
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="emit('cancel')"></Button>
-            <Button type="button" label="Update" severity="info" @click="() => updateResult(false)"></Button>
-            <Button type="button" label="Finish" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
+            <Button v-if="!props.result.startTime" type="button" label="Start" :disabled="disableStart" @click="startFixture"></Button>
+            <Button v-if="props.result.startTime" type="button" label="Update" severity="info" @click="() => updateResult(false)"></Button>
+            <Button v-if="props.result.startTime" type="button" label="Finish" :disabled="disableFinish" @click="() => updateResult(true)"></Button>
         </div>
     </Dialog>
 </template>

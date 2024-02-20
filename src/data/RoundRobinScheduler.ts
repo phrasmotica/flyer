@@ -140,6 +140,15 @@ export class Round {
         })
     }
 
+    startFixture(id: string) {
+        const idx = this.fixtures.findIndex(f => f.id === id)
+        if (idx >= 0) {
+            this.fixtures[idx].startTime = Date.now()
+        }
+
+        return this
+    }
+
     updateResult(newResult: Result, finish: boolean) {
         const idx = this.fixtures.findIndex(f => f.id === newResult.id)
         if (idx >= 0) {

@@ -37,7 +37,7 @@ const getPlayerName = (id: string) => {
         <div class="col-2 text-center cursor-pointer border-round-md"
             :class="getResultClass(props.result)"
             @click="() => emit('showResultModal', props.result)">
-            <span v-if="props.result.startTime">
+            <span v-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
                 {{ props.result.scores.map(s => s.score).join("-") }}
             </span>
             <span v-else>

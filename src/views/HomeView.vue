@@ -66,6 +66,10 @@ const start = (players: string[], r: number, t: number) => {
     setPhase(Phase.InProgress)
 }
 
+const startFixture = (id: string) => {
+    rounds.value = rounds.value.map(r => r.startFixture(id))
+}
+
 const updateResult = (newResult: Result, finish: boolean) => {
     rounds.value = rounds.value.map(r => r.updateResult(newResult, finish))
 }
@@ -92,7 +96,12 @@ const restart = () => {
                 <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
             </div>
 
-            <FixtureList v-if="display === Display.Fixtures" :players="actualPlayers" :raceTo="raceTo" :rounds="rounds" @updateResult="updateResult" />
+            <FixtureList v-if="display === Display.Fixtures"
+                :players="actualPlayers"
+                :raceTo="raceTo"
+                :rounds="rounds"
+                @start="startFixture"
+                @updateResult="updateResult" />
 
             <RoundRobinTable v-if="display === Display.HeadToHead" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
 

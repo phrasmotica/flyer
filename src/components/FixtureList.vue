@@ -16,6 +16,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+    start: [resultId: string]
     updateResult: [result: Result, finish: boolean]
 }>()
 
@@ -30,6 +31,13 @@ const resultsRemaining = computed(() => props.rounds.flatMap(r => r.fixtures).fi
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
     showModal.value = true
+}
+
+const startFixture = () => {
+    if (selectedResult.value) {
+        emit('start', selectedResult.value.id)
+        hideModal()
+    }
 }
 
 const updateResult = (result: Result, finish: boolean) => {
@@ -66,6 +74,7 @@ const hideModal = () => {
         :players="props.players"
         :result="selectedResult"
         :raceTo="props.raceTo"
+        @start="startFixture"
         @confirm="updateResult"
         @cancel="hideModal" />
 </template>
