@@ -7,6 +7,8 @@ import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import RoundRobinTable from "../components/RoundRobinTable.vue"
 
+import { Scheduler } from "../data/Scheduler"
+
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
@@ -54,14 +56,9 @@ const start = (players: string[], r: number) => {
     }))
 
     raceTo.value = r
-    results.value = generateFixtures(actualPlayers.value)
+    const rounds = new Scheduler(actualPlayers.value).generateFixtures()
+    results.value = rounds.flatMap(r => r.fixtures)
     setPhase(Phase.InProgress)
-}
-
-const generateFixtures = (players: Player[]) => {
-    const fixtures = new Scheduler(players).generateFixtures()
-
-    return fixtures
 }
 
 const updateResult = (newResult: Result) => {
