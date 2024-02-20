@@ -6,6 +6,8 @@ import type { Result } from "../models/Result"
 export class RoundRobinScheduler {
     frameTimeEstimateMins: number = 7
 
+    private generatedRounds?: Round[]
+
     constructor(private players: Player[]) {
 
     }
@@ -21,12 +23,16 @@ export class RoundRobinScheduler {
     }
 
     generateFixtures() {
+        if (this.generatedRounds !== undefined) {
+            throw "Fixtures have already been generated!"
+        }
+
         let attempts = 0
 
         const oddPlayerCount = this.players.length % 2 !== 0
         const numRounds = oddPlayerCount ? this.players.length : this.players.length - 1
 
-        const rounds = <Round[]>[]
+        this.generatedRounds = <Round[]>[]
 
         // use this to omit a random player each round, if we have an odd number of players
         const omissionIndexes = this.shuffle(this.players.map((_, i) => i))
@@ -42,7 +48,7 @@ export class RoundRobinScheduler {
         // 8. add the round to the list of rounds
         let r = 0
         while (r < numRounds && attempts < 10) {
-            const round = new Round("Round " + (r + 1))
+            const round = new Round(r + 1, "Round " + (r + 1))
 
             console.log(round.name)
 
@@ -59,7 +65,7 @@ export class RoundRobinScheduler {
             while (overallPool.length > 1) {
                 const playerA = this.getRandom(overallPool)
 
-                const existingOpponents = rounds.flatMap(r => r.getExistingOpponents(playerA))
+                const existingOpponents = this.generatedRounds.flatMap(r => r.getExistingOpponents(playerA))
 
                 const possibleOpponents = overallPool.filter(p => !existingOpponents.includes(p.id) && playerA.id !== p.id)
                 if (possibleOpponents.length <= 0) {
@@ -81,7 +87,7 @@ export class RoundRobinScheduler {
                 continue
             }
 
-            rounds.push(round)
+            this.generatedRounds.push(round)
             r++
         }
 
@@ -89,7 +95,20 @@ export class RoundRobinScheduler {
             console.log("Failed to generate rounds after 10 attempts!")
         }
 
-        return rounds
+        return this.generatedRounds
+    }
+
+    getCurrentRound() {
+        if (this.generatedRounds === undefined) {
+            return 0
+        }
+
+        const oldestInProgressRound = this.generatedRounds.find(r => r.fixtures.some(f => !f.finishTime))
+        if (!oldestInProgressRound) {
+            return 0
+        }
+
+        return oldestInProgressRound.index
     }
 
     getRandom<T>(arr: T[]) {
@@ -118,10 +137,12 @@ export class RoundRobinScheduler {
 }
 
 export class Round {
+    public index: number
     public name: string
     public fixtures: Result[]
 
-    constructor(name: string) {
+    constructor(index: number, name: string) {
+        this.index = index
         this.name = name
         this.fixtures = []
     }

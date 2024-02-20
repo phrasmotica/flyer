@@ -12,6 +12,7 @@ import type { Result } from "../models/Result"
 const props = defineProps<{
     players: Player[]
     raceTo: number
+    currentRound: number
     rounds: Round[]
 }>()
 
@@ -73,6 +74,7 @@ const hideModal = () => {
         v-if="round && selectedResult"
         :visible="showModal"
         :players="props.players"
+        :currentRound="props.currentRound"
         :round="round"
         :result="selectedResult"
         :raceTo="props.raceTo"
@@ -80,4 +82,3 @@ const hideModal = () => {
         @confirm="updateResult"
         @cancel="hideModal" />
 </template>
-../data/RoundRobinScheduler

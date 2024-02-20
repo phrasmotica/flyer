@@ -9,6 +9,7 @@ import type { Result } from "../models/Result"
 const props = defineProps<{
     visible: boolean
     players: Player[]
+    currentRound: number
     round: Round
     result: Result
     raceTo: number
@@ -55,7 +56,9 @@ const updateResult = (finish: boolean) => {
     emit('confirm', result, finish)
 }
 
-const disableStart = computed(() => false)
+const startButtonText = computed(() => props.round.index > props.currentRound ? `Waiting for round to start` : "Start")
+
+const disableStart = computed(() => props.round.index > props.currentRound)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
@@ -113,7 +116,7 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
             <Button v-if="!props.result.startTime"
                 class="mb-2"
                 type="button"
-                label="Start"
+                :label="startButtonText"
                 :disabled="disableStart"
                 @click="startFixture" />
 

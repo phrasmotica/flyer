@@ -43,6 +43,8 @@ const raceTo = ref(0)
 // TODO: use this to assign fixtures to tables
 const tableCount = ref(0)
 
+let scheduler: RoundRobinScheduler
+
 const rounds = ref<Round[]>([])
 const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
@@ -62,7 +64,10 @@ const start = (players: string[], r: number, t: number) => {
 
     raceTo.value = r
     tableCount.value = t
-    rounds.value = new RoundRobinScheduler(actualPlayers.value).generateFixtures()
+
+    scheduler = new RoundRobinScheduler(actualPlayers.value)
+    rounds.value = scheduler.generateFixtures()
+
     setPhase(Phase.InProgress)
 }
 
@@ -99,6 +104,7 @@ const restart = () => {
             <FixtureList v-if="display === Display.Fixtures"
                 :players="actualPlayers"
                 :raceTo="raceTo"
+                :currentRound="scheduler.getCurrentRound()"
                 :rounds="rounds"
                 @start="startFixture"
                 @updateResult="updateResult" />
