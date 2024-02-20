@@ -15,7 +15,7 @@ const emit = defineEmits<{
     reset: []
 }>()
 
-const playerCount = ref(4)
+const playerCount = ref(props.players.filter(p => p).length)
 const format = ref('Round Robin')
 const formatOptions = ref(['Round Robin'])
 const raceTo = ref(1)
