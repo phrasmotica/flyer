@@ -19,8 +19,8 @@ enum Phase {
 }
 
 enum Display {
-    List = "List",
-    Table = "Table",
+    Fixtures = "Fixtures",
+    HeadToHead = "Head-to-Head",
 }
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
@@ -46,7 +46,7 @@ const tableCount = ref(0)
 const rounds = ref<Round[]>([])
 const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
-const display = ref(Display.List)
+const display = ref(Display.Fixtures)
 
 const setPhase = (p: Phase) => phase.value = p
 
@@ -89,12 +89,12 @@ const restart = () => {
 
         <div v-else-if="phase === Phase.InProgress">
             <div class="p-fluid">
-                <SelectButton v-model="display" :options="[Display.List, Display.Table]" :allowEmpty="false" aria-labelledby="basic" />
+                <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
             </div>
 
-            <FixtureList v-if="display === Display.List" :players="actualPlayers" :raceTo="raceTo" :rounds="rounds" @updateResult="updateResult" />
+            <FixtureList v-if="display === Display.Fixtures" :players="actualPlayers" :raceTo="raceTo" :rounds="rounds" @updateResult="updateResult" />
 
-            <RoundRobinTable v-if="display === Display.Table" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+            <RoundRobinTable v-if="display === Display.HeadToHead" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
