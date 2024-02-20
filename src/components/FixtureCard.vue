@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ScoreCell from "./ScoreCell.vue"
+
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
@@ -11,18 +13,6 @@ const emit = defineEmits<{
     showResultModal: [result: Result]
 }>()
 
-const getResultClass = (result: Result) => {
-    if (result.finishTime) {
-        return "bg-primary"
-    }
-
-    if (result.startTime) {
-        return "in-progress"
-    }
-
-    return "bg-cyan-100"
-}
-
 const getPlayerName = (id: string) => {
     return props.players.find(p => p.id === id)?.name ?? id
 }
@@ -34,16 +24,7 @@ const getPlayerName = (id: string) => {
             {{ getPlayerName(props.result.scores[0].playerId) }}
         </div>
 
-        <div class="col-2 text-center cursor-pointer border-round-md"
-            :class="getResultClass(props.result)"
-            @click="() => emit('showResultModal', props.result)">
-            <span v-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
-                {{ props.result.scores.map(s => s.score).join("-") }}
-            </span>
-            <span v-else>
-                ?-?
-            </span>
-        </div>
+        <ScoreCell :result="props.result" @showResultModal="() => emit('showResultModal', props.result)" />
 
         <div class="col-5 text-right">
             {{ getPlayerName(props.result.scores[1].playerId) }}
