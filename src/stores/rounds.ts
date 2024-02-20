@@ -12,6 +12,15 @@ export const useRoundsStore = defineStore("rounds", () => {
 
     const remainingCount = computed(() => rounds.value.flatMap(r => r.fixtures).filter(f => !f.finishTime).length)
 
+    const currentRound = computed(() => {
+        const oldestInProgressRound = rounds.value.find(r => r.fixtures.some(f => !f.finishTime))
+        if (!oldestInProgressRound) {
+            return 0
+        }
+
+        return oldestInProgressRound.index
+    })
+
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
 
     const setRounds = (r: Round[]) => rounds.value = r
@@ -26,5 +35,5 @@ export const useRoundsStore = defineStore("rounds", () => {
 
     const clear = () => setRounds([])
 
-    return { rounds, results, remainingCount, getRound, setRounds, startFixture, updateResult, clear }
+    return { rounds, results, remainingCount, currentRound, getRound, setRounds, startFixture, updateResult, clear }
 })

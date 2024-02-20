@@ -10,7 +10,6 @@ import { useRoundsStore } from "../stores/rounds"
 
 const props = defineProps<{
     raceTo: number
-    currentRound: number
 }>()
 
 const roundsStore = useRoundsStore()
@@ -64,7 +63,6 @@ const hideModal = () => {
     <RecordResultModal
         v-if="round && selectedResult"
         :visible="showModal"
-        :currentRound="props.currentRound"
         :round="round"
         :result="selectedResult"
         :raceTo="props.raceTo"

@@ -113,8 +113,7 @@ const hideRestartModal = () => {
             </div> -->
 
             <FixtureList v-if="display === Display.Fixtures"
-                :raceTo="raceTo"
-                :currentRound="scheduler.getCurrentRound()" />
+                :raceTo="raceTo" />
 
             <!-- <RoundRobinTable v-if="display === Display.HeadToHead"
                 :players="actualPlayers"

@@ -6,10 +6,10 @@ import type { Round } from "../data/RoundRobinScheduler"
 import type { Result } from "../models/Result"
 
 import { usePlayersStore } from "../stores/players"
+import { useRoundsStore } from "../stores/rounds"
 
 const props = defineProps<{
     visible: boolean
-    currentRound: number
     round: Round
     result: Result
     raceTo: number
@@ -22,6 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const playersStore = usePlayersStore()
+const roundsStore = useRoundsStore()
 
 const visible = ref(props.visible)
 const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
@@ -58,9 +59,9 @@ const updateResult = (finish: boolean) => {
     emit('confirm', result, finish)
 }
 
-const startButtonText = computed(() => props.round.index > props.currentRound ? `Waiting for round to start` : "Start")
+const startButtonText = computed(() => props.round.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
 
-const disableStart = computed(() => props.round.index > props.currentRound)
+const disableStart = computed(() => props.round.index > roundsStore.currentRound)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
