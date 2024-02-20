@@ -3,16 +3,20 @@ import { computed, ref } from "vue"
 
 import RecordResultModal from "./RecordResultModal.vue"
 
+import type { Round } from "../data/RoundRobinScheduler"
+
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
 const props = defineProps<{
     players: Player[]
     raceTo: number
+    rounds: Round[]
     results: Result[]
 }>()
 
 const emit = defineEmits<{
+    start: [resultId: string]
     updateResult: [result: Result, finish: boolean]
 }>()
 
@@ -20,6 +24,7 @@ const selectedResult = ref<Result>()
 const showModal = ref(false)
 
 const resultsRemaining = computed(() => props.results.filter(r => !r.finishTime).length)
+const round = computed(() => props.rounds.find(r => r.fixtures.some(f => f.id === selectedResult.value?.id)))
 
 const hasResult = (player1: string, player2: string) => {
     return props.results.some(r => r.scores.some(s => s.playerId === player1) && r.scores.some(s => s.playerId === player2))
@@ -66,6 +71,13 @@ const selectForRecording = (p: Player, q: Player) => {
     selectedResult.value = getResult(p.id, q.id)
 
     showModal.value = true
+}
+
+const startFixture = () => {
+    if (selectedResult.value) {
+        emit('start', selectedResult.value.id)
+        hideModal()
+    }
 }
 
 const updateResult = (result: Result, finish: boolean) => {
@@ -118,11 +130,13 @@ const hideModal = () => {
     </DataTable>
 
     <RecordResultModal
-        v-if="selectedResult"
+        v-if="round && selectedResult"
         :visible="showModal"
         :players="props.players"
+        :round="round"
         :result="selectedResult"
         :raceTo="props.raceTo"
+        @start="startFixture"
         @confirm="updateResult"
         @cancel="hideModal" />
 </template>

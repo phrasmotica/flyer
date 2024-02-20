@@ -103,7 +103,13 @@ const restart = () => {
                 @start="startFixture"
                 @updateResult="updateResult" />
 
-            <RoundRobinTable v-if="display === Display.HeadToHead" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+            <RoundRobinTable v-if="display === Display.HeadToHead"
+                :players="actualPlayers"
+                :raceTo="raceTo"
+                :rounds="rounds"
+                :results="results"
+                @start="startFixture"
+                @updateResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
