@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from "uuid"
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
@@ -8,11 +7,10 @@ import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
-import { RoundRobinScheduler, type Round } from "../data/RoundRobinScheduler"
-
-import type { Result } from "../models/Result"
+import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 import { usePlayersStore } from "../stores/players"
+import { useRoundsStore } from "../stores/rounds"
 
 enum Phase {
     Setup,
@@ -47,8 +45,7 @@ const tableCount = ref(0)
 
 let scheduler: RoundRobinScheduler
 
-const rounds = ref<Round[]>([])
-const results = computed(() => rounds.value.flatMap(r => r.fixtures))
+const roundsStore = useRoundsStore()
 
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
@@ -61,26 +58,15 @@ const setName = (index: number, name: string) => {
 }
 
 const start = (players: string[], r: number, t: number) => {
-    playersStore.setPlayers(players.map(p => ({
-        id: uuidv4(),
-        name: p,
-    })))
+    playersStore.init(players)
 
     raceTo.value = r
     tableCount.value = t
 
     scheduler = new RoundRobinScheduler(playersStore.players)
-    rounds.value = scheduler.generateFixtures()
+    roundsStore.setRounds(scheduler.generateFixtures())
 
     setPhase(Phase.InProgress)
-}
-
-const startFixture = (id: string) => {
-    rounds.value = rounds.value.map(r => r.startFixture(id))
-}
-
-const updateResult = (newResult: Result, finish: boolean) => {
-    rounds.value = rounds.value.map(r => r.updateResult(newResult, finish))
 }
 
 const confirmFinish = () => {
@@ -104,7 +90,7 @@ const restart = () => {
     setPhase(Phase.Setup)
     playersStore.clear()
     raceTo.value = 0
-    rounds.value = []
+    roundsStore.clear()
 }
 
 const hideRestartModal = () => {
@@ -128,10 +114,7 @@ const hideRestartModal = () => {
 
             <FixtureList v-if="display === Display.Fixtures"
                 :raceTo="raceTo"
-                :currentRound="scheduler.getCurrentRound()"
-                :rounds="rounds"
-                @start="startFixture"
-                @updateResult="updateResult" />
+                :currentRound="scheduler.getCurrentRound()" />
 
             <!-- <RoundRobinTable v-if="display === Display.HeadToHead"
                 :players="actualPlayers"
@@ -154,7 +137,7 @@ const hideRestartModal = () => {
         </div>
 
         <div v-else-if="phase === Phase.Finished">
-            <ResultsTable :results="results" />
+            <ResultsTable />
 
             <div class="p-fluid mt-2">
                 <Button label="Restart" @click="confirmRestart" />
@@ -187,5 +170,3 @@ const hideRestartModal = () => {
     }
 }
 </style>
-../data/RoundRobinScheduler
-../stores/players

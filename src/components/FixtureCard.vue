@@ -33,4 +33,3 @@ const playersStore = usePlayersStore()
         </div>
     </div>
 </template>
-../stores/players

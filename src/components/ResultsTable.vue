@@ -4,12 +4,10 @@ import { computed } from "vue"
 import type { Result } from "../models/Result"
 
 import { usePlayersStore } from "../stores/players"
-
-const props = defineProps<{
-    results: Result[]
-}>()
+import { useRoundsStore } from "../stores/rounds"
 
 const playersStore = usePlayersStore()
+const roundsStore = useRoundsStore()
 
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {
@@ -52,10 +50,10 @@ const tableData = computed(() =>
     playersStore.players.map((p, i) => ({
         rank: i + 1,
         name: p.name,
-        wins: getWins(p.id, props.results),
-        draws: getDraws(p.id, props.results),
-        losses: getLosses(p.id, props.results),
-        incomplete: isIncomplete(p.id, props.results),
+        wins: getWins(p.id, roundsStore.results),
+        draws: getDraws(p.id, roundsStore.results),
+        losses: getLosses(p.id, roundsStore.results),
+        incomplete: isIncomplete(p.id, roundsStore.results),
     })).sort((p, q) => {
         if (p.wins !== q.wins) {
             return q.wins - p.wins
@@ -102,4 +100,3 @@ h3 {
     margin: 0px;
 }
 </style>
-../stores/players

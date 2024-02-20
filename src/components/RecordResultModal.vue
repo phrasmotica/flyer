@@ -142,4 +142,3 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
         </div>
     </Dialog>
 </template>
-../stores/players
