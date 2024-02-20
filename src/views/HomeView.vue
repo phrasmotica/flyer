@@ -7,7 +7,7 @@ import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import RoundRobinTable from "../components/RoundRobinTable.vue"
 
-import { Scheduler } from "../data/Scheduler"
+import { Scheduler, type Round } from "../data/Scheduler"
 
 import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
@@ -39,6 +39,11 @@ const players = ref(defaultPlayers)
 
 const actualPlayers = ref<Player[]>([])
 const raceTo = ref(0)
+
+// TODO: turn Round into a class that can do all the result-recording behind the scenes
+const rounds = ref<Round[]>([])
+
+// TODO: remove this
 const results = ref<Result[]>([])
 
 const display = ref(Display.Table)
@@ -56,8 +61,8 @@ const start = (players: string[], r: number) => {
     }))
 
     raceTo.value = r
-    const rounds = new Scheduler(actualPlayers.value).generateFixtures()
-    results.value = rounds.flatMap(r => r.fixtures)
+    rounds.value = new Scheduler(actualPlayers.value).generateRoundRobinFixtures()
+    results.value = rounds.value.flatMap(r => r.fixtures)
     setPhase(Phase.InProgress)
 }
 
@@ -69,12 +74,22 @@ const updateResult = (newResult: Result) => {
     else {
         results.value = [...results.value, newResult]
     }
+
+    rounds.value = rounds.value.map(r => {
+        const idx = r.fixtures.findIndex(f => f.id === newResult.id)
+        if (idx >= 0) {
+            r.fixtures[idx] = newResult
+        }
+
+        return r
+    })
 }
 
 const restart = () => {
     setPhase(Phase.Setup)
     actualPlayers.value = []
     raceTo.value = 0
+    rounds.value = []
     results.value = []
 }
 </script>
@@ -95,7 +110,7 @@ const restart = () => {
 
             <RoundRobinTable v-if="display === Display.Table" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
 
-            <FixtureList v-if="display === Display.List" :players="actualPlayers" :raceTo="raceTo" :results="results" @updateResult="updateResult" />
+            <FixtureList v-if="display === Display.List" :players="actualPlayers" :raceTo="raceTo" :rounds="rounds" @updateResult="updateResult" />
 
             <div class="p-fluid mt-2">
                 <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
