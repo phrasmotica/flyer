@@ -43,7 +43,6 @@ const raceTo = ref(0)
 // TODO: use this to assign fixtures to tables
 const tableCount = ref(0)
 
-// TODO: turn Round into a class that can do all the result-recording behind the scenes
 const rounds = ref<Round[]>([])
 const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
@@ -68,14 +67,7 @@ const start = (players: string[], r: number, t: number) => {
 }
 
 const updateResult = (newResult: Result) => {
-    rounds.value = rounds.value.map(r => {
-        const idx = r.fixtures.findIndex(f => f.id === newResult.id)
-        if (idx >= 0) {
-            r.fixtures[idx] = newResult
-        }
-
-        return r
-    })
+    rounds.value = rounds.value.map(r => r.updateResult(newResult))
 }
 
 const restart = () => {

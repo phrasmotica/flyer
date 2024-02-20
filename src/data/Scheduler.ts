@@ -139,6 +139,15 @@ export class Round {
         })
     }
 
+    updateResult(newResult: Result) {
+        const idx = this.fixtures.findIndex(f => f.id === newResult.id)
+        if (idx >= 0) {
+            this.fixtures[idx] = newResult
+        }
+
+        return this
+    }
+
     getExistingFixtures(player: Player) {
         return this.fixtures.filter(f => f.scores.some(s => s.playerId === player.id))
     }
