@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 
-import PlayerDropdown from "./PlayerDropdown.vue"
-
 import type { Round } from "../data/RoundRobinScheduler"
 
 import type { Player } from "../models/Player"
@@ -80,19 +78,18 @@ const disableFinish = computed(() => {
     return false
 })
 
-const description = computed(() => props.result.scores.map(s => {
-    const player = props.players.find(p => p.id === s.playerId)!
-    return player.name
-}).join(" v "))
+const getPlayerName = (id: string) => props.players.find(p => p.id === id)?.name
+
+const description = computed(() => props.result.scores.map(s => getPlayerName(s.playerId)!).join(" v "))
 
 const header = computed(() => `${props.round.name} - ${description.value}`)
 </script>
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header">
-        <div v-if="props.result.startTime" v-for="p, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
-            <div class="font-bold p-fluid mb-2 md:mb-0">
-                <PlayerDropdown :players="playerOptions" :selectedPlayerId="p" @select="id => setPlayer(i, id)" />
+        <div v-if="props.result.startTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+            <div class="font-bold">
+                {{ getPlayerName(id) }}
             </div>
 
             <div class="md:ml-3">
