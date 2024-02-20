@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 import PlayerNameInput from "../components/PlayerNameInput.vue"
+
+import { Scheduler } from "../data/Scheduler"
 
 const props = defineProps<{
     players: string[]
 }>()
 
 const emit = defineEmits<{
-    start: [players: string[], raceTo: number]
+    start: [players: string[], raceTo: number, tableCount: number]
     setName: [index: number, name: string]
     reset: []
 }>()
@@ -18,6 +20,9 @@ const format = ref('Round Robin')
 const formatOptions = ref(['Round Robin'])
 const raceTo = ref(1)
 const tableCount = ref(1)
+
+const estimatedDuration = computed(() => new Scheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
+const durationPerFrame = new Scheduler([]).frameTimeEstimateMins
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -32,7 +37,7 @@ onMounted(() => {
 
 const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
 
-const start = () => emit('start', actualPlayers.value, raceTo.value)
+const start = () => emit('start', actualPlayers.value, raceTo.value, tableCount.value)
 </script>
 
 <template>
@@ -73,6 +78,10 @@ const start = () => emit('start', actualPlayers.value, raceTo.value)
     <!-- TODO: allow selecting round-robin (existing) or knockout format (implement that!) -->
     <div class="p-fluid mb-2">
         <SelectButton v-model="format" :options="formatOptions" :allowEmpty="false" aria-labelledby="basic" />
+    </div>
+
+    <div class="p-fluid mb-2">
+        <p>Estimated duration: {{ estimatedDuration }} min(s) <em>({{ durationPerFrame }} min(s) per frame)</em></p>
     </div>
 
     <h1 class="border-bottom-1 mb-2">Players</h1>

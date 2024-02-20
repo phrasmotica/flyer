@@ -40,6 +40,9 @@ const players = ref(defaultPlayers)
 const actualPlayers = ref<Player[]>([])
 const raceTo = ref(0)
 
+// TODO: use this to assign fixtures to tables
+const tableCount = ref(0)
+
 // TODO: turn Round into a class that can do all the result-recording behind the scenes
 const rounds = ref<Round[]>([])
 const results = computed(() => rounds.value.flatMap(r => r.fixtures))
@@ -52,13 +55,14 @@ const setName = (index: number, name: string) => {
     players.value = players.value.map((v, i) => i === index ? name : v)
 }
 
-const start = (players: string[], r: number) => {
+const start = (players: string[], r: number, t: number) => {
     actualPlayers.value = players.map(p => ({
         id: uuidv4(),
         name: p,
     }))
 
     raceTo.value = r
+    tableCount.value = t
     rounds.value = new Scheduler(actualPlayers.value).generateRoundRobinFixtures()
     setPhase(Phase.InProgress)
 }

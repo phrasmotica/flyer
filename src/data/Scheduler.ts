@@ -4,8 +4,20 @@ import type { Player } from "../models/Player"
 import type { Result } from "../models/Result"
 
 export class Scheduler {
+    frameTimeEstimateMins: number = 7
+
     constructor(private players: Player[]) {
 
+    }
+
+    estimateDuration(players: number, raceTo: number, tables: number) {
+        // assumes perfect parallelisation across tables, i.e. does not account
+        // for a player making their next opponent wait for their slow match
+        const numFixtures = players * (players - 1) / 2
+        const maxFrames = 2 * raceTo - 1
+        const meanFrames = (raceTo + maxFrames) / 2
+        const expectedFramesTotal = numFixtures * meanFrames
+        return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tables)
     }
 
     generateRoundRobinFixtures() {
