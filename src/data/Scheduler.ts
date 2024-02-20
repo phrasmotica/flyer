@@ -21,6 +21,8 @@ export class Scheduler {
     }
 
     generateRoundRobinFixtures() {
+        let attempts = 0
+
         const oddPlayerCount = this.players.length % 2 !== 0
         const numRounds = oddPlayerCount ? this.players.length : this.players.length - 1
 
@@ -39,8 +41,10 @@ export class Scheduler {
         // 7. repeat steps 1-5 until the overall pool has fewer than 2 players
         // 8. add the round to the list of rounds
         let r = 0
-        while (r < numRounds) {
-            console.log("Round " + (r + 1))
+        while (r < numRounds && attempts < 10) {
+            const round = new Round("Round " + (r + 1))
+
+            console.log(round.name)
 
             let retry = false
 
@@ -52,13 +56,10 @@ export class Scheduler {
                 overallPool.splice(omissionIndexes[r], 1)
             }
 
-            const fixtures = <Result[]>[]
-
             while (overallPool.length > 1) {
                 const playerA = this.getRandom(overallPool)
 
-                const existingFixtures = rounds.flatMap(r => r.fixtures).filter(f => f.scores.some(s => s.playerId === playerA.id))
-                const existingOpponents = [...new Set(existingFixtures.map(f => f.scores.map(s => s.playerId).filter(id => id !== playerA.id)).flatMap(s => s))]
+                const existingOpponents = rounds.flatMap(r => r.getExistingOpponents(playerA))
 
                 const possibleOpponents = overallPool.filter(p => !existingOpponents.includes(p.id) && playerA.id !== p.id)
                 if (possibleOpponents.length <= 0) {
@@ -70,34 +71,22 @@ export class Scheduler {
 
                 const playerB = this.getRandom(possibleOpponents)
 
-                console.log(playerA.name + " v " + playerB.name)
-
-                fixtures.push({
-                    id: uuidv4(),
-                    scores: [
-                        {
-                            playerId: playerA.id,
-                            score: 0,
-                        },
-                        {
-                            playerId: playerB.id,
-                            score: 0,
-                        },
-                    ],
-                    startTime: null,
-                })
+                round.addFixture([playerA, playerB])
 
                 overallPool = overallPool.filter(p => ![playerA.id, playerB.id].includes(p.id))
             }
 
             if (retry) {
+                attempts++
                 continue
             }
 
-            rounds.push({
-                name: `Round ${++r}`,
-                fixtures: fixtures,
-            })
+            rounds.push(round)
+            r++
+        }
+
+        if (attempts >= 10) {
+            console.log("Failed to generate rounds after 10 attempts!")
         }
 
         return rounds
@@ -128,7 +117,34 @@ export class Scheduler {
     }
 }
 
-export interface Round {
-    name: string
-    fixtures: Result[]
+export class Round {
+    public name: string
+    public fixtures: Result[]
+
+    constructor(name: string) {
+        this.name = name
+        this.fixtures = []
+    }
+
+    addFixture(players: Player[]) {
+        console.log(players.map(p => p.name).join(" v "))
+
+        this.fixtures.push({
+            id: uuidv4(),
+            scores: players.map(p => ({
+                playerId: p.id,
+                score: 0,
+            })),
+            startTime: null,
+        })
+    }
+
+    getExistingFixtures(player: Player) {
+        return this.fixtures.filter(f => f.scores.some(s => s.playerId === player.id))
+    }
+
+    getExistingOpponents(player: Player) {
+        const existingFixtures = this.getExistingFixtures(player)
+        return [...new Set(existingFixtures.map(f => f.scores.map(s => s.playerId).filter(id => id !== player.id)).flatMap(s => s))]
+    }
 }
