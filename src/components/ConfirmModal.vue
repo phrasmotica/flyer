@@ -3,10 +3,12 @@ import { ref, watch } from "vue"
 
 const props = defineProps<{
     visible: boolean
+    header: string
+    message: string
 }>()
 
 const emit = defineEmits<{
-    start: []
+    confirm: []
     cancel: []
 }>()
 
@@ -18,9 +20,9 @@ watch(props, () => {
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal header="Start Flyer">
+    <Dialog v-model:visible="visible" modal :header="props.header">
         <div class="font-bold mb-2">
-            Are you ready to start the flyer?
+            {{ props.message }}
         </div>
 
         <div class="p-fluid">
@@ -28,7 +30,7 @@ watch(props, () => {
                 class="mb-2"
                 type="button"
                 label="Yes"
-                @click="emit('start')" />
+                @click="emit('confirm')" />
 
             <Button
                 type="button"

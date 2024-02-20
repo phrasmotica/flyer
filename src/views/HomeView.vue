@@ -2,10 +2,11 @@
 import { v4 as uuidv4 } from "uuid"
 import { computed, ref } from "vue"
 
+import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
-import RoundRobinTable from "../components/RoundRobinTable.vue"
+// import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import { RoundRobinScheduler, type Round } from "../data/RoundRobinScheduler"
 
@@ -49,6 +50,7 @@ const rounds = ref<Round[]>([])
 const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
 const display = ref(Display.Fixtures)
+const showModal = ref(false)
 
 const setPhase = (p: Phase) => phase.value = p
 
@@ -77,6 +79,19 @@ const startFixture = (id: string) => {
 
 const updateResult = (newResult: Result, finish: boolean) => {
     rounds.value = rounds.value.map(r => r.updateResult(newResult, finish))
+}
+
+const confirmFinish = () => {
+    showModal.value = true
+}
+
+const finish = () => {
+    setPhase(Phase.Finished)
+    hideModal()
+}
+
+const hideModal = () => {
+    showModal.value = false
 }
 
 const restart = () => {
@@ -118,8 +133,15 @@ const restart = () => {
                 @updateResult="updateResult" /> -->
 
             <div class="p-fluid mt-2">
-                <Button label="Finish" @click="() => setPhase(Phase.Finished)" />
+                <Button label="Finish" @click="confirmFinish" />
             </div>
+
+            <ConfirmModal
+                :visible="showModal"
+                header="Finish Flyer"
+                message="Are you ready to finish the flyer?"
+                @confirm="finish"
+                @cancel="hideModal" />
         </div>
 
         <div v-else-if="phase === Phase.Finished">

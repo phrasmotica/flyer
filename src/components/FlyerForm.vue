@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 
+import ConfirmModal from "./ConfirmModal.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
-import ConfirmStartModal from "./ConfirmStartModal.vue"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
@@ -128,9 +128,11 @@ const hideModal = () => {
         <Button label="Start" :disabled="actualPlayers.some(p => !p)" @click="confirmStart" />
     </div>
 
-    <ConfirmStartModal
+    <ConfirmModal
         :visible="showModal"
-        @start="start"
+        header="Start Flyer"
+        message="Are you ready to start the flyer?"
+        @confirm="start"
         @cancel="hideModal" />
 </template>
 
