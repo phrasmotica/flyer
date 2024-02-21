@@ -131,6 +131,7 @@ const hideModal = () => {
         :round="round"
         :result="selectedResult"
         :raceTo="props.raceTo"
+        :waitForPreviousRounds="false"
         @start="startFixture"
         @confirm="updateResult"
         @cancel="hideModal" />

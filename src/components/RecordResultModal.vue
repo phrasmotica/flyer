@@ -13,6 +13,7 @@ const props = defineProps<{
     round: Round
     result: Result
     raceTo: number
+    waitForPreviousRounds: boolean
 }>()
 
 const emit = defineEmits<{
@@ -59,9 +60,9 @@ const updateResult = (finish: boolean) => {
     emit('confirm', result, finish)
 }
 
-const startButtonText = computed(() => props.round.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
+const startButtonText = computed(() => props.waitForPreviousRounds && props.round.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
 
-const disableStart = computed(() => props.round.index > roundsStore.currentRound)
+const disableStart = computed(() => props.waitForPreviousRounds && props.round.index > roundsStore.currentRound)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
