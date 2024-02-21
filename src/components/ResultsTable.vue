@@ -47,8 +47,7 @@ const isIncomplete = (player: string, results: Result[]) => {
 }
 
 const tableData = computed(() =>
-    playersStore.players.map((p, i) => ({
-        rank: i + 1,
+    playersStore.players.map(p => ({
         name: p.name,
         wins: getWins(p.id, roundsStore.results),
         draws: getDraws(p.id, roundsStore.results),
@@ -64,7 +63,10 @@ const tableData = computed(() =>
         }
 
         return 0
-    })
+    }).map((x, i) => ({
+        rank: i + 1,
+        ...x
+    }))
 )
 
 const rowClass = (data: any) => {
