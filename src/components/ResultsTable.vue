@@ -46,14 +46,16 @@ const isIncomplete = (player: string, results: Result[]) => {
     return results.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
 }
 
-const tableData = computed(() =>
-    playersStore.players.map(p => ({
+const tableData = computed(() => {
+    const data = playersStore.players.map(p => ({
         name: p.name,
         wins: getWins(p.id, roundsStore.results),
         draws: getDraws(p.id, roundsStore.results),
         losses: getLosses(p.id, roundsStore.results),
         incomplete: isIncomplete(p.id, roundsStore.results),
-    })).sort((p, q) => {
+    }))
+
+    return data.sort((p, q) => {
         if (p.wins !== q.wins) {
             return q.wins - p.wins
         }
@@ -63,11 +65,8 @@ const tableData = computed(() =>
         }
 
         return 0
-    }).map((x, i) => ({
-        rank: i + 1,
-        ...x
-    }))
-)
+    })
+})
 
 const rowClass = (data: any) => {
     return [
@@ -85,7 +84,12 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
     <h1 class="border-bottom-1">Results</h1>
 
     <DataTable :value="tableData" :rowClass="rowClass">
-        <Column field="rank" header="#"></Column>
+        <Column header="#">
+            <template #body="slotProps">
+                {{ slotProps.index + 1 }}
+            </template>
+        </Column>
+
         <Column field="name" header="Name"></Column>
         <Column field="wins" header="Won"></Column>
         <Column field="draws" header="Drew"></Column>
