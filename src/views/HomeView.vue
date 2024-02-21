@@ -51,7 +51,10 @@ const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
 const showRestartModal = ref(false)
 
-const setPhase = (p: Phase) => phase.value = p
+const setPhase = (p: Phase) => {
+    phase.value = p
+    window.scroll(0, 0)
+}
 
 const setName = (index: number, name: string) => {
     players.value = players.value.map((v, i) => i === index ? name : v)
