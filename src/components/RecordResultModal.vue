@@ -143,3 +143,10 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
         </div>
     </Dialog>
 </template>
+
+<style>
+.p-dialog {
+    width: min(100%, 540px);
+    margin: 0% 5%;
+}
+</style>
