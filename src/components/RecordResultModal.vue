@@ -84,7 +84,7 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="header">
+    <Dialog v-model:visible="visible" modal :header="header" @hide="emit('cancel')">
         <div v-if="props.result.finishTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold">
                 {{ playersStore.getName(id) }}: {{ scores[i] }}

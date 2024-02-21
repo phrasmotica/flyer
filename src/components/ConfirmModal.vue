@@ -20,7 +20,7 @@ watch(props, () => {
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="props.header">
+    <Dialog v-model:visible="visible" modal :header="props.header" @hide="emit('cancel')">
         <div class="font-bold mb-2">
             {{ props.message }}
         </div>

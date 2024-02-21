@@ -18,9 +18,6 @@ const round = computed(() => roundsStore.getRound(selectedResult.value?.id || ""
 const selectedResult = ref<Result>()
 const showModal = ref(false)
 
-// TODO: fix bug where clicking on a fixture's score, closing the modal via the
-// 'X' button, then clicking on the same fixture's score doesn't cause the
-// modal to open...
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
     showModal.value = true
