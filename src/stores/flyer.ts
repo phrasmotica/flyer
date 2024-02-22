@@ -1,5 +1,5 @@
 import { computed, ref } from "vue"
-import dayjs from "dayjs"
+import { differenceInMinutes } from "date-fns"
 import { defineStore } from "pinia"
 
 import { Flyer } from "../data/Flyer"
@@ -30,7 +30,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             return null
         }
 
-        return dayjs(flyer.value.finishTime).diff(dayjs(flyer.value.startTime), "minutes")
+        return differenceInMinutes(new Date(flyer.value.finishTime), (new Date(flyer.value.startTime)))
     })
 
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
