@@ -103,8 +103,13 @@ const description = computed(() => props.result.scores.map(s => playersStore.get
 const header = computed(() => `${round.value.name} - ${description.value}`)
 
 const fixtureDuration = computed(() => {
-    if (!props.result.startTime || !props.result.finishTime) {
+    if (!props.result.startTime) {
         return null
+    }
+
+    if (!props.result.finishTime) {
+        // TODO: make this update in real time, by using setInterval()
+        return differenceInMinutes(new Date(), (new Date(props.result.startTime)))
     }
 
     return differenceInMinutes(new Date(props.result.finishTime), (new Date(props.result.startTime)))
@@ -121,25 +126,29 @@ const fixtureDuration = computed(() => {
             </div>
         </div>
 
-        <div v-else-if="props.result.startTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
-            <div class="font-bold">
-                {{ playersStore.getName(id) }}
-            </div>
+        <div v-else-if="props.result.startTime">
+            <p>Started {{ fixtureDuration }} minute(s) ago</p>
 
-            <div class="md:ml-3">
-                <InputNumber
-                    showButtons
-                    buttonLayout="horizontal"
-                    :modelValue="scores[i]"
-                    :min="0" :max="settingsStore.raceTo"
-                    @update:modelValue="v => setScore(i, v)">
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
+            <div v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+                <div class="font-bold">
+                    {{ playersStore.getName(id) }}
+                </div>
+
+                <div class="md:ml-3">
+                    <InputNumber
+                        showButtons
+                        buttonLayout="horizontal"
+                        :modelValue="scores[i]"
+                        :min="0" :max="settingsStore.raceTo"
+                        @update:modelValue="v => setScore(i, v)">
+                        <template #incrementbuttonicon>
+                            <span class="pi pi-plus" />
+                        </template>
+                        <template #decrementbuttonicon>
+                            <span class="pi pi-minus" />
+                        </template>
+                    </InputNumber>
+                </div>
             </div>
         </div>
 
