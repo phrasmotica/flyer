@@ -9,6 +9,7 @@ import 'primeicons/primeicons.css'
 import PrimeVue from 'primevue/config'
 
 import Button from "primevue/button"
+import Checkbox from 'primevue/checkbox'
 import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import Dialog from 'primevue/dialog'
@@ -27,6 +28,7 @@ app.use(router)
 app.use(PrimeVue)
 
 app.component("Button", Button)
+app.component("Checkbox", Checkbox)
 app.component("Column", Column)
 app.component("DataTable", DataTable)
 app.component("Dialog", Dialog)

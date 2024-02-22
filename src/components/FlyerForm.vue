@@ -80,6 +80,11 @@ const hideModal = () => {
         <SelectButton v-model="flyerStore.format" :options="flyerStore.formatOptions" :allowEmpty="false" aria-labelledby="basic" />
     </div>
 
+    <div class="p-fluid flex justify-content-between mb-2">
+        <label for="requireCompletedRoundsCheckbox">Require completed rounds</label>
+        <Checkbox inputId="requireCompletedRoundsCheckbox" v-model="flyerStore.requireCompletedRounds" :binary="true" />
+    </div>
+
     <div class="p-fluid mb-2">
         <p>Estimated duration: {{ flyerStore.estimatedDuration }} min(s) <em>({{ flyerStore.durationPerFrame }} min(s) per frame)</em></p>
     </div>
