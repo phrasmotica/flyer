@@ -3,9 +3,9 @@ import { computed, ref, watch } from "vue"
 
 import type { Result } from "../data/Result"
 
-import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"
+import { useSettingsStore } from "../stores/settings"
 
 const props = defineProps<{
     visible: boolean
@@ -16,7 +16,7 @@ const emit = defineEmits<{
     hide: []
 }>()
 
-const flyerStore = useFlyerStore()
+const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
 const roundsStore = useRoundsStore()
 
@@ -62,9 +62,9 @@ const updateResult = (finish: boolean) => {
     emit('hide')
 }
 
-const startButtonText = computed(() => flyerStore.requireCompletedRounds && round.value.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
+const startButtonText = computed(() => settingsStore.requireCompletedRounds && round.value.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
 
-const disableStart = computed(() => flyerStore.requireCompletedRounds && round.value.index > roundsStore.currentRound)
+const disableStart = computed(() => settingsStore.requireCompletedRounds && round.value.index > roundsStore.currentRound)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
@@ -72,7 +72,7 @@ const disableFinish = computed(() => {
         return true
     }
 
-    if (scores.value.every(s => s < flyerStore.raceTo)) {
+    if (scores.value.every(s => s < settingsStore.raceTo)) {
         return true
     }
 
@@ -104,7 +104,7 @@ const header = computed(() => `${round.value.name} - ${description.value}`)
                     showButtons
                     buttonLayout="horizontal"
                     :modelValue="scores[i]"
-                    :min="0" :max="flyerStore.raceTo"
+                    :min="0" :max="settingsStore.raceTo"
                     @update:modelValue="v => setScore(i, v)">
                     <template #incrementbuttonicon>
                         <span class="pi pi-plus" />

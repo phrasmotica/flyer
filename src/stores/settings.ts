@@ -14,7 +14,7 @@ if (defaultPlayers.length < 10) {
     defaultPlayers = [...defaultPlayers, ...new Array(10 - defaultPlayers.length).fill("")]
 }
 
-export const useFlyerStore = defineStore("flyer", () => {
+export const useSettingsStore = defineStore("settings", () => {
     const playerCount = ref(defaultPlayers.filter(p => p).length)
     const players = ref(defaultPlayers)
 

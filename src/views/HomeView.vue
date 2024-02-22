@@ -9,9 +9,9 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
-import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"
+import { useSettingsStore } from "../stores/settings"
 
 enum Phase {
     Setup,
@@ -24,7 +24,7 @@ enum Display {
     HeadToHead = "Head-to-Head",
 }
 
-const flyerStore = useFlyerStore()
+const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
 const roundsStore = useRoundsStore()
 
@@ -39,7 +39,7 @@ const setPhase = (p: Phase) => {
 }
 
 const start = () => {
-    playersStore.init(flyerStore.actualPlayers)
+    playersStore.init(settingsStore.actualPlayers)
 
     const scheduler = new RoundRobinScheduler(playersStore.players)
     roundsStore.setRounds(scheduler.generateFixtures())
@@ -101,7 +101,7 @@ const hideRestartModal = () => {
             <div class="p-fluid mt-2">
                 <Button
                     label="Finish"
-                    :disabled="!flyerStore.allowEarlyFinish && roundsStore.remainingCount > 0"
+                    :disabled="!settingsStore.allowEarlyFinish && roundsStore.remainingCount > 0"
                     @click="confirmFinish" />
             </div>
 

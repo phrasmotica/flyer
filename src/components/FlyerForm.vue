@@ -4,9 +4,9 @@ import { onMounted, ref } from "vue"
 import ConfirmModal from "./ConfirmModal.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
-import { useFlyerStore } from "../stores/flyer"
+import { useSettingsStore } from "../stores/settings"
 
-const flyerStore = useFlyerStore()
+const settingsStore = useSettingsStore()
 
 const emit = defineEmits<{
     start: []
@@ -44,7 +44,7 @@ const hideModal = () => {
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="flyerStore.raceTo"
+            v-model="settingsStore.raceTo"
             showButtons buttonLayout="horizontal"
             :min="1" :max="5"
             prefix="Races to "
@@ -60,9 +60,9 @@ const hideModal = () => {
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="flyerStore.tableCount"
+            v-model="settingsStore.tableCount"
             showButtons buttonLayout="horizontal"
-            :min="1" :max="Math.floor(flyerStore.playerCount / 2)"
+            :min="1" :max="Math.floor(settingsStore.playerCount / 2)"
             suffix=" table(s)"
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
@@ -76,22 +76,22 @@ const hideModal = () => {
 
     <!-- TODO: allow selecting round-robin (existing) or knockout format (implement that!) -->
     <div class="p-fluid mb-2">
-        <SelectButton v-model="flyerStore.format" :options="flyerStore.formatOptions" :allowEmpty="false" aria-labelledby="basic" />
+        <SelectButton v-model="settingsStore.format" :options="settingsStore.formatOptions" :allowEmpty="false" aria-labelledby="basic" />
     </div>
 
     <div class="p-fluid flex justify-content-between mb-2">
         <label for="requireCompletedRoundsCheckbox">Require completed rounds</label>
-        <Checkbox inputId="requireCompletedRoundsCheckbox" v-model="flyerStore.requireCompletedRounds" :binary="true" />
+        <Checkbox inputId="requireCompletedRoundsCheckbox" v-model="settingsStore.requireCompletedRounds" :binary="true" />
     </div>
 
     <div class="p-fluid flex justify-content-between mb-2">
         <label for="allowEarlyFinishCheckbox">Allow early finish</label>
-        <Checkbox inputId="allowEarlyFinishCheckbox" v-model="flyerStore.allowEarlyFinish" :binary="true" />
+        <Checkbox inputId="allowEarlyFinishCheckbox" v-model="settingsStore.allowEarlyFinish" :binary="true" />
     </div>
 
     <div class="p-fluid border-top-1 mb-2">
         <p>
-            Estimated duration: <span class="font-bold">{{ flyerStore.estimatedDuration }} min(s)</span> <em>({{ flyerStore.durationPerFrame }} min(s) per frame)</em>
+            Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
         </p>
     </div>
 
@@ -99,7 +99,7 @@ const hideModal = () => {
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="flyerStore.playerCount"
+            v-model="settingsStore.playerCount"
             showButtons buttonLayout="horizontal"
             :min="2" :max="10"
             suffix=" players"
@@ -113,17 +113,17 @@ const hideModal = () => {
         </InputNumber>
     </div>
 
-    <div v-for="p, i in flyerStore.players">
+    <div v-for="p, i in settingsStore.players">
         <PlayerNameInput
             class="mb-2"
             :placeholder="'Player ' + (i + 1)"
-            :disabled="i >= flyerStore.playerCount"
+            :disabled="i >= settingsStore.playerCount"
             :name="p"
-            @setName="n => flyerStore.setName(i, n)" />
+            @setName="n => settingsStore.setName(i, n)" />
     </div>
 
     <div class="p-fluid">
-        <Button label="Start" :disabled="flyerStore.isInvalid" @click="confirmStart" />
+        <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
     </div>
 
     <ConfirmModal
