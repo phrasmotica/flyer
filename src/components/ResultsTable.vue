@@ -3,11 +3,11 @@ import { computed } from "vue"
 
 import type { Result } from "../data/Result"
 
+import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
-import { useRoundsStore } from "../stores/rounds"
 
 const playersStore = usePlayersStore()
-const roundsStore = useRoundsStore()
+const roundsStore = useFlyerStore()
 
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {

@@ -3,8 +3,8 @@ import { computed, ref, watch } from "vue"
 
 import type { Result } from "../data/Result"
 
+import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
-import { useRoundsStore } from "../stores/rounds"
 import { useSettingsStore } from "../stores/settings"
 
 const props = defineProps<{
@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
-const roundsStore = useRoundsStore()
+const roundsStore = useFlyerStore()
 
 const visible = ref(props.visible)
 const selectedPlayers = ref(props.result.scores.map(r => r.playerId))

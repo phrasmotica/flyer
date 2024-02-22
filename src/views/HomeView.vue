@@ -9,8 +9,8 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
+import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
-import { useRoundsStore } from "../stores/rounds"
 import { useSettingsStore } from "../stores/settings"
 
 enum Phase {
@@ -26,7 +26,7 @@ enum Display {
 
 const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
-const roundsStore = useRoundsStore()
+const roundsStore = useFlyerStore()
 
 const phase = ref(Phase.Setup)
 const display = ref(Display.Fixtures)

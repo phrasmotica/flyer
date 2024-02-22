@@ -6,7 +6,7 @@ import { Flyer } from "../data/Flyer"
 import type { Result } from "../data/Result"
 import type { Round } from "../data/Round"
 
-export const useRoundsStore = defineStore("rounds", () => {
+export const useFlyerStore = defineStore("flyer", () => {
     const flyer = ref<Flyer>()
 
     const rounds = computed(() => flyer.value?.rounds ?? [])

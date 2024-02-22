@@ -6,9 +6,9 @@ import RecordResultModal from "./RecordResultModal.vue"
 
 import type { Result } from "../data/Result"
 
-import { useRoundsStore } from "../stores/rounds"
+import { useFlyerStore } from "../stores/flyer"
 
-const roundsStore = useRoundsStore()
+const roundsStore = useFlyerStore()
 
 const selectedResult = ref<Result>()
 const showModal = ref(false)
