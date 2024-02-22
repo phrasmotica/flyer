@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ScoreCell from "./ScoreCell.vue"
 
-import type { Result } from "../models/Result"
+import type { Result } from "../data/Result"
 
 import { usePlayersStore } from "../stores/players"
 

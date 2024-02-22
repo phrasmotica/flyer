@@ -4,7 +4,7 @@ import { ref } from "vue"
 import FixtureCard from "./FixtureCard.vue"
 import RecordResultModal from "./RecordResultModal.vue"
 
-import type { Result } from "../models/Result"
+import type { Result } from "../data/Result"
 
 import { useRoundsStore } from "../stores/rounds"
 

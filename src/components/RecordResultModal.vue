@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 
-import type { Result } from "../models/Result"
+import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"

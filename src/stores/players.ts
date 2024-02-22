@@ -2,7 +2,7 @@ import { ref } from "vue"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
-import type { Player } from "../models/Player"
+import type { Player } from "../data/Player"
 
 export const usePlayersStore = defineStore("players", () => {
     const players = ref<Player[]>([])

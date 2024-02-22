@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Result } from "../models/Result"
+import type { Result } from "../data/Result"
 
 const props = defineProps<{
     result: Result

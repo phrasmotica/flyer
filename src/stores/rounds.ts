@@ -1,9 +1,8 @@
 import { computed, ref } from "vue"
 import { defineStore } from "pinia"
 
-import type { Round } from "../data/RoundRobinScheduler"
-
-import type { Result } from "../models/Result"
+import type { Result } from "../data/Result"
+import type { Round } from "../data/Round"
 
 export const useRoundsStore = defineStore("rounds", () => {
     const rounds = ref<Round[]>([])

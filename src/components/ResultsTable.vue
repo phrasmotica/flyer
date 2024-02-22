@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import type { Result } from "../models/Result"
+import type { Result } from "../data/Result"
 
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 
-import type { Player } from "../models/Player"
+import type { Player } from "../data/Player"
 
 const props = defineProps<{
     players: Player[]

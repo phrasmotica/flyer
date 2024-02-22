@@ -4,10 +4,9 @@ import { computed, ref } from "vue"
 import RecordResultModal from "./RecordResultModal.vue"
 import ScoreCell from "./ScoreCell.vue"
 
-import type { Round } from "../data/RoundRobinScheduler"
-
-import type { Player } from "../models/Player"
-import type { Result } from "../models/Result"
+import type { Player } from "../data/Player"
+import type { Result } from "../data/Result"
+import type { Round } from "../data/Round"
 
 const props = defineProps<{
     players: Player[]
