@@ -24,12 +24,11 @@ enum Display {
     HeadToHead = "Head-to-Head",
 }
 
-const phase = ref(Phase.Setup)
-
 const flyerStore = useFlyerStore()
 const playersStore = usePlayersStore()
 const roundsStore = useRoundsStore()
 
+const phase = ref(Phase.Setup)
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
 const showRestartModal = ref(false)
@@ -69,6 +68,7 @@ const restart = () => {
     setPhase(Phase.Setup)
     playersStore.clear()
     roundsStore.clear()
+    hideRestartModal()
 }
 
 const hideRestartModal = () => {
@@ -99,7 +99,10 @@ const hideRestartModal = () => {
                 @updateResult="updateResult" /> -->
 
             <div class="p-fluid mt-2">
-                <Button label="Finish" @click="confirmFinish" />
+                <Button
+                    label="Finish"
+                    :disabled="!flyerStore.allowEarlyFinish && roundsStore.remainingCount > 0"
+                    @click="confirmFinish" />
             </div>
 
             <ConfirmModal

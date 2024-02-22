@@ -35,5 +35,15 @@ export const useRoundsStore = defineStore("rounds", () => {
 
     const clear = () => setRounds([])
 
-    return { rounds, results, remainingCount, currentRound, getRound, setRounds, startFixture, updateResult, clear }
+    return {
+        rounds,
+        results,
+        remainingCount,
+        currentRound,
+        getRound,
+        setRounds,
+        startFixture,
+        updateResult,
+        clear,
+    }
 })

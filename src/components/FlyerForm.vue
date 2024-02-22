@@ -84,8 +84,15 @@ const hideModal = () => {
         <Checkbox inputId="requireCompletedRoundsCheckbox" v-model="flyerStore.requireCompletedRounds" :binary="true" />
     </div>
 
-    <div class="p-fluid mb-2">
-        <p>Estimated duration: {{ flyerStore.estimatedDuration }} min(s) <em>({{ flyerStore.durationPerFrame }} min(s) per frame)</em></p>
+    <div class="p-fluid flex justify-content-between mb-2">
+        <label for="allowEarlyFinishCheckbox">Allow early finish</label>
+        <Checkbox inputId="allowEarlyFinishCheckbox" v-model="flyerStore.allowEarlyFinish" :binary="true" />
+    </div>
+
+    <div class="p-fluid border-top-1 mb-2">
+        <p>
+            Estimated duration: <span class="font-bold">{{ flyerStore.estimatedDuration }} min(s)</span> <em>({{ flyerStore.durationPerFrame }} min(s) per frame)</em>
+        </p>
     </div>
 
     <h1 class="border-bottom-1 mb-2">Players</h1>

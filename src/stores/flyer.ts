@@ -27,6 +27,7 @@ export const useFlyerStore = defineStore("flyer", () => {
     const formatOptions = ref(['Round Robin'])
 
     const requireCompletedRounds = ref(false)
+    const allowEarlyFinish = ref(false)
 
     const actualPlayers = computed(() => players.value.slice(0, playerCount.value))
 
@@ -60,6 +61,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         format,
         formatOptions,
         requireCompletedRounds,
+        allowEarlyFinish,
 
         playerCount,
         estimatedDuration,
