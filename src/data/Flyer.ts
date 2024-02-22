@@ -2,27 +2,31 @@ import type { Result } from "./Result"
 import type { Round } from "./Round"
 
 export class Flyer {
-    constructor(private rounds: Round[]) {
+    public startTime: number | null
+    public finishTime: number | null
 
+    constructor(public rounds: Round[]) {
+        this.startTime = null
+        this.finishTime = null
     }
 
-    getRounds() {
-        return this.rounds
+    start() {
+        this.startTime = Date.now()
     }
 
     startFixture(id: string) {
         for (const r of this.rounds) {
             r.startFixture(id)
         }
-
-        return this
     }
 
     updateResult(newResult: Result, finish: boolean) {
         for (const r of this.rounds) {
             r.updateResult(newResult, finish)
         }
+    }
 
-        return this
+    finish() {
+        this.finishTime = Date.now()
     }
 }

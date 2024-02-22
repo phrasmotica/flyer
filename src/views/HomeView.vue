@@ -42,7 +42,7 @@ const start = () => {
     playersStore.init(settingsStore.actualPlayers)
 
     const scheduler = new RoundRobinScheduler(playersStore.players)
-    roundsStore.setRounds(scheduler.generateFixtures())
+    roundsStore.start(scheduler.generateFixtures())
 
     setPhase(Phase.InProgress)
 }
@@ -52,6 +52,8 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
+    roundsStore.finish()
+
     setPhase(Phase.Finished)
     hideFinishModal()
 }
@@ -65,9 +67,10 @@ const confirmRestart = () => {
 }
 
 const restart = () => {
-    setPhase(Phase.Setup)
     playersStore.clear()
     roundsStore.clear()
+
+    setPhase(Phase.Setup)
     hideRestartModal()
 }
 

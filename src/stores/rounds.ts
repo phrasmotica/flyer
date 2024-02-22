@@ -1,4 +1,5 @@
 import { computed, ref } from "vue"
+import dayjs from "dayjs"
 import { defineStore } from "pinia"
 
 import { Flyer } from "../data/Flyer"
@@ -8,7 +9,7 @@ import type { Round } from "../data/Round"
 export const useRoundsStore = defineStore("rounds", () => {
     const flyer = ref<Flyer>()
 
-    const rounds = computed(() => flyer.value?.getRounds() ?? [])
+    const rounds = computed(() => flyer.value?.rounds ?? [])
 
     const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
@@ -24,21 +25,34 @@ export const useRoundsStore = defineStore("rounds", () => {
         return oldestInProgressRound.index
     })
 
+    const durationMinutes = computed(() => {
+        if (!flyer.value?.startTime || !flyer.value?.finishTime) {
+            return null
+        }
+
+        return dayjs(flyer.value.finishTime).diff(dayjs(flyer.value.startTime), "minutes")
+    })
+
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
 
-    const setRounds = (r: Round[]) => {
+    const start = (r: Round[]) => {
         flyer.value = new Flyer(r)
+        flyer.value.start()
     }
 
     const startFixture = (id: string) => {
-        flyer.value = flyer.value?.startFixture(id)
+        flyer.value?.startFixture(id)
     }
 
     const updateResult = (newResult: Result, finish: boolean) => {
-        flyer.value = flyer.value?.updateResult(newResult, finish)
+        flyer.value?.updateResult(newResult, finish)
     }
 
-    const clear = () => setRounds([])
+    const finish = () => {
+        flyer.value?.finish()
+    }
+
+    const clear = () => flyer.value = undefined
 
     return {
         rounds,
@@ -46,10 +60,12 @@ export const useRoundsStore = defineStore("rounds", () => {
         ongoingCount,
         remainingCount,
         currentRound,
+        durationMinutes,
         getRound,
-        setRounds,
+        start,
         startFixture,
         updateResult,
+        finish,
         clear,
     }
 })

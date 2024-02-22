@@ -33,8 +33,6 @@ export class Round {
         if (idx >= 0) {
             this.fixtures[idx].startTime = Date.now()
         }
-
-        return this
     }
 
     updateResult(newResult: Result, finish: boolean) {
@@ -46,8 +44,6 @@ export class Round {
 
             this.fixtures[idx] = newResult
         }
-
-        return this
     }
 
     getExistingFixtures(player: Player) {

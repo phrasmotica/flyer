@@ -83,6 +83,8 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 <template>
     <h1 class="border-bottom-1">Results</h1>
 
+    <p>Took {{ roundsStore.durationMinutes }} minute(s)</p>
+
     <DataTable :value="tableData" :rowClass="rowClass">
         <Column header="#">
             <template #body="slotProps">
