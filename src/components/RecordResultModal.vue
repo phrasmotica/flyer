@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
+import { differenceInMinutes } from "date-fns"
 
 import type { Result } from "../data/Result"
 
@@ -16,15 +17,15 @@ const emit = defineEmits<{
     hide: []
 }>()
 
+const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
-const roundsStore = useFlyerStore()
 
 const visible = ref(props.visible)
 const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
 const scores = ref(props.result.scores.map(r => r.score))
 
-const round = computed(() => roundsStore.getRound(props.result.id)!)
+const round = computed(() => flyerStore.getRound(props.result.id)!)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -43,7 +44,7 @@ const setScore = (index: number, score: number) => {
 }
 
 const startFixture = () => {
-    roundsStore.startFixture(props.result.id)
+    flyerStore.startFixture(props.result.id)
     emit('hide')
 }
 
@@ -57,7 +58,7 @@ const updateResult = (finish: boolean) => {
         startTime: props.result.startTime,
     }
 
-    roundsStore.updateResult(result, finish)
+    flyerStore.updateResult(result, finish)
 
     emit('hide')
 }
@@ -67,7 +68,7 @@ const startButtonText = computed(() => {
         return "Waiting for round to start"
     }
 
-    if (roundsStore.ongoingCount >= settingsStore.tableCount) {
+    if (flyerStore.ongoingCount >= settingsStore.tableCount) {
         return "Waiting for a free table"
     }
 
@@ -76,10 +77,10 @@ const startButtonText = computed(() => {
 
 const disableStart = computed(() => {
     if (settingsStore.requireCompletedRounds) {
-        return round.value.index > roundsStore.currentRound
+        return round.value.index > flyerStore.currentRound
     }
 
-    return roundsStore.ongoingCount >= settingsStore.tableCount
+    return flyerStore.ongoingCount >= settingsStore.tableCount
 })
 
 const disableFinish = computed(() => {
@@ -100,12 +101,22 @@ const disableFinish = computed(() => {
 const description = computed(() => props.result.scores.map(s => playersStore.getName(s.playerId)!).join(" v "))
 
 const header = computed(() => `${round.value.name} - ${description.value}`)
+
+const fixtureDuration = computed(() => {
+    if (!props.result.startTime || !props.result.finishTime) {
+        return null
+    }
+
+    return differenceInMinutes(new Date(props.result.finishTime), (new Date(props.result.startTime)))
+})
 </script>
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header" @hide="emit('hide')">
-        <div v-if="props.result.finishTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
-            <div class="font-bold">
+        <div v-if="props.result.finishTime" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+            <p>Took {{ fixtureDuration }} minute(s)</p>
+
+            <div v-for="id, i in selectedPlayers" class="font-bold">
                 {{ playersStore.getName(id) }}: {{ scores[i] }}
             </div>
         </div>

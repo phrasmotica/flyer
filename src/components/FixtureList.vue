@@ -8,7 +8,7 @@ import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 
-const roundsStore = useFlyerStore()
+const flyerStore = useFlyerStore()
 
 const selectedResult = ref<Result>()
 const showModal = ref(false)
@@ -27,10 +27,10 @@ const hideModal = () => {
     <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
         <h1>Fixtures</h1>
 
-        <h4>Results remaining: {{ roundsStore.remainingCount }}</h4>
+        <h4>Results remaining: {{ flyerStore.remainingCount }}</h4>
     </div>
 
-    <div v-for="r, i in roundsStore.rounds" :class="[i > 0 && 'border border-top-1']">
+    <div v-for="r, i in flyerStore.rounds" :class="[i > 0 && 'border border-top-1']">
         <h3 class="text-center">{{ r.name }}</h3>
 
         <div v-for="f, j in r.fixtures" class="mt-1 pt-1 mb-1" :class="[j > 0 && 'border-gray-200 border-top-1']">

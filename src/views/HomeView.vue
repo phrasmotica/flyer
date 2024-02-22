@@ -24,9 +24,9 @@ enum Display {
     HeadToHead = "Head-to-Head",
 }
 
+const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
-const roundsStore = useFlyerStore()
 
 const phase = ref(Phase.Setup)
 const display = ref(Display.Fixtures)
@@ -42,7 +42,7 @@ const start = () => {
     playersStore.init(settingsStore.actualPlayers)
 
     const scheduler = new RoundRobinScheduler(playersStore.players)
-    roundsStore.start(scheduler.generateFixtures())
+    flyerStore.start(scheduler.generateFixtures())
 
     setPhase(Phase.InProgress)
 }
@@ -52,7 +52,7 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
-    roundsStore.finish()
+    flyerStore.finish()
 
     setPhase(Phase.Finished)
     hideFinishModal()
@@ -68,7 +68,7 @@ const confirmRestart = () => {
 
 const restart = () => {
     playersStore.clear()
-    roundsStore.clear()
+    flyerStore.clear()
 
     setPhase(Phase.Setup)
     hideRestartModal()
@@ -104,7 +104,7 @@ const hideRestartModal = () => {
             <div class="p-fluid mt-2">
                 <Button
                     label="Finish"
-                    :disabled="!settingsStore.allowEarlyFinish && roundsStore.remainingCount > 0"
+                    :disabled="!settingsStore.allowEarlyFinish && flyerStore.remainingCount > 0"
                     @click="confirmFinish" />
             </div>
 

@@ -6,8 +6,8 @@ import type { Result } from "../data/Result"
 import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 
+const flyerStore = useFlyerStore()
 const playersStore = usePlayersStore()
-const roundsStore = useFlyerStore()
 
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {
@@ -49,10 +49,10 @@ const isIncomplete = (player: string, results: Result[]) => {
 const tableData = computed(() => {
     const data = playersStore.players.map(p => ({
         name: p.name,
-        wins: getWins(p.id, roundsStore.results),
-        draws: getDraws(p.id, roundsStore.results),
-        losses: getLosses(p.id, roundsStore.results),
-        incomplete: isIncomplete(p.id, roundsStore.results),
+        wins: getWins(p.id, flyerStore.results),
+        draws: getDraws(p.id, flyerStore.results),
+        losses: getLosses(p.id, flyerStore.results),
+        incomplete: isIncomplete(p.id, flyerStore.results),
     }))
 
     return data.sort((p, q) => {
@@ -83,7 +83,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 <template>
     <h1 class="border-bottom-1">Results</h1>
 
-    <p>Took {{ roundsStore.durationMinutes }} minute(s)</p>
+    <p>Took {{ flyerStore.durationMinutes }} minute(s)</p>
 
     <DataTable :value="tableData" :rowClass="rowClass">
         <Column header="#">
