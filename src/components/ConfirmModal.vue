@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     confirm: []
-    cancel: []
+    hide: []
 }>()
 
 const visible = ref(props.visible)
@@ -20,7 +20,7 @@ watch(props, () => {
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="props.header" @hide="emit('cancel')">
+    <Dialog v-model:visible="visible" modal :header="props.header" @hide="emit('hide')">
         <div class="font-bold mb-2">
             {{ props.message }}
         </div>
@@ -36,7 +36,7 @@ watch(props, () => {
                 type="button"
                 label="No"
                 severity="secondary"
-                @click="emit('cancel')" />
+                @click="emit('hide')" />
         </div>
     </Dialog>
 </template>

@@ -13,9 +13,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    cancel: []
-    start: []
-    confirm: [result: Result, finish: boolean]
+    hide: []
 }>()
 
 const flyerStore = useFlyerStore()
@@ -44,7 +42,10 @@ const setScore = (index: number, score: number) => {
     scores.value = scores.value.map((s, i) => i === index ? score : s)
 }
 
-const startFixture = () => emit('start')
+const startFixture = () => {
+    roundsStore.startFixture(props.result.id)
+    emit('hide')
+}
 
 const updateResult = (finish: boolean) => {
     const result = <Result>{
@@ -56,7 +57,9 @@ const updateResult = (finish: boolean) => {
         startTime: props.result.startTime,
     }
 
-    emit('confirm', result, finish)
+    roundsStore.updateResult(result, finish)
+
+    emit('hide')
 }
 
 const startButtonText = computed(() => flyerStore.requireCompletedRounds && round.value.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
@@ -84,7 +87,7 @@ const header = computed(() => `${round.value.name} - ${description.value}`)
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="header" @hide="emit('cancel')">
+    <Dialog v-model:visible="visible" modal :header="header" @hide="emit('hide')">
         <div v-if="props.result.finishTime" v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <div class="font-bold">
                 {{ playersStore.getName(id) }}: {{ scores[i] }}
@@ -139,7 +142,7 @@ const header = computed(() => `${round.value.name} - ${description.value}`)
                 type="button"
                 label="Close"
                 severity="secondary"
-                @click="emit('cancel')" />
+                @click="emit('hide')" />
         </div>
     </Dialog>
 </template>

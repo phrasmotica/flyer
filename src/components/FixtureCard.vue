@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    showResultModal: [result: Result]
+    showResultModal: []
 }>()
 
 const playersStore = usePlayersStore()
@@ -25,7 +25,7 @@ const playersStore = usePlayersStore()
         <div class="col-2 p-0">
             <ScoreCell
                 :result="props.result"
-                @showResultModal="() => emit('showResultModal', props.result)" />
+                @showResultModal="emit('showResultModal')" />
         </div>
 
         <div class="col-5 text-right">

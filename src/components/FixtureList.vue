@@ -18,18 +18,6 @@ const selectForRecording = (r: Result) => {
     showModal.value = true
 }
 
-const startFixture = () => {
-    if (selectedResult.value) {
-        roundsStore.startFixture(selectedResult.value.id)
-        hideModal()
-    }
-}
-
-const updateResult = (result: Result, finish: boolean) => {
-    roundsStore.updateResult(result, finish)
-    hideModal()
-}
-
 const hideModal = () => {
     showModal.value = false
 }
@@ -56,7 +44,5 @@ const hideModal = () => {
         v-if="selectedResult"
         :visible="showModal"
         :result="selectedResult"
-        @start="startFixture"
-        @confirm="updateResult"
-        @cancel="hideModal" />
+        @hide="hideModal" />
 </template>

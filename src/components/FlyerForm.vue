@@ -10,7 +10,6 @@ const flyerStore = useFlyerStore()
 
 const emit = defineEmits<{
     start: []
-    reset: []
 }>()
 
 const showModal = ref(false)
@@ -125,7 +124,7 @@ const hideModal = () => {
         header="Start Flyer"
         message="Are you ready to start the flyer?"
         @confirm="start"
-        @cancel="hideModal" />
+        @hide="hideModal" />
 </template>
 
 <style>

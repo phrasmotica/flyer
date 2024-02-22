@@ -54,10 +54,10 @@ const confirmFinish = () => {
 
 const finish = () => {
     setPhase(Phase.Finished)
-    hideModal()
+    hideFinishModal()
 }
 
-const hideModal = () => {
+const hideFinishModal = () => {
     showFinishModal.value = false
 }
 
@@ -107,7 +107,7 @@ const hideRestartModal = () => {
                 header="Finish Flyer"
                 message="Are you ready to finish the flyer?"
                 @confirm="finish"
-                @cancel="hideModal" />
+                @hide="hideFinishModal" />
         </div>
 
         <div v-else-if="phase === Phase.Finished">
@@ -122,7 +122,7 @@ const hideRestartModal = () => {
                 header="Restart"
                 message="Are you sure you want to restart? All data for the current flyer will be lost!"
                 @confirm="restart"
-                @cancel="hideRestartModal" />
+                @hide="hideRestartModal" />
         </div>
     </main>
 
