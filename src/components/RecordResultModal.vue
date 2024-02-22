@@ -7,12 +7,14 @@ import type { Result } from "../models/Result"
 
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"
+import { useFlyerStore } from "../stores/flyer"
+
+const flyerStore = useFlyerStore()
 
 const props = defineProps<{
     visible: boolean
     round: Round
     result: Result
-    raceTo: number
     waitForPreviousRounds: boolean
 }>()
 
@@ -70,7 +72,7 @@ const disableFinish = computed(() => {
         return true
     }
 
-    if (scores.value.every(s => s < props.raceTo)) {
+    if (scores.value.every(s => s < flyerStore.raceTo)) {
         return true
     }
 
@@ -102,7 +104,7 @@ const header = computed(() => `${props.round.name} - ${description.value}`)
                     showButtons
                     buttonLayout="horizontal"
                     :modelValue="scores[i]"
-                    :min="0" :max="props.raceTo"
+                    :min="0" :max="flyerStore.raceTo"
                     @update:modelValue="v => setScore(i, v)">
                     <template #incrementbuttonicon>
                         <span class="pi pi-plus" />

@@ -1,30 +1,19 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { onMounted, ref } from "vue"
 
 import ConfirmModal from "./ConfirmModal.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
-import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
+import { useFlyerStore } from "../stores/flyer"
 
-const props = defineProps<{
-    players: string[]
-}>()
+const flyerStore = useFlyerStore()
 
 const emit = defineEmits<{
-    start: [players: string[], raceTo: number, tableCount: number]
-    setName: [index: number, name: string]
+    start: []
     reset: []
 }>()
 
-const playerCount = ref(props.players.filter(p => p).length)
-const format = ref('Round Robin')
-const formatOptions = ref(['Round Robin'])
-const raceTo = ref(1)
-const tableCount = ref(1)
 const showModal = ref(false)
-
-const estimatedDuration = computed(() => new RoundRobinScheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
-const durationPerFrame = new RoundRobinScheduler([]).frameTimeEstimateMins
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -37,14 +26,12 @@ onMounted(() => {
     }
 })
 
-const actualPlayers = computed(() => props.players.slice(0, playerCount.value))
-
 const confirmStart = () => {
     showModal.value = true
 }
 
 const start = () => {
-    emit('start', actualPlayers.value, raceTo.value, tableCount.value)
+    emit('start')
     hideModal()
 }
 
@@ -58,7 +45,7 @@ const hideModal = () => {
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="raceTo"
+            v-model="flyerStore.raceTo"
             showButtons buttonLayout="horizontal"
             :min="1" :max="5"
             prefix="Races to "
@@ -74,9 +61,9 @@ const hideModal = () => {
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="tableCount"
+            v-model="flyerStore.tableCount"
             showButtons buttonLayout="horizontal"
-            :min="1" :max="Math.floor(playerCount / 2)"
+            :min="1" :max="Math.floor(flyerStore.playerCount / 2)"
             suffix=" table(s)"
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
@@ -90,18 +77,18 @@ const hideModal = () => {
 
     <!-- TODO: allow selecting round-robin (existing) or knockout format (implement that!) -->
     <div class="p-fluid mb-2">
-        <SelectButton v-model="format" :options="formatOptions" :allowEmpty="false" aria-labelledby="basic" />
+        <SelectButton v-model="flyerStore.format" :options="flyerStore.formatOptions" :allowEmpty="false" aria-labelledby="basic" />
     </div>
 
     <div class="p-fluid mb-2">
-        <p>Estimated duration: {{ estimatedDuration }} min(s) <em>({{ durationPerFrame }} min(s) per frame)</em></p>
+        <p>Estimated duration: {{ flyerStore.estimatedDuration }} min(s) <em>({{ flyerStore.durationPerFrame }} min(s) per frame)</em></p>
     </div>
 
     <h1 class="border-bottom-1 mb-2">Players</h1>
 
     <div class="p-fluid mb-2">
         <InputNumber
-            v-model="playerCount"
+            v-model="flyerStore.playerCount"
             showButtons buttonLayout="horizontal"
             :min="2" :max="10"
             suffix=" players"
@@ -115,17 +102,17 @@ const hideModal = () => {
         </InputNumber>
     </div>
 
-    <div v-for="p, i in players">
+    <div v-for="p, i in flyerStore.players">
         <PlayerNameInput
             class="mb-2"
             :placeholder="'Player ' + (i + 1)"
-            :disabled="i >= playerCount"
+            :disabled="i >= flyerStore.playerCount"
             :name="p"
-            @setName="n => emit('setName', i, n)" />
+            @setName="n => flyerStore.setName(i, n)" />
     </div>
 
     <div class="p-fluid">
-        <Button label="Start" :disabled="actualPlayers.some(p => !p)" @click="confirmStart" />
+        <Button label="Start" :disabled="flyerStore.isInvalid" @click="confirmStart" />
     </div>
 
     <ConfirmModal

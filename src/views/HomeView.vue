@@ -9,6 +9,7 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
+import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"
 
@@ -23,28 +24,10 @@ enum Display {
     HeadToHead = "Head-to-Head",
 }
 
-const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
-
-let defaultPlayers = <string[]>[]
-if (defaultPlayersEnv) {
-    defaultPlayers = String(defaultPlayersEnv).split(";")
-}
-
-if (defaultPlayers.length < 10) {
-    defaultPlayers = [...defaultPlayers, ...new Array(10 - defaultPlayers.length).fill("")]
-}
-
 const phase = ref(Phase.Setup)
-const players = ref(defaultPlayers)
 
+const flyerStore = useFlyerStore()
 const playersStore = usePlayersStore()
-const raceTo = ref(0)
-
-// TODO: use this to assign fixtures to tables
-const tableCount = ref(0)
-
-let scheduler: RoundRobinScheduler
-
 const roundsStore = useRoundsStore()
 
 const display = ref(Display.Fixtures)
@@ -56,17 +39,10 @@ const setPhase = (p: Phase) => {
     window.scroll(0, 0)
 }
 
-const setName = (index: number, name: string) => {
-    players.value = players.value.map((v, i) => i === index ? name : v)
-}
+const start = () => {
+    playersStore.init(flyerStore.actualPlayers)
 
-const start = (players: string[], r: number, t: number) => {
-    playersStore.init(players)
-
-    raceTo.value = r
-    tableCount.value = t
-
-    scheduler = new RoundRobinScheduler(playersStore.players)
+    const scheduler = new RoundRobinScheduler(playersStore.players)
     roundsStore.setRounds(scheduler.generateFixtures())
 
     setPhase(Phase.InProgress)
@@ -92,7 +68,6 @@ const confirmRestart = () => {
 const restart = () => {
     setPhase(Phase.Setup)
     playersStore.clear()
-    raceTo.value = 0
     roundsStore.clear()
 }
 
@@ -105,8 +80,6 @@ const hideRestartModal = () => {
     <main>
         <div v-if="phase === Phase.Setup">
             <FlyerForm
-                :players="players"
-                @setName="setName"
                 @start="start" />
         </div>
 
@@ -115,8 +88,7 @@ const hideRestartModal = () => {
                 <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
             </div> -->
 
-            <FixtureList v-if="display === Display.Fixtures"
-                :raceTo="raceTo" />
+            <FixtureList v-if="display === Display.Fixtures" />
 
             <!-- <RoundRobinTable v-if="display === Display.HeadToHead"
                 :players="actualPlayers"

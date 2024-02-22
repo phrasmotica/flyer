@@ -8,10 +8,6 @@ import type { Result } from "../models/Result"
 
 import { useRoundsStore } from "../stores/rounds"
 
-const props = defineProps<{
-    raceTo: number
-}>()
-
 const roundsStore = useRoundsStore()
 const round = computed(() => roundsStore.getRound(selectedResult.value?.id || ""))
 
@@ -62,7 +58,6 @@ const hideModal = () => {
         :visible="showModal"
         :round="round"
         :result="selectedResult"
-        :raceTo="props.raceTo"
         :waitForPreviousRounds="false"
         @start="startFixture"
         @confirm="updateResult"
