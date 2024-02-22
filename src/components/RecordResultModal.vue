@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 
-import type { Round } from "../data/RoundRobinScheduler"
-
 import type { Result } from "../models/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"
 
-const flyerStore = useFlyerStore()
-
 const props = defineProps<{
     visible: boolean
-    round: Round
     result: Result
 }>()
 
@@ -23,12 +18,15 @@ const emit = defineEmits<{
     confirm: [result: Result, finish: boolean]
 }>()
 
+const flyerStore = useFlyerStore()
 const playersStore = usePlayersStore()
 const roundsStore = useRoundsStore()
 
 const visible = ref(props.visible)
 const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
 const scores = ref(props.result.scores.map(r => r.score))
+
+const round = computed(() => roundsStore.getRound(props.result.id)!)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -61,9 +59,9 @@ const updateResult = (finish: boolean) => {
     emit('confirm', result, finish)
 }
 
-const startButtonText = computed(() => flyerStore.requireCompletedRounds && props.round.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
+const startButtonText = computed(() => flyerStore.requireCompletedRounds && round.value.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
 
-const disableStart = computed(() => flyerStore.requireCompletedRounds && props.round.index > roundsStore.currentRound)
+const disableStart = computed(() => flyerStore.requireCompletedRounds && round.value.index > roundsStore.currentRound)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
@@ -82,7 +80,7 @@ const disableFinish = computed(() => {
 
 const description = computed(() => props.result.scores.map(s => playersStore.getName(s.playerId)!).join(" v "))
 
-const header = computed(() => `${props.round.name} - ${description.value}`)
+const header = computed(() => `${round.value.name} - ${description.value}`)
 </script>
 
 <template>

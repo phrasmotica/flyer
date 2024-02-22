@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
 import FixtureCard from "./FixtureCard.vue"
 import RecordResultModal from "./RecordResultModal.vue"
@@ -9,7 +9,6 @@ import type { Result } from "../models/Result"
 import { useRoundsStore } from "../stores/rounds"
 
 const roundsStore = useRoundsStore()
-const round = computed(() => roundsStore.getRound(selectedResult.value?.id || ""))
 
 const selectedResult = ref<Result>()
 const showModal = ref(false)
@@ -54,9 +53,8 @@ const hideModal = () => {
     </div>
 
     <RecordResultModal
-        v-if="round && selectedResult"
+        v-if="selectedResult"
         :visible="showModal"
-        :round="round"
         :result="selectedResult"
         @start="startFixture"
         @confirm="updateResult"
