@@ -26,6 +26,8 @@ export const useFlyerStore = defineStore("flyer", () => {
     const format = ref('Round Robin')
     const formatOptions = ref(['Round Robin'])
 
+    const requireCompletedRounds = ref(false)
+
     const actualPlayers = computed(() => players.value.slice(0, playerCount.value))
 
     const estimatedDuration = computed(() => new RoundRobinScheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
@@ -51,5 +53,25 @@ export const useFlyerStore = defineStore("flyer", () => {
         setTableCount(1)
     }
 
-    return { players, raceTo, tableCount, format, formatOptions, playerCount, estimatedDuration, durationPerFrame, actualPlayers, isInvalid, setPlayerCount, setPlayers, setName, setRaceTo, setTableCount, reset }
+    return {
+        players,
+        raceTo,
+        tableCount,
+        format,
+        formatOptions,
+        requireCompletedRounds,
+
+        playerCount,
+        estimatedDuration,
+        durationPerFrame,
+        actualPlayers,
+        isInvalid,
+
+        setPlayerCount,
+        setPlayers,
+        setName,
+        setRaceTo,
+        setTableCount,
+        reset,
+    }
 })

@@ -5,9 +5,9 @@ import type { Round } from "../data/RoundRobinScheduler"
 
 import type { Result } from "../models/Result"
 
+import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 import { useRoundsStore } from "../stores/rounds"
-import { useFlyerStore } from "../stores/flyer"
 
 const flyerStore = useFlyerStore()
 
@@ -15,7 +15,6 @@ const props = defineProps<{
     visible: boolean
     round: Round
     result: Result
-    waitForPreviousRounds: boolean
 }>()
 
 const emit = defineEmits<{
@@ -62,9 +61,9 @@ const updateResult = (finish: boolean) => {
     emit('confirm', result, finish)
 }
 
-const startButtonText = computed(() => props.waitForPreviousRounds && props.round.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
+const startButtonText = computed(() => flyerStore.requireCompletedRounds && props.round.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
 
-const disableStart = computed(() => props.waitForPreviousRounds && props.round.index > roundsStore.currentRound)
+const disableStart = computed(() => flyerStore.requireCompletedRounds && props.round.index > roundsStore.currentRound)
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]

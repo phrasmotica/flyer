@@ -58,7 +58,6 @@ const hideModal = () => {
         :visible="showModal"
         :round="round"
         :result="selectedResult"
-        :waitForPreviousRounds="false"
         @start="startFixture"
         @confirm="updateResult"
         @cancel="hideModal" />
