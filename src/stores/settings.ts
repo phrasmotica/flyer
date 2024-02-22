@@ -27,7 +27,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const formatOptions = ref(['Round Robin'])
 
     const requireCompletedRounds = ref(false)
-    const allowEarlyFinish = ref(false)
+    const allowEarlyFinish = ref(true)
 
     const actualPlayers = computed(() => players.value.slice(0, playerCount.value))
 
