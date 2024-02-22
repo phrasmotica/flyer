@@ -12,6 +12,7 @@ export const useRoundsStore = defineStore("rounds", () => {
 
     const results = computed(() => rounds.value.flatMap(r => r.fixtures))
 
+    const ongoingCount = computed(() => results.value.filter(f => f.startTime && !f.finishTime).length)
     const remainingCount = computed(() => results.value.filter(f => !f.finishTime).length)
 
     const currentRound = computed(() => {
@@ -42,6 +43,7 @@ export const useRoundsStore = defineStore("rounds", () => {
     return {
         rounds,
         results,
+        ongoingCount,
         remainingCount,
         currentRound,
         getRound,

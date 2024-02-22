@@ -62,9 +62,25 @@ const updateResult = (finish: boolean) => {
     emit('hide')
 }
 
-const startButtonText = computed(() => settingsStore.requireCompletedRounds && round.value.index > roundsStore.currentRound ? `Waiting for round to start` : "Start")
+const startButtonText = computed(() => {
+    if (settingsStore.requireCompletedRounds) {
+        return "Waiting for round to start"
+    }
 
-const disableStart = computed(() => settingsStore.requireCompletedRounds && round.value.index > roundsStore.currentRound)
+    if (roundsStore.ongoingCount >= settingsStore.tableCount) {
+        return "Waiting for a free table"
+    }
+
+    return "Start"
+})
+
+const disableStart = computed(() => {
+    if (settingsStore.requireCompletedRounds) {
+        return round.value.index > roundsStore.currentRound
+    }
+
+    return roundsStore.ongoingCount >= settingsStore.tableCount
+})
 
 const disableFinish = computed(() => {
     const uniquePlayers = [...new Set(selectedPlayers.value)]
