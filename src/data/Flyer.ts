@@ -58,4 +58,15 @@ export class Flyer {
     finish() {
         this.finishTime = Date.now()
     }
+
+    getWinner() {
+        const finalRound = this.rounds[this.rounds.length - 1]
+        if (finalRound) {
+            const final = finalRound.fixtures[finalRound.fixtures.length - 1]
+            const winningScore = final.scores.reduce((s, t) => s.score > t.score ? s : t)
+            return winningScore.playerId
+        }
+
+        return ""
+    }
 }

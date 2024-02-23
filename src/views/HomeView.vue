@@ -4,6 +4,7 @@ import { ref } from "vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
 import FlyerForm from "../components/FlyerForm.vue"
+import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
@@ -130,7 +131,9 @@ const hideRestartModal = () => {
         </div>
 
         <div v-else-if="phase === Phase.Finished">
-            <ResultsTable />
+            <ResultsTable v-if="settingsStore.format === Format.RoundRobin" />
+
+            <Podium v-if="settingsStore.format === Format.Knockout" />
 
             <div class="p-fluid mt-2">
                 <Button label="Restart" @click="confirmRestart" />

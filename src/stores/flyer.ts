@@ -33,6 +33,8 @@ export const useFlyerStore = defineStore("flyer", () => {
         return differenceInMinutes(new Date(flyer.value.finishTime), (new Date(flyer.value.startTime)))
     })
 
+    const winner = computed(() => flyer.value?.getWinner() ?? "")
+
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
 
     const start = (r: Round[]) => {
@@ -61,6 +63,8 @@ export const useFlyerStore = defineStore("flyer", () => {
         remainingCount,
         currentRound,
         durationMinutes,
+        winner,
+
         getRound,
         start,
         startFixture,
