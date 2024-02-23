@@ -17,7 +17,7 @@ const winnerName = computed(() => playersStore.getName(flyerStore.winner))
 
     <div class="text-center">
         <p>The winner is</p>
-        <h1>{{ winnerName }}</h1>
+        <h1 class="font-bold">{{ winnerName }}</h1>
     </div>
 </template>
 
