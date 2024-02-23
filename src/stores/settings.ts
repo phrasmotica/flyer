@@ -31,8 +31,8 @@ export const useSettingsStore = defineStore("settings", () => {
     const format = ref(Format.Knockout)
     const formatOptions = ref([Format.Knockout, Format.RoundRobin])
 
-    const requireCompletedRounds = ref(false)
-    const allowEarlyFinish = ref(true)
+    const requireCompletedRounds = ref(true)
+    const allowEarlyFinish = ref(false)
 
     watch(format, () => {
         if (format.value === Format.Knockout) {
