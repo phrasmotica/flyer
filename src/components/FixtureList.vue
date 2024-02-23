@@ -11,11 +11,21 @@ import { useFlyerStore } from "../stores/flyer"
 const flyerStore = useFlyerStore()
 
 const selectedResult = ref<Result>()
+const highlightedResultId = ref("")
 const showModal = ref(false)
 
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
     showModal.value = true
+}
+
+const highlight = (resultId: string) => {
+    if (highlightedResultId.value === resultId) {
+        highlightedResultId.value = ""
+    }
+    else {
+        highlightedResultId.value = resultId
+    }
 }
 
 const hideModal = () => {
@@ -36,7 +46,9 @@ const hideModal = () => {
         <div v-for="f, j in r.fixtures" class="mt-1 pt-1 mb-1" :class="[j > 0 && 'border-gray-200 border-top-1']">
             <FixtureCard
                 :result="f"
-                @showResultModal="() => selectForRecording(f)" />
+                :highlightedResultId="highlightedResultId"
+                @showResultModal="() => selectForRecording(f)"
+                @highlight="highlight" />
         </div>
     </div>
 
