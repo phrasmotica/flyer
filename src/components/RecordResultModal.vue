@@ -112,7 +112,7 @@ const fixtureDuration = computed(() => {
         return differenceInMinutes(new Date(), (new Date(props.result.startTime)))
     }
 
-    return differenceInMinutes(new Date(props.result.finishTime), (new Date(props.result.startTime)))
+    return differenceInMinutes(new Date(props.result.finishTime), new Date(props.result.startTime))
 })
 </script>
 

@@ -1,7 +1,8 @@
+import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
 import { Round } from "./Round"
 
-export class RoundRobinScheduler {
+export class RoundRobinScheduler implements IScheduler {
     frameTimeEstimateMins: number = 7
 
     private generatedRounds?: Round[]

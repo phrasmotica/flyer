@@ -7,6 +7,7 @@ import FlyerForm from "../components/FlyerForm.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
+import type { IScheduler } from "../data/IScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -41,7 +42,7 @@ const setPhase = (p: Phase) => {
 const start = () => {
     playersStore.init(settingsStore.actualPlayers)
 
-    const scheduler = new RoundRobinScheduler(playersStore.players)
+    const scheduler: IScheduler = new RoundRobinScheduler(playersStore.players)
     flyerStore.start(scheduler.generateFixtures())
 
     setPhase(Phase.InProgress)
