@@ -1,4 +1,4 @@
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { defineStore } from "pinia"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
@@ -33,6 +33,13 @@ export const useSettingsStore = defineStore("settings", () => {
 
     const requireCompletedRounds = ref(false)
     const allowEarlyFinish = ref(true)
+
+    watch(format, () => {
+        if (format.value === Format.Knockout) {
+            requireCompletedRounds.value = true
+            allowEarlyFinish.value = false
+        }
+    })
 
     const actualPlayers = computed(() => players.value.slice(0, playerCount.value))
 

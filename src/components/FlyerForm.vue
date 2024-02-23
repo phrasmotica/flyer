@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 import ConfirmModal from "./ConfirmModal.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
-import { useSettingsStore } from "../stores/settings"
+import { Format, useSettingsStore } from "../stores/settings"
 
 const settingsStore = useSettingsStore()
 
@@ -13,6 +13,8 @@ const emit = defineEmits<{
 }>()
 
 const showModal = ref(false)
+
+const isKnockout = computed(() => settingsStore.format === Format.Knockout)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -79,13 +81,27 @@ const hideModal = () => {
     </div>
 
     <div class="p-fluid flex justify-content-between mb-2">
-        <label for="requireCompletedRoundsCheckbox">Require completed rounds</label>
-        <Checkbox inputId="requireCompletedRoundsCheckbox" v-model="settingsStore.requireCompletedRounds" :binary="true" />
+        <label for="requireCompletedRoundsCheckbox" :class="[isKnockout && 'text-color-secondary']">
+            Require completed rounds
+        </label>
+
+        <Checkbox
+            inputId="requireCompletedRoundsCheckbox"
+            v-model="settingsStore.requireCompletedRounds"
+            :binary="true"
+            :disabled="isKnockout" />
     </div>
 
     <div class="p-fluid flex justify-content-between mb-2">
-        <label for="allowEarlyFinishCheckbox">Allow early finish</label>
-        <Checkbox inputId="allowEarlyFinishCheckbox" v-model="settingsStore.allowEarlyFinish" :binary="true" />
+        <label for="allowEarlyFinishCheckbox" :class="[isKnockout && 'text-color-secondary']">
+            Allow early finish
+        </label>
+
+        <Checkbox
+            inputId="allowEarlyFinishCheckbox"
+            v-model="settingsStore.allowEarlyFinish"
+            :binary="true"
+            :disabled="isKnockout" />
     </div>
 
     <div class="p-fluid border-top-1 mb-2">
