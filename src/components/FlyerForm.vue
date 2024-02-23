@@ -74,7 +74,6 @@ const hideModal = () => {
         </InputNumber>
     </div>
 
-    <!-- TODO: allow selecting round-robin (existing) or knockout format (implement that!) -->
     <div class="p-fluid mb-2">
         <SelectButton v-model="settingsStore.format" :options="settingsStore.formatOptions" :allowEmpty="false" aria-labelledby="basic" />
     </div>

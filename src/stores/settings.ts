@@ -3,6 +3,11 @@ import { defineStore } from "pinia"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
+export enum Format {
+    Knockout = "Knockout",
+    RoundRobin = "Round Robin",
+}
+
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 
 let defaultPlayers = <string[]>[]
@@ -23,8 +28,8 @@ export const useSettingsStore = defineStore("settings", () => {
     // TODO: use this to assign fixtures to tables
     const tableCount = ref(1)
 
-    const format = ref('Round Robin')
-    const formatOptions = ref(['Round Robin'])
+    const format = ref(Format.Knockout)
+    const formatOptions = ref([Format.Knockout, Format.RoundRobin])
 
     const requireCompletedRounds = ref(false)
     const allowEarlyFinish = ref(true)
