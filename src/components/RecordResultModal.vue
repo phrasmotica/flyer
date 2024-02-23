@@ -49,8 +49,10 @@ const startFixture = () => {
 }
 
 const updateResult = (finish: boolean) => {
+    // TODO: reduce the amount of data needed to update the scores
     const result = <Result>{
         id: props.result.id,
+        parentFixtureIds: props.result.parentFixtureIds,
         scores: selectedPlayers.value.map((id, i) => ({
             playerId: id,
             score: scores.value[i],

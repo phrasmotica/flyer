@@ -49,10 +49,13 @@ export class KnockoutScheduler implements IScheduler {
                 if (r === 0) {
                     const playerA = overallPool.pop()
 
-                    round.addPlaceholderFixture([playerA!], 2)
+                    round.addPlaceholderFixture([playerA!], 2, [])
                 }
                 else {
-                    round.addPlaceholderFixture([], 2)
+                    const previousRound = this.generatedRounds[r - 1]
+                    const parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
+
+                    round.addPlaceholderFixture([], 2, parentFixtureIds)
                 }
             }
 
@@ -101,10 +104,6 @@ export class KnockoutScheduler implements IScheduler {
         }
 
         return oldestInProgressRound.index
-    }
-
-    getRandom<T>(arr: T[]) {
-        return arr[Math.floor(Math.random() * arr.length)]
     }
 
     shuffle<T>(arr: T[]) {

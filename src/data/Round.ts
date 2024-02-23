@@ -14,11 +14,12 @@ export class Round {
         this.fixtures = []
     }
 
-    addFixture(players: Player[]) {
+    addFixture(players: Player[], parentFixtureIds: string[]) {
         console.log(players.map(p => p.name).join(" v "))
 
         this.fixtures.push({
             id: uuidv4(),
+            parentFixtureIds,
             scores: players.map(p => ({
                 playerId: p.id,
                 score: 0,
@@ -29,9 +30,10 @@ export class Round {
         })
     }
 
-    addPlaceholderFixture(players: Player[], playerCount: number) {
+    addPlaceholderFixture(players: Player[], playerCount: number, parentFixtureIds: string[]) {
         const fixture = <Result>{
             id: uuidv4(),
+            parentFixtureIds,
             scores: players.map(p => ({
                 playerId: p.id,
                 score: 0,

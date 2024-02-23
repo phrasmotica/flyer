@@ -76,7 +76,7 @@ export class RoundRobinScheduler implements IScheduler {
 
                 const playerB = this.getRandom(possibleOpponents)
 
-                round.addFixture([playerA, playerB])
+                round.addFixture([playerA, playerB], [])
 
                 overallPool = overallPool.filter(p => ![playerA.id, playerB.id].includes(p.id))
             }
