@@ -22,10 +22,17 @@ const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
 
 const visible = ref(props.visible)
-const selectedPlayers = ref(props.result.scores.map(r => r.playerId))
+const result = ref(props.result)
 const scores = ref(props.result.scores.map(r => r.score))
 
-const round = computed(() => flyerStore.getRound(props.result.id)!)
+watch(props, () => {
+    visible.value = props.visible
+    result.value = props.result
+    scores.value = props.result.scores.map(r => r.score)
+})
+
+const players = computed(() => result.value.scores.map(r => r.playerId))
+const round = computed(() => flyerStore.getRound(result.value.id)!)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -33,34 +40,28 @@ watch([scores], () => {
     (<any>document.activeElement)?.blur()
 })
 
-watch(props, () => {
-    visible.value = props.visible
-    selectedPlayers.value = props.result.scores.map(r => r.playerId)
-    scores.value = props.result.scores.map(r => r.score)
-})
-
 const setScore = (index: number, score: number) => {
     scores.value = scores.value.map((s, i) => i === index ? score : s)
 }
 
 const startFixture = () => {
-    flyerStore.startFixture(props.result.id)
+    flyerStore.startFixture(result.value.id)
     emit('hide')
 }
 
 const updateResult = (finish: boolean) => {
     // TODO: reduce the amount of data needed to update the scores
-    const result = <Result>{
-        id: props.result.id,
-        parentFixtureIds: props.result.parentFixtureIds,
-        scores: selectedPlayers.value.map((id, i) => ({
+    const r = <Result>{
+        id: result.value.id,
+        parentFixtureIds: result.value.parentFixtureIds,
+        scores: players.value.map((id, i) => ({
             playerId: id,
             score: scores.value[i],
         })),
-        startTime: props.result.startTime,
+        startTime: result.value.startTime,
     }
 
-    flyerStore.updateResult(result, finish)
+    flyerStore.updateResult(r, finish)
 
     emit('hide')
 }
@@ -86,12 +87,11 @@ const disableStart = computed(() => {
 })
 
 const disableFinish = computed(() => {
-    const uniquePlayers = [...new Set(selectedPlayers.value)]
-    if (uniquePlayers.length !== selectedPlayers.value.length) {
+    if (scores.value.every(s => s < settingsStore.raceTo)) {
         return true
     }
 
-    if (scores.value.every(s => s < settingsStore.raceTo)) {
+    if (scores.value.reduce((a, b) => a + b) > 2 * settingsStore.raceTo - 1) {
         return true
     }
 
@@ -100,7 +100,7 @@ const disableFinish = computed(() => {
     return false
 })
 
-const description = computed(() => props.result.scores.map(s => {
+const description = computed(() => result.value.scores.map(s => {
     if (s.isBye) {
         return "(bye)"
     }
@@ -111,33 +111,36 @@ const description = computed(() => props.result.scores.map(s => {
 const header = computed(() => `${round.value.name} - ${description.value}`)
 
 const fixtureDuration = computed(() => {
-    if (!props.result.startTime) {
+    if (!result.value.startTime) {
         return null
     }
 
-    if (!props.result.finishTime) {
+    if (!result.value.finishTime) {
         // TODO: make this update in real time, by using setInterval()
-        return differenceInMinutes(new Date(), (new Date(props.result.startTime)))
+        return differenceInMinutes(new Date(), (new Date(result.value.startTime)))
     }
 
-    return differenceInMinutes(new Date(props.result.finishTime), new Date(props.result.startTime))
+    return differenceInMinutes(new Date(result.value.finishTime), new Date(result.value.startTime))
 })
 </script>
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header" @hide="emit('hide')">
-        <div v-if="props.result.finishTime" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+        <div v-if="result.finishTime" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
             <p>Took {{ fixtureDuration }} minute(s)</p>
 
-            <div v-for="id, i in selectedPlayers" class="font-bold">
+            <div v-for="id, i in players" class="font-bold">
                 {{ playersStore.getName(id) }}: {{ scores[i] }}
             </div>
         </div>
 
-        <div v-else-if="props.result.startTime">
-            <p>Started {{ fixtureDuration }} minute(s) ago</p>
+        <div v-else-if="result.startTime">
+            <p v-if="fixtureDuration && fixtureDuration > 0">
+                Started {{ fixtureDuration }} minute(s) ago
+            </p>
+            <p v-else>Just started</p>
 
-            <div v-for="id, i in selectedPlayers" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+            <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
                 <div class="font-bold">
                     {{ playersStore.getName(id) }}
                 </div>
@@ -161,21 +164,21 @@ const fixtureDuration = computed(() => {
         </div>
 
         <div class="p-fluid">
-            <Button v-if="!props.result.startTime"
+            <Button v-if="!result.startTime"
                 class="mb-2"
                 type="button"
                 :label="startButtonText"
                 :disabled="disableStart"
                 @click="startFixture" />
 
-            <Button v-if="props.result.startTime && !props.result.finishTime"
+            <Button v-if="result.startTime && !result.finishTime"
                 class="mb-2"
                 type="button"
                 label="Update"
                 severity="info"
                 @click="() => updateResult(false)" />
 
-            <Button v-if="props.result.startTime && !props.result.finishTime"
+            <Button v-if="result.startTime && !result.finishTime"
                 class="mb-2"
                 type="button"
                 label="Finish"
