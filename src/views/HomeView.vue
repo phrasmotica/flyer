@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue"
+import { useRouter } from "vue-router"
 
 import ConfirmModal from "../components/ConfirmModal.vue"
-import FixtureList from "../components/FixtureList.vue"
 import FlyerForm from "../components/FlyerForm.vue"
-import Podium from "../components/Podium.vue"
-import ResultsTable from "../components/ResultsTable.vue"
-// import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
@@ -16,30 +13,13 @@ import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
 import { useSettingsStore, Format } from "../stores/settings"
 
-enum Phase {
-    Setup,
-    InProgress,
-    Finished,
-}
-
-enum Display {
-    Fixtures = "Fixtures",
-    HeadToHead = "Head-to-Head",
-}
+const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 const playersStore = usePlayersStore()
 
-const phase = ref(Phase.Setup)
-const display = ref(Display.Fixtures)
-const showFinishModal = ref(false)
-const showRestartModal = ref(false)
-
-const setPhase = (p: Phase) => {
-    phase.value = p
-    window.scroll(0, 0)
-}
+const showModal = ref(false)
 
 const start = () => {
     playersStore.init(settingsStore.actualPlayers)
@@ -58,94 +38,36 @@ const start = () => {
 
     flyerStore.start(scheduler.generateFixtures())
 
-    setPhase(Phase.InProgress)
+    hideModal()
+
+    router.push({
+        name: "play",
+    })
 }
 
-const confirmFinish = () => {
-    showFinishModal.value = true
+const confirmStart = () => {
+    showModal.value = true
 }
 
-const finish = () => {
-    flyerStore.finish()
-
-    setPhase(Phase.Finished)
-    hideFinishModal()
-}
-
-const hideFinishModal = () => {
-    showFinishModal.value = false
-}
-
-const confirmRestart = () => {
-    showRestartModal.value = true
-}
-
-const restart = () => {
-    playersStore.clear()
-    flyerStore.clear()
-
-    setPhase(Phase.Setup)
-    hideRestartModal()
-}
-
-const hideRestartModal = () => {
-    showRestartModal.value = false
+const hideModal = () => {
+    showModal.value = false
 }
 </script>
 
 <template>
     <main>
-        <div v-if="phase === Phase.Setup">
-            <FlyerForm
-                @start="start" />
+        <FlyerForm />
+
+        <div class="p-fluid">
+            <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
         </div>
 
-        <div v-else-if="phase === Phase.InProgress">
-            <!-- <div class="p-fluid">
-                <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
-            </div> -->
-
-            <FixtureList v-if="display === Display.Fixtures" />
-
-            <!-- <RoundRobinTable v-if="display === Display.HeadToHead"
-                :players="actualPlayers"
-                :raceTo="raceTo"
-                :rounds="rounds"
-                :results="results"
-                @start="startFixture"
-                @updateResult="updateResult" /> -->
-
-            <div class="p-fluid mt-2">
-                <Button
-                    label="Finish"
-                    :disabled="!settingsStore.allowEarlyFinish && flyerStore.remainingCount > 0"
-                    @click="confirmFinish" />
-            </div>
-
-            <ConfirmModal
-                :visible="showFinishModal"
-                header="Finish Flyer"
-                message="Are you ready to finish the flyer?"
-                @confirm="finish"
-                @hide="hideFinishModal" />
-        </div>
-
-        <div v-else-if="phase === Phase.Finished">
-            <ResultsTable v-if="settingsStore.format === Format.RoundRobin" />
-
-            <Podium v-if="settingsStore.format === Format.Knockout" />
-
-            <div class="p-fluid mt-2">
-                <Button label="Restart" @click="confirmRestart" />
-            </div>
-
-            <ConfirmModal
-                :visible="showRestartModal"
-                header="Restart"
-                message="Are you sure you want to restart? All data for the current flyer will be lost!"
-                @confirm="restart"
-                @hide="hideRestartModal" />
-        </div>
+        <ConfirmModal
+            :visible="showModal"
+            header="Start Flyer"
+            message="Are you ready to start the flyer?"
+            @confirm="start"
+            @hide="hideModal" />
     </main>
 
     <footer>

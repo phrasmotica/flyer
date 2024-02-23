@@ -1,18 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted } from "vue"
 
-import ConfirmModal from "./ConfirmModal.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
 import { Format, useSettingsStore } from "../stores/settings"
 
 const settingsStore = useSettingsStore()
-
-const emit = defineEmits<{
-    start: []
-}>()
-
-const showModal = ref(false)
 
 const isKnockout = computed(() => settingsStore.format === Format.Knockout)
 
@@ -26,19 +19,6 @@ onMounted(() => {
         })
     }
 })
-
-const confirmStart = () => {
-    showModal.value = true
-}
-
-const start = () => {
-    emit('start')
-    hideModal()
-}
-
-const hideModal = () => {
-    showModal.value = false
-}
 </script>
 
 <template>
@@ -136,17 +116,6 @@ const hideModal = () => {
             :name="p"
             @setName="n => settingsStore.setName(i, n)" />
     </div>
-
-    <div class="p-fluid">
-        <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
-    </div>
-
-    <ConfirmModal
-        :visible="showModal"
-        header="Start Flyer"
-        message="Are you ready to start the flyer?"
-        @confirm="start"
-        @hide="hideModal" />
 </template>
 
 <style>
