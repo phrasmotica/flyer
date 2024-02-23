@@ -17,10 +17,10 @@ const getResultClass = (result: Result) => {
     }
 
     if (result.startTime) {
-        return "in-progress"
+        return "in-progress text-white"
     }
 
-    return "bg-cyan-100"
+    return "bg-orange-400 text-white"
 }
 
 const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
@@ -44,8 +44,6 @@ const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 
 <style scoped>
 .in-progress {
-    color: #ffffff;
     background: #0ea5e9;
-    border: 1px solid #0ea5e9;
 }
 </style>
