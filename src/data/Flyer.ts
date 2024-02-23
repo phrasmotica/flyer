@@ -12,6 +12,10 @@ export class Flyer {
 
     start() {
         this.startTime = Date.now()
+
+        for (const r of this.rounds) {
+            r.completeWalkovers()
+        }
     }
 
     startFixture(id: string) {

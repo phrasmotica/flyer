@@ -98,7 +98,13 @@ const disableFinish = computed(() => {
     return false
 })
 
-const description = computed(() => props.result.scores.map(s => playersStore.getName(s.playerId)!).join(" v "))
+const description = computed(() => props.result.scores.map(s => {
+    if (s.isBye) {
+        return "(bye)"
+    }
+
+    return playersStore.getName(s.playerId) || "(???)"
+}).join(" v "))
 
 const header = computed(() => `${round.value.name} - ${description.value}`)
 

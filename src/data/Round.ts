@@ -71,6 +71,19 @@ export class Round {
         }
     }
 
+    completeWalkovers() {
+        for (let f of this.fixtures) {
+            const isWalkover = f.scores.some(s => s.isBye)
+            if (isWalkover) {
+                console.log("Walking over " + f.id)
+
+                const now = Date.now()
+                f.startTime = now
+                f.finishTime = now
+            }
+        }
+    }
+
     startFixture(id: string) {
         const idx = this.fixtures.findIndex(f => f.id === id)
         if (idx >= 0) {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue"
+
 import type { Result } from "../data/Result"
 
 const props = defineProps<{
@@ -6,11 +8,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    showResultModal: []
+    clicked: []
 }>()
 
 const getResultClass = (result: Result) => {
-    if (result.finishTime) {
+    if (isWalkover.value || result.finishTime) {
         return "bg-primary"
     }
 
@@ -20,13 +22,18 @@ const getResultClass = (result: Result) => {
 
     return "bg-cyan-100"
 }
+
+const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 </script>
 
 <template>
-    <div class="p-2 text-center cursor-pointer border-round-md"
-        :class="getResultClass(props.result)"
-        @click="() => emit('showResultModal')">
-        <span v-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
+    <div class="p-2 text-center border-round-md"
+        :class="[getResultClass(props.result), !isWalkover && 'cursor-pointer']"
+        @click="() => emit('clicked')">
+        <span v-if="isWalkover">
+            <em>W/O</em>
+        </span>
+        <span v-else-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
             {{ props.result.scores.map(s => s.score).join("-") }}
         </span>
         <span v-else>
