@@ -8,11 +8,12 @@ import ResultsTable from "../components/ResultsTable.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import type { IScheduler } from "../data/IScheduler"
+import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 import { useFlyerStore } from "../stores/flyer"
 import { usePlayersStore } from "../stores/players"
-import { useSettingsStore } from "../stores/settings"
+import { useSettingsStore, Format } from "../stores/settings"
 
 enum Phase {
     Setup,
@@ -42,7 +43,18 @@ const setPhase = (p: Phase) => {
 const start = () => {
     playersStore.init(settingsStore.actualPlayers)
 
-    const scheduler: IScheduler = new RoundRobinScheduler(playersStore.players)
+    let scheduler: IScheduler
+
+    switch (settingsStore.format) {
+        case Format.Knockout:
+            scheduler = new KnockoutScheduler(playersStore.players)
+            break
+
+        case Format.RoundRobin:
+            scheduler = new RoundRobinScheduler(playersStore.players)
+            break
+    }
+
     flyerStore.start(scheduler.generateFixtures())
 
     setPhase(Phase.InProgress)

@@ -19,7 +19,11 @@ const playersStore = usePlayersStore()
 <template>
     <div class="grid m-0">
         <div class="col-5">
-            {{ playersStore.getName(props.result.scores[0].playerId) }}
+            <span v-if="props.result.scores[0].isBye" class="text-gray-400">
+                <em>bye</em>
+            </span>
+
+            <span v-else>{{ playersStore.getName(props.result.scores[0].playerId) }}</span>
         </div>
 
         <div class="col-2 p-0">
@@ -29,7 +33,11 @@ const playersStore = usePlayersStore()
         </div>
 
         <div class="col-5 text-right">
-            {{ playersStore.getName(props.result.scores[1].playerId) }}
+            <span v-if="props.result.scores[1].isBye" class="text-gray-400">
+                <em>bye</em>
+            </span>
+
+            <span v-else>{{ playersStore.getName(props.result.scores[1].playerId) }}</span>
         </div>
     </div>
 </template>

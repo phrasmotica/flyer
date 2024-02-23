@@ -22,10 +22,53 @@ export class Round {
             scores: players.map(p => ({
                 playerId: p.id,
                 score: 0,
+                isBye: false,
             })),
             startTime: null,
             finishTime: null,
         })
+    }
+
+    addPlaceholderFixture(players: Player[], playerCount: number) {
+        const fixture = <Result>{
+            id: uuidv4(),
+            scores: players.map(p => ({
+                playerId: p.id,
+                score: 0,
+            })),
+            startTime: null,
+            finishTime: null,
+        }
+
+        for (let i = fixture.scores.length; i < playerCount; i++) {
+            fixture.scores.push({
+                playerId: "",
+                score: 0,
+                isBye: false,
+            })
+        }
+
+        this.fixtures.push(fixture)
+    }
+
+    fillFixture(player: Player) {
+        for (let f of this.fixtures) {
+            const emptySpace = f.scores.find(s => !s.playerId)
+
+            if (emptySpace) {
+                emptySpace.playerId = player.id
+                return
+            }
+        }
+    }
+
+    fillByes() {
+        for (let f of this.fixtures) {
+            const emptySpaces = f.scores.filter(s => !s.playerId)
+            for (const s of emptySpaces) {
+                s.isBye = true
+            }
+        }
     }
 
     startFixture(id: string) {
