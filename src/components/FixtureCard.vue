@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref, watch } from "vue"
 
 import ScoreCell from "./ScoreCell.vue"
 
@@ -19,6 +19,12 @@ const emit = defineEmits<{
 
 const playersStore = usePlayersStore()
 
+const result = ref(props.result)
+
+watch(props, () => {
+    result.value = props.result
+})
+
 const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 
 const handleClick = () => {
@@ -35,47 +41,53 @@ const handleNameClick = (id: string) => {
 </script>
 
 <template>
-    <div class="grid m-0" :class="[props.highlightedResultId === props.result.id && 'bg-blue-100']">
+    <div class="grid m-0" :class="[props.highlightedResultId === result.id && 'bg-blue-100']">
         <div
             class="col-5"
             :class="[
-                props.highlightedResultId === props.result.parentFixtureIds[0] && 'bg-blue-100',
-                props.result.parentFixtureIds[0] && 'cursor-pointer',
+                props.highlightedResultId === result.parentFixtureIds[0] && 'bg-blue-100',
+                result.parentFixtureIds[0] && 'cursor-pointer',
             ]"
-            @click="handleNameClick(props.result.parentFixtureIds[0])">
-            <span v-if="props.result.scores[0].isBye" class="text-gray-400">
+            @click="handleNameClick(result.parentFixtureIds[0])">
+            <span v-if="result.scores[0].isBye" class="text-gray-400">
                 <em>(bye)</em>
             </span>
 
-            <span v-else-if="props.result.parentFixtureIds[0]" class="text-gray-400">
-                <em>TBD</em>
+            <span v-else-if="result.scores[0].playerId">
+                {{ playersStore.getName(result.scores[0].playerId) }}
             </span>
 
-            <span v-else>{{ playersStore.getName(props.result.scores[0].playerId) }}</span>
+            <span v-else-if="result.parentFixtureIds[0]">
+                <em class="text-gray-400">TBD</em>
+            </span>
         </div>
 
         <div class="col-2 p-0">
             <ScoreCell
-                :result="props.result"
+                :result="result"
                 @clicked="handleClick" />
         </div>
 
         <div
             class="col-5 text-right"
             :class="[
-                props.highlightedResultId === props.result.parentFixtureIds[1] && 'bg-blue-100',
-                props.result.parentFixtureIds[0] && 'cursor-pointer',
+                props.highlightedResultId === result.parentFixtureIds[1] && 'bg-blue-100',
+                result.parentFixtureIds[0] && 'cursor-pointer',
             ]"
-            @click="handleNameClick(props.result.parentFixtureIds[1])">
-            <span v-if="props.result.scores[1].isBye" class="text-gray-400">
+            @click="handleNameClick(result.parentFixtureIds[1])">
+            <span v-if="result.scores[1].isBye" class="text-gray-400">
                 <em>(bye)</em>
             </span>
 
-            <span v-else-if="props.result.parentFixtureIds[1]" class="text-gray-400">
-                <em>TBD</em>
+            <span v-else-if="result.scores[1].playerId">
+                {{ playersStore.getName(result.scores[1].playerId) }}
             </span>
 
-            <span v-else>{{ playersStore.getName(props.result.scores[1].playerId) }}</span>
+            <span v-else-if="result.parentFixtureIds[1]">
+                <em class="text-gray-400">TBD</em>
+            </span>
+
+            <span v-else>{{ playersStore.getName(result.scores[1].playerId) }}</span>
         </div>
     </div>
 </template>

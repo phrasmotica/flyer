@@ -74,6 +74,8 @@ export class Round {
     }
 
     completeWalkovers() {
+        const ids: [string, string][] = []
+
         for (let f of this.fixtures) {
             const isWalkover = f.scores.some(s => s.isBye)
             if (isWalkover) {
@@ -82,8 +84,17 @@ export class Round {
                 const now = Date.now()
                 f.startTime = now
                 f.finishTime = now
+
+                const winner = f.scores.find(s => !s.isBye && s.playerId)
+                if (!winner) {
+                    throw "No winner of walkover " + f.id + "!"
+                }
+
+                ids.push([f.id, winner.playerId])
             }
         }
+
+        return ids
     }
 
     startFixture(id: string) {
@@ -93,15 +104,23 @@ export class Round {
         }
     }
 
-    updateResult(newResult: Result, finish: boolean) {
+    updateResult(newResult: Result, finish: boolean): [string, string] {
+        let winnerId = ""
+
         const idx = this.fixtures.findIndex(f => f.id === newResult.id)
         if (idx >= 0) {
             if (finish) {
                 newResult.finishTime = Date.now()
+
+                const winner = newResult.scores.reduce((s, t) => s.score > t.score ? s : t)
+                winnerId = winner.playerId
             }
 
             this.fixtures[idx] = newResult
+            return [newResult.id, winnerId]
         }
+
+        return ["", ""]
     }
 
     getExistingFixtures(player: Player) {

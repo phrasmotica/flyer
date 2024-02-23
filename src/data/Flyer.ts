@@ -14,7 +14,13 @@ export class Flyer {
         this.startTime = Date.now()
 
         for (const r of this.rounds) {
-            r.completeWalkovers()
+            const walkovers = r.completeWalkovers()
+
+            for (const [fixtureId, winnerId] of walkovers) {
+                // doing this just once is sufficient because we're not creating any fixtures
+                // with a bye in both slots
+                this.propagate(fixtureId, winnerId)
+            }
         }
     }
 
@@ -26,7 +32,26 @@ export class Flyer {
 
     updateResult(newResult: Result, finish: boolean) {
         for (const r of this.rounds) {
-            r.updateResult(newResult, finish)
+            const [fixtureId, winnerId] = r.updateResult(newResult, finish)
+
+            if (finish) {
+                this.propagate(fixtureId, winnerId)
+            }
+        }
+    }
+
+    // Updates results that depend on the one with the specified ID
+    // with given player ID, intended to be that of the winner. Use it for
+    // progressing a player through to the next stage of a knockout bracket.
+    propagate(fixtureId: string, winnerId: string) {
+        // TODO: inefficient to search through all future fixtures. Optimise
+        // this somehow (only search future fixtures?), or redesign the whole
+        // thing...
+        for (const f of this.rounds.flatMap(r => r.fixtures)) {
+            const slotIndex = f.parentFixtureIds.indexOf(fixtureId)
+            if (slotIndex >= 0) {
+                f.scores[slotIndex].playerId = winnerId
+            }
         }
     }
 
