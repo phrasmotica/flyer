@@ -9,7 +9,7 @@ const flyerStore = useFlyerStore()
 const winner = computed(() => flyerStore.winner)
 
 const winnerResults = computed(() => {
-    const results = flyerStore.results.filter(r => r.scores.some(s => s.playerId === winner.value?.id ?? "???"))
+    const results = flyerStore.results.filter(r => r.scores.some(s => s.playerId === winner.value?.id || "???"))
 
     // ensures reverse chronological order
     return results.reverse()
