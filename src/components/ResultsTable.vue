@@ -4,10 +4,8 @@ import { computed } from "vue"
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
-import { usePlayersStore } from "../stores/players"
 
 const flyerStore = useFlyerStore()
-const playersStore = usePlayersStore()
 
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {
@@ -47,7 +45,7 @@ const isIncomplete = (player: string, results: Result[]) => {
 }
 
 const tableData = computed(() => {
-    const data = playersStore.players.map(p => ({
+    const data = flyerStore.players.map(p => ({
         name: p.name,
         wins: getWins(p.id, flyerStore.results),
         draws: getDraws(p.id, flyerStore.results),

@@ -10,10 +10,6 @@ export class KnockoutScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private players: Player[]) {
-
-    }
-
     estimateDuration(players: number, raceTo: number, tables: number) {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
@@ -24,14 +20,14 @@ export class KnockoutScheduler implements IScheduler {
         return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tables)
     }
 
-    generateFixtures() {
+    generateFixtures(players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
         }
 
-        const overallPool = this.shuffle([...this.players])
+        const overallPool = this.shuffle([...players])
 
-        const numRounds = Math.ceil(Math.log2(this.players.length))
+        const numRounds = Math.ceil(Math.log2(players.length))
 
         let numSpaces = Math.pow(2, numRounds)
         let numFixtures = numSpaces / 2

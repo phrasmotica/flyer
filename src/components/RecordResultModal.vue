@@ -5,7 +5,6 @@ import { differenceInMinutes } from "date-fns"
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
-import { usePlayersStore } from "../stores/players"
 import { useSettingsStore } from "../stores/settings"
 
 const props = defineProps<{
@@ -19,7 +18,6 @@ const emit = defineEmits<{
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
-const playersStore = usePlayersStore()
 
 const visible = ref(props.visible)
 const result = ref(props.result)
@@ -113,7 +111,7 @@ const description = computed(() => result.value.scores.map(s => {
         return "(bye)"
     }
 
-    return playersStore.getName(s.playerId) || "(???)"
+    return flyerStore.getPlayerName(s.playerId) || "(???)"
 }).join(" v "))
 
 const header = computed(() => `${round.value.name} - ${description.value}`)
@@ -138,7 +136,7 @@ const fixtureDuration = computed(() => {
             <p>Took {{ fixtureDuration }} minute(s)</p>
 
             <div v-for="id, i in players" class="font-bold">
-                {{ playersStore.getName(id) }}: {{ scores[i] }}
+                {{ flyerStore.getPlayerName(id) }}: {{ scores[i] }}
             </div>
         </div>
 
@@ -150,7 +148,7 @@ const fixtureDuration = computed(() => {
 
             <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
                 <div class="font-bold">
-                    {{ playersStore.getName(id) }}
+                    {{ flyerStore.getPlayerName(id) }}
                 </div>
 
                 <div class="md:ml-3">

@@ -9,10 +9,6 @@ export class RoundRobinScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private players: Player[]) {
-
-    }
-
     estimateDuration(players: number, raceTo: number, tables: number) {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
@@ -23,20 +19,20 @@ export class RoundRobinScheduler implements IScheduler {
         return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tables)
     }
 
-    generateFixtures() {
+    generateFixtures(players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
         }
 
         let attempts = 0
 
-        const oddPlayerCount = this.players.length % 2 !== 0
-        const numRounds = oddPlayerCount ? this.players.length : this.players.length - 1
+        const oddPlayerCount = players.length % 2 !== 0
+        const numRounds = oddPlayerCount ? players.length : players.length - 1
 
         this.generatedRounds = <Round[]>[]
 
         // use this to omit a random player each round, if we have an odd number of players
-        const omissionIndexes = this.shuffle(this.players.map((_, i) => i))
+        const omissionIndexes = this.shuffle(players.map((_, i) => i))
 
         // generate rounds of fixtures. For each round:
         // 1. create an overall pool of all players. If the number of players is odd, omit one player who has NOT yet been omitted from a round from this round
@@ -59,7 +55,7 @@ export class RoundRobinScheduler implements IScheduler {
 
             let retry = false
 
-            let overallPool = [...this.players]
+            let overallPool = [...players]
 
             if (oddPlayerCount) {
                 // omit a random player that hasn't been omitted yet

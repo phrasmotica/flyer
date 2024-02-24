@@ -5,7 +5,7 @@ import ScoreCell from "./ScoreCell.vue"
 
 import type { Result } from "../data/Result"
 
-import { usePlayersStore } from "../stores/players"
+import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     result: Result
@@ -17,7 +17,7 @@ const emit = defineEmits<{
     highlight: [resultId: string]
 }>()
 
-const playersStore = usePlayersStore()
+const flyerStore = useFlyerStore()
 
 const result = ref(props.result)
 
@@ -54,7 +54,7 @@ const handleNameClick = (id: string) => {
             </span>
 
             <span v-else-if="result.scores[0].playerId">
-                {{ playersStore.getName(result.scores[0].playerId) }}
+                {{ flyerStore.getPlayerName(result.scores[0].playerId) }}
             </span>
 
             <span v-else-if="result.parentFixtureIds[0]">
@@ -80,14 +80,14 @@ const handleNameClick = (id: string) => {
             </span>
 
             <span v-else-if="result.scores[1].playerId">
-                {{ playersStore.getName(result.scores[1].playerId) }}
+                {{ flyerStore.getPlayerName(result.scores[1].playerId) }}
             </span>
 
             <span v-else-if="result.parentFixtureIds[1]">
                 <em class="text-gray-400">TBD</em>
             </span>
 
-            <span v-else>{{ playersStore.getName(result.scores[1].playerId) }}</span>
+            <span v-else>{{ flyerStore.getPlayerName(result.scores[1].playerId) }}</span>
         </div>
     </div>
 </template>

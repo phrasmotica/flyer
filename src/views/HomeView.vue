@@ -5,41 +5,32 @@ import { useRouter } from "vue-router"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 
-import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 import { useFlyerStore } from "../stores/flyer"
-import { usePlayersStore } from "../stores/players"
 import { useSettingsStore, Format } from "../stores/settings"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
-const playersStore = usePlayersStore()
 
 const showModal = ref(false)
 
 const start = () => {
-    playersStore.init(settingsStore.actualPlayers)
-
-    let scheduler: IScheduler
-
     switch (settingsStore.format) {
         case Format.Knockout:
-            scheduler = new KnockoutScheduler(playersStore.players)
+            flyerStore.start(settingsStore.actualPlayers, new KnockoutScheduler())
             break
 
         case Format.RoundRobin:
-            scheduler = new RoundRobinScheduler(playersStore.players)
+            flyerStore.start(settingsStore.actualPlayers, new RoundRobinScheduler())
             break
 
         default:
             throw `Invalid flyer format ${settingsStore.format}!`
     }
-
-    flyerStore.start(scheduler.generateFixtures())
 
     hideModal()
 

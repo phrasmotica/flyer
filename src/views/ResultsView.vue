@@ -7,14 +7,12 @@ import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyerStore } from "../stores/flyer"
-import { usePlayersStore } from "../stores/players"
 import { useSettingsStore, Format } from "../stores/settings"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
-const playersStore = usePlayersStore()
 
 const showRestartModal = ref(false)
 
@@ -23,7 +21,6 @@ const confirmRestart = () => {
 }
 
 const restart = () => {
-    playersStore.clear()
     flyerStore.clear()
 
     hideRestartModal()

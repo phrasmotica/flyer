@@ -8,6 +8,7 @@ import { defineStore } from "pinia"
 import type { Flyer } from "../data/Flyer"
 import type { Result } from "../data/Result"
 import type { Round } from "../data/Round"
+import type { IScheduler } from "@/data/IScheduler"
 
 export const useFlyerStore = defineStore("flyer", () => {
     const flyer = useStorage<Flyer>("flyer", null, localStorage, {
@@ -16,6 +17,8 @@ export const useFlyerStore = defineStore("flyer", () => {
             write: v => JSON.stringify(v),
         }
     })
+
+    const players = computed(() => flyer.value?.players ?? [])
 
     const rounds = computed(() => flyer.value?.rounds ?? [])
 
@@ -53,12 +56,20 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
 
-    const start = (r: Round[]) => {
+    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
+
+    const start = (p: string[], scheduler: IScheduler) => {
+        const players = p.map(n => ({
+            id: uuidv4(),
+            name: n,
+        }))
+
         flyer.value = <Flyer>{
             id: uuidv4(),
-            rounds: r,
+            players,
             startTime: null,
             finishTime: null,
+            rounds: scheduler.generateFixtures(players),
         }
 
         flyer.value.startTime = Date.now()
@@ -141,6 +152,7 @@ export const useFlyerStore = defineStore("flyer", () => {
     const clear = () => flyer.value = null
 
     return {
+        players,
         rounds,
         results,
         ongoingCount,
@@ -150,6 +162,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         winner,
 
         getRound,
+        getPlayerName,
         start,
         startFixture,
         updateResult,

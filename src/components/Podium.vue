@@ -2,12 +2,10 @@
 import { computed } from "vue"
 
 import { useFlyerStore } from "../stores/flyer"
-import { usePlayersStore } from "../stores/players"
 
 const flyerStore = useFlyerStore()
-const playersStore = usePlayersStore()
 
-const winnerName = computed(() => playersStore.getName(flyerStore.winner))
+const winnerName = computed(() => flyerStore.getPlayerName(flyerStore.winner))
 </script>
 
 <template>
