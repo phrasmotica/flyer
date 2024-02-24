@@ -1,6 +1,9 @@
+import { v4 as uuidv4 } from "uuid"
+
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
-import { Round } from "./Round"
+import type { Round } from "./Round"
+import type { Result } from "./Result"
 
 export class KnockoutScheduler implements IScheduler {
     frameTimeEstimateMins: number = 7
@@ -41,7 +44,11 @@ export class KnockoutScheduler implements IScheduler {
         // 3.
         let r = 0
         while (r < numRounds) {
-            const round = new Round(r + 1, this.getRoundName(numSpaces))
+            const round = <Round>{
+                index: r + 1,
+                name: this.getRoundName(numSpaces),
+                fixtures: [],
+            }
 
             console.log(round.name)
 
@@ -49,22 +56,22 @@ export class KnockoutScheduler implements IScheduler {
                 if (r === 0) {
                     const playerA = overallPool.pop()
 
-                    round.addPlaceholderFixture([playerA!], 2, [])
+                    this.addPlaceholderFixture(round, [playerA!], 2, [])
                 }
                 else {
                     const previousRound = this.generatedRounds[r - 1]
                     const parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
 
-                    round.addPlaceholderFixture([], 2, parentFixtureIds)
+                    this.addPlaceholderFixture(round, [], 2, parentFixtureIds)
                 }
             }
 
             while (overallPool.length > 0) {
-                round.fillFixture(overallPool.pop()!)
+                this.fillFixture(round, overallPool.pop()!)
             }
 
             if (r === 0) {
-                round.fillByes()
+                this.fillByes(round)
             }
 
             this.generatedRounds.push(round)
@@ -90,6 +97,49 @@ export class KnockoutScheduler implements IScheduler {
 
             default:
                 return "Round of " + numSpaces
+        }
+    }
+
+    private addPlaceholderFixture(round: Round, players: Player[], playerCount: number, parentFixtureIds: string[]) {
+        const fixture = <Result>{
+            id: uuidv4(),
+            parentFixtureIds,
+            scores: players.map(p => ({
+                playerId: p.id,
+                score: 0,
+            })),
+            startTime: null,
+            finishTime: null,
+        }
+
+        for (let i = fixture.scores.length; i < playerCount; i++) {
+            fixture.scores.push({
+                playerId: "",
+                score: 0,
+                isBye: false,
+            })
+        }
+
+        round.fixtures.push(fixture)
+    }
+
+    private fillFixture(round: Round, player: Player) {
+        for (let f of round.fixtures) {
+            const emptySpace = f.scores.find(s => !s.playerId)
+
+            if (emptySpace) {
+                emptySpace.playerId = player.id
+                return
+            }
+        }
+    }
+
+    private fillByes(round: Round) {
+        for (let f of round.fixtures) {
+            const emptySpaces = f.scores.filter(s => !s.playerId)
+            for (const s of emptySpaces) {
+                s.isBye = true
+            }
         }
     }
 

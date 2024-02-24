@@ -1,4 +1,4 @@
-import { Round } from "./Round"
+import type { Round } from "./Round"
 
 export interface IScheduler {
     frameTimeEstimateMins: number

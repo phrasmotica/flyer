@@ -1,6 +1,8 @@
+import { v4 as uuidv4 } from "uuid"
+
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
-import { Round } from "./Round"
+import type { Round } from "./Round"
 
 export class RoundRobinScheduler implements IScheduler {
     frameTimeEstimateMins: number = 7
@@ -47,7 +49,11 @@ export class RoundRobinScheduler implements IScheduler {
         // 8. add the round to the list of rounds
         let r = 0
         while (r < numRounds && attempts < 10) {
-            const round = new Round(r + 1, "Round " + (r + 1))
+            const round = <Round>{
+                index: r + 1,
+                name: "Round " + (r + 1),
+                fixtures: [],
+            }
 
             console.log(round.name)
 
@@ -64,7 +70,7 @@ export class RoundRobinScheduler implements IScheduler {
             while (overallPool.length > 1) {
                 const playerA = this.getRandom(overallPool)
 
-                const existingOpponents = this.generatedRounds.flatMap(r => r.getExistingOpponents(playerA))
+                const existingOpponents = this.generatedRounds.flatMap(r => this.getExistingOpponents(r, playerA))
 
                 const possibleOpponents = overallPool.filter(p => !existingOpponents.includes(p.id) && playerA.id !== p.id)
                 if (possibleOpponents.length <= 0) {
@@ -76,7 +82,7 @@ export class RoundRobinScheduler implements IScheduler {
 
                 const playerB = this.getRandom(possibleOpponents)
 
-                round.addFixture([playerA, playerB], [])
+                this.addFixture(round, [playerA, playerB], [])
 
                 overallPool = overallPool.filter(p => ![playerA.id, playerB.id].includes(p.id))
             }
@@ -95,6 +101,27 @@ export class RoundRobinScheduler implements IScheduler {
         }
 
         return this.generatedRounds
+    }
+
+    private addFixture(round: Round, players: Player[], parentFixtureIds: string[]) {
+        console.log(players.map(p => p.name).join(" v "))
+
+        round.fixtures.push({
+            id: uuidv4(),
+            parentFixtureIds,
+            scores: players.map(p => ({
+                playerId: p.id,
+                score: 0,
+                isBye: false,
+            })),
+            startTime: null,
+            finishTime: null,
+        })
+    }
+
+    private getExistingOpponents(r: Round, player: Player) {
+        const existingFixtures = r.fixtures.filter(f => f.scores.some(s => s.playerId === player.id))
+        return [...new Set(existingFixtures.map(f => f.scores.map(s => s.playerId).filter(id => id !== player.id)).flatMap(s => s))]
     }
 
     getCurrentRound() {
