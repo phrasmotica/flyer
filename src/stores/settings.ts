@@ -4,6 +4,7 @@ import { useStorage } from "@vueuse/core"
 
 import { Format, type FlyerSettings } from "../data/FlyerSettings"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
+import { KnockoutScheduler } from "@/data/KnockoutScheduler"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 
@@ -38,9 +39,31 @@ export const useSettingsStore = defineStore("settings", () => {
 
     const actualPlayers = computed(() => playerNames.value.slice(0, settings.value.playerCount))
 
-    const estimatedDuration = computed(() => new RoundRobinScheduler().estimateDuration(settings.value))
+    const estimatedDuration = computed(() => {
+        switch (settings.value.format) {
+            case Format.Knockout:
+                return new KnockoutScheduler().estimateDuration(settings.value)
 
-    const durationPerFrame = computed(() => new RoundRobinScheduler().frameTimeEstimateMins)
+            case Format.RoundRobin:
+                return new RoundRobinScheduler().estimateDuration(settings.value)
+
+            default:
+                throw `Invalid flyer format ${settings.value.format}!`
+        }
+    })
+
+    const durationPerFrame = computed(() => {
+        switch (settings.value.format) {
+            case Format.Knockout:
+                return new KnockoutScheduler().frameTimeEstimateMins
+
+            case Format.RoundRobin:
+                return new RoundRobinScheduler().frameTimeEstimateMins
+
+            default:
+                throw `Invalid flyer format ${settings.value.format}!`
+        }
+    })
 
     const isInvalid = computed(() => actualPlayers.value.some(p => !p))
 
