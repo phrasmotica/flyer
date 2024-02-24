@@ -80,8 +80,8 @@ const disableStart = computed(() => {
         return true
     }
 
-    if (settings.requireCompletedRounds) {
-        return round.value.index > flyerStore.currentRound
+    if (settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
+        return true
     }
 
     return flyerStore.ongoingCount >= settings.tableCount
