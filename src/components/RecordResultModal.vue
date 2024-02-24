@@ -17,7 +17,7 @@ const emit = defineEmits<{
 }>()
 
 const flyerStore = useFlyerStore()
-const settingsStore = useSettingsStore()
+const settings = useSettingsStore().settings
 
 const visible = ref(props.visible)
 const result = ref(props.result)
@@ -64,11 +64,11 @@ const startButtonText = computed(() => {
         return "Waiting for a previous result"
     }
 
-    if (settingsStore.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
+    if (settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
         return "Waiting for round to start"
     }
 
-    if (flyerStore.ongoingCount >= settingsStore.tableCount) {
+    if (flyerStore.ongoingCount >= settings.tableCount) {
         return "Waiting for a free table"
     }
 
@@ -80,19 +80,19 @@ const disableStart = computed(() => {
         return true
     }
 
-    if (settingsStore.requireCompletedRounds) {
+    if (settings.requireCompletedRounds) {
         return round.value.index > flyerStore.currentRound
     }
 
-    return flyerStore.ongoingCount >= settingsStore.tableCount
+    return flyerStore.ongoingCount >= settings.tableCount
 })
 
 const disableFinish = computed(() => {
-    if (scores.value.every(s => s < settingsStore.raceTo)) {
+    if (scores.value.every(s => s < settings.raceTo)) {
         return true
     }
 
-    if (scores.value.reduce((a, b) => a + b) > 2 * settingsStore.raceTo - 1) {
+    if (scores.value.reduce((a, b) => a + b) > 2 * settings.raceTo - 1) {
         return true
     }
 
@@ -151,7 +151,7 @@ const fixtureDuration = computed(() => {
                         showButtons
                         buttonLayout="horizontal"
                         :modelValue="scores[i]"
-                        :min="0" :max="settingsStore.raceTo"
+                        :min="0" :max="settings.raceTo"
                         @update:modelValue="v => setScore(i, v)">
                         <template #incrementbuttonicon>
                             <span class="pi pi-plus" />

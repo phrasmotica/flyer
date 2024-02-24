@@ -2,12 +2,8 @@ import { computed, watch } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
+import { Format, type FlyerSettings } from "../data/FlyerSettings"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
-
-export enum Format {
-    Knockout = "Knockout",
-    RoundRobin = "Round Robin",
-}
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 
@@ -21,75 +17,45 @@ if (defaultPlayers.length < 10) {
 }
 
 export const useSettingsStore = defineStore("settings", () => {
-    // TODO: simplify this store by storing a single object for all the settings,
-    // rather than requiring one useStorage(...) call for each setting
+    const settings = useStorage("settings", <FlyerSettings>{
+        playerCount: defaultPlayers.filter(p => p).length,
+        playerNames: defaultPlayers,
+        raceTo: 1,
+        tableCount: 1, // TODO: use this to assign fixtures to tables
+        format: Format.Knockout,
+        requireCompletedRounds: true,
+        allowEarlyFinish: false,
+    })
 
-    const playerCount = useStorage("playerCount", defaultPlayers.filter(p => p).length)
-    const playerNames = useStorage("playerNames", defaultPlayers)
+    const playerNames = computed(() => settings.value.playerNames)
 
-    const raceTo = useStorage("raceTo", 1)
-
-    // TODO: use this to assign fixtures to tables
-    const tableCount = useStorage("tableCount", 1)
-
-    const format = useStorage("format", Format.Knockout)
-    const formatOptions = [Format.Knockout, Format.RoundRobin]
-
-    const requireCompletedRounds = useStorage("requireCompletedRounds", true)
-    const allowEarlyFinish = useStorage("allowEarlyFinish", false)
-
-    watch(format, () => {
-        if (format.value === Format.Knockout) {
-            requireCompletedRounds.value = true
-            allowEarlyFinish.value = false
+    watch(settings, () => {
+        if (settings.value.format === Format.Knockout) {
+            settings.value.requireCompletedRounds = true
+            settings.value.allowEarlyFinish = false
         }
     })
 
-    const actualPlayers = computed(() => playerNames.value.slice(0, playerCount.value))
+    const actualPlayers = computed(() => playerNames.value.slice(0, settings.value.playerCount))
 
-    const estimatedDuration = computed(() => new RoundRobinScheduler().estimateDuration(playerCount.value, raceTo.value, tableCount.value))
+    const estimatedDuration = computed(() => new RoundRobinScheduler().estimateDuration(settings.value.playerCount, settings.value.raceTo, settings.value.tableCount))
 
     const durationPerFrame = computed(() => new RoundRobinScheduler().frameTimeEstimateMins)
 
     const isInvalid = computed(() => actualPlayers.value.some(p => !p))
 
-    const setPlayerCount = (n: number) => playerCount.value = n
-
-    const setPlayers = (p: string[]) => playerNames.value = p
-
     const setName = (index: number, name: string) => {
-        playerNames.value = playerNames.value.map((v, i) => i === index ? name : v)
-    }
-
-    const setRaceTo = (r: number) => raceTo.value = r
-
-    const setTableCount = (t: number) => tableCount.value = t
-
-    const reset = () => {
-        setRaceTo(1)
-        setTableCount(1)
+        settings.value.playerNames = playerNames.value.map((v, i) => i === index ? name : v)
     }
 
     return {
-        playerNames,
-        raceTo,
-        tableCount,
-        format,
-        formatOptions,
-        requireCompletedRounds,
-        allowEarlyFinish,
+        settings,
 
-        playerCount,
         estimatedDuration,
         durationPerFrame,
         actualPlayers,
         isInvalid,
 
-        setPlayerCount,
-        setPlayers,
         setName,
-        setRaceTo,
-        setTableCount,
-        reset,
     }
 })

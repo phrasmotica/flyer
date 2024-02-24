@@ -17,7 +17,7 @@ enum Display {
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
-const settingsStore = useSettingsStore()
+const settings = useSettingsStore().settings
 
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
@@ -60,7 +60,7 @@ const hideFinishModal = () => {
         <div class="p-fluid mt-2">
             <Button
                 label="Finish"
-                :disabled="!settingsStore.allowEarlyFinish && flyerStore.remainingCount > 0"
+                :disabled="!settings.allowEarlyFinish && flyerStore.remainingCount > 0"
                 @click="confirmFinish" />
         </div>
 

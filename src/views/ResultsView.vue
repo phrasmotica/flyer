@@ -6,8 +6,10 @@ import ConfirmModal from "../components/ConfirmModal.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
+import { Format } from "../data/FlyerSettings"
+
 import { useFlyerStore } from "../stores/flyer"
-import { useSettingsStore, Format } from "../stores/settings"
+import { useSettingsStore } from "../stores/settings"
 
 const router = useRouter()
 
@@ -37,9 +39,9 @@ const hideRestartModal = () => {
 
 <template>
     <main>
-        <ResultsTable v-if="settingsStore.format === Format.RoundRobin" />
+        <ResultsTable v-if="settingsStore.settings.format === Format.RoundRobin" />
 
-        <Podium v-if="settingsStore.format === Format.Knockout" />
+        <Podium v-if="settingsStore.settings.format === Format.Knockout" />
 
         <div class="p-fluid mt-2">
             <Button label="Restart" @click="confirmRestart" />
