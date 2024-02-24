@@ -34,6 +34,9 @@ const start = () => {
         case Format.RoundRobin:
             scheduler = new RoundRobinScheduler(playersStore.players)
             break
+
+        default:
+            throw `Invalid flyer format ${settingsStore.format}!`
     }
 
     flyerStore.start(scheduler.generateFixtures())
