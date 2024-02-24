@@ -47,9 +47,9 @@ export const useSettingsStore = defineStore("settings", () => {
 
     const actualPlayers = computed(() => playerNames.value.slice(0, playerCount.value))
 
-    const estimatedDuration = computed(() => new RoundRobinScheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
+    const estimatedDuration = computed(() => new RoundRobinScheduler().estimateDuration(playerCount.value, raceTo.value, tableCount.value))
 
-    const durationPerFrame = computed(() => new RoundRobinScheduler([]).frameTimeEstimateMins)
+    const durationPerFrame = computed(() => new RoundRobinScheduler().frameTimeEstimateMins)
 
     const isInvalid = computed(() => actualPlayers.value.some(p => !p))
 
