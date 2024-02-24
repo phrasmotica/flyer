@@ -1,5 +1,6 @@
-import { computed, ref, watch } from "vue"
+import { computed, watch } from "vue"
 import { defineStore } from "pinia"
+import { useStorage } from "@vueuse/core"
 
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
@@ -20,19 +21,22 @@ if (defaultPlayers.length < 10) {
 }
 
 export const useSettingsStore = defineStore("settings", () => {
-    const playerCount = ref(defaultPlayers.filter(p => p).length)
-    const players = ref(defaultPlayers)
+    // TODO: simplify this store by storing a single object for all the settings,
+    // rather than requiring one useStorage(...) call for each setting
 
-    const raceTo = ref(1)
+    const playerCount = useStorage("playerCount", defaultPlayers.filter(p => p).length, localStorage)
+    const playerNames = useStorage("playerNames", defaultPlayers, localStorage)
+
+    const raceTo = useStorage("raceTo", 1, localStorage)
 
     // TODO: use this to assign fixtures to tables
-    const tableCount = ref(1)
+    const tableCount = useStorage("tableCount", 1, localStorage)
 
-    const format = ref(Format.Knockout)
-    const formatOptions = ref([Format.Knockout, Format.RoundRobin])
+    const format = useStorage("format", Format.Knockout, localStorage)
+    const formatOptions = [Format.Knockout, Format.RoundRobin]
 
-    const requireCompletedRounds = ref(true)
-    const allowEarlyFinish = ref(false)
+    const requireCompletedRounds = useStorage("requireCompletedRounds", true, localStorage)
+    const allowEarlyFinish = useStorage("allowEarlyFinish", false, localStorage)
 
     watch(format, () => {
         if (format.value === Format.Knockout) {
@@ -41,7 +45,7 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     })
 
-    const actualPlayers = computed(() => players.value.slice(0, playerCount.value))
+    const actualPlayers = computed(() => playerNames.value.slice(0, playerCount.value))
 
     const estimatedDuration = computed(() => new RoundRobinScheduler([]).estimateDuration(playerCount.value, raceTo.value, tableCount.value))
 
@@ -51,10 +55,10 @@ export const useSettingsStore = defineStore("settings", () => {
 
     const setPlayerCount = (n: number) => playerCount.value = n
 
-    const setPlayers = (p: string[]) => players.value = p
+    const setPlayers = (p: string[]) => playerNames.value = p
 
     const setName = (index: number, name: string) => {
-        players.value = players.value.map((v, i) => i === index ? name : v)
+        playerNames.value = playerNames.value.map((v, i) => i === index ? name : v)
     }
 
     const setRaceTo = (r: number) => raceTo.value = r
@@ -67,7 +71,7 @@ export const useSettingsStore = defineStore("settings", () => {
     }
 
     return {
-        players,
+        playerNames,
         raceTo,
         tableCount,
         format,

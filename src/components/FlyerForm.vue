@@ -108,7 +108,7 @@ onMounted(() => {
         </InputNumber>
     </div>
 
-    <div v-for="p, i in settingsStore.players">
+    <div v-for="p, i in settingsStore.playerNames">
         <PlayerNameInput
             class="mb-2"
             :placeholder="'Player ' + (i + 1)"
