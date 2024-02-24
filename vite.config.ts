@@ -6,7 +6,9 @@ import mkcert from'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/flyer/",
+  base: process.env.NODE_ENV === 'production'
+    ? "/flyer/"
+    : "",
   plugins: [
     vue(),
     mkcert(),

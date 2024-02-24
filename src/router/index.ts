@@ -1,22 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import HomeView from "../views/HomeView.vue"
+import PlayView from "../views/PlayView.vue"
+import ResultsView from "../views/ResultsView.vue"
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      redirect: { name: 'home' }
+    },
+    {
+      path: '/flyer',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: HomeView,
     },
     {
-      path: '/play',
+      path: '/flyer/play',
       name: 'play',
-      component: () => import('../views/PlayView.vue')
+      component: PlayView,
     },
     {
-      path: '/results',
+      path: '/flyer/results',
       name: 'results',
-      component: () => import('../views/ResultsView.vue')
+      component: ResultsView,
     },
   ]
 })
