@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "predeploy": "npm run build-only",
-    "deploy": "gh-pages -d dist",
+    "deploy": "cpy dist/index.html . --rename=404.html && gh-pages -d dist",
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
