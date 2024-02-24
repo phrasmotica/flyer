@@ -22,11 +22,11 @@ const showModal = ref(false)
 const start = () => {
     switch (settingsStore.settings.format) {
         case Format.Knockout:
-            flyerStore.start(settingsStore.actualPlayers, new KnockoutScheduler())
+            flyerStore.start(settingsStore.actualPlayers, settingsStore.settings, new KnockoutScheduler())
             break
 
         case Format.RoundRobin:
-            flyerStore.start(settingsStore.actualPlayers, new RoundRobinScheduler())
+            flyerStore.start(settingsStore.actualPlayers, settingsStore.settings, new RoundRobinScheduler())
             break
 
         default:

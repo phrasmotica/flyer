@@ -9,12 +9,10 @@ import ResultsTable from "../components/ResultsTable.vue"
 import { Format } from "../data/FlyerSettings"
 
 import { useFlyerStore } from "../stores/flyer"
-import { useSettingsStore } from "../stores/settings"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
-const settingsStore = useSettingsStore()
 
 const showRestartModal = ref(false)
 
@@ -39,9 +37,9 @@ const hideRestartModal = () => {
 
 <template>
     <main>
-        <ResultsTable v-if="settingsStore.settings.format === Format.RoundRobin" />
+        <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
 
-        <Podium v-if="settingsStore.settings.format === Format.Knockout" />
+        <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
         <div class="p-fluid mt-2">
             <Button label="Restart" @click="confirmRestart" />

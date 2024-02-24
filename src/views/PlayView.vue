@@ -7,7 +7,6 @@ import FixtureList from "../components/FixtureList.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import { useFlyerStore } from "../stores/flyer"
-import { useSettingsStore } from "../stores/settings"
 
 enum Display {
     Fixtures = "Fixtures",
@@ -17,7 +16,6 @@ enum Display {
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
-const settings = useSettingsStore().settings
 
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
@@ -60,7 +58,7 @@ const hideFinishModal = () => {
         <div class="p-fluid mt-2">
             <Button
                 label="Finish"
-                :disabled="!settings.allowEarlyFinish && flyerStore.remainingCount > 0"
+                :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
                 @click="confirmFinish" />
         </div>
 

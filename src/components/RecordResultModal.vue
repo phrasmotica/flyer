@@ -5,7 +5,6 @@ import { differenceInMinutes } from "date-fns"
 import type { Result, Score } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
-import { useSettingsStore } from "../stores/settings"
 
 const props = defineProps<{
     visible: boolean
@@ -17,7 +16,6 @@ const emit = defineEmits<{
 }>()
 
 const flyerStore = useFlyerStore()
-const settings = useSettingsStore().settings
 
 const visible = ref(props.visible)
 const result = ref(props.result)
@@ -64,11 +62,11 @@ const startButtonText = computed(() => {
         return "Waiting for a previous result"
     }
 
-    if (settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
+    if (flyerStore.settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
         return "Waiting for round to start"
     }
 
-    if (flyerStore.ongoingCount >= settings.tableCount) {
+    if (flyerStore.ongoingCount >= flyerStore.settings.tableCount) {
         return "Waiting for a free table"
     }
 
@@ -80,19 +78,19 @@ const disableStart = computed(() => {
         return true
     }
 
-    if (settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
+    if (flyerStore.settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
         return true
     }
 
-    return flyerStore.ongoingCount >= settings.tableCount
+    return flyerStore.ongoingCount >= flyerStore.settings.tableCount
 })
 
 const disableFinish = computed(() => {
-    if (scores.value.every(s => s < settings.raceTo)) {
+    if (scores.value.every(s => s < flyerStore.settings.raceTo)) {
         return true
     }
 
-    if (scores.value.reduce((a, b) => a + b) > 2 * settings.raceTo - 1) {
+    if (scores.value.reduce((a, b) => a + b) > 2 * flyerStore.settings.raceTo - 1) {
         return true
     }
 
@@ -151,7 +149,7 @@ const fixtureDuration = computed(() => {
                         showButtons
                         buttonLayout="horizontal"
                         :modelValue="scores[i]"
-                        :min="0" :max="settings.raceTo"
+                        :min="0" :max="flyerStore.settings.raceTo"
                         @update:modelValue="v => setScore(i, v)">
                         <template #incrementbuttonicon>
                             <span class="pi pi-plus" />
