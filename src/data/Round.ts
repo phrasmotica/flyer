@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid"
 import type { Player } from "./Player"
 import type { Result } from "./Result"
 
+// TODO: turn this into an interface and move the business logic into a separate
+// class. This will allow us to use useStorage(...) in the flyer store
 export class Round {
     public index: number
     public name: string

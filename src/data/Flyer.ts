@@ -1,6 +1,8 @@
 import type { Result } from "./Result"
 import type { Round } from "./Round"
 
+// TODO: turn this into an interface and move the business logic into a separate
+// class. This will allow us to use useStorage(...) in the flyer store
 export class Flyer {
     public startTime: number | null
     public finishTime: number | null
