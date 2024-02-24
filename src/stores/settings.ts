@@ -24,19 +24,19 @@ export const useSettingsStore = defineStore("settings", () => {
     // TODO: simplify this store by storing a single object for all the settings,
     // rather than requiring one useStorage(...) call for each setting
 
-    const playerCount = useStorage("playerCount", defaultPlayers.filter(p => p).length, localStorage)
-    const playerNames = useStorage("playerNames", defaultPlayers, localStorage)
+    const playerCount = useStorage("playerCount", defaultPlayers.filter(p => p).length)
+    const playerNames = useStorage("playerNames", defaultPlayers)
 
-    const raceTo = useStorage("raceTo", 1, localStorage)
+    const raceTo = useStorage("raceTo", 1)
 
     // TODO: use this to assign fixtures to tables
-    const tableCount = useStorage("tableCount", 1, localStorage)
+    const tableCount = useStorage("tableCount", 1)
 
-    const format = useStorage("format", Format.Knockout, localStorage)
+    const format = useStorage("format", Format.Knockout)
     const formatOptions = [Format.Knockout, Format.RoundRobin]
 
-    const requireCompletedRounds = useStorage("requireCompletedRounds", true, localStorage)
-    const allowEarlyFinish = useStorage("allowEarlyFinish", false, localStorage)
+    const requireCompletedRounds = useStorage("requireCompletedRounds", true)
+    const allowEarlyFinish = useStorage("allowEarlyFinish", false)
 
     watch(format, () => {
         if (format.value === Format.Knockout) {

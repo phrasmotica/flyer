@@ -6,7 +6,7 @@ import type { Player } from "../data/Player"
 
 export const usePlayersStore = defineStore("players", () => {
     // TODO: encapsulate this list in an object
-    const players = useStorage("players", <Player[]>[], localStorage)
+    const players = useStorage("players", <Player[]>[])
 
     const init = (p: string[]) => {
         players.value = p.map(x => ({
