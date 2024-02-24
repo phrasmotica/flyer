@@ -67,6 +67,10 @@ const updateResult = (finish: boolean) => {
 }
 
 const startButtonText = computed(() => {
+    if (result.value.scores.some(s => !s.playerId)) {
+        return "Waiting for a previous result"
+    }
+
     if (settingsStore.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
         return "Waiting for round to start"
     }
@@ -79,6 +83,10 @@ const startButtonText = computed(() => {
 })
 
 const disableStart = computed(() => {
+    if (result.value.scores.some(s => !s.playerId)) {
+        return true
+    }
+
     if (settingsStore.requireCompletedRounds) {
         return round.value.index > flyerStore.currentRound
     }
