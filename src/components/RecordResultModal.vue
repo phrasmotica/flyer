@@ -67,7 +67,7 @@ const updateResult = (finish: boolean) => {
 }
 
 const startButtonText = computed(() => {
-    if (settingsStore.requireCompletedRounds) {
+    if (settingsStore.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
         return "Waiting for round to start"
     }
 
