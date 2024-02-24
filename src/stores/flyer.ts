@@ -48,10 +48,11 @@ export const useFlyerStore = defineStore("flyer", () => {
         const finalRound = rounds.value[rounds.value.length - 1]
         if (finalRound) {
             const final = finalRound.fixtures[finalRound.fixtures.length - 1]
-            return getWinner(final).playerId
+            const id = getWinner(final).playerId
+            return players.value.find(p => p.id === id) || null
         }
 
-        return ""
+        return null
     })
 
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
