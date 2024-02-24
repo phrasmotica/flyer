@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue"
 import { differenceInMinutes } from "date-fns"
 
-import type { Result } from "../data/Result"
+import type { Result, Score } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
@@ -47,19 +47,14 @@ const startFixture = () => {
     emit('hide')
 }
 
-const updateResult = (finish: boolean) => {
-    // TODO: reduce the amount of data needed to update the scores
-    const r = <Result>{
-        id: result.value.id,
-        parentFixtureIds: result.value.parentFixtureIds,
-        scores: players.value.map((id, i) => ({
-            playerId: id,
-            score: scores.value[i],
-        })),
-        startTime: result.value.startTime,
-    }
+const updateScores = (finish: boolean) => {
+    const newScores = players.value.map((id, i) => <Score>{
+        playerId: id,
+        score: scores.value[i],
+        isBye: false,
+    })
 
-    flyerStore.updateResult(r, finish)
+    flyerStore.updateScores(result.value.id, newScores, finish)
 
     emit('hide')
 }
@@ -182,14 +177,14 @@ const fixtureDuration = computed(() => {
                 type="button"
                 label="Update"
                 severity="info"
-                @click="() => updateResult(false)" />
+                @click="() => updateScores(false)" />
 
             <Button v-if="result.startTime && !result.finishTime"
                 class="mb-2"
                 type="button"
                 label="Finish"
                 :disabled="disableFinish"
-                @click="() => updateResult(true)" />
+                @click="() => updateScores(true)" />
 
             <Button
                 type="button"

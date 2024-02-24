@@ -6,7 +6,7 @@ import { differenceInMinutes } from "date-fns"
 import { defineStore } from "pinia"
 
 import type { Flyer } from "../data/Flyer"
-import type { Result } from "../data/Result"
+import type { Result, Score } from "../data/Result"
 import type { Round } from "../data/Round"
 import type { IScheduler } from "@/data/IScheduler"
 
@@ -118,16 +118,16 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateResult = (newResult: Result, finish: boolean) => {
+    const updateScores = (resultId: string, scores: Score[], finish: boolean) => {
         for (const r of flyer.value!.rounds) {
-            const idx = r.fixtures.findIndex(f => f.id === newResult.id)
+            const idx = r.fixtures.findIndex(f => f.id === resultId)
             if (idx >= 0) {
-                if (finish) {
-                    newResult.finishTime = Date.now()
-                    propagate(newResult.id, getWinner(newResult).playerId)
-                }
+                r.fixtures[idx].scores = scores
 
-                r.fixtures[idx] = newResult
+                if (finish) {
+                    r.fixtures[idx].finishTime = Date.now()
+                    propagate(resultId, getWinner(r.fixtures[idx]).playerId)
+                }
             }
         }
     }
@@ -165,7 +165,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         getPlayerName,
         start,
         startFixture,
-        updateResult,
+        updateScores,
         finish,
         clear,
     }
