@@ -26,7 +26,7 @@ const restart = () => {
     hideRestartModal()
 
     router.push({
-        name: "home",
+        name: "setup",
     })
 }
 

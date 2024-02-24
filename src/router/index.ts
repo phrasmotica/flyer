@@ -9,11 +9,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: { name: 'home' }
+      redirect: { name: 'setup' }
     },
     {
       path: '/flyer',
-      name: 'home',
+      name: 'setup',
       component: HomeView,
     },
     {
