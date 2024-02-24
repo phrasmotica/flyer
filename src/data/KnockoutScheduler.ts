@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 
+import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
@@ -10,14 +11,14 @@ export class KnockoutScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    estimateDuration(players: number, raceTo: number, tables: number) {
+    estimateDuration(settings: FlyerSettings) {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
-        const numFixtures = players * (players - 1) / 2
-        const maxFrames = 2 * raceTo - 1
-        const meanFrames = (raceTo + maxFrames) / 2
+        const numFixtures = settings.playerCount * (settings.playerCount - 1) / 2
+        const maxFrames = 2 * settings.raceTo - 1
+        const meanFrames = (settings.raceTo + maxFrames) / 2
         const expectedFramesTotal = numFixtures * meanFrames
-        return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tables)
+        return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
     }
 
     generateFixtures(players: Player[]) {
