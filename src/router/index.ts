@@ -12,17 +12,17 @@ const router = createRouter({
       redirect: { name: 'setup' }
     },
     {
-      path: '/flyer',
+      path: '/setup',
       name: 'setup',
       component: HomeView,
     },
     {
-      path: '/flyer/play',
+      path: '/play',
       name: 'play',
       component: PlayView,
     },
     {
-      path: '/flyer/results',
+      path: '/results',
       name: 'results',
       component: ResultsView,
     },
