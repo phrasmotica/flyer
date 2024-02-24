@@ -62,9 +62,9 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
 
-    const start = (p: string[], settings: FlyerSettings, scheduler: IScheduler) => {
-        // TODO: derive players list from settings object
-        const players = p.map(n => ({
+    const start = (settings: FlyerSettings, scheduler: IScheduler) => {
+        const actualPlayerNames = settings.playerNames.slice(0, settings.playerCount)
+        const players = actualPlayerNames.map(n => ({
             id: uuidv4(),
             name: n,
         }))

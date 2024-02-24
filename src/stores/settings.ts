@@ -37,8 +37,6 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     })
 
-    const actualPlayers = computed(() => playerNames.value.slice(0, settings.value.playerCount))
-
     const estimatedDuration = computed(() => {
         switch (settings.value.format) {
             case Format.Knockout:
@@ -65,7 +63,10 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     })
 
-    const isInvalid = computed(() => actualPlayers.value.some(p => !p))
+    const isInvalid = computed(() => {
+        const actualPlayerNames = playerNames.value.slice(0, settings.value.playerCount)
+        return actualPlayerNames.some(p => !p)
+    })
 
     const setName = (index: number, name: string) => {
         settings.value.playerNames = playerNames.value.map((v, i) => i === index ? name : v)
@@ -76,7 +77,6 @@ export const useSettingsStore = defineStore("settings", () => {
 
         estimatedDuration,
         durationPerFrame,
-        actualPlayers,
         isInvalid,
 
         setName,
