@@ -6,6 +6,7 @@ export interface FlyerSettings {
     format: Format
     requireCompletedRounds: boolean
     allowEarlyFinish: boolean
+    name: string
 }
 
 export enum Format {
