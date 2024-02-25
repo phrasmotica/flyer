@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue"
+import { computed, onMounted, watch } from "vue"
 
 import PlayerNameInput from "./PlayerNameInput.vue"
 
@@ -8,6 +8,13 @@ import { Format } from "../data/FlyerSettings"
 import { useSettingsStore } from "../stores/settings"
 
 const settingsStore = useSettingsStore()
+
+watch(settingsStore.settings, () => {
+    if (settingsStore.settings.format === Format.Knockout) {
+        settingsStore.settings.requireCompletedRounds = true
+        settingsStore.settings.allowEarlyFinish = false
+    }
+})
 
 const isKnockout = computed(() => settingsStore.settings.format === Format.Knockout)
 

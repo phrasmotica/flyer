@@ -1,4 +1,4 @@
-import { computed, watch } from "vue"
+import { computed } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
@@ -29,13 +29,6 @@ export const useSettingsStore = defineStore("settings", () => {
     })
 
     const playerNames = computed(() => settings.value.playerNames)
-
-    watch(settings, () => {
-        if (settings.value.format === Format.Knockout) {
-            settings.value.requireCompletedRounds = true
-            settings.value.allowEarlyFinish = false
-        }
-    })
 
     const estimatedDuration = computed(() => {
         switch (settings.value.format) {
