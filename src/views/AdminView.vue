@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
+
+const isCleared = ref(false)
 
 const backToSetup = () => {
     router.push({
@@ -9,17 +12,35 @@ const backToSetup = () => {
     })
 }
 
+const clearButtonLabel = computed(() => isCleared.value ? "Done!" : "Clear local storage")
+
 const clearLocalStorage = () => {
     localStorage.clear()
+    isCleared.value = true
+
+    setTimeout(() => {
+        isCleared.value = false
+    }, 2000)
 }
 </script>
 
 <template>
     <main>
-        <div class="sticky bottom-0 bg-white p-fluid pt-2">
-            <Button class="mb-2" label="Clear local storage" severity="danger" @click="clearLocalStorage" />
+        <h1 class="border-bottom-1">Admin</h1>
 
-            <Button class="mb-2" label="Go back" severity="secondary" @click="backToSetup" />
+        <div class="sticky bottom-0 bg-white p-fluid pt-2">
+            <Button
+                class="mb-2"
+                :label="clearButtonLabel"
+                :disabled="isCleared"
+                severity="danger"
+                @click="clearLocalStorage" />
+
+            <Button
+                class="mb-2"
+                label="Go back"
+                severity="secondary"
+                @click="backToSetup" />
         </div>
     </main>
 
