@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 
 const props = defineProps<{
     visible: boolean
     header: string
     message: string
+    confirmLabel: string
+    cancelLabel: string
 }>()
 
 const emit = defineEmits<{
@@ -17,6 +19,9 @@ const visible = ref(props.visible)
 watch(props, () => {
     visible.value = props.visible
 })
+
+const confirmLabel = computed(() => props.confirmLabel || "Yes")
+const cancelLabel = computed(() => props.cancelLabel || "No")
 </script>
 
 <template>
@@ -25,16 +30,18 @@ watch(props, () => {
             {{ props.message }}
         </div>
 
+        <slot />
+
         <div class="p-fluid">
             <Button
                 class="mb-2"
                 type="button"
-                label="Yes"
+                :label="confirmLabel"
                 @click="emit('confirm')" />
 
             <Button
                 type="button"
-                label="No"
+                :label="cancelLabel"
                 severity="secondary"
                 @click="emit('hide')" />
         </div>

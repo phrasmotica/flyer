@@ -41,7 +41,7 @@ const getRoundName = (result: Result) => {
 </script>
 
 <template>
-    <h1 class="border-bottom-1">Results</h1>
+    <h1 class="border-bottom-1">{{ flyerStore.settings.name }} - Results</h1>
 
     <p>Took {{ flyerStore.durationMinutes }} minute(s)</p>
 

@@ -60,9 +60,17 @@ const hideModal = () => {
         <ConfirmModal
             :visible="showModal"
             header="Start Flyer"
-            message="Are you ready to start the flyer?"
+            message="Please enter a name for the flyer:"
+            confirmLabel="Start"
+            cancelLabel="Go back"
             @confirm="start"
-            @hide="hideModal" />
+            @hide="hideModal">
+            <div class="p-fluid mb-2">
+                <InputText
+                    placeholder="Flyer name"
+                    v-model="settingsStore.settings.name" />
+            </div>
+        </ConfirmModal>
     </main>
 
     <footer>

@@ -35,7 +35,7 @@ const hideModal = () => {
 
 <template>
     <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
-        <h1>Fixtures</h1>
+        <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
 
         <h4>Results remaining: {{ flyerStore.remainingCount }}</h4>
     </div>

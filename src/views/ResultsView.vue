@@ -49,6 +49,8 @@ const hideRestartModal = () => {
             :visible="showRestartModal"
             header="Restart"
             message="Are you sure you want to restart? All data for the current flyer will be lost!"
+            confirmLabel="Yes"
+            cancelLabel="No"
             @confirm="restart"
             @hide="hideRestartModal" />
     </main>

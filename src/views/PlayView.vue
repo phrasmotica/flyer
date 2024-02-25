@@ -66,6 +66,8 @@ const hideFinishModal = () => {
             :visible="showFinishModal"
             header="Finish Flyer"
             message="Are you ready to finish the flyer?"
+            confirmLabel="Yes"
+            cancelLabel="No"
             @confirm="finish"
             @hide="hideFinishModal" />
     </main>
