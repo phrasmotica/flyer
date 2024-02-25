@@ -34,3 +34,8 @@ a,
     place-items: center;
   }
 }
+
+.bg-colour {
+    transition: color 0.5s, background-color 0.5s;
+    background-color: var(--color-background)!important;
+}

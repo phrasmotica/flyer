@@ -67,7 +67,7 @@ const hideGoToSetupModal = () => {
 
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
-        <div class="sticky bottom-0 bg-white p-fluid pt-2">
+        <div class="sticky bottom-0 bg-colour p-fluid pt-2">
             <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
             <Button class="mb-4" label="New flyer" severity="info" @click="confirmGoToSetup" />
