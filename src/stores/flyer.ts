@@ -158,6 +158,7 @@ export const useFlyerStore = defineStore("flyer", () => {
     const clear = () => flyer.value = null
 
     return {
+        flyer,
         players,
         settings,
         rounds,

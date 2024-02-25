@@ -9,10 +9,12 @@ import ResultsTable from "../components/ResultsTable.vue"
 import { Format } from "../data/FlyerSettings"
 
 import { useFlyerStore } from "../stores/flyer"
+import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
+const flyerHistoryStore = useFlyerHistoryStore()
 
 const showRestartModal = ref(false)
 
@@ -30,6 +32,12 @@ const restart = () => {
     })
 }
 
+const save = () => {
+    if (flyerStore.flyer) {
+        flyerHistoryStore.add(flyerStore.flyer)
+    }
+}
+
 const hideRestartModal = () => {
     showRestartModal.value = false
 }
@@ -42,6 +50,8 @@ const hideRestartModal = () => {
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
         <div class="p-fluid mt-2">
+            <Button class="mb-2" label="Save flyer" severity="info" @click="save" />
+
             <Button label="Restart" @click="confirmRestart" />
         </div>
 
