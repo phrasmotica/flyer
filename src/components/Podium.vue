@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import type { Player } from "../data/Player"
+import type { Result } from "../data/Result"
+
 import { useFlyerStore } from "../stores/flyer"
-import type { Result } from "@/data/Result"
 
 const flyerStore = useFlyerStore()
 
 const winner = computed(() => flyerStore.winner)
 
 const winnerResults = computed(() => {
-    const results = flyerStore.results.filter(r => r.scores.some(s => s.playerId === winner.value?.id || "???"))
+    if (!winner.value) {
+        return []
+    }
+
+    const results = flyerStore.results.filter(r => r.scores.some(s => s.playerId === winner.value!.id))
 
     // ensures reverse chronological order
     return results.reverse()
@@ -19,13 +25,18 @@ const getScore = (result: Result) => {
     return result.scores.map(s => s.score).sort((a, b) => b - a).join("-")
 }
 
-const getOpponentName = (result: Result) => {
-    return flyerStore.getPlayerName(result.scores.find(s => s.playerId !== winner.value!.id)!.playerId)
+const getOpponentName = (player: Player, result: Result) => {
+    const opponentScore = result.scores.find(s => s.playerId !== player.id)
+    if (!opponentScore) {
+        return "UNKNOWN"
+    }
+
+    return flyerStore.getPlayerName(opponentScore.playerId)
 }
 
 const getRoundName = (result: Result) => {
     const round = flyerStore.rounds.find(r => r.fixtures.some(f => f.id === result.id))
-    return round?.name ?? "UNKNOWN"
+    return round?.name || "UNKNOWN"
 }
 </script>
 
@@ -44,7 +55,7 @@ const getRoundName = (result: Result) => {
             <li v-for="f in winnerResults">
                 <span>
                     <span class="font-bold">{{ getScore(f) }}</span>
-                    v {{ getOpponentName(f) }}
+                    v {{ getOpponentName(winner, f) }}
                     <span class="font-italic">({{ getRoundName(f) }})</span>
                 </span>
             </li>
