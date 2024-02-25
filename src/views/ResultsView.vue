@@ -16,16 +16,21 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
 
-const showRestartModal = ref(false)
+const showGoToSetupModal = ref(false)
 
-const confirmRestart = () => {
-    showRestartModal.value = true
+const confirmGoToSetup = () => {
+    if (alreadySaved.value) {
+        goToSetup()
+    }
+    else {
+        showGoToSetupModal.value = true
+    }
 }
 
-const restart = () => {
+const goToSetup = () => {
     flyerStore.clear()
 
-    hideRestartModal()
+    hideGoToSetupModal()
 
     router.push({
         name: "setup",
@@ -44,8 +49,8 @@ const save = () => {
     }
 }
 
-const hideRestartModal = () => {
-    showRestartModal.value = false
+const hideGoToSetupModal = () => {
+    showGoToSetupModal.value = false
 }
 </script>
 
@@ -56,20 +61,20 @@ const hideRestartModal = () => {
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
         <div class="sticky bottom-0 bg-white p-fluid pt-2">
-            <Button class="mb-2" :label="saveButtonText" severity="info" :disabled="alreadySaved" @click="save" />
+            <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
-            <Button class="mb-4" label="Restart" @click="confirmRestart" />
+            <Button class="mb-4" label="New flyer" severity="info" @click="confirmGoToSetup" />
         </div>
 
         <ConfirmModal
-            :visible="showRestartModal"
-            header="Restart"
-            message="Are you sure you want to restart? All data for the current flyer will be lost!"
+            :visible="showGoToSetupModal"
+            header="New flyer"
+            message="Are you sure you want to start a new flyer? The current one has not been saved!"
             confirmLabel="Yes"
             :confirmDisabled="false"
             cancelLabel="No"
-            @confirm="restart"
-            @hide="hideRestartModal" />
+            @confirm="goToSetup"
+            @hide="hideGoToSetupModal" />
     </main>
 
     <footer>
