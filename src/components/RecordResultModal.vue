@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from "vue"
-import { useIntervalFn } from "@vueuse/core"
-import { differenceInSeconds } from "date-fns"
 
 import Clock from "./Clock.vue"
+
+import { useClock } from "../composables/useClock"
 
 import type { Result, Score } from "../data/Result"
 
@@ -24,22 +24,12 @@ const visible = ref(props.visible)
 const result = ref(props.result)
 const scores = ref(props.result.scores.map(r => r.score))
 
-const updateClock = () => {
-    const startTime = result.value.startTime
-    if (startTime && !result.value.finishTime) {
-        elapsedSeconds.value = differenceInSeconds(Date.now(), startTime)
-    }
-}
-
-const elapsedSeconds = ref(0)
-const clockInterval = useIntervalFn(updateClock, 1000)
+const { elapsedSeconds, interval } = useClock(result.value.startTime || 0)
 
 watch(props, () => {
     visible.value = props.visible
     result.value = props.result
     scores.value = props.result.scores.map(r => r.score)
-
-    updateClock()
 })
 
 const players = computed(() => result.value.scores.map(r => r.playerId))
@@ -128,7 +118,7 @@ const hide = () => {
 }
 
 onUnmounted(() => {
-    clockInterval.pause()
+    interval.pause()
 })
 </script>
 
