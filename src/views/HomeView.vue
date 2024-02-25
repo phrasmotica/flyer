@@ -44,6 +44,12 @@ const confirmStart = () => {
     showModal.value = true
 }
 
+const viewPastFlyers = () => {
+    router.push({
+        name: "history",
+    })
+}
+
 const hideModal = () => {
     showModal.value = false
 }
@@ -55,6 +61,8 @@ const hideModal = () => {
 
         <div class="p-fluid">
             <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+
+            <Button class="mt-2" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
         </div>
 
         <ConfirmModal

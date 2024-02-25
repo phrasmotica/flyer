@@ -19,7 +19,7 @@ const newFlyer = () => {
         <FlyerHistory />
 
         <div class="p-fluid mt-2">
-            <Button label="New flyer" @click="newFlyer" />
+            <Button label="New flyer" severity="info" @click="newFlyer" />
         </div>
     </main>
 
