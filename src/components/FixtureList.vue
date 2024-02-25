@@ -17,7 +17,7 @@ const selectedResult = ref<Result>()
 const highlightedResultId = ref("")
 const showModal = ref(false)
 
-const { elapsedSeconds, interval } = useClock(flyerStore.flyer.startTime || 0)
+const { elapsedSeconds, interval } = useClock("flyer", flyerStore.flyer.startTime || 0)
 
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
