@@ -2,8 +2,8 @@ import { ref } from "vue"
 import { useIntervalFn } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
-export const useClock = (name: string, startTime: number) => {
-    const computeDifference = () => differenceInSeconds(Date.now(), startTime)
+export const useClock = (name: string, startTime: number | null, startNow: boolean) => {
+    const computeDifference = () => differenceInSeconds(Date.now(), startTime || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
 
@@ -13,7 +13,9 @@ export const useClock = (name: string, startTime: number) => {
         elapsedSeconds.value = newValue
     }
 
-    const interval = useIntervalFn(updateClock, 1000)
+    const interval = useIntervalFn(updateClock, 1000, {
+        immediate: startNow,
+    })
 
     return {
         elapsedSeconds,

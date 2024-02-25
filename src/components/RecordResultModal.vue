@@ -24,7 +24,7 @@ const visible = ref(props.visible)
 const result = ref(props.result)
 const scores = ref(props.result.scores.map(r => r.score))
 
-const { elapsedSeconds, interval } = useClock("fixture-" + result.value.id, result.value.startTime || 0)
+const { elapsedSeconds, interval } = useClock("fixture-" + result.value.id, result.value.startTime, !result.value.finishTime)
 
 watch(props, () => {
     visible.value = props.visible
