@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
-import { differenceInMinutes } from "date-fns"
+import { computed, onUnmounted, ref, watch } from "vue"
+import { useIntervalFn } from "@vueuse/core"
+import { differenceInSeconds } from "date-fns"
+
+import Clock from "./Clock.vue"
 
 import type { Result, Score } from "../data/Result"
 
@@ -21,10 +24,22 @@ const visible = ref(props.visible)
 const result = ref(props.result)
 const scores = ref(props.result.scores.map(r => r.score))
 
+const updateClock = () => {
+    const startTime = result.value.startTime
+    if (startTime && !result.value.finishTime) {
+        elapsedSeconds.value = differenceInSeconds(Date.now(), startTime)
+    }
+}
+
+const elapsedSeconds = ref(0)
+const clockInterval = useIntervalFn(updateClock, 1000)
+
 watch(props, () => {
     visible.value = props.visible
     result.value = props.result
     scores.value = props.result.scores.map(r => r.score)
+
+    updateClock()
 })
 
 const players = computed(() => result.value.scores.map(r => r.playerId))
@@ -42,7 +57,6 @@ const setScore = (index: number, score: number) => {
 
 const startFixture = () => {
     flyerStore.startFixture(result.value.id)
-    emit('hide')
 }
 
 const updateScores = (finish: boolean) => {
@@ -54,7 +68,7 @@ const updateScores = (finish: boolean) => {
 
     flyerStore.updateScores(result.value.id, newScores, finish)
 
-    emit('hide')
+    hide()
 }
 
 const startButtonText = computed(() => {
@@ -104,29 +118,24 @@ const description = computed(() => result.value.scores.map(s => {
         return "(bye)"
     }
 
-    return flyerStore.getPlayerName(s.playerId) || "(???)"
+    return flyerStore.getPlayerName(s.playerId) || "???"
 }).join(" v "))
 
 const header = computed(() => `${round.value.name} - ${description.value}`)
 
-const fixtureDuration = computed(() => {
-    if (!result.value.startTime) {
-        return null
-    }
+const hide = () => {
+    emit('hide')
+}
 
-    if (!result.value.finishTime) {
-        // TODO: make this update in real time, by using setInterval()
-        return differenceInMinutes(new Date(), (new Date(result.value.startTime)))
-    }
-
-    return differenceInMinutes(new Date(result.value.finishTime), new Date(result.value.startTime))
+onUnmounted(() => {
+    clockInterval.pause()
 })
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="header" @hide="emit('hide')">
+    <Dialog v-model:visible="visible" modal :header="header" @hide="hide">
         <div v-if="result.finishTime" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
-            <p>Took {{ fixtureDuration }} minute(s)</p>
+            <Clock :elapsedSeconds="Math.floor((result.finishTime - result.startTime!) / 1000)" />
 
             <div v-for="id, i in players" class="font-bold">
                 {{ flyerStore.getPlayerName(id) }}: {{ scores[i] }}
@@ -134,10 +143,7 @@ const fixtureDuration = computed(() => {
         </div>
 
         <div v-else-if="result.startTime">
-            <p v-if="fixtureDuration && fixtureDuration > 0">
-                Started {{ fixtureDuration }} minute(s) ago
-            </p>
-            <p v-else>Just started</p>
+            <Clock :elapsedSeconds="elapsedSeconds" />
 
             <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
                 <div class="font-bold">
@@ -188,7 +194,7 @@ const fixtureDuration = computed(() => {
                 type="button"
                 label="Close"
                 severity="secondary"
-                @click="emit('hide')" />
+                @click="hide" />
         </div>
     </Dialog>
 </template>
