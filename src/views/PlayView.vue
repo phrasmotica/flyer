@@ -23,7 +23,10 @@ const flyerStore = useFlyerStore()
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
 
-const { elapsedSeconds, interval } = useClock("flyer", flyerStore.flyer.startTime, !flyerStore.flyer.finishTime)
+const { elapsedSeconds, interval } = useClock(
+    "flyer",
+    flyerStore.flyer.startTime,
+    !!flyerStore.flyer.startTime && !flyerStore.flyer.finishTime)
 
 const confirmFinish = () => {
     showFinishModal.value = true
