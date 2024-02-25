@@ -26,6 +26,7 @@ export const useSettingsStore = defineStore("settings", () => {
         format: Format.Knockout,
         requireCompletedRounds: true,
         allowEarlyFinish: false,
+        name: "",
     })
 
     const playerNames = computed(() => settings.value.playerNames)
