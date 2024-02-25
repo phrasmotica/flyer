@@ -31,7 +31,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <h1 class="border-bottom-1 mb-2">Format</h1>
+    <h2 class="border-bottom-1 border-gray-200 mb-2">Format</h2>
 
     <div class="p-fluid mb-2">
         <InputNumber
@@ -93,13 +93,14 @@ onMounted(() => {
             :disabled="isKnockout" />
     </div>
 
-    <div class="p-fluid border-top-1 mb-2">
+    <div class="p-fluid mb-2">
+        <!-- TODO: move this into the nav button box -->
         <p>
             Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
         </p>
     </div>
 
-    <h1 class="border-bottom-1 mb-2">Players</h1>
+    <h2 class="border-bottom-1 border-gray-200 mb-2">Players</h2>
 
     <div class="p-fluid mb-2">
         <InputNumber

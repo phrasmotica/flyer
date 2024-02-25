@@ -57,6 +57,8 @@ const hideModal = () => {
 
 <template>
     <main>
+        <h1 class="border-bottom-1 mb-2">Setup</h1>
+
         <FlyerForm />
 
         <div class="sticky bottom-0 bg-white p-fluid pt-2">
