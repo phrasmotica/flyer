@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { computed } from "vue"
 import { useStorage } from "@vueuse/core"
-import { differenceInMinutes } from "date-fns"
+import { differenceInSeconds } from "date-fns"
 import { defineStore } from "pinia"
 
 import type { Flyer } from "../data/Flyer"
@@ -39,12 +39,12 @@ export const useFlyerStore = defineStore("flyer", () => {
         return oldestInProgressRound.index
     })
 
-    const durationMinutes = computed(() => {
+    const durationSeconds = computed(() => {
         if (!flyer.value?.startTime || !flyer.value?.finishTime) {
             return null
         }
 
-        return differenceInMinutes(new Date(flyer.value.finishTime), (new Date(flyer.value.startTime)))
+        return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
     })
 
     const winner = computed(() => {
@@ -166,7 +166,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         ongoingCount,
         remainingCount,
         currentRound,
-        durationMinutes,
+        durationSeconds,
         winner,
 
         getRound,

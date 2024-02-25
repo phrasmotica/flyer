@@ -41,10 +41,6 @@ const getRoundName = (result: Result) => {
 </script>
 
 <template>
-    <h1 class="border-bottom-1">{{ flyerStore.settings.name }} - Results</h1>
-
-    <p>Took {{ flyerStore.durationMinutes }} minute(s)</p>
-
     <div v-if="winner">
         <div class="text-center">
             <p>The winner is</p>

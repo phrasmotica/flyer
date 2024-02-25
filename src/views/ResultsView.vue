@@ -2,6 +2,7 @@
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
+import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
@@ -56,6 +57,12 @@ const hideGoToSetupModal = () => {
 
 <template>
     <main>
+        <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 mb-1">
+            <h1>{{ flyerStore.settings.name }} - Results</h1>
+
+            <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
+        </div>
+
         <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
 
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
