@@ -9,7 +9,7 @@ export const useClock = (name: string, startTime: number | null, startNow: boole
 
     const updateClock = () => {
         const newValue = computeDifference()
-        console.debug("Clock " + name + ": " + newValue)
+        console.debug("Clock " + name + ": " + startTime + " + " + newValue)
         elapsedSeconds.value = newValue
     }
 
