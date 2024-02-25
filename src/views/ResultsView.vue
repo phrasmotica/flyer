@@ -55,10 +55,10 @@ const hideRestartModal = () => {
 
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
-        <div class="p-fluid mt-2">
+        <div class="sticky bottom-0 bg-white p-fluid pt-2">
             <Button class="mb-2" :label="saveButtonText" severity="info" :disabled="alreadySaved" @click="save" />
 
-            <Button label="Restart" @click="confirmRestart" />
+            <Button class="mb-4" label="Restart" @click="confirmRestart" />
         </div>
 
         <ConfirmModal

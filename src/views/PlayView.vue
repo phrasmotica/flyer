@@ -55,8 +55,9 @@ const hideFinishModal = () => {
             @start="startFixture"
             @updateResult="updateResult" /> -->
 
-        <div class="p-fluid mt-2">
+        <div class="sticky bottom-0 bg-white p-fluid pt-2">
             <Button
+                class="mb-4"
                 label="Finish"
                 :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
                 @click="confirmFinish" />

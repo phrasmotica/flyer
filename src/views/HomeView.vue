@@ -59,10 +59,10 @@ const hideModal = () => {
     <main>
         <FlyerForm />
 
-        <div class="sticky bottom-0 p-fluid bg-white">
-            <Button class="mt-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+        <div class="sticky bottom-0 bg-white p-fluid pt-2">
+            <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 
-            <Button class="my-2" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
+            <Button class="mb-4" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
         </div>
 
         <ConfirmModal
