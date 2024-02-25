@@ -150,7 +150,7 @@ export const useFlyerStore = defineStore("flyer", () => {
     }
 
     const finish = () => {
-        if (flyer.value) {
+        if (flyer.value && !flyer.value.finishTime) {
             flyer.value.finishTime = Date.now()
         }
     }
