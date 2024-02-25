@@ -11,6 +11,15 @@ export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
         pastFlyers.value = [...pastFlyers.value, flyer]
     }
 
+    const deleteFlyer = (flyer: Flyer) => {
+        const idx = pastFlyers.value.findIndex(f => f.id === flyer.id)
+        if (idx >= 0) {
+            const newFlyers = [...pastFlyers.value]
+            newFlyers.splice(idx, 1)
+            pastFlyers.value = newFlyers
+        }
+    }
+
     const getWinner = (flyer: Flyer) => {
         const finalRound = flyer.rounds[flyer.rounds.length - 1]
         if (finalRound) {
@@ -28,6 +37,7 @@ export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
         pastFlyers,
 
         add,
+        deleteFlyer,
 
         getWinner,
     }
