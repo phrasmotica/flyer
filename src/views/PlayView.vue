@@ -67,6 +67,7 @@ const hideFinishModal = () => {
             header="Finish Flyer"
             message="Are you ready to finish the flyer?"
             confirmLabel="Yes"
+            :confirmDisabled="false"
             cancelLabel="No"
             @confirm="finish"
             @hide="hideFinishModal" />

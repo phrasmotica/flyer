@@ -62,6 +62,7 @@ const hideModal = () => {
             header="Start Flyer"
             message="Please enter a name for the flyer:"
             confirmLabel="Start"
+            :confirmDisabled="settingsStore.settings.name.length <= 0"
             cancelLabel="Go back"
             @confirm="start"
             @hide="hideModal">

@@ -6,6 +6,7 @@ const props = defineProps<{
     header: string
     message: string
     confirmLabel: string
+    confirmDisabled: boolean
     cancelLabel: string
 }>()
 
@@ -37,6 +38,7 @@ const cancelLabel = computed(() => props.cancelLabel || "No")
                 class="mb-2"
                 type="button"
                 :label="confirmLabel"
+                :disabled="props.confirmDisabled"
                 @click="emit('confirm')" />
 
             <Button
