@@ -124,11 +124,13 @@ onUnmounted(() => {
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header" @hide="hide">
-        <div v-if="result.finishTime" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
+        <div v-if="result.finishTime" class="mb-2">
             <Clock :elapsedSeconds="Math.floor((result.finishTime - result.startTime!) / 1000)" />
 
+            <div class="flex flex-column md:flex-row md:align-items-center justify-content-between">
             <div v-for="id, i in players" class="font-bold">
                 {{ flyerStore.getPlayerName(id) }}: {{ scores[i] }}
+                </div>
             </div>
         </div>
 
