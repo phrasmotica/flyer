@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onUnmounted, ref } from "vue"
 import { useRouter } from "vue-router"
 
+import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
+
+import { useClock } from "../composables/useClock"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -19,6 +22,8 @@ const flyerStore = useFlyerStore()
 
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
+
+const { elapsedSeconds, interval } = useClock("flyer", flyerStore.flyer.startTime || 0)
 
 const confirmFinish = () => {
     showFinishModal.value = true
@@ -37,10 +42,20 @@ const finish = () => {
 const hideFinishModal = () => {
     showFinishModal.value = false
 }
+
+onUnmounted(() => {
+    interval.pause()
+})
 </script>
 
 <template>
     <main>
+        <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
+            <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
+
+            <Clock :elapsedSeconds="elapsedSeconds" />
+        </div>
+
         <!-- <div class="p-fluid">
             <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
         </div> -->

@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from "vue"
+import { ref } from "vue"
 
-import Clock from "./Clock.vue"
 import FixtureCard from "./FixtureCard.vue"
 import RecordResultModal from "./RecordResultModal.vue"
-
-import { useClock } from "../composables/useClock"
 
 import type { Result } from "../data/Result"
 
@@ -16,8 +13,6 @@ const flyerStore = useFlyerStore()
 const selectedResult = ref<Result>()
 const highlightedResultId = ref("")
 const showModal = ref(false)
-
-const { elapsedSeconds, interval } = useClock("flyer", flyerStore.flyer.startTime || 0)
 
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
@@ -36,19 +31,9 @@ const highlight = (resultId: string) => {
 const hideModal = () => {
     showModal.value = false
 }
-
-onUnmounted(() => {
-    interval.pause()
-})
 </script>
 
 <template>
-    <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
-        <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
-
-        <Clock :elapsedSeconds="elapsedSeconds" />
-    </div>
-
     <div v-for="r, i in flyerStore.rounds" :class="[i > 0 && 'border border-top-1']">
         <h3 class="text-center">{{ r.name }}</h3>
 
