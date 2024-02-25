@@ -62,6 +62,10 @@ const hideModal = () => {
         <FlyerForm />
 
         <div class="sticky bottom-0 bg-white p-fluid pt-2">
+            <p class="mb-2">
+                Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+            </p>
+
             <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 
             <Button class="mb-4" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />

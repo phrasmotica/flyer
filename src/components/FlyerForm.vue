@@ -93,13 +93,6 @@ onMounted(() => {
             :disabled="isKnockout" />
     </div>
 
-    <div class="p-fluid mb-2">
-        <!-- TODO: move this into the nav button box -->
-        <p>
-            Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
-        </p>
-    </div>
-
     <h2 class="border-bottom-1 border-gray-200 mb-2">Players</h2>
 
     <div class="p-fluid mb-2">
