@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -32,8 +32,14 @@ const restart = () => {
     })
 }
 
+const alreadySaved = computed(() => {
+    return flyerHistoryStore.pastFlyers.some(f => f.id === flyerStore.flyer.id)
+})
+
+const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
+
 const save = () => {
-    if (flyerStore.flyer) {
+    if (flyerStore.flyer && !alreadySaved.value) {
         flyerHistoryStore.add(flyerStore.flyer)
     }
 }
@@ -50,7 +56,7 @@ const hideRestartModal = () => {
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
         <div class="p-fluid mt-2">
-            <Button class="mb-2" label="Save flyer" severity="info" @click="save" />
+            <Button class="mb-2" :label="saveButtonText" severity="info" :disabled="alreadySaved" @click="save" />
 
             <Button label="Restart" @click="confirmRestart" />
         </div>
