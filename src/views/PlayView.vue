@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from "vue"
+import { computed, onUnmounted, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import Clock from "../components/Clock.vue"
@@ -27,6 +27,14 @@ const { elapsedSeconds, interval } = useClock(
     "flyer",
     flyerStore.flyer.startTime,
     !!flyerStore.flyer.startTime && !flyerStore.flyer.finishTime)
+
+const clockDisplay = computed(() => {
+    if (flyerStore.flyer.startTime && flyerStore.flyer.finishTime) {
+        return Math.floor((flyerStore.flyer.finishTime - flyerStore.flyer.startTime) / 1000)
+    }
+
+    return elapsedSeconds.value
+})
 
 const confirmFinish = () => {
     showFinishModal.value = true
@@ -56,7 +64,7 @@ onUnmounted(() => {
         <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
             <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
 
-            <Clock :elapsedSeconds="elapsedSeconds" />
+            <Clock :elapsedSeconds="clockDisplay" />
         </div>
 
         <!-- <div class="p-fluid">
