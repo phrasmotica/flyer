@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, watch } from "vue"
 
 import ScoreCell from "./ScoreCell.vue"
+
+import { useMatch } from "../composables/useMatch"
 
 import type { Result } from "../data/Result"
 
@@ -19,13 +21,13 @@ const emit = defineEmits<{
 
 const flyerStore = useFlyerStore()
 
-const result = ref(props.result)
+const { result } = useMatch("card", props.result)
 
 watch(props, () => {
     result.value = props.result
 })
 
-const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
+const isWalkover = computed(() => result.value.scores.some(s => s.isBye))
 
 const handleClick = () => {
     if (!isWalkover.value) {
