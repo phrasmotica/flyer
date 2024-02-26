@@ -65,12 +65,26 @@ onMounted(() => {
         </InputNumber>
     </div>
 
-    <div class="p-fluid mb-2">
-        <SelectButton v-model="settingsStore.settings.format" :options="[Format.Knockout, Format.RoundRobin]" :allowEmpty="false" aria-labelledby="basic" />
-    </div>
+    <div class="grid m-0 mb-2">
+        <div class="col-12 md:col-6 mb-2 md:mb-0 p-0 p-fluid">
+            <div class="md:mr-1">
+                <label for="formatDropdown" class="font-bold">Format</label>
+                <Dropdown
+                    inputId="formatDropdown"
+                    v-model="settingsStore.settings.format"
+                    :options="[Format.Knockout, Format.RoundRobin]" />
+            </div>
+        </div>
 
-    <div class="p-fluid mb-2">
-        <SelectButton v-model="settingsStore.settings.ruleSet" :options="[RuleSet.Blackball, RuleSet.International]" :allowEmpty="false" aria-labelledby="basic" />
+        <div class="col-12 md:col-6 p-0 p-fluid">
+            <div class="md:ml-1">
+                <label for="ruleSetDropdown" class="font-bold">Rules</label>
+                <Dropdown
+                    inputId="ruleSetDropdown"
+                    v-model="settingsStore.settings.ruleSet"
+                    :options="[RuleSet.Blackball, RuleSet.International]" />
+            </div>
+        </div>
     </div>
 
     <div class="p-fluid flex justify-content-between mb-2">
