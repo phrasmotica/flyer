@@ -1,6 +1,7 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
 import { createPinia } from 'pinia'
 
 import 'primevue/resources/themes/aura-light-green/theme.css'
@@ -22,6 +23,21 @@ import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+
+app.use(createI18n({
+    locale: "en-GB",
+    fallbackLocale: "en-GB",
+    legacy: false,
+    datetimeFormats: {
+        "en-GB": {
+            long: {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', hour12: false,
+            }
+        }
+    },
+    messages: {},
+}))
 
 app.use(createPinia())
 app.use(router)

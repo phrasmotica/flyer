@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "../components/ConfirmModal.vue"
 
@@ -7,6 +8,8 @@ import type { Flyer } from "../data/Flyer"
 
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 import { differenceInMinutes } from "date-fns"
+
+const { d } = useI18n()
 
 const flyerHistoryStore = useFlyerHistoryStore()
 
@@ -70,8 +73,8 @@ const getWinnerName = (f: Flyer) => flyerHistoryStore.getWinner(f)?.name || "???
                     {{ f.settings.name }}
                 </div>
 
-                <div :class="[isSelected(f) && 'font-bold']">
-                    {{ f.startTime }}
+                <div class="flex-shrink-0" :class="[isSelected(f) && 'font-bold']">
+                    {{ d(f.startTime!, "long") }}
                 </div>
             </div>
 
