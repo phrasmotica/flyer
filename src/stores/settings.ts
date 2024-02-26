@@ -2,7 +2,7 @@ import { computed } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
-import { Format, type FlyerSettings } from "../data/FlyerSettings"
+import { Format, type FlyerSettings, RuleSet } from "../data/FlyerSettings"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 import { KnockoutScheduler } from "@/data/KnockoutScheduler"
 
@@ -24,6 +24,7 @@ export const useSettingsStore = defineStore("settings", () => {
         raceTo: 1,
         tableCount: 1, // TODO: use this to assign fixtures to tables
         format: Format.Knockout,
+        ruleSet: RuleSet.Blackball,
         requireCompletedRounds: true,
         allowEarlyFinish: false,
         name: "",
