@@ -13,6 +13,7 @@ watch(() => settingsStore.settings.format, () => {
     if (settingsStore.settings.format === Format.Knockout) {
         settingsStore.settings.requireCompletedRounds = true
         settingsStore.settings.allowEarlyFinish = false
+        settingsStore.settings.allowDraws = false
     }
 
     if (settingsStore.settings.format === Format.RoundRobin) {
@@ -111,6 +112,18 @@ onMounted(() => {
         <Checkbox
             inputId="allowEarlyFinishCheckbox"
             v-model="settingsStore.settings.allowEarlyFinish"
+            :binary="true"
+            :disabled="isKnockout" />
+    </div>
+
+    <div class="p-fluid flex justify-content-between mb-2">
+        <label for="allowDrawsCheckbox" :class="[isKnockout && 'text-color-secondary']">
+            Allow draws
+        </label>
+
+        <Checkbox
+            inputId="allowDrawsCheckbox"
+            v-model="settingsStore.settings.allowDraws"
             :binary="true"
             :disabled="isKnockout" />
     </div>
