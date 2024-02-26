@@ -6,6 +6,7 @@ export interface FlyerSettings {
     tableCount: number
     format: Format
     requireCompletedRounds: boolean
+    allowDraws: boolean
     allowEarlyFinish: boolean
     name: string
 }

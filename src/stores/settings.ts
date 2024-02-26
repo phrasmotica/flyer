@@ -26,6 +26,7 @@ export const useSettingsStore = defineStore("settings", () => {
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
         requireCompletedRounds: true,
+        allowDraws: false,
         allowEarlyFinish: false,
         name: "",
     })
