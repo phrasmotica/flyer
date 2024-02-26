@@ -21,8 +21,10 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 
 const display = ref(Display.Fixtures)
+
 const showFinishModal = ref(false)
 const showInfoModal = ref(false)
+const showAbandonModal = ref(false)
 
 const { elapsedSeconds, interval } = useClock(
     "flyer",
@@ -56,6 +58,18 @@ const hideFinishModal = () => {
 }
 
 const hideInfoModal = () => showInfoModal.value = false
+
+const abandon = () => {
+    flyerStore.clear()
+
+    hideAbandonModal()
+
+    router.push({
+        name: "setup",
+    })
+}
+
+const hideAbandonModal = () => showAbandonModal.value = false
 
 onUnmounted(() => {
     interval.pause()
@@ -118,6 +132,16 @@ onUnmounted(() => {
                     @click="hideInfoModal" />
             </div>
         </Dialog>
+
+        <ConfirmModal
+            :visible="showAbandonModal"
+            header="Abandon flyer"
+            message="Are you sure you want to abandon this flyer?"
+            confirmLabel="Yes"
+            :confirmDisabled="false"
+            cancelLabel="No"
+            @confirm="abandon"
+            @hide="hideAbandonModal" />
     </main>
 
     <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
@@ -128,10 +152,16 @@ onUnmounted(() => {
             @click="confirmFinish" />
 
         <Button
-            class="mb-5"
+            class="mb-2"
             label="Info"
             severity="info"
             @click="() => showInfoModal = true" />
+
+        <Button
+            class="mb-5"
+            label="Abandon"
+            severity="danger"
+            @click="() => showAbandonModal = true" />
     </div>
 
     <footer>
