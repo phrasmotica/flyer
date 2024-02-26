@@ -112,12 +112,21 @@ onMounted(() => {
     </div>
 
     <div v-for="p, i in settingsStore.settings.playerNames">
-        <PlayerNameInput
-            class="mb-2"
-            :placeholder="'Player ' + (i + 1)"
-            :disabled="i >= settingsStore.settings.playerCount"
-            :name="p"
-            @setName="n => settingsStore.setName(i, n)" />
+        <div class="flex mb-2">
+            <PlayerNameInput
+                class="flex-grow-1"
+                :placeholder="'Player ' + (i + 1)"
+                :disabled="i >= settingsStore.settings.playerCount"
+                :name="p"
+                @setName="n => settingsStore.setName(i, n)" />
+
+            <Button
+                class="ml-2"
+                icon="pi pi-trash"
+                severity="danger"
+                :disabled="settingsStore.settings.playerCount <= 2 || i >= settingsStore.settings.playerCount"
+                @click="() => settingsStore.deleteName(i)" />
+        </div>
     </div>
 </template>
 

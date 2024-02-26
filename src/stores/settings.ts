@@ -66,6 +66,20 @@ export const useSettingsStore = defineStore("settings", () => {
         settings.value.playerNames = playerNames.value.map((v, i) => i === index ? name : v)
     }
 
+    const deleteName = (index: number) => {
+        if (settings.value.playerCount <= 2) {
+            return
+        }
+
+        settings.value.playerCount = settings.value.playerCount - 1
+
+        const newNames = [...settings.value.playerNames]
+        newNames.splice(index, 1)
+        newNames.push("")
+
+        settings.value.playerNames = newNames
+    }
+
     return {
         settings,
 
@@ -74,5 +88,6 @@ export const useSettingsStore = defineStore("settings", () => {
         isInvalid,
 
         setName,
+        deleteName,
     }
 })
