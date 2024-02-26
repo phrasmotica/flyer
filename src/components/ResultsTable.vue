@@ -63,7 +63,7 @@ const tableData = computed(() => {
         }
 
         return 0
-    })
+    }).map((p, i) => ({ rank: i + 1, ...p }))
 })
 
 const rowClass = (data: any) => {
