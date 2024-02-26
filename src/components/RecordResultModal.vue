@@ -24,15 +24,23 @@ const visible = ref(props.visible)
 const result = ref(props.result)
 const scores = ref(props.result.scores.map(r => r.score))
 
-const { elapsedSeconds, interval } = useClock(
+const { elapsedSeconds, interval, startTime } = useClock(
     "fixture-" + result.value.id,
     result.value.startTime,
     !!result.value.startTime && !result.value.finishTime)
 
-watch(props, () => {
-    visible.value = props.visible
-    result.value = props.result
-    scores.value = props.result.scores.map(r => r.score)
+watch(() => props.visible, (newVisible, _) => {
+    visible.value = newVisible
+})
+
+watch(() => props.result, (newResult, _) => {
+    result.value = newResult
+    scores.value = newResult.scores.map(r => r.score)
+
+    if (newResult.startTime) {
+        startTime.value = newResult.startTime
+        interval.resume()
+    }
 })
 
 const players = computed(() => result.value.scores.map(r => r.playerId))
@@ -50,8 +58,6 @@ const setScore = (index: number, score: number) => {
 
 const startFixture = () => {
     flyerStore.startFixture(result.value.id)
-
-    interval.resume()
 }
 
 const updateScores = (finish: boolean) => {
@@ -62,10 +68,6 @@ const updateScores = (finish: boolean) => {
     })
 
     flyerStore.updateScores(result.value.id, newScores, finish)
-
-    if (finish) {
-        interval.pause()
-    }
 
     hide()
 }
@@ -133,17 +135,17 @@ onUnmounted(() => {
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header" @hide="hide">
-        <div v-if="result.finishTime" class="mb-2">
-            <Clock :elapsedSeconds="Math.floor((result.finishTime - result.startTime!) / 1000)" />
+        <div v-if="result.startTime && result.finishTime" class="mb-2">
+            <Clock :elapsedSeconds="Math.floor((result.finishTime - result.startTime) / 1000)" />
 
             <div class="flex flex-column md:flex-row md:align-items-center justify-content-between">
-            <div v-for="id, i in players" class="font-bold">
-                {{ flyerStore.getPlayerName(id) }}: {{ scores[i] }}
+                <div v-for="id, i in players" class="font-bold">
+                    {{ flyerStore.getPlayerName(id) }}: {{ scores[i] }}
                 </div>
             </div>
         </div>
 
-        <div v-else-if="result.startTime">
+        <div v-else-if="result.startTime" class="mb-2">
             <Clock :elapsedSeconds="elapsedSeconds" />
 
             <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
