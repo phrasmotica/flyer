@@ -3,7 +3,7 @@ import { computed, onMounted, watch } from "vue"
 
 import PlayerNameInput from "./PlayerNameInput.vue"
 
-import { Format } from "../data/FlyerSettings"
+import { Format, RuleSet } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
 
@@ -67,6 +67,10 @@ onMounted(() => {
 
     <div class="p-fluid mb-2">
         <SelectButton v-model="settingsStore.settings.format" :options="[Format.Knockout, Format.RoundRobin]" :allowEmpty="false" aria-labelledby="basic" />
+    </div>
+
+    <div class="p-fluid mb-2">
+        <SelectButton v-model="settingsStore.settings.ruleSet" :options="[RuleSet.Blackball, RuleSet.International]" :allowEmpty="false" aria-labelledby="basic" />
     </div>
 
     <div class="p-fluid flex justify-content-between mb-2">
