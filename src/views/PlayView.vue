@@ -106,6 +106,7 @@ onUnmounted(() => {
                 <ul>
                     <li>{{ flyerStore.settings.format }} format</li>
                     <li>Races to {{ flyerStore.settings.raceTo }}</li>
+                    <li>{{ flyerStore.settings.ruleSet }} rules</li>
                 </ul>
             </div>
 
