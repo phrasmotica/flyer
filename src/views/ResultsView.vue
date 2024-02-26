@@ -67,12 +67,6 @@ const hideGoToSetupModal = () => {
 
         <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
-        <div class="sticky bottom-0 bg-colour p-fluid pt-2">
-            <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
-
-            <Button class="mb-4" label="New flyer" severity="info" @click="confirmGoToSetup" />
-        </div>
-
         <ConfirmModal
             :visible="showGoToSetupModal"
             header="New flyer"
@@ -83,6 +77,12 @@ const hideGoToSetupModal = () => {
             @confirm="goToSetup"
             @hide="hideGoToSetupModal" />
     </main>
+
+    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+        <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
+
+        <Button class="mb-5" label="New flyer" severity="info" @click="confirmGoToSetup" />
+    </div>
 
     <footer>
         <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>

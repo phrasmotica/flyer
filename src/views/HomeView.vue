@@ -61,16 +61,6 @@ const hideModal = () => {
 
         <FlyerForm />
 
-        <div class="sticky bottom-0 bg-colour p-fluid pt-2">
-            <p class="mb-2">
-                Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
-            </p>
-
-            <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
-
-            <Button class="mb-4" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
-        </div>
-
         <ConfirmModal
             :visible="showModal"
             header="Start Flyer"
@@ -87,6 +77,16 @@ const hideModal = () => {
             </div>
         </ConfirmModal>
     </main>
+
+    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+        <p class="mb-2">
+            Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+        </p>
+
+        <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+
+        <Button class="mb-5" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
+    </div>
 
     <footer>
         <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>

@@ -17,11 +17,11 @@ const newFlyer = () => {
         <h1 class="border-bottom-1">Past Flyers</h1>
 
         <FlyerHistory />
-
-        <div class="sticky bottom-0 bg-colour p-fluid pt-2">
-            <Button class="mb-4" label="New flyer" severity="info" @click="newFlyer" />
-        </div>
     </main>
+
+    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+        <Button class="mb-5" label="New flyer" severity="info" @click="newFlyer" />
+    </div>
 
     <footer>
         <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>

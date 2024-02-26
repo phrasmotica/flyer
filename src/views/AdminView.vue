@@ -28,21 +28,22 @@ const clearLocalStorage = () => {
     <main>
         <h1 class="border-bottom-1">Admin</h1>
 
-        <div class="sticky bottom-0 bg-colour p-fluid pt-2">
+        <div class="p-fluid mt-2">
             <Button
-                class="mb-2"
                 :label="clearButtonLabel"
                 :disabled="isCleared"
                 severity="danger"
                 @click="clearLocalStorage" />
-
-            <Button
-                class="mb-2"
-                label="Go back"
-                severity="secondary"
-                @click="backToSetup" />
         </div>
     </main>
+
+    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+        <Button
+            class="mb-5"
+            label="Go back"
+            severity="secondary"
+            @click="backToSetup" />
+    </div>
 
     <footer>
         <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>

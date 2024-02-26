@@ -81,14 +81,6 @@ onUnmounted(() => {
             @start="startFixture"
             @updateResult="updateResult" /> -->
 
-        <div class="sticky bottom-0 bg-colour p-fluid pt-2">
-            <Button
-                class="mb-4"
-                label="Finish"
-                :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
-                @click="confirmFinish" />
-        </div>
-
         <ConfirmModal
             :visible="showFinishModal"
             header="Finish Flyer"
@@ -99,6 +91,14 @@ onUnmounted(() => {
             @confirm="finish"
             @hide="hideFinishModal" />
     </main>
+
+    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+        <Button
+            class="mb-5"
+            label="Finish"
+            :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
+            @click="confirmFinish" />
+    </div>
 
     <footer>
         <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>
