@@ -26,7 +26,12 @@ const cancelLabel = computed(() => props.cancelLabel || "No")
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="props.header" @hide="emit('hide')">
+    <Dialog
+        modal
+        class="w-full mx-4"
+        v-model:visible="visible"
+        :header="props.header"
+        @hide="emit('hide')">
         <div class="font-bold mb-2">
             {{ props.message }}
         </div>

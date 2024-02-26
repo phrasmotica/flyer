@@ -131,7 +131,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Dialog v-model:visible="visible" modal :header="header" @hide="hide">
+    <Dialog
+        modal
+        class="w-full mx-4"
+        v-model:visible="visible"
+        :header="header"
+        @hide="hide">
         <div v-if="hasStarted && hasFinished" class="mb-2">
             <Clock :elapsedSeconds="durationSeconds!" />
 
