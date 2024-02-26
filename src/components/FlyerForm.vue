@@ -9,7 +9,7 @@ import { useSettingsStore } from "../stores/settings"
 
 const settingsStore = useSettingsStore()
 
-watch(settingsStore.settings, () => {
+watch(() => settingsStore.settings.format, () => {
     if (settingsStore.settings.format === Format.Knockout) {
         settingsStore.settings.requireCompletedRounds = true
         settingsStore.settings.allowEarlyFinish = false
