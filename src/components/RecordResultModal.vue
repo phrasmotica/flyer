@@ -58,6 +58,9 @@ const setScore = (index: number, score: number) => {
 
 const startFixture = () => {
     flyerStore.startFixture(result.value.id)
+
+    startTime.value = result.value.startTime
+    interval.resume()
 }
 
 const updateScores = (finish: boolean) => {
