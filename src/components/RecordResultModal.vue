@@ -3,7 +3,7 @@ import { computed, onUnmounted, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
 
-import { useMatchClock } from "../composables/useClock"
+import { useMatch } from "../composables/useMatch"
 
 import type { Result, Score } from "../data/Result"
 
@@ -21,17 +21,26 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const visible = ref(props.visible)
-const scores = ref(props.result.scores.map(r => r.score))
 
-const { result, elapsedSeconds, clock } = useMatchClock("modal", props.result)
+const {
+    result,
+    scores,
+    players,
+    elapsedSeconds,
+    hasStarted,
+    hasFinished,
+    isInProgress,
+    durationSeconds,
+    setScore,
+    pauseClock,
+    resumeClock,
+} = useMatch("modal", props.result)
 
 watch(props, () => {
     visible.value = props.visible
     result.value = props.result
-    scores.value = props.result.scores.map(r => r.score)
 })
 
-const players = computed(() => result.value.scores.map(r => r.playerId))
 const round = computed(() => flyerStore.getRound(result.value.id)!)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
@@ -40,14 +49,10 @@ watch([scores], () => {
     (<any>document.activeElement)?.blur()
 })
 
-const setScore = (index: number, score: number) => {
-    scores.value = scores.value.map((s, i) => i === index ? score : s)
-}
-
 const startFixture = () => {
     flyerStore.startFixture(result.value.id)
 
-    clock.resume()
+    resumeClock()
 }
 
 const updateScores = (finish: boolean) => {
@@ -119,14 +124,14 @@ const hide = () => {
 }
 
 onUnmounted(() => {
-    clock.pause()
+    pauseClock()
 })
 </script>
 
 <template>
     <Dialog v-model:visible="visible" modal :header="header" @hide="hide">
-        <div v-if="result.startTime && result.finishTime" class="mb-2">
-            <Clock :elapsedSeconds="Math.floor((result.finishTime - result.startTime) / 1000)" />
+        <div v-if="hasStarted && hasFinished" class="mb-2">
+            <Clock :elapsedSeconds="durationSeconds!" />
 
             <div class="flex flex-column md:flex-row md:align-items-center justify-content-between">
                 <div v-for="id, i in players" class="font-bold">
@@ -135,7 +140,7 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <div v-else-if="result.startTime" class="mb-2">
+        <div v-else-if="hasStarted" class="mb-2">
             <Clock :elapsedSeconds="elapsedSeconds" />
 
             <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
@@ -162,21 +167,21 @@ onUnmounted(() => {
         </div>
 
         <div class="p-fluid">
-            <Button v-if="!result.startTime"
+            <Button v-if="!hasStarted"
                 class="mb-2"
                 type="button"
                 :label="startButtonText"
                 :disabled="disableStart"
                 @click="startFixture" />
 
-            <Button v-if="result.startTime && !result.finishTime"
+            <Button v-if="isInProgress"
                 class="mb-2"
                 type="button"
                 label="Update"
                 severity="info"
                 @click="() => updateScores(false)" />
 
-            <Button v-if="result.startTime && !result.finishTime"
+            <Button v-if="isInProgress"
                 class="mb-2"
                 type="button"
                 label="Finish"
