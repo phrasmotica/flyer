@@ -14,6 +14,10 @@ watch(settingsStore.settings, () => {
         settingsStore.settings.requireCompletedRounds = true
         settingsStore.settings.allowEarlyFinish = false
     }
+
+    if (settingsStore.settings.format === Format.RoundRobin) {
+        settingsStore.settings.requireCompletedRounds = false
+    }
 })
 
 const isKnockout = computed(() => settingsStore.settings.format === Format.Knockout)
