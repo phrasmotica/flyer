@@ -104,7 +104,9 @@ const disableFinish = computed(() => {
         return true
     }
 
-    // TODO: prevent submitting a draw, configurable?
+    if (!flyerStore.settings.allowDraws && [...new Set(scores.value)].length <= 1) {
+        return true
+    }
 
     return false
 })
