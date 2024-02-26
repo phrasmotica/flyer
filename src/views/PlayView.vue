@@ -22,6 +22,7 @@ const flyerStore = useFlyerStore()
 
 const display = ref(Display.Fixtures)
 const showFinishModal = ref(false)
+const showInfoModal = ref(false)
 
 const { elapsedSeconds, interval } = useClock(
     "flyer",
@@ -53,6 +54,8 @@ const finish = () => {
 const hideFinishModal = () => {
     showFinishModal.value = false
 }
+
+const hideInfoModal = () => showInfoModal.value = false
 
 onUnmounted(() => {
     interval.pause()
@@ -90,14 +93,44 @@ onUnmounted(() => {
             cancelLabel="No"
             @confirm="finish"
             @hide="hideFinishModal" />
+
+        <Dialog
+            modal
+            class="w-full mx-4"
+            v-model:visible="showInfoModal"
+            :header="flyerStore.settings.name + ' - Info'"
+            @hide="hideInfoModal">
+            <div class="p-fluid mb-2">
+                <h4 class="font-bold">Rules</h4>
+
+                <ul>
+                    <li>{{ flyerStore.settings.format }} format</li>
+                    <li>Races to {{ flyerStore.settings.raceTo }}</li>
+                </ul>
+            </div>
+
+            <div class="p-fluid">
+                <Button
+                    type="button"
+                    label="Close"
+                    severity="secondary"
+                    @click="hideInfoModal" />
+            </div>
+        </Dialog>
     </main>
 
     <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <Button
-            class="mb-5"
+            class="mb-2"
             label="Finish"
             :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
             @click="confirmFinish" />
+
+        <Button
+            class="mb-5"
+            label="Info"
+            severity="info"
+            @click="() => showInfoModal = true" />
     </div>
 
     <footer>
