@@ -2,6 +2,7 @@
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 
+import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 
@@ -79,9 +80,15 @@ const hideModal = () => {
     </main>
 
     <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
-        <p class="mb-2">
-            Estimated duration: <span class="font-bold">{{ settingsStore.estimatedDuration }} min(s)</span> <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
-        </p>
+        <div class="flex align-items-center justify-content-between border-bottom-1 border-gray-200 mb-2">
+            <div>
+                Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+            </div>
+
+            <div class="ml-4">
+                <Clock large :elapsedSeconds="settingsStore.estimatedDuration * 60" />
+            </div>
+        </div>
 
         <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 

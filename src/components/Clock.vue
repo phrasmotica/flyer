@@ -3,6 +3,7 @@ import { computed, ref, watch } from "vue"
 
 const props = defineProps<{
     elapsedSeconds: number
+    large?: boolean
 }>()
 
 const elapsedSeconds = ref(props.elapsedSeconds)
@@ -24,5 +25,7 @@ const clockText = computed(() => {
 </script>
 
 <template>
-    <p class="text-center font-bold text-xl">{{ clockText }}</p>
+    <p class="text-center font-bold text-xl" :class="[props.large && 'text-3xl']">
+        {{ clockText }}
+    </p>
 </template>
