@@ -3,7 +3,7 @@ import { computed, onUnmounted, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
 
-import { useClock } from "../composables/useClock"
+import { useMatchClock } from "../composables/useClock"
 
 import type { Result, Score } from "../data/Result"
 
@@ -21,26 +21,14 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const visible = ref(props.visible)
-const result = ref(props.result)
 const scores = ref(props.result.scores.map(r => r.score))
 
-const { elapsedSeconds, interval, startTime } = useClock(
-    "fixture-" + result.value.id,
-    result.value.startTime,
-    !!result.value.startTime && !result.value.finishTime)
+const { result, elapsedSeconds, clock } = useMatchClock("modal", props.result)
 
-watch(() => props.visible, (newVisible, _) => {
-    visible.value = newVisible
-})
-
-watch(() => props.result, (newResult, _) => {
-    result.value = newResult
-    scores.value = newResult.scores.map(r => r.score)
-
-    if (newResult.startTime) {
-        startTime.value = newResult.startTime
-        interval.resume()
-    }
+watch(props, () => {
+    visible.value = props.visible
+    result.value = props.result
+    scores.value = props.result.scores.map(r => r.score)
 })
 
 const players = computed(() => result.value.scores.map(r => r.playerId))
@@ -59,8 +47,7 @@ const setScore = (index: number, score: number) => {
 const startFixture = () => {
     flyerStore.startFixture(result.value.id)
 
-    startTime.value = result.value.startTime
-    interval.resume()
+    clock.resume()
 }
 
 const updateScores = (finish: boolean) => {
@@ -132,7 +119,7 @@ const hide = () => {
 }
 
 onUnmounted(() => {
-    interval.pause()
+    clock.pause()
 })
 </script>
 
