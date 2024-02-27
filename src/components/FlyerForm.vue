@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue"
 
+import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
@@ -96,6 +97,11 @@ onMounted(() => {
             </div>
         </div>
     </div>
+
+    <LabelledCheckbox
+        label="Randomly draw all rounds"
+        v-model="settingsStore.settings.randomlyDrawAllRounds"
+        :disabled="!isKnockout" />
 
     <LabelledCheckbox
         label="Require completed rounds"
