@@ -192,6 +192,7 @@ onUnmounted(() => {
             @click="() => showInfoModal = true" />
 
         <Button
+            v-if="!hasFinished"
             class="mb-2"
             label="Abandon"
             severity="danger"
