@@ -18,6 +18,7 @@ import Dropdown from 'primevue/dropdown'
 import InputNumber from "primevue/inputnumber"
 import InputText from "primevue/inputtext"
 import SelectButton from "primevue/selectbutton"
+import Slider from "primevue/slider"
 
 import App from './App.vue'
 import router from './router'
@@ -52,5 +53,6 @@ app.component("Dropdown", Dropdown)
 app.component("InputNumber", InputNumber)
 app.component("InputText", InputText)
 app.component("SelectButton", SelectButton)
+app.component("Slider", Slider)
 
 app.mount('#app')
