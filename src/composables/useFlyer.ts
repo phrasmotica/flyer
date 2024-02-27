@@ -21,7 +21,9 @@ export const useFlyer = (f: Flyer) => {
 
         const rounds = [...flyer.value.rounds]
 
-        const generatedRounds = rounds.filter(r => r.isGenerated)
+        // don't want to include the always-generated final round, so
+        // use a take-while approach
+        const generatedRounds = takeWhile(rounds, r => r.isGenerated)
         if (generatedRounds.length >= rounds.length) {
             return false
         }
@@ -62,6 +64,14 @@ export const useFlyer = (f: Flyer) => {
 
     const pauseClock = clock.pause
     const resumeClock = clock.resume
+
+    const takeWhile = <T>(arr: T[], pred: (x: T) => boolean): T[] => {
+        if (arr.length <= 0) {
+            return []
+        }
+
+        return pred(arr[0]) ? [arr[0], ...takeWhile(arr.slice(1, -1), pred)] : []
+    }
 
     return {
         flyer,

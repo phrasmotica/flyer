@@ -47,7 +47,10 @@ export class KnockoutScheduler implements IScheduler {
         // 3.
         let r = 0
         while (r < numRounds) {
-            const round = this.generateRound(r, overallPool, numSpaces, this.randomDraw)
+            // ensure the final round (match) always draws from the two semi-finals
+            const takeFromParents = !this.randomDraw || r === numRounds - 1
+
+            const round = this.generateRound(r, overallPool, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
 
             numSpaces /= 2
@@ -73,11 +76,11 @@ export class KnockoutScheduler implements IScheduler {
         }
     }
 
-    generateRound(r: number, overallPool: Player[], numSpaces: number, random: boolean) {
+    generateRound(r: number, overallPool: Player[], numSpaces: number, takeFromParents: boolean) {
         const round = <Round>{
             index: r + 1,
             name: this.getRoundName(numSpaces),
-            isGenerated: r === 0 || !this.randomDraw,
+            isGenerated: r === 0 || takeFromParents,
             fixtures: [],
         }
 
@@ -95,7 +98,7 @@ export class KnockoutScheduler implements IScheduler {
                 // random draw => choose the players later
                 let parentFixtureIds = <string[]>[]
 
-                if (!random) {
+                if (takeFromParents) {
                     const previousRound = this.generatedRounds![r - 1]
                     parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
                 }

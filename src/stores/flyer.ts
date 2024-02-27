@@ -90,11 +90,9 @@ export const useFlyerStore = defineStore("flyer", () => {
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
                 // with a bye in both slots
-                if (!flyer.value.settings.randomlyDrawAllRounds) {
-                    propagate(fixtureId, winnerId)
-                }
-                else {
-                    // TODO: automatically put semi-final winners into the final
+                const didPropagate = tryPropagate(fixtureId, winnerId)
+                if (!didPropagate) {
+                    // add winner to random draw pool for next round
                     playerPool.value = [...playerPool.value, winnerId]
                 }
             }
@@ -143,11 +141,9 @@ export const useFlyerStore = defineStore("flyer", () => {
                 if (finish) {
                     r.fixtures[idx].finishTime = Date.now()
 
-                    if (!flyer.value.settings.randomlyDrawAllRounds) {
-                        propagate(resultId, getWinner(r.fixtures[idx]).playerId)
-                    }
-                    else {
-                        // TODO: automatically put semi-final winners into the final
+                    const didPropagate = tryPropagate(resultId, getWinner(r.fixtures[idx]).playerId)
+                    if (!didPropagate) {
+                        // add winner to random draw pool for next round
                         playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
                     }
                 }
@@ -192,13 +188,16 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
-    const propagate = (fixtureId: string, winnerId: string) => {
+    const tryPropagate = (fixtureId: string, winnerId: string) => {
         for (const f of flyer.value!.rounds.flatMap(r => r.fixtures)) {
             const slotIndex = f.parentFixtureIds.indexOf(fixtureId)
             if (slotIndex >= 0) {
                 f.scores[slotIndex].playerId = winnerId
+                return true
             }
         }
+
+        return false
     }
 
     const finish = () => {
