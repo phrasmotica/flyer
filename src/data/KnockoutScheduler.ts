@@ -73,11 +73,10 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     generateRound(r: number, overallPool: Player[], numSpaces: number, random: boolean) {
-        // TODO: allow drawing the round randomly
-
         const round = <Round>{
             index: r + 1,
             name: this.getRoundName(numSpaces),
+            isGenerated: r === 0 || !this.randomDraw,
             fixtures: [],
         }
 

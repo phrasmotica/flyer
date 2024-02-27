@@ -49,6 +49,7 @@ export class RoundRobinScheduler implements IScheduler {
             const round = <Round>{
                 index: r + 1,
                 name: "Round " + (r + 1),
+                isGenerated: true,
                 fixtures: [],
             }
 
