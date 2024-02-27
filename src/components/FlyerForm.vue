@@ -6,7 +6,7 @@ import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
-import { Format, RuleSet } from "../data/FlyerSettings"
+import { Format, MoneySplit, RuleSet } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
 
@@ -146,6 +146,21 @@ onMounted(() => {
                     <span class="pi pi-minus" />
                 </template>
             </InputNumber>
+        </div>
+
+        <div class="p-fluid mb-2">
+            <label
+                for="moneySplitDropdown"
+                class="font-bold"
+                :class="[!settingsStore.settings.entryFeeRequired && 'text-color-secondary']">
+                Money split
+            </label>
+
+            <Dropdown
+                inputId="moneySplitDropdown"
+                v-model="settingsStore.settings.moneySplit"
+                :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
+                :disabled="!settingsStore.settings.entryFeeRequired" />
         </div>
     </FlyerFormSection>
 
