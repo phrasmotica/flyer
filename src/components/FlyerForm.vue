@@ -36,7 +36,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <h2 class="border-bottom-1 border-gray-200 mb-2">Format</h2>
+    <h2 class="border-bottom-1 border-gray-200 mb-2">Settings</h2>
 
     <div class="p-fluid mb-2">
         <InputNumber

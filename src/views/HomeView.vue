@@ -58,7 +58,7 @@ const hideModal = () => {
 
 <template>
     <main>
-        <h1 class="border-bottom-1 mb-2">Setup</h1>
+        <h1 class="border-bottom-1 mb-2">New Flyer</h1>
 
         <FlyerForm />
 
