@@ -165,7 +165,7 @@ onUnmounted(() => {
             <div class="p-fluid mb-2">
                 <h4 class="font-bold">Rules</h4>
 
-                <ul>
+                <ul class="m-0">
                     <li>
                         {{ flyerStore.settings.format }} format
                         <span v-if="isKnockout && flyerStore.settings.randomlyDrawAllRounds">

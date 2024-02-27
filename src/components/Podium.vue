@@ -53,7 +53,7 @@ const getRoundName = (result: Result) => {
             <h1 class="font-bold">{{ winner.name }}</h1>
         </div>
 
-        <ul>
+        <ul class="m-0">
             <li v-for="f in winnerResults">
                 <span>
                     <span class="font-bold">{{ getScore(f) }}</span>
