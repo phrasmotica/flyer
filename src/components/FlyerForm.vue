@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue"
 
+import FlyerFormSection from "./FlyerFormSection.vue"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
@@ -13,10 +14,6 @@ const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const settingsStore = useSettingsStore()
-
-const showSettings = ref(false)
-const showPrizes = ref(false)
-const showPlayers = ref(false)
 
 watch(() => settingsStore.settings.playerCount, () => {
     if (settingsStore.settings.tableCount > Math.floor(settingsStore.settings.playerCount / 2)) {
@@ -52,18 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div
-        class="flex align-items-end justify-content-between border-bottom-1 border-gray-200 mb-2 cursor-pointer"
-        @click="showSettings = !showSettings">
-        <h2>Settings</h2>
-
-        <div class="mb-1">
-            <span v-if="showSettings" class="font-italic">&nbsp;(click to hide)</span>
-            <span v-else class="font-italic">&nbsp;(click to show)</span>
-        </div>
-    </div>
-
-    <div v-if="showSettings">
+    <FlyerFormSection header="Settings">
         <div class="p-fluid mb-2">
             <InputNumber
                 v-model="settingsStore.settings.raceTo"
@@ -137,20 +123,9 @@ onMounted(() => {
             label="Allow draws"
             v-model="settingsStore.settings.allowDraws"
             :disabled="isKnockout" />
-    </div>
+    </FlyerFormSection>
 
-    <div
-        class="flex align-items-end justify-content-between border-bottom-1 border-gray-200 mb-2 cursor-pointer"
-        @click="showPrizes = !showPrizes">
-        <h2>Prizes</h2>
-
-        <div class="mb-1">
-            <span v-if="showPrizes" class="font-italic">&nbsp;(click to hide)</span>
-            <span v-else class="font-italic">&nbsp;(click to show)</span>
-        </div>
-    </div>
-
-    <div v-if="showPrizes">
+    <FlyerFormSection header="Prizes">
         <LabelledCheckbox
             label="Entry fee required"
             v-model="settingsStore.settings.entryFeeRequired" />
@@ -172,20 +147,9 @@ onMounted(() => {
                 </template>
             </InputNumber>
         </div>
-    </div>
+    </FlyerFormSection>
 
-    <div
-        class="flex align-items-end justify-content-between border-bottom-1 border-gray-200 mb-2 cursor-pointer"
-        @click="showPlayers = !showPlayers">
-        <h2>Players</h2>
-
-        <div class="mb-1">
-            <span v-if="showPlayers" class="font-italic">&nbsp;(click to hide)</span>
-            <span v-else class="font-italic">&nbsp;(click to show)</span>
-        </div>
-    </div>
-
-    <div v-if="showPlayers">
+    <FlyerFormSection header="Players">
         <div class="p-fluid mb-2 md:hidden">
             <InputNumber
                 v-model="settingsStore.settings.playerCount"
@@ -225,7 +189,7 @@ onMounted(() => {
                     @click="() => settingsStore.deleteName(i)" />
             </div>
         </div>
-    </div>
+    </FlyerFormSection>
 </template>
 
 <style>
