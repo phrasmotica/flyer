@@ -9,6 +9,8 @@ import FixtureList from "../components/FixtureList.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 
+import { Format } from "../data/FlyerSettings"
+
 import { useFlyerStore } from "../stores/flyer"
 
 enum Display {
@@ -43,6 +45,8 @@ onMounted(() => {
         resumeClock()
     }
 })
+
+const isKnockout = computed(() => flyerStore.settings.format === Format.Knockout)
 
 const progressText = computed(() => {
     if (hasStarted.value) {
@@ -162,7 +166,15 @@ onUnmounted(() => {
                 <h4 class="font-bold">Rules</h4>
 
                 <ul>
-                    <li>{{ flyerStore.settings.format }} format</li>
+                    <li>
+                        {{ flyerStore.settings.format }} format
+                        <span v-if="isKnockout && flyerStore.settings.randomlyDrawAllRounds">
+                            <em>(random draw)</em>
+                        </span>
+                        <span v-else-if="isKnockout">
+                            <em>(fixed draw)</em>
+                        </span>
+                    </li>
                     <li>Races to {{ flyerStore.settings.raceTo }}</li>
                     <li>{{ flyerStore.settings.ruleSet }} rules</li>
                 </ul>
