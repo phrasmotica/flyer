@@ -21,6 +21,7 @@ watch(() => settingsStore.settings.format, () => {
     }
 
     if (settingsStore.settings.format === Format.RoundRobin) {
+        settingsStore.settings.randomlyDrawAllRounds = false
         settingsStore.settings.requireCompletedRounds = false
     }
 })

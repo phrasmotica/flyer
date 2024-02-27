@@ -26,6 +26,7 @@ export const useSettingsStore = defineStore("settings", () => {
         tableCount: 1, // TODO: use this to assign fixtures to tables
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
+        randomlyDrawAllRounds: false,
         requireCompletedRounds: true,
         allowDraws: false,
         allowEarlyFinish: false,

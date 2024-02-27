@@ -5,6 +5,7 @@ export interface FlyerSettings {
     ruleSet: RuleSet
     tableCount: number
     format: Format
+    randomlyDrawAllRounds: boolean
     requireCompletedRounds: boolean
     allowDraws: boolean
     allowEarlyFinish: boolean
