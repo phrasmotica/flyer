@@ -56,8 +56,21 @@ const progressText = computed(() => {
 
 const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
 
+const finishButtonText = computed(() => {
+    if (hasStarted.value && hasFinished.value) {
+        return "View results"
+    }
+
+    return "Finish"
+})
+
 const confirmFinish = () => {
-    showFinishModal.value = true
+    if (hasFinished.value) {
+        finish()
+    }
+    else {
+        showFinishModal.value = true
+    }
 }
 
 const finish = () => {
@@ -168,7 +181,7 @@ onUnmounted(() => {
     <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <Button
             class="mb-2"
-            label="Finish"
+            :label="finishButtonText"
             :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
             @click="confirmFinish" />
 
