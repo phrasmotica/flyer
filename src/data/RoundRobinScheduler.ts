@@ -17,7 +17,8 @@ export class RoundRobinScheduler implements IScheduler {
         const maxFrames = 2 * settings.raceTo - 1
         const meanFrames = (settings.raceTo + maxFrames) / 2
         const expectedFramesTotal = numFixtures * meanFrames
-        return Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
+        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
+        return Math.max(this.frameTimeEstimateMins, expectedTime)
     }
 
     generateFixtures(players: Player[]) {
