@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useStorage } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 import { defineStore } from "pinia"
@@ -23,6 +23,8 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const settings = computed(() => flyer.value?.settings)
 
+    const playerPool = ref<string[]>([])
+
     const rounds = computed(() => flyer.value?.rounds ?? [])
 
     const results = computed(() => rounds.value.flatMap(r => r.fixtures))
@@ -38,6 +40,8 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         return oldestInProgressRound.index
     })
+
+    const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
     const durationSeconds = computed(() => {
         if (!flyer.value?.startTime || !flyer.value?.finishTime) {
@@ -86,7 +90,13 @@ export const useFlyerStore = defineStore("flyer", () => {
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
                 // with a bye in both slots
-                propagate(fixtureId, winnerId)
+                if (!flyer.value.settings.randomlyDrawAllRounds) {
+                    propagate(fixtureId, winnerId)
+                }
+                else {
+                    // TODO: automatically put semi-final winners into the final
+                    playerPool.value = [...playerPool.value, winnerId]
+                }
             }
         }
     }
@@ -136,9 +146,48 @@ export const useFlyerStore = defineStore("flyer", () => {
                     if (!flyer.value.settings.randomlyDrawAllRounds) {
                         propagate(resultId, getWinner(r.fixtures[idx]).playerId)
                     }
+                    else {
+                        // TODO: automatically put semi-final winners into the final
+                        playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
+                    }
                 }
             }
         }
+    }
+
+    const generateNextRound = () => {
+        const shuffledPlayerIds =  shuffle([...playerPool.value])
+
+        const nextRound = rounds.value.find(r => !r.isGenerated)!
+        for (const f of nextRound.fixtures) {
+            for (const s of f.scores) {
+                s.playerId = shuffledPlayerIds.pop()!
+            }
+        }
+
+        nextRound.isGenerated = true
+
+        playerPool.value = []
+    }
+
+    const shuffle = <T>(arr: T[]) => {
+        // https://stackoverflow.com/a/2450976
+        let currentIndex = arr.length
+        let randomIndex = 0
+
+        // While there remain elements to shuffle.
+        while (currentIndex > 0) {
+            // Pick a remaining element.
+            randomIndex = Math.floor(Math.random() * currentIndex)
+            currentIndex--
+
+            // And swap it with the current element.
+            const temp = arr[currentIndex]
+            arr[currentIndex] = arr[randomIndex]
+            arr[randomIndex] = temp
+        }
+
+        return arr
     }
 
     const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
@@ -169,6 +218,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         ongoingCount,
         remainingCount,
         currentRound,
+        generationIsComplete,
         durationSeconds,
         winner,
 
@@ -177,6 +227,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         start,
         startFixture,
         updateScores,
+        generateNextRound,
         finish,
         clear,
     }

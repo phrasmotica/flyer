@@ -75,7 +75,7 @@ const finishButtonText = computed(() => {
 })
 
 const generateNextRound = () => {
-    // TODO: implement
+    flyerStore.generateNextRound()
 }
 
 const confirmFinish = () => {
@@ -202,7 +202,7 @@ onUnmounted(() => {
 
     <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <Button
-            v-if="flyerStore.settings.randomlyDrawAllRounds"
+            v-if="flyerStore.settings.randomlyDrawAllRounds && !flyerStore.generationIsComplete"
             class="mb-2"
             label="Generate next round"
             :disabled="!readyForNextRound"

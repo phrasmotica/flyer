@@ -16,18 +16,17 @@ export const useFlyer = (f: Flyer) => {
 
     const readyForNextRound = computed(() => {
         if (!f.settings.randomlyDrawAllRounds) {
-            return true
+            return false
         }
 
-        // finds the latest round with at least once fixture that's started
         const rounds = [...flyer.value.rounds]
-        rounds.reverse()
 
-        const currentRound = rounds.find(r => r.fixtures.some(f => f.startTime))
-        if (!currentRound) {
-            return true
+        const generatedRounds = rounds.filter(r => r.isGenerated)
+        if (generatedRounds.length >= rounds.length) {
+            return false
         }
 
+        const currentRound = generatedRounds[generatedRounds.length - 1]
         return currentRound.fixtures.every(f => f.startTime && f.finishTime)
     })
 
