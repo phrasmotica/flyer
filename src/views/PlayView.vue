@@ -117,7 +117,7 @@ onUnmounted(() => {
             <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
 
             <div class="flex align-items-end justify-content-between">
-                <p class="text-lg font-italic">{{ progressText }}</p>
+                <p class="m-0 text-lg font-italic">{{ progressText }}</p>
 
                 <Clock :elapsedSeconds="clockDisplay" />
             </div>
