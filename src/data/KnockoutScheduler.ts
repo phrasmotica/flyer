@@ -26,12 +26,11 @@ export class KnockoutScheduler implements IScheduler {
             throw "Fixtures have already been generated!"
         }
 
-        const overallPool = this.shuffle([...players])
-
         const numRounds = Math.ceil(Math.log2(players.length))
 
+        const overallPool = this.shuffle([...players])
+
         let numSpaces = Math.pow(2, numRounds)
-        let numFixtures = numSpaces / 2
 
         this.generatedRounds = <Round[]>[]
 
@@ -41,40 +40,10 @@ export class KnockoutScheduler implements IScheduler {
         // 3.
         let r = 0
         while (r < numRounds) {
-            const round = <Round>{
-                index: r + 1,
-                name: this.getRoundName(numSpaces),
-                fixtures: [],
-            }
-
-            console.log(round.name)
-
-            for (let i = 0; i < numFixtures; i++) {
-                if (r === 0) {
-                    const playerA = overallPool.pop()
-
-                    this.addPlaceholderFixture(round, [playerA!], 2, [])
-                }
-                else {
-                    const previousRound = this.generatedRounds[r - 1]
-                    const parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
-
-                    this.addPlaceholderFixture(round, [], 2, parentFixtureIds)
-                }
-            }
-
-            while (overallPool.length > 0) {
-                this.fillFixture(round, overallPool.pop()!)
-            }
-
-            if (r === 0) {
-                this.fillByes(round)
-            }
-
+            const round = this.generateRound(r, overallPool, numSpaces)
             this.generatedRounds.push(round)
 
             numSpaces /= 2
-            numFixtures /= 2
             r++
         }
 
@@ -95,6 +64,44 @@ export class KnockoutScheduler implements IScheduler {
             default:
                 return "Round of " + numSpaces
         }
+    }
+
+    generateRound(r: number, overallPool: Player[], numSpaces: number) {
+        // TODO: allow drawing the round randomly
+
+        const round = <Round>{
+            index: r + 1,
+            name: this.getRoundName(numSpaces),
+            fixtures: [],
+        }
+
+        console.log(round.name)
+
+        const numFixtures = numSpaces / 2
+
+        for (let i = 0; i < numFixtures; i++) {
+            if (r === 0) {
+                const playerA = overallPool.pop()
+
+                this.addPlaceholderFixture(round, [playerA!], 2, [])
+            }
+            else {
+                const previousRound = this.generatedRounds![r - 1]
+                const parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
+
+                this.addPlaceholderFixture(round, [], 2, parentFixtureIds)
+            }
+        }
+
+        while (overallPool.length > 0) {
+            this.fillFixture(round, overallPool.pop()!)
+        }
+
+        if (r === 0) {
+            this.fillByes(round)
+        }
+
+        return round
     }
 
     private addPlaceholderFixture(round: Round, players: Player[], playerCount: number, parentFixtureIds: string[]) {
