@@ -83,10 +83,6 @@ const hideGoToSetupModal = () => {
 
         <Button class="mb-5" label="New flyer" severity="info" @click="confirmGoToSetup" />
     </div>
-
-    <footer>
-        <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>
-    </footer>
 </template>
 
 <style scoped>

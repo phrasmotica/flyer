@@ -94,10 +94,6 @@ const hideModal = () => {
 
         <Button class="mb-5" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
     </div>
-
-    <footer>
-        <a href="https://www.flaticon.com/free-icons/ball-eight" title="ball eight icons">Ball eight icons created by Boris farias - Flaticon</a>
-    </footer>
 </template>
 
 <style scoped>
