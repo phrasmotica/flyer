@@ -31,6 +31,8 @@ const getOpponentName = (player: Player, result: Result) => {
         return "UNKNOWN"
     }
 
+    // TODO: deal with a result in which the winner got a bye
+
     return flyerStore.getPlayerName(opponentScore.playerId)
 }
 
