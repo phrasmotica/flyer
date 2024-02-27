@@ -92,7 +92,7 @@ const hideModal = () => {
 
         <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 
-        <Button class="mb-2" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
+        <Button class="mb-2" label="View past flyers" severity="info" @click="viewPastFlyers" />
     </div>
 </template>
 
