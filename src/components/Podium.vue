@@ -21,7 +21,13 @@ const winnerResults = computed(() => {
     return results.reverse()
 })
 
+const isWalkover = (result: Result) => result.scores.some(s => s.isBye)
+
 const getScore = (result: Result) => {
+    if (isWalkover(result)) {
+        return "W/O"
+    }
+
     return result.scores.map(s => s.score).sort((a, b) => b - a).join("-")
 }
 
@@ -30,8 +36,6 @@ const getOpponentName = (player: Player, result: Result) => {
     if (!opponentScore) {
         return "UNKNOWN"
     }
-
-    // TODO: deal with a result in which the winner got a bye
 
     return flyerStore.getPlayerName(opponentScore.playerId)
 }
@@ -53,8 +57,8 @@ const getRoundName = (result: Result) => {
             <li v-for="f in winnerResults">
                 <span>
                     <span class="font-bold">{{ getScore(f) }}</span>
-                    v {{ getOpponentName(winner, f) }}
-                    <span class="font-italic">({{ getRoundName(f) }})</span>
+                    <span v-if="!isWalkover(f)">&nbsp;v {{ getOpponentName(winner, f) }}</span>
+                    <span class="font-italic">&nbsp;({{ getRoundName(f) }})</span>
                 </span>
             </li>
         </ul>
@@ -64,9 +68,3 @@ const getRoundName = (result: Result) => {
         <p class="m-0 text-center">No winner!</p>
     </div>
 </template>
-
-<style scoped>
-h3 {
-    margin: 0px;
-}
-</style>
