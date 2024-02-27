@@ -139,7 +139,7 @@ onMounted(() => {
             showButtons buttonLayout="horizontal"
             :min="2" :max="maxPlayersEnv"
             suffix=" players"
-            :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
+            inputClass="text-center font-bold">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>
