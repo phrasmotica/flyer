@@ -5,6 +5,7 @@ import ScoreCell from "./ScoreCell.vue"
 
 import { useMatch } from "../composables/useMatch"
 
+import { Format } from "../data/FlyerSettings"
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -26,6 +27,8 @@ const { result } = useMatch("card", props.result)
 watch(props, () => {
     result.value = props.result
 })
+
+const isRandomDraw = computed(() => flyerStore.settings.format === Format.Knockout && flyerStore.settings.randomlyDrawAllRounds)
 
 const isWalkover = computed(() => result.value.scores.some(s => s.isBye))
 
@@ -59,7 +62,7 @@ const handleNameClick = (id: string) => {
                 {{ flyerStore.getPlayerName(result.scores[0].playerId) }}
             </span>
 
-            <span v-else-if="result.parentFixtureIds[0]">
+            <span v-else-if="result.parentFixtureIds[0] || isRandomDraw">
                 <em class="text-gray-400">TBD</em>
             </span>
         </div>
@@ -85,7 +88,7 @@ const handleNameClick = (id: string) => {
                 {{ flyerStore.getPlayerName(result.scores[1].playerId) }}
             </span>
 
-            <span v-else-if="result.parentFixtureIds[1]">
+            <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">
                 <em class="text-gray-400">TBD</em>
             </span>
 
