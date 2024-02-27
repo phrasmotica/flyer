@@ -25,7 +25,7 @@ const clockText = computed(() => {
 </script>
 
 <template>
-    <p class="text-center font-bold text-xl" :class="[props.large && 'text-3xl']">
+    <p class="m-0 text-center font-bold text-xl" :class="[props.large && 'text-3xl']">
         {{ clockText }}
     </p>
 </template>
