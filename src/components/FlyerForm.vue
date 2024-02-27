@@ -96,41 +96,20 @@ onMounted(() => {
         </div>
     </div>
 
-    <div class="p-fluid flex justify-content-between mb-2">
-        <label for="requireCompletedRoundsCheckbox" :class="[isKnockout && 'text-color-secondary']">
-            Require completed rounds
-        </label>
+    <LabelledCheckbox
+        label="Require completed rounds"
+        v-model="settingsStore.settings.requireCompletedRounds"
+        :disabled="isKnockout" />
 
-        <Checkbox
-            inputId="requireCompletedRoundsCheckbox"
-            v-model="settingsStore.settings.requireCompletedRounds"
-            :binary="true"
-            :disabled="isKnockout" />
-    </div>
+    <LabelledCheckbox
+        label="Allow early finish"
+        v-model="settingsStore.settings.allowEarlyFinish"
+        :disabled="isKnockout" />
 
-    <div class="p-fluid flex justify-content-between mb-2">
-        <label for="allowEarlyFinishCheckbox" :class="[isKnockout && 'text-color-secondary']">
-            Allow early finish
-        </label>
-
-        <Checkbox
-            inputId="allowEarlyFinishCheckbox"
-            v-model="settingsStore.settings.allowEarlyFinish"
-            :binary="true"
-            :disabled="isKnockout" />
-    </div>
-
-    <div class="p-fluid flex justify-content-between mb-2">
-        <label for="allowDrawsCheckbox" :class="[isKnockout && 'text-color-secondary']">
-            Allow draws
-        </label>
-
-        <Checkbox
-            inputId="allowDrawsCheckbox"
-            v-model="settingsStore.settings.allowDraws"
-            :binary="true"
-            :disabled="isKnockout" />
-    </div>
+    <LabelledCheckbox
+        label="Allow draws"
+        v-model="settingsStore.settings.allowDraws"
+        :disabled="isKnockout" />
 
     <h2 class="border-bottom-1 border-gray-200 mb-2">Players</h2>
 
