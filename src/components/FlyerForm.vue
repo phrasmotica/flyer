@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from "vue"
 
 import FlyerFormSection from "./FlyerFormSection.vue"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
+import LabelledDropdown from "./LabelledDropdown.vue"
 import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
@@ -85,9 +86,8 @@ onMounted(() => {
         <div class="grid m-0 mb-2">
             <div class="col-12 md:col-6 mb-2 md:mb-0 p-0 p-fluid">
                 <div class="md:mr-1">
-                    <label for="formatDropdown" class="font-bold">Format</label>
-                    <Dropdown
-                        inputId="formatDropdown"
+                    <LabelledDropdown
+                        label="Format"
                         v-model="settingsStore.settings.format"
                         :options="[Format.Knockout, Format.RoundRobin]" />
                 </div>
@@ -95,9 +95,8 @@ onMounted(() => {
 
             <div class="col-12 md:col-6 p-0 p-fluid">
                 <div class="md:ml-1">
-                    <label for="ruleSetDropdown" class="font-bold">Rules</label>
-                    <Dropdown
-                        inputId="ruleSetDropdown"
+                    <LabelledDropdown
+                        label="Rules"
                         v-model="settingsStore.settings.ruleSet"
                         :options="[RuleSet.Blackball, RuleSet.International]" />
                 </div>
@@ -148,20 +147,11 @@ onMounted(() => {
             </InputNumber>
         </div>
 
-        <div class="p-fluid mb-2">
-            <label
-                for="moneySplitDropdown"
-                class="font-bold"
-                :class="[!settingsStore.settings.entryFeeRequired && 'text-color-secondary']">
-                Money split
-            </label>
-
-            <Dropdown
-                inputId="moneySplitDropdown"
-                v-model="settingsStore.settings.moneySplit"
-                :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
-                :disabled="!settingsStore.settings.entryFeeRequired" />
-        </div>
+        <LabelledDropdown
+            label="Money split"
+            v-model="settingsStore.settings.moneySplit"
+            :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
+            :disabled="!settingsStore.settings.entryFeeRequired" />
     </FlyerFormSection>
 
     <FlyerFormSection header="Players">
