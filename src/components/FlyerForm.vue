@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue"
 
+import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 
 import { Format, RuleSet } from "../data/FlyerSettings"
@@ -133,7 +134,7 @@ onMounted(() => {
 
     <h2 class="border-bottom-1 border-gray-200 mb-2">Players</h2>
 
-    <div class="p-fluid mb-2">
+    <div class="p-fluid mb-2 md:hidden">
         <InputNumber
             v-model="settingsStore.settings.playerCount"
             showButtons buttonLayout="horizontal"
@@ -147,6 +148,12 @@ onMounted(() => {
                 <span class="pi pi-minus" />
             </template>
         </InputNumber>
+    </div>
+
+    <div class="mt-2 hidden md:block">
+        <LabelledSlider
+            v-model="settingsStore.settings.playerCount"
+            :min="2" :max="maxPlayersEnv" />
     </div>
 
     <div v-for="p, i in settingsStore.settings.playerNames">
