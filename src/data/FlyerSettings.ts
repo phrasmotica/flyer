@@ -9,6 +9,8 @@ export interface FlyerSettings {
     requireCompletedRounds: boolean
     allowDraws: boolean
     allowEarlyFinish: boolean
+    entryFeeRequired: boolean
+    entryFee: number
     name: string
 }
 

@@ -30,6 +30,8 @@ export const useSettingsStore = defineStore("settings", () => {
         requireCompletedRounds: true,
         allowDraws: false,
         allowEarlyFinish: false,
+        entryFeeRequired: false,
+        entryFee: 5,
         name: "",
     })
 
