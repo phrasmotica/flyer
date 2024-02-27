@@ -14,6 +14,12 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const settingsStore = useSettingsStore()
 
+watch(() => settingsStore.settings.playerCount, () => {
+    if (settingsStore.settings.tableCount > Math.floor(settingsStore.settings.playerCount / 2)) {
+        settingsStore.settings.tableCount = Math.floor(settingsStore.settings.playerCount / 2)
+    }
+})
+
 watch(() => settingsStore.settings.format, () => {
     if (settingsStore.settings.format === Format.Knockout) {
         settingsStore.settings.requireCompletedRounds = true
