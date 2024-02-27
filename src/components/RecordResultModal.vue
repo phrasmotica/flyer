@@ -69,6 +69,10 @@ const updateScores = (finish: boolean) => {
 
 const startButtonText = computed(() => {
     if (result.value.scores.some(s => !s.playerId)) {
+        if (flyerStore.settings.randomlyDrawAllRounds) {
+            return "Waiting for round to be generated"
+        }
+
         return "Waiting for a previous result"
     }
 
