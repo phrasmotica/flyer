@@ -165,7 +165,7 @@ onUnmounted(() => {
             @hide="hideAbandonModal" />
     </main>
 
-    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+    <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <Button
             class="mb-2"
             label="Finish"
@@ -179,7 +179,7 @@ onUnmounted(() => {
             @click="() => showInfoModal = true" />
 
         <Button
-            class="mb-5"
+            class="mb-2"
             label="Abandon"
             severity="danger"
             @click="() => showAbandonModal = true" />

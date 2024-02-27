@@ -79,7 +79,7 @@ const hideModal = () => {
         </ConfirmModal>
     </main>
 
-    <div class="sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
+    <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <div class="flex align-items-center justify-content-between border-bottom-1 border-gray-200 mb-2">
             <div>
                 Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
@@ -92,7 +92,7 @@ const hideModal = () => {
 
         <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 
-        <Button class="mb-5" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
+        <Button class="mb-2" label="View past flyers" severity="info" :disabled="settingsStore.isInvalid" @click="viewPastFlyers" />
     </div>
 </template>
 
