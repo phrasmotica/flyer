@@ -23,6 +23,8 @@ const flyerStore = useFlyerStore()
 const {
     elapsedSeconds,
     durationSeconds,
+    hasStarted,
+    hasFinished,
     isInProgress,
     pauseClock,
     resumeClock,
@@ -38,6 +40,18 @@ onMounted(() => {
     if (isInProgress.value) {
         resumeClock()
     }
+})
+
+const progressText = computed(() => {
+    if (hasStarted.value) {
+        if (hasFinished.value) {
+            return "Finished"
+        }
+
+        return "In progress"
+    }
+
+    return "Ready to start"
 })
 
 const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
@@ -81,10 +95,14 @@ onUnmounted(() => {
 
 <template>
     <main>
-        <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 pb-1">
+        <div class="border-bottom-1 pb-1">
             <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
 
-            <Clock :elapsedSeconds="clockDisplay" />
+            <div class="flex align-items-end justify-content-between">
+                <p class="text-lg font-italic">{{ progressText }}</p>
+
+                <Clock :elapsedSeconds="clockDisplay" />
+            </div>
         </div>
 
         <!-- <div class="p-fluid">
