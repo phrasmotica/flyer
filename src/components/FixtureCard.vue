@@ -91,8 +91,6 @@ const handleNameClick = (id: string) => {
             <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">
                 <em class="text-gray-400">TBD</em>
             </span>
-
-            <span v-else>{{ flyerStore.getPlayerName(result.scores[1].playerId) }}</span>
         </div>
     </div>
 </template>
