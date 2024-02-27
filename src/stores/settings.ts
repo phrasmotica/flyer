@@ -2,7 +2,7 @@ import { computed } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
-import { Format, type FlyerSettings, RuleSet } from "../data/FlyerSettings"
+import { Format, type FlyerSettings, RuleSet, MoneySplit } from "../data/FlyerSettings"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 import { KnockoutScheduler } from "@/data/KnockoutScheduler"
 
@@ -32,6 +32,7 @@ export const useSettingsStore = defineStore("settings", () => {
         allowEarlyFinish: false,
         entryFeeRequired: false,
         entryFee: 5,
+        moneySplit: MoneySplit.WinnerTakesAll,
         name: "",
     })
 

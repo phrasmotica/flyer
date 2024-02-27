@@ -11,6 +11,7 @@ export interface FlyerSettings {
     allowEarlyFinish: boolean
     entryFeeRequired: boolean
     entryFee: number
+    moneySplit: MoneySplit
     name: string
 }
 
@@ -22,4 +23,9 @@ export enum Format {
 export enum RuleSet {
     International = "International",
     Blackball = "Blackball",
+}
+
+export enum MoneySplit {
+    WinnerTakesAll = "Winner Takes All",
+    SeventyThirty = "70/30",
 }
