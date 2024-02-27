@@ -14,6 +14,23 @@ export const useFlyer = (f: Flyer) => {
         return flyer.value.rounds.flatMap(r => r.fixtures).every(x => x.startTime && x.finishTime)
     })
 
+    const readyForNextRound = computed(() => {
+        if (!f.settings.randomlyDrawAllRounds) {
+            return true
+        }
+
+        // finds the latest round with at least once fixture that's started
+        const rounds = [...flyer.value.rounds]
+        rounds.reverse()
+
+        const currentRound = rounds.find(r => r.fixtures.some(f => f.startTime))
+        if (!currentRound) {
+            return true
+        }
+
+        return currentRound.fixtures.every(f => f.startTime && f.finishTime)
+    })
+
     const durationSeconds = computed(() => {
         if (!hasStarted.value || !hasFinished.value) {
             return null
@@ -55,6 +72,7 @@ export const useFlyer = (f: Flyer) => {
         hasFinished,
         isInProgress,
         isComplete,
+        readyForNextRound,
         durationSeconds,
 
         pauseClock,

@@ -27,6 +27,7 @@ const {
     hasFinished,
     isInProgress,
     isComplete,
+    readyForNextRound,
     pauseClock,
     resumeClock,
 } = useFlyer(flyerStore.flyer)
@@ -68,6 +69,10 @@ const finishButtonText = computed(() => {
 
     return "Finish"
 })
+
+const generateNextRound = () => {
+    // TODO: implement
+}
 
 const confirmFinish = () => {
     if (hasFinished.value) {
@@ -185,6 +190,14 @@ onUnmounted(() => {
 
     <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <Button
+            v-if="flyerStore.settings.randomlyDrawAllRounds"
+            class="mb-2"
+            label="Generate next round"
+            :disabled="!readyForNextRound"
+            @click="generateNextRound" />
+
+        <Button
+            v-else
             class="mb-2"
             :label="finishButtonText"
             :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
