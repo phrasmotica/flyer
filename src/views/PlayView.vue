@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import Clock from "../components/Clock.vue"
@@ -7,7 +7,7 @@ import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
-import { useClock } from "../composables/useClock"
+import { useFlyer } from "../composables/useFlyer"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -20,24 +20,27 @@ const router = useRouter()
 
 const flyerStore = useFlyerStore()
 
+const {
+    elapsedSeconds,
+    durationSeconds,
+    isInProgress,
+    pauseClock,
+    resumeClock,
+} = useFlyer(flyerStore.flyer)
+
 const display = ref(Display.Fixtures)
 
 const showFinishModal = ref(false)
 const showInfoModal = ref(false)
 const showAbandonModal = ref(false)
 
-const { elapsedSeconds, interval } = useClock(
-    "flyer",
-    flyerStore.flyer.startTime,
-    !!flyerStore.flyer.startTime && !flyerStore.flyer.finishTime)
-
-const clockDisplay = computed(() => {
-    if (flyerStore.flyer.startTime && flyerStore.flyer.finishTime) {
-        return Math.floor((flyerStore.flyer.finishTime - flyerStore.flyer.startTime) / 1000)
+onMounted(() => {
+    if (isInProgress.value) {
+        resumeClock()
     }
-
-    return elapsedSeconds.value
 })
+
+const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
 
 const confirmFinish = () => {
     showFinishModal.value = true
@@ -72,7 +75,7 @@ const abandon = () => {
 const hideAbandonModal = () => showAbandonModal.value = false
 
 onUnmounted(() => {
-    interval.pause()
+    pauseClock()
 })
 </script>
 
