@@ -15,6 +15,7 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 const settingsStore = useSettingsStore()
 
 const showSettings = ref(false)
+const showPrizes = ref(false)
 const showPlayers = ref(false)
 
 watch(() => settingsStore.settings.playerCount, () => {
@@ -136,6 +137,41 @@ onMounted(() => {
             label="Allow draws"
             v-model="settingsStore.settings.allowDraws"
             :disabled="isKnockout" />
+    </div>
+
+    <div
+        class="flex align-items-end justify-content-between border-bottom-1 border-gray-200 mb-2 cursor-pointer"
+        @click="showPrizes = !showPrizes">
+        <h2>Prizes</h2>
+
+        <div class="mb-1">
+            <span v-if="showPrizes" class="font-italic">&nbsp;(click to hide)</span>
+            <span v-else class="font-italic">&nbsp;(click to show)</span>
+        </div>
+    </div>
+
+    <div v-if="showPrizes">
+        <LabelledCheckbox
+            label="Entry fee required"
+            v-model="settingsStore.settings.entryFeeRequired" />
+
+        <div class="p-fluid mb-2">
+            <InputNumber
+                v-model="settingsStore.settings.entryFee"
+                showButtons buttonLayout="horizontal"
+                :min="5" :max="20" :step="5"
+                mode="currency" currency="GBP" locale="en-GB"
+                suffix=" entry fee"
+                inputClass="text-center font-bold"
+                :disabled="!settingsStore.settings.entryFeeRequired">
+                <template #incrementbuttonicon>
+                    <span class="pi pi-plus" />
+                </template>
+                <template #decrementbuttonicon>
+                    <span class="pi pi-minus" />
+                </template>
+            </InputNumber>
+        </div>
     </div>
 
     <div

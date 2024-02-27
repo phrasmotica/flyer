@@ -90,6 +90,19 @@ const hideModal = () => {
             </div>
         </div>
 
+        <div v-if="settingsStore.settings.entryFeeRequired"
+            class="flex align-items-center justify-content-between border-bottom-1 border-gray-200 mb-2">
+            <div>
+                Total prize pot <em>({{ settingsStore.settings.playerCount }} players)</em>
+            </div>
+
+            <div class="ml-4">
+                <p class="m-0 text-center font-bold text-3xl">
+                    &pound;{{ settingsStore.settings.playerCount * settingsStore.settings.entryFee }}
+                </p>
+            </div>
+        </div>
+
         <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 
         <Button class="mb-2" label="View past flyers" severity="info" @click="viewPastFlyers" />
