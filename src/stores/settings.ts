@@ -7,14 +7,15 @@ import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 import { KnockoutScheduler } from "@/data/KnockoutScheduler"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
+const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 
 let defaultPlayers = <string[]>[]
 if (defaultPlayersEnv) {
     defaultPlayers = String(defaultPlayersEnv).split(";")
 }
 
-if (defaultPlayers.length < 10) {
-    defaultPlayers = [...defaultPlayers, ...new Array(10 - defaultPlayers.length).fill("")]
+if (defaultPlayers.length < maxPlayersEnv) {
+    defaultPlayers = [...defaultPlayers, ...new Array(maxPlayersEnv - defaultPlayers.length).fill("")]
 }
 
 export const useSettingsStore = defineStore("settings", () => {

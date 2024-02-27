@@ -7,6 +7,9 @@ import { Format, RuleSet } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
 
+const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
+const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
+
 const settingsStore = useSettingsStore()
 
 watch(() => settingsStore.settings.format, () => {
@@ -42,7 +45,7 @@ onMounted(() => {
         <InputNumber
             v-model="settingsStore.settings.raceTo"
             showButtons buttonLayout="horizontal"
-            :min="1" :max="5"
+            :min="1" :max="maxRaceEnv"
             prefix="Races to "
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
@@ -134,7 +137,7 @@ onMounted(() => {
         <InputNumber
             v-model="settingsStore.settings.playerCount"
             showButtons buttonLayout="horizontal"
-            :min="2" :max="10"
+            :min="2" :max="maxPlayersEnv"
             suffix=" players"
             :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
             <template #incrementbuttonicon>
