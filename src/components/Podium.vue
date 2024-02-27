@@ -43,7 +43,7 @@ const getRoundName = (result: Result) => {
 <template>
     <div v-if="winner">
         <div class="text-center">
-            <p>The winner is</p>
+            <p class="m-0">The winner is</p>
             <h1 class="font-bold">{{ winner.name }}</h1>
         </div>
 
@@ -59,7 +59,7 @@ const getRoundName = (result: Result) => {
     </div>
 
     <div v-else>
-        <p class="text-center">No winner!</p>
+        <p class="m-0 text-center">No winner!</p>
     </div>
 </template>
 
