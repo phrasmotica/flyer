@@ -132,7 +132,10 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                 if (finish) {
                     r.fixtures[idx].finishTime = Date.now()
-                    propagate(resultId, getWinner(r.fixtures[idx]).playerId)
+
+                    if (!flyer.value.settings.randomlyDrawAllRounds) {
+                        propagate(resultId, getWinner(r.fixtures[idx]).playerId)
+                    }
                 }
             }
         }

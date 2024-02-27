@@ -23,7 +23,7 @@ const showModal = ref(false)
 const start = () => {
     switch (settingsStore.settings.format) {
         case Format.Knockout:
-            flyerStore.start(settingsStore.settings, new KnockoutScheduler())
+            flyerStore.start(settingsStore.settings, new KnockoutScheduler(settingsStore.settings.randomlyDrawAllRounds))
             break
 
         case Format.RoundRobin:

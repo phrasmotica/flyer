@@ -38,7 +38,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const estimatedDuration = computed(() => {
         switch (settings.value.format) {
             case Format.Knockout:
-                return new KnockoutScheduler().estimateDuration(settings.value)
+                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).estimateDuration(settings.value)
 
             case Format.RoundRobin:
                 return new RoundRobinScheduler().estimateDuration(settings.value)
@@ -51,7 +51,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const durationPerFrame = computed(() => {
         switch (settings.value.format) {
             case Format.Knockout:
-                return new KnockoutScheduler().frameTimeEstimateMins
+                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).frameTimeEstimateMins
 
             case Format.RoundRobin:
                 return new RoundRobinScheduler().frameTimeEstimateMins

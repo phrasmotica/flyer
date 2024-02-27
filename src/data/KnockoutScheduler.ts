@@ -11,7 +11,13 @@ export class KnockoutScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
+    constructor(private randomDraw: boolean) {
+
+    }
+
     estimateDuration(settings: FlyerSettings) {
+        // TODO: allow for random draw, i.e. rounds needing to be completed
+
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const numFixtures = settings.playerCount - 1
@@ -40,7 +46,7 @@ export class KnockoutScheduler implements IScheduler {
         // 3.
         let r = 0
         while (r < numRounds) {
-            const round = this.generateRound(r, overallPool, numSpaces)
+            const round = this.generateRound(r, overallPool, numSpaces, this.randomDraw)
             this.generatedRounds.push(round)
 
             numSpaces /= 2
@@ -66,7 +72,7 @@ export class KnockoutScheduler implements IScheduler {
         }
     }
 
-    generateRound(r: number, overallPool: Player[], numSpaces: number) {
+    generateRound(r: number, overallPool: Player[], numSpaces: number, random: boolean) {
         // TODO: allow drawing the round randomly
 
         const round = <Round>{
@@ -86,8 +92,13 @@ export class KnockoutScheduler implements IScheduler {
                 this.addPlaceholderFixture(round, [playerA!], 2, [])
             }
             else {
-                const previousRound = this.generatedRounds![r - 1]
-                const parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
+                // random draw => choose the players later
+                let parentFixtureIds = <string[]>[]
+
+                if (!random) {
+                    const previousRound = this.generatedRounds![r - 1]
+                    parentFixtureIds = previousRound.fixtures.slice(i * 2, (i + 1) * 2).map(f => f.id)
+                }
 
                 this.addPlaceholderFixture(round, [], 2, parentFixtureIds)
             }
