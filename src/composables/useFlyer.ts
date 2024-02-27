@@ -10,6 +10,9 @@ export const useFlyer = (f: Flyer) => {
     const hasStarted = computed(() => !!flyer.value.startTime)
     const hasFinished = computed(() => !!flyer.value.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
+    const isComplete = computed(() => {
+        return flyer.value.rounds.flatMap(r => r.fixtures).every(x => x.startTime && x.finishTime)
+    })
 
     const durationSeconds = computed(() => {
         if (!hasStarted.value || !hasFinished.value) {
@@ -51,6 +54,7 @@ export const useFlyer = (f: Flyer) => {
         hasStarted,
         hasFinished,
         isInProgress,
+        isComplete,
         durationSeconds,
 
         pauseClock,

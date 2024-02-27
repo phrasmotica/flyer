@@ -26,6 +26,7 @@ const {
     hasStarted,
     hasFinished,
     isInProgress,
+    isComplete,
     pauseClock,
     resumeClock,
 } = useFlyer(flyerStore.flyer)
@@ -46,6 +47,10 @@ const progressText = computed(() => {
     if (hasStarted.value) {
         if (hasFinished.value) {
             return "Finished"
+        }
+
+        if (isComplete.value) {
+            return "Completed"
         }
 
         return "In progress"
