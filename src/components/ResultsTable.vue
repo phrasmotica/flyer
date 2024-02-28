@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import { useSettings } from "../composables/useSettings"
+
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const flyerStore = useFlyerStore()
+
+const {
+    prizeMonies,
+} = useSettings(flyerStore.settings)
+
+const winner = computed(() => flyerStore.winner)
 
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {
@@ -91,6 +99,11 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <Column field="draws" header="Drew"></Column>
         <Column field="losses" header="Lost"></Column>
     </DataTable>
+
+    <p v-if="winner && prizeMonies.length > 0" class="m-0 text-center text-xl">
+        {{ winner.name }} wins
+        <span class="font-bold">&pound;{{ prizeMonies[0] }}</span>
+    </p>
 
     <h4 v-if="incompleteCount > 0">
         <em>{{ incompleteCount }} player(s) have incomplete results!</em>
