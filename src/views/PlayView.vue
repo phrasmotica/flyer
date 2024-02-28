@@ -182,8 +182,10 @@ onUnmounted(() => {
                     <li>{{ raceSummary }}</li>
                     <li>{{ rulesSummary }}</li>
                 </ul>
+            </div>
 
-                <h4 class="font-bold mt-2">Prizes</h4>
+            <div v-if="settings.entryFeeRequired" class="p-fluid mb-2">
+                <h4 class="font-bold">Prizes</h4>
 
                 <ul class="m-0">
                     <li>{{ entryFeeSummary }}</li>
