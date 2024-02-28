@@ -1,10 +1,24 @@
 import { computed, ref } from "vue"
 
-import { MoneySplit, type FlyerSettings } from "../data/FlyerSettings"
+import { MoneySplit, type FlyerSettings, Format } from "../data/FlyerSettings"
 import type { MeterItem } from "primevue/metergroup"
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
+
+    const formatSummary = computed(() => `${settings.value.format} format`)
+
+    const drawSummary = computed(() => {
+        if (settings.value.format === Format.RoundRobin) {
+            return ""
+        }
+
+        return settings.value.randomlyDrawAllRounds ? "random draw" : "fixed draw"
+    })
+
+    const raceSummary = computed(() => `Races to ${settings.value.raceTo}`)
+
+    const rulesSummary = computed(() => `${settings.value.ruleSet} rules`)
 
     const entryFeeSummary = computed(() => {
         return `£${settings.value.entryFee} entry fee => £${prizePot.value} pot`
@@ -42,6 +56,10 @@ export const useSettings = (s: FlyerSettings) => {
     return {
         settings,
 
+        formatSummary,
+        drawSummary,
+        raceSummary,
+        rulesSummary,
         entryFeeSummary,
         prizePot,
         prizeMonies,
