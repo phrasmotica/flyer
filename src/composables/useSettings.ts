@@ -45,7 +45,7 @@ export const useSettings = (s: FlyerSettings) => {
     }
 
     const colors = ["#34d399", "#fbbf24", "#60a5fa", "#c084fc"]
-    const labels = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"]
+    const labels = ["Winner", "Runner-Up", "3rd", "4th", "5th", "6th", "7th", "8th"]
 
     const prizeMoniesMeterItems = computed(() => prizeMonies.value.map((x, i) => <MeterItem>{
         color: colors[i % colors.length],

@@ -87,7 +87,7 @@ const hideModal = () => {
     </main>
 
     <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
-        <div class="flex align-items-center justify-content-between border-bottom-1 border-gray-200 mb-2">
+        <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
             <div>
                 Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
             </div>

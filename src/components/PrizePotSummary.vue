@@ -17,19 +17,21 @@ const {
 
 <template>
     <div class="flex justify-content-between">
-        <h4 class="font-bold">Total prize pot</h4>
-        <h4 class="font-bold">{{ prizePotSummary }}</h4>
+        <span class="text-lg font-bold">Total prize pot</span>
+        <span class="text-lg font-bold">{{ prizePotSummary }}</span>
     </div>
 
     <MeterGroup
-        class="gap-0"
+        class="gap-1"
         :value="prizeMoniesMeterItems"
-        :max="prizePot">
-        <template #label>
-            <div class="flex justify-content-between">
-                <span>
-                    {{ prizeMoniesSummary }}
-                </span>
+        :max="prizePot"
+        labelPosition="start">
+        <template #label="x">
+            <div v-for="v in x.value">
+                <div class="flex justify-content-between">
+                    <span class="text-sm font-italic">{{ v.label }}</span>
+                    <span class="text-sm font-italic">&pound;{{ v.value }}</span>
+                </div>
             </div>
         </template>
     </MeterGroup>
