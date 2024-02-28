@@ -1,11 +1,28 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onUpdated, ref } from "vue"
+import { v4 as uuidv4 } from "uuid"
 
 const props = defineProps<{
     header: string
 }>()
 
 const showContent = ref(true)
+
+const id = "flyer-form-section-" + uuidv4()
+
+onUpdated(() => {
+    const formSection = document.getElementById(id)
+    if (formSection) {
+        const buttons = formSection.getElementsByClassName("p-inputnumber-button")
+        for (const b of buttons) {
+            // hack to stop InputNumber elements from focusing after pressing their buttons.
+            // Important for mobile UX
+            b.addEventListener("mouseup", () => {
+                (<any>document.activeElement)?.blur()
+            })
+        }
+    }
+})
 </script>
 
 <template>
@@ -20,9 +37,7 @@ const showContent = ref(true)
         </div>
     </div>
 
-    <!-- TODO: revert to using v-if, and use the onUpdated() hook to re-add the
-    blurring event listener hack from FlyerForm.vue -->
-    <div :class="[showContent ? 'block' : 'hidden']">
+    <div :id="id" v-if="showContent">
         <slot />
     </div>
 </template>

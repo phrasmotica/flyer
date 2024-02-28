@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, watch } from "vue"
 
 import FlyerFormSection from "./FlyerFormSection.vue"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
@@ -36,17 +36,6 @@ watch(() => settingsStore.settings.format, () => {
 })
 
 const isKnockout = computed(() => settingsStore.settings.format === Format.Knockout)
-
-// hack to stop InputNumber elements from focusing after pressing their buttons.
-// Important for mobile UX
-onMounted(() => {
-    const buttons = document.getElementsByClassName("p-inputnumber-button")
-    for (const b of buttons) {
-        b.addEventListener("mouseup", () => {
-            (<any>document.activeElement)?.blur()
-        })
-    }
-})
 </script>
 
 <template>
