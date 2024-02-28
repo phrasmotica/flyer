@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import { useSettings } from "../composables/useSettings"
+
 import type { Player } from "../data/Player"
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const flyerStore = useFlyerStore()
+
+const {
+    prizeMonies,
+} = useSettings(flyerStore.settings)
 
 const winner = computed(() => flyerStore.winner)
 
@@ -51,6 +57,13 @@ const getRoundName = (result: Result) => {
         <div class="text-center">
             <p class="m-0">The winner is</p>
             <h1 class="font-bold">{{ winner.name }}</h1>
+
+            <p v-if="prizeMonies.length > 0" class="m-0 text-xl">
+                who wins
+                <span class="font-bold">
+                    &pound;{{ prizeMonies[0] }}
+                </span>
+            </p>
         </div>
 
         <ul class="m-0">
