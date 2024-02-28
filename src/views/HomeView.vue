@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
-import type { MeterItem } from "primevue/metergroup"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
+
+import { useSettings } from "../composables/useSettings"
 
 import { Format } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
@@ -19,29 +20,27 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
+const {
+    settings,
+    prizePot,
+    prizeMoniesMeterItems,
+    prizeMoniesSummary,
+} = useSettings(settingsStore.settings)
+
 const showModal = ref(false)
 
-const colors = ["#34d399", "#fbbf24", "#60a5fa", "#c084fc"]
-const labels = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"]
-
-const prizeMoniesMeterItems = computed(() => settingsStore.prizeMonies.map((x, i) => <MeterItem>{
-    color: colors[i % colors.length],
-    label: labels[i],
-    value: x,
-}))
-
 const start = () => {
-    switch (settingsStore.settings.format) {
+    switch (settings.value.format) {
         case Format.Knockout:
-            flyerStore.start(settingsStore.settings, new KnockoutScheduler(settingsStore.settings.randomlyDrawAllRounds))
+            flyerStore.start(settings.value, new KnockoutScheduler(settings.value.randomlyDrawAllRounds))
             break
 
         case Format.RoundRobin:
-            flyerStore.start(settingsStore.settings, new RoundRobinScheduler())
+            flyerStore.start(settings.value, new RoundRobinScheduler())
             break
 
         default:
-            throw `Invalid flyer format ${settingsStore.settings.format}!`
+            throw `Invalid flyer format ${settings.value.format}!`
     }
 
     hideModal()
@@ -77,14 +76,14 @@ const hideModal = () => {
             header="Start Flyer"
             message="Please enter a name for the flyer:"
             confirmLabel="Start"
-            :confirmDisabled="settingsStore.settings.name.length <= 0"
+            :confirmDisabled="settings.name.length <= 0"
             cancelLabel="Go back"
             @confirm="start"
             @hide="hideModal">
             <div class="p-fluid mb-2">
                 <InputText
                     placeholder="Flyer name"
-                    v-model="settingsStore.settings.name" />
+                    v-model="settings.name" />
             </div>
         </ConfirmModal>
     </main>
@@ -100,20 +99,19 @@ const hideModal = () => {
             </div>
         </div>
 
-        <div v-if="settingsStore.settings.entryFeeRequired"
+        <div v-if="settings.entryFeeRequired"
             class="p-fluid border-bottom-1 border-gray-200 mb-2">
             <div>
                 <!-- TODO: maybe put this much detail inside a modal? -->
                 <MeterGroup
                     class="gap-0"
                     :value="prizeMoniesMeterItems"
-                    :max="settingsStore.prizePot">
-                    <template #label="x">
+                    :max="prizePot">
+                    <template #label>
                         <div class="flex justify-content-between">
                             <span class="text-lg">Prize money</span>
-
                             <span class="text-lg">
-                                {{ x.value.map((v, i) => `${v.label}: £${settingsStore.prizeMonies[i]}`).join(", ") }}
+                                {{ prizeMoniesSummary }}
                             </span>
                         </div>
                     </template>
