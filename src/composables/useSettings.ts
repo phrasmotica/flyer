@@ -6,6 +6,10 @@ import type { MeterItem } from "primevue/metergroup"
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
+    const entryFeeSummary = computed(() => {
+        return `£${settings.value.entryFee} entry fee => £${prizePot.value} pot`
+    })
+
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
 
     const prizeMonies = computed(() => {
@@ -38,6 +42,7 @@ export const useSettings = (s: FlyerSettings) => {
     return {
         settings,
 
+        entryFeeSummary,
         prizePot,
         prizeMonies,
         prizeMoniesMeterItems,

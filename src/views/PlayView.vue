@@ -8,6 +8,7 @@ import FixtureList from "../components/FixtureList.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
+import { useSettings } from "../composables/useSettings"
 
 import { Format } from "../data/FlyerSettings"
 
@@ -34,6 +35,12 @@ const {
     resumeClock,
 } = useFlyer(flyerStore.flyer)
 
+const {
+    settings,
+    entryFeeSummary,
+    prizeMoniesSummary,
+} = useSettings(flyerStore.settings)
+
 const display = ref(Display.Fixtures)
 
 const showFinishModal = ref(false)
@@ -46,7 +53,7 @@ onMounted(() => {
     }
 })
 
-const isKnockout = computed(() => flyerStore.settings.format === Format.Knockout)
+const isKnockout = computed(() => settings.value.format === Format.Knockout)
 
 const progressText = computed(() => {
     if (hasStarted.value) {
@@ -123,7 +130,7 @@ onUnmounted(() => {
 <template>
     <main>
         <div class="border-bottom-1 pb-1">
-            <h1>{{ flyerStore.settings.name }} - Fixtures</h1>
+            <h1>{{ settings.name }} - Fixtures</h1>
 
             <div class="flex align-items-end justify-content-between">
                 <p class="m-0 text-lg font-italic">{{ progressText }}</p>
@@ -160,23 +167,30 @@ onUnmounted(() => {
             modal
             class="w-full mx-4"
             v-model:visible="showInfoModal"
-            :header="flyerStore.settings.name + ' - Info'"
+            :header="settings.name + ' - Info'"
             @hide="hideInfoModal">
             <div class="p-fluid mb-2">
                 <h4 class="font-bold">Rules</h4>
 
                 <ul class="m-0">
                     <li>
-                        {{ flyerStore.settings.format }} format
-                        <span v-if="isKnockout && flyerStore.settings.randomlyDrawAllRounds">
+                        {{ settings.format }} format
+                        <span v-if="isKnockout && settings.randomlyDrawAllRounds">
                             <em>(random draw)</em>
                         </span>
                         <span v-else-if="isKnockout">
                             <em>(fixed draw)</em>
                         </span>
                     </li>
-                    <li>Races to {{ flyerStore.settings.raceTo }}</li>
-                    <li>{{ flyerStore.settings.ruleSet }} rules</li>
+                    <li>Races to {{ settings.raceTo }}</li>
+                    <li>{{ settings.ruleSet }} rules</li>
+                </ul>
+
+                <h4 class="font-bold mt-2">Prizes</h4>
+
+                <ul class="m-0">
+                    <li>{{ entryFeeSummary }}</li>
+                    <li>{{ prizeMoniesSummary }}</li>
                 </ul>
             </div>
 
@@ -202,7 +216,7 @@ onUnmounted(() => {
 
     <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
         <Button
-            v-if="flyerStore.settings.randomlyDrawAllRounds && !flyerStore.generationIsComplete"
+            v-if="settings.randomlyDrawAllRounds && !flyerStore.generationIsComplete"
             class="mb-2"
             label="Generate next round"
             :disabled="!readyForNextRound"
@@ -212,7 +226,7 @@ onUnmounted(() => {
             v-else
             class="mb-2"
             :label="finishButtonText"
-            :disabled="!flyerStore.settings.allowEarlyFinish && flyerStore.remainingCount > 0"
+            :disabled="!settings.allowEarlyFinish && flyerStore.remainingCount > 0"
             @click="confirmFinish" />
 
         <Button
