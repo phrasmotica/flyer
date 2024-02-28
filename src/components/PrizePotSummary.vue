@@ -11,7 +11,6 @@ const {
     prizePot,
     prizePotSummary,
     prizeMoniesMeterItems,
-    prizeMoniesSummary,
 } = useSettings(props.settings)
 </script>
 
