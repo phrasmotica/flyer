@@ -17,6 +17,7 @@ import Dialog from 'primevue/dialog'
 import Dropdown from 'primevue/dropdown'
 import InputNumber from "primevue/inputnumber"
 import InputText from "primevue/inputtext"
+import MeterGroup from 'primevue/metergroup'
 import SelectButton from "primevue/selectbutton"
 import Slider from "primevue/slider"
 
@@ -52,6 +53,7 @@ app.component("Dialog", Dialog)
 app.component("Dropdown", Dropdown)
 app.component("InputNumber", InputNumber)
 app.component("InputText", InputText)
+app.component("MeterGroup", MeterGroup)
 app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
 

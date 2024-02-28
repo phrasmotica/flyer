@@ -69,6 +69,24 @@ export const useSettingsStore = defineStore("settings", () => {
         return actualPlayerNames.some(p => !p)
     })
 
+    const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
+
+    const prizeMonies = computed(() => {
+        if (!settings.value.entryFeeRequired) {
+            return []
+        }
+
+        if (settings.value.moneySplit === MoneySplit.SeventyThirty) {
+            return [roundX(prizePot.value * 0.7, 5), roundX(prizePot.value * 0.3, 5)]
+        }
+
+        return [prizePot.value]
+    })
+
+    const roundX = (v: number, multiple: number) => {
+        return Math.round(v / multiple) * multiple
+    }
+
     const setName = (index: number, name: string) => {
         settings.value.playerNames = playerNames.value.map((v, i) => i === index ? name : v)
     }
@@ -93,6 +111,8 @@ export const useSettingsStore = defineStore("settings", () => {
         estimatedDuration,
         durationPerFrame,
         isInvalid,
+        prizePot,
+        prizeMonies,
 
         setName,
         deleteName,

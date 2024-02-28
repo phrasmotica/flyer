@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
+import type { MeterItem } from "primevue/metergroup"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -19,6 +20,15 @@ const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
 const showModal = ref(false)
+
+const colors = ["#34d399", "#fbbf24", "#60a5fa", "#c084fc"]
+const labels = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"]
+
+const prizeMoniesMeterItems = computed(() => settingsStore.prizeMonies.map((x, i) => <MeterItem>{
+    color: colors[i % colors.length],
+    label: labels[i],
+    value: x,
+}))
 
 const start = () => {
     switch (settingsStore.settings.format) {
@@ -91,15 +101,23 @@ const hideModal = () => {
         </div>
 
         <div v-if="settingsStore.settings.entryFeeRequired"
-            class="flex align-items-center justify-content-between border-bottom-1 border-gray-200 mb-2">
+            class="p-fluid border-bottom-1 border-gray-200 mb-2">
             <div>
-                Total prize pot <em>({{ settingsStore.settings.playerCount }} players)</em>
-            </div>
+                <!-- TODO: maybe put this much detail inside a modal? -->
+                <MeterGroup
+                    class="gap-0"
+                    :value="prizeMoniesMeterItems"
+                    :max="settingsStore.prizePot">
+                    <template #label="x">
+                        <div class="flex justify-content-between">
+                            <span class="text-lg">Prize money</span>
 
-            <div class="ml-4">
-                <p class="m-0 text-center font-bold text-3xl">
-                    &pound;{{ settingsStore.settings.playerCount * settingsStore.settings.entryFee }}
-                </p>
+                            <span class="text-lg">
+                                {{ x.value.map((v, i) => `${v.label}: £${settingsStore.prizeMonies[i]}`).join(", ") }}
+                            </span>
+                        </div>
+                    </template>
+                </MeterGroup>
             </div>
         </div>
 
