@@ -5,6 +5,7 @@ import { useRouter } from "vue-router"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
+import PrizePotSummary from "../components/PrizePotSummary.vue"
 
 import { useSettings } from "../composables/useSettings"
 
@@ -22,9 +23,6 @@ const settingsStore = useSettingsStore()
 
 const {
     settings,
-    prizePot,
-    prizeMoniesMeterItems,
-    prizeMoniesSummary,
 } = useSettings(settingsStore.settings)
 
 const showModal = ref(false)
@@ -101,22 +99,7 @@ const hideModal = () => {
 
         <div v-if="settings.entryFeeRequired"
             class="p-fluid border-bottom-1 border-gray-200 mb-2">
-            <div>
-                <!-- TODO: maybe put this much detail inside a modal? -->
-                <MeterGroup
-                    class="gap-0"
-                    :value="prizeMoniesMeterItems"
-                    :max="prizePot">
-                    <template #label>
-                        <div class="flex justify-content-between">
-                            <span class="text-lg">Prize money</span>
-                            <span class="text-lg">
-                                {{ prizeMoniesSummary }}
-                            </span>
-                        </div>
-                    </template>
-                </MeterGroup>
-            </div>
+            <PrizePotSummary :settings="settingsStore.settings" />
         </div>
 
         <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />

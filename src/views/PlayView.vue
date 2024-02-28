@@ -5,6 +5,7 @@ import { useRouter } from "vue-router"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
+import PrizePotSummary from "../components/PrizePotSummary.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -40,6 +41,9 @@ const {
     raceSummary,
     rulesSummary,
     entryFeeSummary,
+    prizePot,
+    prizePotSummary,
+    prizeMoniesMeterItems,
     prizeMoniesSummary,
 } = useSettings(flyerStore.settings)
 
@@ -185,12 +189,7 @@ onUnmounted(() => {
             </div>
 
             <div v-if="settings.entryFeeRequired" class="p-fluid mb-2">
-                <h4 class="font-bold">Prizes</h4>
-
-                <ul class="m-0">
-                    <li>{{ entryFeeSummary }}</li>
-                    <li>{{ prizeMoniesSummary }}</li>
-                </ul>
+                <PrizePotSummary :settings="flyerStore.settings" />
             </div>
 
             <div class="p-fluid">

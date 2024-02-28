@@ -26,6 +26,8 @@ export const useSettings = (s: FlyerSettings) => {
 
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
 
+    const prizePotSummary = computed(() => `£${prizePot.value}`)
+
     const prizeMonies = computed(() => {
         if (!settings.value.entryFeeRequired) {
             return []
@@ -62,6 +64,7 @@ export const useSettings = (s: FlyerSettings) => {
         rulesSummary,
         entryFeeSummary,
         prizePot,
+        prizePotSummary,
         prizeMonies,
         prizeMoniesMeterItems,
         prizeMoniesSummary,
