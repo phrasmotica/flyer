@@ -20,7 +20,9 @@ const showContent = ref(true)
         </div>
     </div>
 
-    <div v-if="showContent">
+    <!-- TODO: revert to using v-if, and use the onUpdated() hook to re-add the
+    blurring event listener hack from FlyerForm.vue -->
+    <div :class="[showContent ? 'block' : 'hidden']">
         <slot />
     </div>
 </template>
