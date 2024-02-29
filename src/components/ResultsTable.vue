@@ -10,6 +10,7 @@ import { useFlyerStore } from "../stores/flyer"
 const flyerStore = useFlyerStore()
 
 const {
+    settings,
     prizeMonies,
 } = useSettings(flyerStore.settings)
 
@@ -87,6 +88,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 </script>
 
 <template>
+    <!-- TODO: ensure table does not need to scroll sideways on narrow screens -->
     <DataTable :value="tableData" :rowClass="rowClass">
         <Column header="#">
             <template #body="slotProps">
@@ -96,7 +98,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 
         <Column field="name" header="Name"></Column>
         <Column field="wins" header="Won"></Column>
-        <Column field="draws" header="Drew"></Column>
+        <Column v-if="settings.allowDraws" field="draws" header="Drew"></Column>
         <Column field="losses" header="Lost"></Column>
     </DataTable>
 
