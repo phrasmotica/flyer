@@ -27,7 +27,6 @@ main {
 .nav-buttons {
     transition: color 0.5s, background-color 0.5s;
     background-color: seashell!important;
-    z-index: 1050;
 }
 
 .nav-buttons > .p-button:last-child {
