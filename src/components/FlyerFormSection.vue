@@ -29,12 +29,12 @@ onUpdated(() => {
 
 <template>
     <div
-        class="flex align-items-end justify-content-between cursor-pointer"
+        class="flex align-items-baseline justify-content-between cursor-pointer"
         :class="[(!props.noUnderline || showContent) && 'border-bottom-1 border-gray-200 mb-2']"
         @click="showContent = !showContent">
         <h2>{{ props.header }}</h2>
 
-        <div class="mb-1">
+        <div>
             <span v-if="showContent" class="font-italic">&nbsp;(click to hide)</span>
             <span v-else class="font-italic">&nbsp;(click to show)</span>
         </div>
