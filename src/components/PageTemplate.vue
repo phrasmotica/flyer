@@ -26,6 +26,7 @@ main {
 
 .nav-buttons {
     background-color: seashell!important;
+    z-index: 10000;
 }
 
 .nav-buttons > .p-button:last-child {
