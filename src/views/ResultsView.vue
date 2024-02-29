@@ -56,33 +56,35 @@ const hideGoToSetupModal = () => {
 </script>
 
 <template>
-    <main>
-        <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 mb-1">
-            <h1>{{ flyerStore.settings.name }} - Results</h1>
+    <main class="flex flex-column justify-content-between">
+        <div class="content overflow-y-auto p-5">
+            <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 mb-1">
+                <h1>{{ flyerStore.settings.name }} - Results</h1>
 
-            <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
+                <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
+            </div>
+
+            <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
+
+            <Podium v-if="flyerStore.settings.format === Format.Knockout" />
+
+            <ConfirmModal
+                :visible="showGoToSetupModal"
+                header="New flyer"
+                message="Are you sure you want to start a new flyer? The current one has not been saved!"
+                confirmLabel="Yes"
+                :confirmDisabled="false"
+                cancelLabel="No"
+                @confirm="goToSetup"
+                @hide="hideGoToSetupModal" />
         </div>
 
-        <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
+        <div class="nav-buttons p-fluid p-3">
+            <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
-        <Podium v-if="flyerStore.settings.format === Format.Knockout" />
-
-        <ConfirmModal
-            :visible="showGoToSetupModal"
-            header="New flyer"
-            message="Are you sure you want to start a new flyer? The current one has not been saved!"
-            confirmLabel="Yes"
-            :confirmDisabled="false"
-            cancelLabel="No"
-            @confirm="goToSetup"
-            @hide="hideGoToSetupModal" />
+            <Button class="mb-2" label="New flyer" severity="info" @click="confirmGoToSetup" />
+        </div>
     </main>
-
-    <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
-        <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
-
-        <Button class="mb-2" label="New flyer" severity="info" @click="confirmGoToSetup" />
-    </div>
 </template>
 
 <style scoped>

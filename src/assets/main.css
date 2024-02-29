@@ -10,8 +10,7 @@
 }
 
 main {
-  min-height: 100vh;
-  padding: 2rem;
+  height: 100vh;
 }
 
 a,
@@ -40,6 +39,10 @@ a,
     background-color: var(--color-background)!important;
 }
 
+.nav-buttons {
+  background-color: seashell!important;
+}
+
 .nav-buttons > .p-button:last-child {
-  margin-bottom: 2rem!important;
+  margin-bottom: 0!important;
 }

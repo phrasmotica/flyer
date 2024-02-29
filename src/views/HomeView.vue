@@ -64,48 +64,50 @@ const hideModal = () => {
 </script>
 
 <template>
-    <main>
-        <h1 class="border-bottom-1 mb-2">New Flyer</h1>
+    <main class="flex flex-column justify-content-between">
+        <div class="content overflow-y-auto p-5">
+            <h1 class="border-bottom-1 mb-2">New Flyer</h1>
 
-        <FlyerForm />
+            <FlyerForm />
 
-        <ConfirmModal
-            :visible="showModal"
-            header="Start Flyer"
-            message="Please enter a name for the flyer:"
-            confirmLabel="Start"
-            :confirmDisabled="settings.name.length <= 0"
-            cancelLabel="Go back"
-            @confirm="start"
-            @hide="hideModal">
-            <div class="p-fluid mb-2">
-                <InputText
-                    placeholder="Flyer name"
-                    v-model="settings.name" />
+            <ConfirmModal
+                :visible="showModal"
+                header="Start Flyer"
+                message="Please enter a name for the flyer:"
+                confirmLabel="Start"
+                :confirmDisabled="settings.name.length <= 0"
+                cancelLabel="Go back"
+                @confirm="start"
+                @hide="hideModal">
+                <div class="p-fluid mb-2">
+                    <InputText
+                        placeholder="Flyer name"
+                        v-model="settings.name" />
+                </div>
+            </ConfirmModal>
+        </div>
+
+        <div class="nav-buttons p-fluid p-3">
+            <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
+                <div>
+                    Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+                </div>
+
+                <div class="ml-4">
+                    <Clock large :elapsedSeconds="settingsStore.estimatedDuration * 60" />
+                </div>
             </div>
-        </ConfirmModal>
+
+            <div v-if="settings.entryFeeRequired"
+                class="p-fluid border-bottom-1 border-gray-200 mb-2">
+                <PrizePotSummary :settings="settingsStore.settings" />
+            </div>
+
+            <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+
+            <Button label="View past flyers" severity="info" @click="viewPastFlyers" />
+        </div>
     </main>
-
-    <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
-        <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
-            <div>
-                Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
-            </div>
-
-            <div class="ml-4">
-                <Clock large :elapsedSeconds="settingsStore.estimatedDuration * 60" />
-            </div>
-        </div>
-
-        <div v-if="settings.entryFeeRequired"
-            class="p-fluid border-bottom-1 border-gray-200 mb-2">
-            <PrizePotSummary :settings="settingsStore.settings" />
-        </div>
-
-        <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
-
-        <Button class="mb-2" label="View past flyers" severity="info" @click="viewPastFlyers" />
-    </div>
 </template>
 
 <style scoped>

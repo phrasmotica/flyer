@@ -25,25 +25,27 @@ const clearLocalStorage = () => {
 </script>
 
 <template>
-    <main>
-        <h1 class="border-bottom-1">Admin</h1>
+    <main class="flex flex-column justify-content-between">
+        <div class="content overflow-y-auto p-5">
+            <h1 class="border-bottom-1">Admin</h1>
 
-        <div class="p-fluid mt-2">
+            <div class="p-fluid mt-2">
+                <Button
+                    :label="clearButtonLabel"
+                    :disabled="isCleared"
+                    severity="danger"
+                    @click="clearLocalStorage" />
+            </div>
+        </div>
+
+        <div class="nav-buttons p-fluid p-3">
             <Button
-                :label="clearButtonLabel"
-                :disabled="isCleared"
-                severity="danger"
-                @click="clearLocalStorage" />
+                class="mb-2"
+                label="Go back"
+                severity="info"
+                @click="backToSetup" />
         </div>
     </main>
-
-    <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
-        <Button
-            class="mb-2"
-            label="Go back"
-            severity="secondary"
-            @click="backToSetup" />
-    </div>
 </template>
 
 <style scoped>

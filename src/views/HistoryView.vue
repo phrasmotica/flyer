@@ -13,15 +13,17 @@ const newFlyer = () => {
 </script>
 
 <template>
-    <main>
-        <h1 class="border-bottom-1">Past Flyers</h1>
+    <main class="flex flex-column justify-content-between">
+        <div class="content overflow-y-auto p-5">
+            <h1 class="border-bottom-1">Past Flyers</h1>
 
-        <FlyerHistory />
+            <FlyerHistory />
+        </div>
+
+        <div class="nav-buttons p-fluid p-3">
+            <Button label="New flyer" severity="info" @click="newFlyer" />
+        </div>
     </main>
-
-    <div class="nav-buttons sticky bottom-0 bg-colour p-fluid w-full pt-2 px-5">
-        <Button class="mb-2" label="New flyer" severity="info" @click="newFlyer" />
-    </div>
 </template>
 
 <style scoped>
