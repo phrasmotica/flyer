@@ -2,6 +2,8 @@
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
+import PageTemplate from "../components/PageTemplate.vue"
+
 const router = useRouter()
 
 const isCleared = ref(false)
@@ -25,8 +27,8 @@ const clearLocalStorage = () => {
 </script>
 
 <template>
-    <main class="flex flex-column justify-content-between">
-        <div class="content overflow-y-auto p-5">
+    <PageTemplate>
+        <template #content>
             <h1 class="border-bottom-1">Admin</h1>
 
             <div class="p-fluid mt-2">
@@ -36,28 +38,14 @@ const clearLocalStorage = () => {
                     severity="danger"
                     @click="clearLocalStorage" />
             </div>
-        </div>
+        </template>
 
-        <div class="nav-buttons p-fluid p-3">
+        <template #buttons>
             <Button
                 class="mb-2"
                 label="Go back"
                 severity="info"
                 @click="backToSetup" />
-        </div>
-    </main>
+        </template>
+    </PageTemplate>
 </template>
-
-<style scoped>
-@media screen and (max-width: 767px) {
-    main {
-        width: 100%;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    main {
-        width: 600px;
-    }
-}
-</style>

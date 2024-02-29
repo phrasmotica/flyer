@@ -9,10 +9,6 @@
   font-weight: normal;
 }
 
-main {
-  height: 100vh;
-}
-
 a,
 .green {
   text-decoration: none;
@@ -37,12 +33,4 @@ a,
 .bg-colour {
     transition: color 0.5s, background-color 0.5s;
     background-color: var(--color-background)!important;
-}
-
-.nav-buttons {
-  background-color: seashell!important;
-}
-
-.nav-buttons > .p-button:last-child {
-  margin-bottom: 0!important;
 }

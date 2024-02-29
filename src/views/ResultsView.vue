@@ -4,6 +4,7 @@ import { useRouter } from "vue-router"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
+import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
@@ -56,8 +57,8 @@ const hideGoToSetupModal = () => {
 </script>
 
 <template>
-    <main class="flex flex-column justify-content-between">
-        <div class="content overflow-y-auto p-5">
+    <PageTemplate>
+        <template #content>
             <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 mb-1">
                 <h1>{{ flyerStore.settings.name }} - Results</h1>
 
@@ -77,26 +78,12 @@ const hideGoToSetupModal = () => {
                 cancelLabel="No"
                 @confirm="goToSetup"
                 @hide="hideGoToSetupModal" />
-        </div>
+        </template>
 
-        <div class="nav-buttons p-fluid p-3">
+        <template #buttons>
             <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
-            <Button class="mb-2" label="New flyer" severity="info" @click="confirmGoToSetup" />
-        </div>
-    </main>
+            <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
+        </template>
+    </PageTemplate>
 </template>
-
-<style scoped>
-@media screen and (max-width: 767px) {
-    main {
-        width: 100%;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    main {
-        width: 600px;
-    }
-}
-</style>

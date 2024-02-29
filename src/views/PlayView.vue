@@ -5,6 +5,7 @@ import { useRouter } from "vue-router"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
+import PageTemplate from "../components/PageTemplate.vue"
 import PrizePotSummary from "../components/PrizePotSummary.vue"
 // import RoundRobinTable from "../components/RoundRobinTable.vue"
 
@@ -127,8 +128,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <main class="flex flex-column justify-content-between">
-        <div class="content overflow-y-auto p-5">
+    <PageTemplate>
+        <template #content>
             <div class="border-bottom-1 pb-1">
                 <h1>{{ settings.name }} - Fixtures</h1>
 
@@ -206,9 +207,9 @@ onUnmounted(() => {
                 cancelLabel="No"
                 @confirm="abandon"
                 @hide="hideAbandonModal" />
-        </div>
+        </template>
 
-        <div class="nav-buttons p-fluid p-3">
+        <template #buttons>
             <Button
                 v-if="settings.randomlyDrawAllRounds && !flyerStore.generationIsComplete"
                 class="mb-2"
@@ -235,20 +236,6 @@ onUnmounted(() => {
                 label="Abandon"
                 severity="danger"
                 @click="() => showAbandonModal = true" />
-        </div>
-    </main>
+        </template>
+    </PageTemplate>
 </template>
-
-<style scoped>
-@media screen and (max-width: 767px) {
-    main {
-        width: 100%;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    main {
-        width: 600px;
-    }
-}
-</style>

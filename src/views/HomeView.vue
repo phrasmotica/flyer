@@ -5,6 +5,7 @@ import { useRouter } from "vue-router"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
+import PageTemplate from "../components/PageTemplate.vue"
 import PrizePotSummary from "../components/PrizePotSummary.vue"
 
 import { useSettings } from "../composables/useSettings"
@@ -64,8 +65,8 @@ const hideModal = () => {
 </script>
 
 <template>
-    <main class="flex flex-column justify-content-between">
-        <div class="content overflow-y-auto p-5">
+    <PageTemplate>
+        <template #content>
             <h1 class="border-bottom-1 mb-2">New Flyer</h1>
 
             <FlyerForm />
@@ -85,9 +86,9 @@ const hideModal = () => {
                         v-model="settings.name" />
                 </div>
             </ConfirmModal>
-        </div>
+        </template>
 
-        <div class="nav-buttons p-fluid p-3">
+        <template #buttons>
             <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
                 <div>
                     Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
@@ -106,20 +107,6 @@ const hideModal = () => {
             <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
 
             <Button label="View past flyers" severity="info" @click="viewPastFlyers" />
-        </div>
-    </main>
+        </template>
+    </PageTemplate>
 </template>
-
-<style scoped>
-@media screen and (max-width: 767px) {
-    main {
-        width: 100%;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    main {
-        width: 600px;
-    }
-}
-</style>

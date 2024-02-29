@@ -2,6 +2,7 @@
 import { useRouter } from "vue-router"
 
 import FlyerHistory from "../components/FlyerHistory.vue"
+import PageTemplate from "../components/PageTemplate.vue"
 
 const router = useRouter()
 
@@ -13,29 +14,15 @@ const newFlyer = () => {
 </script>
 
 <template>
-    <main class="flex flex-column justify-content-between">
-        <div class="content overflow-y-auto p-5">
+    <PageTemplate>
+        <template #content>
             <h1 class="border-bottom-1">Past Flyers</h1>
 
             <FlyerHistory />
-        </div>
+        </template>
 
-        <div class="nav-buttons p-fluid p-3">
+        <template #buttons>
             <Button label="New flyer" severity="info" @click="newFlyer" />
-        </div>
-    </main>
+        </template>
+    </PageTemplate>
 </template>
-
-<style scoped>
-@media screen and (max-width: 767px) {
-    main {
-        width: 100%;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    main {
-        width: 600px;
-    }
-}
-</style>
