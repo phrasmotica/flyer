@@ -93,7 +93,7 @@ const hideModal = () => {
 
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
+                <div class="flex align-items-center justify-content-between mb-2">
                     <div>
                         Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
                     </div>
@@ -104,7 +104,7 @@ const hideModal = () => {
                 </div>
 
                 <div v-if="settings.entryFeeRequired"
-                    class="p-fluid border-bottom-1 border-gray-200 mb-2">
+                    class="p-fluid mt-2 border-top-1 border-gray-200 pt-1 mb-2">
                     <PrizePotSummary :settings="settingsStore.settings" />
                 </div>
 
