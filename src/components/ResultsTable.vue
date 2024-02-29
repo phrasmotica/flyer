@@ -109,9 +109,3 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <em>{{ incompleteCount }} player(s) have incomplete results!</em>
     </h4>
 </template>
-
-<style scoped>
-h3 {
-    margin: 0px;
-}
-</style>
