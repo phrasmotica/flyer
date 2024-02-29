@@ -1,9 +1,12 @@
 <template>
+    <!-- TODO: make this better. This isn't great on wide screens,
+    plus it'd be better to not have two scroll bars... -->
     <main class="flex flex-column justify-content-between">
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <slot name="content" />
         </div>
 
+        <!-- TODO: put these in a PrimeVue Sidebar component -->
         <div class="nav-buttons p-fluid p-3">
             <slot name="buttons" />
         </div>
