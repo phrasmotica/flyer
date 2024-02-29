@@ -14,6 +14,7 @@ const emit = defineEmits<{
     <div class="player-name-input p-fluid">
         <InputText
             :placeholder="props.placeholder"
+            :invalid="!props.disabled && !props.name"
             :disabled="props.disabled"
             :modelValue="props.name"
             @update:modelValue="v => emit('setName', v || '')" />
