@@ -4,9 +4,11 @@ import { v4 as uuidv4 } from "uuid"
 
 const props = defineProps<{
     header: string
+    hidden?: boolean
+    noUnderline?: boolean
 }>()
 
-const showContent = ref(true)
+const showContent = ref(!props.hidden)
 
 const id = "flyer-form-section-" + uuidv4()
 
@@ -27,7 +29,8 @@ onUpdated(() => {
 
 <template>
     <div
-        class="flex align-items-end justify-content-between border-bottom-1 border-gray-200 mb-2 cursor-pointer"
+        class="flex align-items-end justify-content-between cursor-pointer"
+        :class="[(!props.noUnderline || showContent) && 'border-bottom-1 border-gray-200 mb-2']"
         @click="showContent = !showContent">
         <h2>{{ props.header }}</h2>
 

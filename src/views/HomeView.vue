@@ -5,6 +5,7 @@ import { useRouter } from "vue-router"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
+import FlyerFormSection from "../components/FlyerFormSection.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PrizePotSummary from "../components/PrizePotSummary.vue"
 
@@ -22,9 +23,7 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
-const {
-    settings,
-} = useSettings(settingsStore.settings)
+const { settings } = useSettings(settingsStore.settings)
 
 const showModal = ref(false)
 
@@ -93,22 +92,24 @@ const hideModal = () => {
         </template>
 
         <template #buttons>
-            <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
-                <div>
-                    Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+            <FlyerFormSection hidden noUnderline header="Summary">
+                <div class="flex align-items-center justify-content-between pb-1 border-bottom-1 border-gray-200 mb-2">
+                    <div>
+                        Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+                    </div>
+
+                    <div class="ml-2">
+                        <Clock :elapsedSeconds="settingsStore.estimatedDuration * 60" />
+                    </div>
                 </div>
 
-                <div class="ml-4">
-                    <Clock large :elapsedSeconds="settingsStore.estimatedDuration * 60" />
+                <div v-if="settings.entryFeeRequired"
+                    class="p-fluid border-bottom-1 border-gray-200 mb-2">
+                    <PrizePotSummary :settings="settingsStore.settings" />
                 </div>
-            </div>
 
-            <div v-if="settings.entryFeeRequired"
-                class="p-fluid border-bottom-1 border-gray-200 mb-2">
-                <PrizePotSummary :settings="settingsStore.settings" />
-            </div>
-
-            <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+                <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+            </FlyerFormSection>
         </template>
     </PageTemplate>
 </template>
