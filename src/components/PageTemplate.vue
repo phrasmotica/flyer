@@ -1,6 +1,6 @@
 <template>
     <main class="flex flex-column justify-content-between">
-        <div class="content overflow-y-auto p-5">
+        <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <slot name="content" />
         </div>
 
