@@ -39,6 +39,47 @@ const isKnockout = computed(() => settingsStore.settings.format === Format.Knock
 </script>
 
 <template>
+    <FlyerFormSection header="Players">
+        <div class="p-fluid mb-2 md:hidden">
+            <InputNumber
+                v-model="settingsStore.settings.playerCount"
+                showButtons buttonLayout="horizontal"
+                :min="2" :max="maxPlayersEnv"
+                suffix=" players"
+                inputClass="text-center font-bold">
+                <template #incrementbuttonicon>
+                    <span class="pi pi-plus" />
+                </template>
+                <template #decrementbuttonicon>
+                    <span class="pi pi-minus" />
+                </template>
+            </InputNumber>
+        </div>
+
+        <div class="mt-2 hidden md:block">
+            <LabelledSlider
+                v-model="settingsStore.settings.playerCount"
+                :min="2" :max="maxPlayersEnv" />
+        </div>
+
+        <div v-for="p, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
+            <div class="flex mb-2">
+                <PlayerNameInput
+                    class="flex-grow-1"
+                    :placeholder="'Player ' + (i + 1)"
+                    :name="p"
+                    @setName="n => settingsStore.setName(i, n)" />
+
+                <Button
+                    class="ml-2"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    :disabled="settingsStore.settings.playerCount <= 2 || i >= settingsStore.settings.playerCount"
+                    @click="() => settingsStore.deleteName(i)" />
+            </div>
+        </div>
+    </FlyerFormSection>
+
     <FlyerFormSection header="Settings">
         <div class="p-fluid mb-2">
             <InputNumber
@@ -141,47 +182,6 @@ const isKnockout = computed(() => settingsStore.settings.format === Format.Knock
             v-model="settingsStore.settings.moneySplit"
             :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
             :disabled="!settingsStore.settings.entryFeeRequired" />
-    </FlyerFormSection>
-
-    <FlyerFormSection header="Players">
-        <div class="p-fluid mb-2 md:hidden">
-            <InputNumber
-                v-model="settingsStore.settings.playerCount"
-                showButtons buttonLayout="horizontal"
-                :min="2" :max="maxPlayersEnv"
-                suffix=" players"
-                inputClass="text-center font-bold">
-                <template #incrementbuttonicon>
-                    <span class="pi pi-plus" />
-                </template>
-                <template #decrementbuttonicon>
-                    <span class="pi pi-minus" />
-                </template>
-            </InputNumber>
-        </div>
-
-        <div class="mt-2 hidden md:block">
-            <LabelledSlider
-                v-model="settingsStore.settings.playerCount"
-                :min="2" :max="maxPlayersEnv" />
-        </div>
-
-        <div v-for="p, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
-            <div class="flex mb-2">
-                <PlayerNameInput
-                    class="flex-grow-1"
-                    :placeholder="'Player ' + (i + 1)"
-                    :name="p"
-                    @setName="n => settingsStore.setName(i, n)" />
-
-                <Button
-                    class="ml-2"
-                    icon="pi pi-trash"
-                    severity="danger"
-                    :disabled="settingsStore.settings.playerCount <= 2 || i >= settingsStore.settings.playerCount"
-                    @click="() => settingsStore.deleteName(i)" />
-            </div>
-        </div>
     </FlyerFormSection>
 </template>
 
