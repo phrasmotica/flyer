@@ -16,16 +16,55 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     estimateDuration(settings: FlyerSettings) {
-        // TODO: allow for random draw, i.e. rounds needing to be completed
+        const numFixtures = settings.playerCount - 1
+
+        // here a "group" is a set of fixtures that can be played in parallel
+        let numFixturesPerGroup = [numFixtures]
+
+        const maxFrames = 2 * settings.raceTo - 1
+        const meanFrames = (settings.raceTo + maxFrames) / 2
+
+        if (settings.randomlyDrawAllRounds && numFixtures > 1) {
+            numFixturesPerGroup = this.computeFixturesPerRound(settings.playerCount)
+        }
 
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
-        const numFixtures = settings.playerCount - 1
-        const maxFrames = 2 * settings.raceTo - 1
-        const meanFrames = (settings.raceTo + maxFrames) / 2
-        const expectedFramesTotal = numFixtures * meanFrames
-        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
+
+        // round number of fixtures UP to the next multiple of the number of
+        // tables being used, to account for the fact that a fixture can only be
+        // played on one table
+        const meanFramesPerGroup = numFixturesPerGroup.map(n => meanFrames * Math.ceil(n / settings.tableCount) * settings.tableCount)
+        const expectedTimePerGroup = meanFramesPerGroup.map(m => this.frameTimeEstimateMins * m)
+
+        const expectedTime = Math.ceil(expectedTimePerGroup.reduce((x, y) => x + y) / settings.tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
+    }
+
+    computeFixturesPerRound(playerCount: number) {
+        const numFixtures = playerCount - 1
+
+        if (numFixtures === 1 || !this.randomDraw) {
+            return [numFixtures]
+        }
+
+        const finalRoundFixtures = 1
+        const numFixturesPerGroup = [finalRoundFixtures]
+
+        let remainingFixtures = numFixtures - 1
+        let previousRoundFixtures = 2
+
+        // need to split fixtures into several "groups": one for each round.
+        // We do it in reverse: starting at 1, keep adding increasing powers
+        // of 2 to the list, until the next power of 2 would exceed the total
+        // number of fixtures. Then just add the remaining number of fixtures
+        while (remainingFixtures > 0) {
+            numFixturesPerGroup.unshift(Math.min(previousRoundFixtures, remainingFixtures))
+            remainingFixtures -= previousRoundFixtures
+            previousRoundFixtures *= 2
+        }
+
+        return numFixturesPerGroup
     }
 
     generateFixtures(players: Player[]) {
