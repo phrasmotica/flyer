@@ -135,6 +135,7 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <!-- TODO: make the dialog's width better on different screen sizes -->
     <Dialog
         modal
         class="w-full mx-4"
