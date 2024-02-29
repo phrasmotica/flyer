@@ -75,6 +75,16 @@ const getRoundName = (result: Result) => {
                 </span>
             </li>
         </ul>
+
+        <p class="border-top-1 mt-1 m-0 pt-1">Other prize money:</p>
+
+        <!-- TODO: show prize monies for ALL other recipients -->
+        <p v-if="prizeMonies.length > 1" class="m-0">
+            {{ getOpponentName(winner, winnerResults[0]) }} wins
+            <span class="font-bold">
+                &pound;{{ prizeMonies[1] }}
+            </span>
+        </p>
     </div>
 
     <div v-else>
