@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { useSlots } from "vue"
+
+const slots = useSlots()
+</script>
+
 <template>
     <!-- TODO: make this better. This isn't great on wide screens,
     plus it'd be better to not have two scroll bars... -->
@@ -7,7 +13,7 @@
         </div>
 
         <!-- TODO: put these in a PrimeVue Sidebar component -->
-        <div class="nav-buttons p-fluid p-3">
+        <div v-if="slots.buttons" class="nav-buttons p-fluid p-3">
             <slot name="buttons" />
         </div>
     </main>

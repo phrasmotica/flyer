@@ -16,13 +16,13 @@ const newFlyer = () => {
 <template>
     <PageTemplate>
         <template #content>
-            <h1 class="border-bottom-1">Past Flyers</h1>
+            <div class="flex align-items-center justify-content-between border-bottom-1">
+                <h1>Past Flyers</h1>
+
+                <Button icon="pi pi-plus" severity="info" @click="newFlyer" />
+            </div>
 
             <FlyerHistory />
-        </template>
-
-        <template #buttons>
-            <Button label="New flyer" severity="info" @click="newFlyer" />
         </template>
     </PageTemplate>
 </template>

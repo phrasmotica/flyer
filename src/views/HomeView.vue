@@ -67,7 +67,11 @@ const hideModal = () => {
 <template>
     <PageTemplate>
         <template #content>
-            <h1 class="border-bottom-1 mb-2">New Flyer</h1>
+            <div class="flex align-items-center justify-content-between border-bottom-1 mb-2">
+                <h1>New Flyer</h1>
+
+                <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
+            </div>
 
             <FlyerForm />
 
@@ -104,9 +108,7 @@ const hideModal = () => {
                 <PrizePotSummary :settings="settingsStore.settings" />
             </div>
 
-            <Button class="mb-2" label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
-
-            <Button label="View past flyers" severity="info" @click="viewPastFlyers" />
+            <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
         </template>
     </PageTemplate>
 </template>
