@@ -166,12 +166,11 @@ const isKnockout = computed(() => settingsStore.settings.format === Format.Knock
                 :min="2" :max="maxPlayersEnv" />
         </div>
 
-        <div v-for="p, i in settingsStore.settings.playerNames">
+        <div v-for="p, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
             <div class="flex mb-2">
                 <PlayerNameInput
                     class="flex-grow-1"
                     :placeholder="'Player ' + (i + 1)"
-                    :disabled="i >= settingsStore.settings.playerCount"
                     :name="p"
                     @setName="n => settingsStore.setName(i, n)" />
 
