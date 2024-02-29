@@ -46,11 +46,11 @@ const handleNameClick = (id: string) => {
 </script>
 
 <template>
-    <div class="grid m-0" :class="[props.highlightedResultId === result.id && 'bg-blue-100']">
+    <div class="grid m-0" :class="[props.highlightedResultId === result.id && 'highlight bg-blue-100']">
         <div
             class="col-5"
             :class="[
-                props.highlightedResultId === result.parentFixtureIds[0] && 'bg-blue-100',
+                props.highlightedResultId === result.parentFixtureIds[0] && 'highlight bg-blue-100',
                 result.parentFixtureIds[0] && 'cursor-pointer',
             ]"
             @click="handleNameClick(result.parentFixtureIds[0])">
@@ -76,7 +76,7 @@ const handleNameClick = (id: string) => {
         <div
             class="col-5 text-right"
             :class="[
-                props.highlightedResultId === result.parentFixtureIds[1] && 'bg-blue-100',
+                props.highlightedResultId === result.parentFixtureIds[1] && 'highlight bg-blue-100',
                 result.parentFixtureIds[0] && 'cursor-pointer',
             ]"
             @click="handleNameClick(result.parentFixtureIds[1])">
@@ -94,3 +94,11 @@ const handleNameClick = (id: string) => {
         </div>
     </div>
 </template>
+
+<style scoped>
+@media (prefers-color-scheme: dark) {
+    .highlight.bg-blue-100 {
+        background-color: firebrick!important;
+    }
+}
+</style>
