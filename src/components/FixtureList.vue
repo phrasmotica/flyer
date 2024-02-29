@@ -3,6 +3,7 @@ import { ref } from "vue"
 
 import FixtureCard from "./FixtureCard.vue"
 import RecordResultModal from "./RecordResultModal.vue"
+import RoundSection from "./RoundSection.vue"
 
 import type { Result } from "../data/Result"
 
@@ -34,16 +35,16 @@ const hideModal = () => {
 </script>
 
 <template>
-    <div v-for="r, i in flyerStore.rounds" :class="[i > 0 && 'border border-top-1']">
-        <h3 class="text-center">{{ r.name }}</h3>
-
-        <div v-for="f, j in r.fixtures" class="mt-1 pt-1 mb-1" :class="[j > 0 && 'border-gray-200 border-top-1']">
-            <FixtureCard
-                :result="f"
-                :highlightedResultId="highlightedResultId"
-                @showResultModal="() => selectForRecording(f)"
-                @highlight="highlight" />
-        </div>
+    <div v-for="r in flyerStore.rounds" class="my-1 px-2 border-1 border-round-md">
+        <RoundSection :name="r.name">
+            <div v-for="f, i in r.fixtures" class="py-1" :class="[i > 0 && 'border-gray-200 border-top-1']">
+                <FixtureCard
+                    :result="f"
+                    :highlightedResultId="highlightedResultId"
+                    @showResultModal="() => selectForRecording(f)"
+                    @highlight="highlight" />
+            </div>
+        </RoundSection>
     </div>
 
     <RecordResultModal
