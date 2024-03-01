@@ -46,25 +46,27 @@ const handleNameClick = (id: string) => {
 </script>
 
 <template>
-    <div class="grid m-0" :class="[props.highlightedResultId === result.id && 'highlight bg-blue-100']">
-        <div
-            class="col-5"
-            :class="[
-                props.highlightedResultId === result.parentFixtureIds[0] && 'highlight bg-blue-100',
-                result.parentFixtureIds[0] && 'cursor-pointer',
-            ]"
-            @click="handleNameClick(result.parentFixtureIds[0])">
-            <span v-if="result.scores[0].isBye" class="text-gray-400">
-                <em>(bye)</em>
-            </span>
+    <div class="grid m-0 border-round-md" :class="[props.highlightedResultId === result.id && 'highlight']">
+        <div class="col-5 p-0">
+            <div
+                class="p-2 mr-1 border-round-md text-left"
+                :class="[
+                    props.highlightedResultId === result.parentFixtureIds[0] && 'highlight',
+                    result.parentFixtureIds[0] && 'cursor-pointer',
+                ]"
+                @click="handleNameClick(result.parentFixtureIds[0])">
+                <span v-if="result.scores[0].isBye" class="text-gray-400">
+                    <em>(bye)</em>
+                </span>
 
-            <span v-else-if="result.scores[0].playerId">
-                {{ flyerStore.getPlayerName(result.scores[0].playerId) }}
-            </span>
+                <span v-else-if="result.scores[0].playerId">
+                    {{ flyerStore.getPlayerName(result.scores[0].playerId) }}
+                </span>
 
-            <span v-else-if="result.parentFixtureIds[0] || isRandomDraw">
-                <em class="text-gray-400">TBD</em>
-            </span>
+                <span v-else-if="result.parentFixtureIds[0] || isRandomDraw">
+                    <em class="text-gray-400">TBD</em>
+                </span>
+            </div>
         </div>
 
         <div class="col-2 p-0">
@@ -73,31 +75,37 @@ const handleNameClick = (id: string) => {
                 @clicked="handleClick" />
         </div>
 
-        <div
-            class="col-5 text-right"
-            :class="[
-                props.highlightedResultId === result.parentFixtureIds[1] && 'highlight bg-blue-100',
-                result.parentFixtureIds[0] && 'cursor-pointer',
-            ]"
-            @click="handleNameClick(result.parentFixtureIds[1])">
-            <span v-if="result.scores[1].isBye" class="text-gray-400">
-                <em>(bye)</em>
-            </span>
+        <div class="col-5 p-0">
+            <div
+                class="p-2 ml-1 border-round-md text-right"
+                :class="[
+                    props.highlightedResultId === result.parentFixtureIds[1] && 'highlight',
+                    result.parentFixtureIds[0] && 'cursor-pointer',
+                ]"
+                @click="handleNameClick(result.parentFixtureIds[1])">
+                <span v-if="result.scores[1].isBye" class="text-gray-400">
+                    <em>(bye)</em>
+                </span>
 
-            <span v-else-if="result.scores[1].playerId">
-                {{ flyerStore.getPlayerName(result.scores[1].playerId) }}
-            </span>
+                <span v-else-if="result.scores[1].playerId">
+                    {{ flyerStore.getPlayerName(result.scores[1].playerId) }}
+                </span>
 
-            <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">
-                <em class="text-gray-400">TBD</em>
-            </span>
+                <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">
+                    <em class="text-gray-400">TBD</em>
+                </span>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.highlight {
+    background-color: powderblue!important;
+}
+
 @media (prefers-color-scheme: dark) {
-    .highlight.bg-blue-100 {
+    .highlight {
         background-color: firebrick!important;
     }
 }
