@@ -7,6 +7,7 @@ const flyerStore = useFlyerStore()
 
 const lightsCost = ref(flyerStore.costEstimate)
 
+// TODO: put this in a composable
 const gbp = new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: 'GBP',
@@ -19,7 +20,7 @@ const gbp = new Intl.NumberFormat('en-GB', {
         <InputNumber
             showButtons
             buttonLayout="horizontal"
-            :step="0.5"
+            :min="0" :step="0.5"
             v-model="lightsCost"
             mode="currency"
             currency="GBP"

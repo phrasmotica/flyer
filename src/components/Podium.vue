@@ -53,6 +53,7 @@ const getRoundName = (result: Result) => {
     return round?.name || "UNKNOWN"
 }
 
+// TODO: put this in a composable
 const gbp = new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: 'GBP',
