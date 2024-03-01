@@ -88,7 +88,7 @@ const hideModal = () => {
                 header="Start Flyer"
                 message="Please enter a name for the flyer:"
                 confirmLabel="Start"
-                :confirmDisabled="settings.name.length <= 0 || !entryFeesPaid"
+                :confirmDisabled="settings.name.length <= 0 || (settings.entryFeeRequired && !entryFeesPaid)"
                 cancelLabel="Go back"
                 @confirm="start"
                 @hide="hideModal">
