@@ -20,6 +20,8 @@ const showContent = ref(!props.hidden)
 const status = computed(() => getRoundStatus(props.roundIndex))
 
 const toggle = () => {
+    // TODO: don't allow showing content if the round is waiting for a
+    // previous one to be completed
     showContent.value = !showContent.value
 }
 </script>
