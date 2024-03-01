@@ -8,6 +8,8 @@ import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
 
+import { useTweaks } from "../composables/useTweaks"
+
 import { Format, MoneySplit, RuleSet } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
@@ -22,6 +24,8 @@ const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const settingsStore = useSettingsStore()
+
+const { blurNumberInputs } = useTweaks()
 
 const section = ref(Section.Players)
 
@@ -62,17 +66,7 @@ const items = ref<MenuItem[]>([
 const isKnockout = computed(() => settingsStore.settings.format === Format.Knockout)
 
 onUpdated(() => {
-    const formSection = document.getElementById("form-content")
-    if (formSection) {
-        const buttons = formSection.getElementsByClassName("p-inputnumber-button")
-        for (const b of buttons) {
-            // hack to stop InputNumber elements from focusing after pressing their buttons.
-            // Important for mobile UX
-            b.addEventListener("mouseup", () => {
-                (<any>document.activeElement)?.blur()
-            })
-        }
-    }
+    blurNumberInputs("form-content")
 })
 </script>
 

@@ -2,28 +2,22 @@
 import { onUpdated, ref } from "vue"
 import { v4 as uuidv4 } from "uuid"
 
+import { useTweaks } from "../composables/useTweaks"
+
 const props = defineProps<{
     header: string
     hidden?: boolean
     noUnderline?: boolean
 }>()
 
+const { blurNumberInputs } = useTweaks()
+
 const showContent = ref(!props.hidden)
 
 const id = "flyer-form-section-" + uuidv4()
 
 onUpdated(() => {
-    const formSection = document.getElementById(id)
-    if (formSection) {
-        const buttons = formSection.getElementsByClassName("p-inputnumber-button")
-        for (const b of buttons) {
-            // hack to stop InputNumber elements from focusing after pressing their buttons.
-            // Important for mobile UX
-            b.addEventListener("mouseup", () => {
-                (<any>document.activeElement)?.blur()
-            })
-        }
-    }
+    blurNumberInputs(id)
 })
 </script>
 

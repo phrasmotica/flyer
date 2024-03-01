@@ -5,6 +5,7 @@ import Clock from "./Clock.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
+import { useTweaks } from "../composables/useTweaks"
 
 import type { Result, Score } from "../data/Result"
 
@@ -37,6 +38,8 @@ const {
     resumeClock,
 } = useMatch("modal", props.result)
 
+const { blurActive } = useTweaks()
+
 const visible = ref(props.visible)
 
 watch(props, () => {
@@ -49,7 +52,7 @@ const round = computed(() => flyerStore.getRound(result.value.id)!)
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
 watch([scores], () => {
-    (<any>document.activeElement)?.blur()
+    blurActive()
 })
 
 const startFixture = () => {
@@ -163,7 +166,7 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <div v-else-if="hasStarted" class="mb-2">
+        <div v-else-if="hasStarted" id="score-inputs" class="mb-2">
             <Clock :elapsedSeconds="elapsedSeconds" />
 
             <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
