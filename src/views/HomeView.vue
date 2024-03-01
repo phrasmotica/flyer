@@ -6,6 +6,7 @@ import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
+import LabelledCheckbox from "../components/LabelledCheckbox.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
 import { useSettings } from "../composables/useSettings"
@@ -32,6 +33,7 @@ const {
 } = useSettings(settingsStore.settings)
 
 const showModal = ref(false)
+const entryFeesPaid = ref(false)
 
 const start = () => {
     switch (settings.value.format) {
@@ -66,6 +68,7 @@ const viewPastFlyers = () => {
 
 const hideModal = () => {
     showModal.value = false
+    entryFeesPaid.value = false
 }
 </script>
 
@@ -85,7 +88,7 @@ const hideModal = () => {
                 header="Start Flyer"
                 message="Please enter a name for the flyer:"
                 confirmLabel="Start"
-                :confirmDisabled="settings.name.length <= 0"
+                :confirmDisabled="settings.name.length <= 0 || !entryFeesPaid"
                 cancelLabel="Go back"
                 @confirm="start"
                 @hide="hideModal">
@@ -93,6 +96,13 @@ const hideModal = () => {
                     <InputText
                         placeholder="Flyer name"
                         v-model="settings.name" />
+                </div>
+
+                <div class="p-fluid mb-2">
+                    <LabelledCheckbox
+                        v-if="settings.entryFeeRequired"
+                        v-model="entryFeesPaid"
+                        label="Entry fees paid?" />
                 </div>
             </ConfirmModal>
         </template>
