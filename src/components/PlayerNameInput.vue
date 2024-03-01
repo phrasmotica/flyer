@@ -12,10 +12,21 @@ const emit = defineEmits<{
 
 <template>
     <div class="player-name-input p-fluid">
-        <InputText
-            :placeholder="props.placeholder"
-            :disabled="props.disabled"
-            :modelValue="props.name"
-            @update:modelValue="v => emit('setName', v || '')" />
+        <IconField>
+            <InputIcon v-if="!props.name" class="pi pi-exclamation-circle"></InputIcon>
+
+            <InputText
+                :placeholder="props.placeholder"
+                :disabled="props.disabled"
+                :invalid="!props.name"
+                :modelValue="props.name"
+                @update:modelValue="v => emit('setName', v || '')" />
+        </IconField>
     </div>
 </template>
+
+<style scoped>
+.player-name-input .pi-exclamation-circle {
+    color: red;
+}
+</style>

@@ -15,6 +15,8 @@ import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import Dialog from 'primevue/dialog'
 import Dropdown from 'primevue/dropdown'
+import IconField from "primevue/iconfield"
+import InputIcon from "primevue/inputicon"
 import InputNumber from "primevue/inputnumber"
 import InputText from "primevue/inputtext"
 import MeterGroup from 'primevue/metergroup'
@@ -52,6 +54,8 @@ app.component("Column", Column)
 app.component("DataTable", DataTable)
 app.component("Dialog", Dialog)
 app.component("Dropdown", Dropdown)
+app.component("IconField", IconField)
+app.component("InputIcon", InputIcon)
 app.component("InputNumber", InputNumber)
 app.component("InputText", InputText)
 app.component("MeterGroup", MeterGroup)
