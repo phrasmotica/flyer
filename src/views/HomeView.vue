@@ -24,6 +24,9 @@ const settingsStore = useSettingsStore()
 
 const {
     settings,
+    formatSummary,
+    formatDetails,
+    rulesSummary,
     rulesDetails,
 } = useSettings(settingsStore.settings)
 
@@ -97,10 +100,15 @@ const hideModal = () => {
             <FlyerFormSection hidden noUnderline header="Summary">
                 <div class="mb-2">
                     <!-- TODO: put this nicely under the dropdown in FlyerForm -->
-                    <strong>{{ settingsStore.settings.ruleSet }} rules</strong>&nbsp;<em>({{ rulesDetails }})</em>
+                    <strong>{{ formatSummary }}</strong>&nbsp;<em>({{ formatDetails }})</em>
                 </div>
 
-                <div class="flex align-items-center justify-content-between border-top-1 border-gray-200 mb-2">
+                <div class="pt-2 border-top-1 border-gray-200 mb-2">
+                    <!-- TODO: put this nicely under the dropdown in FlyerForm -->
+                    <strong>{{ rulesSummary }}</strong>&nbsp;<em>({{ rulesDetails }})</em>
+                </div>
+
+                <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
                     <div>
                         Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
                     </div>

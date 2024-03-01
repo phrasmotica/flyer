@@ -3,6 +3,17 @@ import type { MeterItem } from "primevue/metergroup"
 
 import { MoneySplit, type FlyerSettings, Format, RuleSet } from "../data/FlyerSettings"
 
+const formatDetailsList = [
+    {
+        value: Format.Knockout,
+        details: "losers are immediately eliminated until one player remains",
+    },
+    {
+        value: Format.RoundRobin,
+        details: "every player plays against every other player once",
+    },
+]
+
 const rulesDetailsList = [
     {
         value: RuleSet.Blackball,
@@ -18,6 +29,8 @@ export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
     const formatSummary = computed(() => `${settings.value.format} format`)
+
+    const formatDetails = computed(() => formatDetailsList.find(s => s.value === settings.value.format)?.details || "???")
 
     const drawSummary = computed(() => {
         if (settings.value.format === Format.RoundRobin) {
@@ -74,6 +87,7 @@ export const useSettings = (s: FlyerSettings) => {
         settings,
 
         formatSummary,
+        formatDetails,
         drawSummary,
         raceSummary,
         rulesSummary,
