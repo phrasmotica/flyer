@@ -10,6 +10,8 @@ import PlayerNameInput from "./PlayerNameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
 
+import { useCurrency } from "../composables/useCurrency"
+import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
 import { Format, MoneySplit, RuleSet } from "../data/FlyerSettings"
@@ -27,6 +29,10 @@ const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const settingsStore = useSettingsStore()
+
+const { estimatedCost } = useSettings(settingsStore.settings)
+
+const { gbp } = useCurrency()
 
 const { blurNumberInputs } = useTweaks()
 
@@ -194,6 +200,18 @@ onUpdated(() => {
                     inputId="tableCostPerHourStepper"
                     v-model="settingsStore.settings.tableCostPerHour"
                     suffix=" per hour" />
+            </div>
+
+            <div class="flex align-items-center justify-content-between border-top-1 border-gray-200 mb-2">
+                <div>
+                    Estimated cost
+                </div>
+
+                <div class="ml-2">
+                    <p class="m-0 text-center font-bold text-xl">
+                        {{ gbp(estimatedCost) }}
+                    </p>
+                </div>
             </div>
         </div>
 

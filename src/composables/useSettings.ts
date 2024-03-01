@@ -4,6 +4,8 @@ import type { MeterItem } from "primevue/metergroup"
 import { useCurrency } from "./useCurrency"
 
 import { MoneySplit, type FlyerSettings, Format, RuleSet } from "../data/FlyerSettings"
+import { KnockoutScheduler } from "../data/KnockoutScheduler"
+import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 const { gbp } = useCurrency()
 
@@ -49,6 +51,23 @@ export const useSettings = (s: FlyerSettings) => {
     const rulesSummary = computed(() => `${settings.value.ruleSet} rules`)
 
     const rulesDetails = computed(() => rulesDetailsList.find(s => s.value === settings.value.ruleSet)?.details || "???")
+
+    const estimatedDuration = computed(() => {
+        switch (settings.value.format) {
+            case Format.Knockout:
+                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).estimateDuration(settings.value)
+
+            case Format.RoundRobin:
+                return new RoundRobinScheduler().estimateDuration(settings.value)
+
+            default:
+                throw `Invalid flyer format ${settings.value.format}!`
+        }
+    })
+
+    const estimatedCost = computed(() => {
+        return settings.value.tableCostPerHour * settings.value.tableCount * estimatedDuration.value / 60
+    })
 
     const entryFeeSummary = computed(() => {
         return `${gbp(settings.value.entryFee)} entry fee => ${gbp(prizePot.value)} pot`
@@ -96,6 +115,8 @@ export const useSettings = (s: FlyerSettings) => {
         raceSummary,
         rulesSummary,
         rulesDetails,
+        estimatedDuration,
+        estimatedCost,
         entryFeeSummary,
         prizePot,
         prizePotSummary,

@@ -4,6 +4,7 @@ import { ref } from "vue"
 import CurrencyStepper from "./CurrencyStepper.vue"
 
 import { useCurrency } from "../composables/useCurrency"
+import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -11,7 +12,9 @@ const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
 
-const lightsCost = ref(flyerStore.costEstimate)
+const { estimatedCost } = useSettings(flyerStore.settings)
+
+const lightsCost = ref(estimatedCost)
 </script>
 
 <template>

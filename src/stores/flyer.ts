@@ -51,16 +51,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
     })
 
-    const costEstimate = computed(() => {
-        if (!durationSeconds.value) {
-            // TODO: implement this branch
-            return 0
-        }
-
-        const tableCostPerHour = 9 // TODO: make this configurable
-        return tableCostPerHour * settings.value.tableCount * durationSeconds.value / 3600
-    })
-
     const winner = computed(() => {
         const finalRound = rounds.value[rounds.value.length - 1]
         if (finalRound) {
@@ -229,7 +219,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         currentRound,
         generationIsComplete,
         durationSeconds,
-        costEstimate,
         winner,
 
         getRound,

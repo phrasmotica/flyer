@@ -39,19 +39,6 @@ export const useSettingsStore = defineStore("settings", () => {
 
     const playerNames = computed(() => settings.value.playerNames)
 
-    const estimatedDuration = computed(() => {
-        switch (settings.value.format) {
-            case Format.Knockout:
-                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).estimateDuration(settings.value)
-
-            case Format.RoundRobin:
-                return new RoundRobinScheduler().estimateDuration(settings.value)
-
-            default:
-                throw `Invalid flyer format ${settings.value.format}!`
-        }
-    })
-
     const durationPerFrame = computed(() => {
         switch (settings.value.format) {
             case Format.Knockout:
@@ -91,7 +78,6 @@ export const useSettingsStore = defineStore("settings", () => {
     return {
         settings,
 
-        estimatedDuration,
         durationPerFrame,
         isInvalid,
 

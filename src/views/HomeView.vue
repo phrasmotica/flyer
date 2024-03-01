@@ -28,6 +28,7 @@ const {
     formatDetails,
     rulesSummary,
     rulesDetails,
+    estimatedDuration,
 } = useSettings(settingsStore.settings)
 
 const showModal = ref(false)
@@ -114,7 +115,7 @@ const hideModal = () => {
                     </div>
 
                     <div class="ml-2">
-                        <Clock :elapsedSeconds="settingsStore.estimatedDuration * 60" />
+                        <Clock :elapsedSeconds="estimatedDuration * 60" />
                     </div>
                 </div>
 
