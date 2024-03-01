@@ -2,6 +2,7 @@
 import { computed, onUpdated, ref, watch } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
+import CurrencyStepper from "./CurrencyStepper.vue"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledDropdown from "./LabelledDropdown.vue"
 import LabelledSlider from "./LabelledSlider.vue"
@@ -17,6 +18,7 @@ import { useSettingsStore } from "../stores/settings"
 enum Section {
     Players,
     Settings,
+    Tables,
     Prizes,
 }
 
@@ -56,6 +58,10 @@ const items = ref<MenuItem[]>([
     {
         icon: 'pi pi-cog',
         command: _ => section.value = Section.Settings,
+    },
+    {
+        icon: 'pi pi-building',
+        command: _ => section.value = Section.Tables,
     },
     {
         icon: 'pi pi-pound',
@@ -133,22 +139,6 @@ onUpdated(() => {
                 </InputNumber>
             </div>
 
-            <div class="p-fluid mb-2">
-                <InputNumber
-                    v-model="settingsStore.settings.tableCount"
-                    showButtons buttonLayout="horizontal"
-                    :min="1" :max="Math.floor(settingsStore.settings.playerCount / 2)"
-                    suffix=" table(s)"
-                    :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
-            </div>
-
             <div class="grid m-0">
                 <div class="col-12 md:col-6 mb-0 p-0 p-fluid">
                     <div class="md:mr-1">
@@ -192,6 +182,40 @@ onUpdated(() => {
                 v-if="!isKnockout"
                 label="Allow draws"
                 v-model="settingsStore.settings.allowDraws" />
+        </div>
+
+        <div v-if="section === Section.Tables">
+            <div class="p-fluid mb-2">
+                <label for="tablesStepper" class="font-bold">
+                    Tables
+                </label>
+
+                <InputNumber
+                    v-model="settingsStore.settings.tableCount"
+                    showButtons buttonLayout="horizontal"
+                    :min="1" :max="Math.floor(settingsStore.settings.playerCount / 2)"
+                    suffix=" table(s)"
+                    inputId="tablesStepper"
+                    inputClass="text-center font-bold">
+                    <template #incrementbuttonicon>
+                        <span class="pi pi-plus" />
+                    </template>
+                    <template #decrementbuttonicon>
+                        <span class="pi pi-minus" />
+                    </template>
+                </InputNumber>
+            </div>
+
+            <div class="p-fluid mb-2">
+                <label for="tableCostPerHourStepper" class="font-bold">
+                    Table Cost
+                </label>
+
+                <CurrencyStepper
+                    inputId="tableCostPerHourStepper"
+                    v-model="settingsStore.settings.tableCostPerHour"
+                    suffix=" per hour" />
+            </div>
         </div>
 
         <div v-if="section === Section.Prizes">

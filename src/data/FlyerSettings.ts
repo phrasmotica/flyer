@@ -12,6 +12,7 @@ export interface FlyerSettings {
     entryFeeRequired: boolean
     entryFee: number
     moneySplit: MoneySplit
+    tableCostPerHour: number
     name: string
 }
 

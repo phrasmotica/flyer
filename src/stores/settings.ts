@@ -33,6 +33,7 @@ export const useSettingsStore = defineStore("settings", () => {
         entryFeeRequired: false,
         entryFee: 5,
         moneySplit: MoneySplit.WinnerTakesAll,
+        tableCostPerHour: 9,
         name: "",
     })
 
