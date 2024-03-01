@@ -18,13 +18,17 @@ const { getRoundStatus } = useFlyer(flyerStore.flyer)
 const showContent = ref(!props.hidden)
 
 const status = computed(() => getRoundStatus(props.roundIndex))
+
+const toggle = () => {
+    showContent.value = !showContent.value
+}
 </script>
 
 <template>
     <div
         class="flex align-items-baseline justify-content-between cursor-pointer"
-        :class="[showContent && 'border-bottom-1 border-gray-200']"
-        @click="showContent = !showContent">
+        :class="[showContent && 'border-bottom-1']"
+        @click="toggle">
         <h3 class="font-bold">{{ props.name }}</h3>
 
         <div>
