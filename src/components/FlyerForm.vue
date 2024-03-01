@@ -124,11 +124,16 @@ onUpdated(() => {
 
         <div v-if="section === Section.Settings">
             <div class="p-fluid mb-2">
+                <label for="raceToStepper" class="font-bold">
+                    Match Length
+                </label>
+
                 <InputNumber
+                    inputId="raceToStepper"
                     v-model="settingsStore.settings.raceTo"
                     showButtons buttonLayout="horizontal"
                     :min="1" :max="maxRaceEnv"
-                    prefix="Races to "
+                    prefix="Race to "
                     :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
                     <template #incrementbuttonicon>
                         <span class="pi pi-plus" />

@@ -22,7 +22,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const settings = useStorage("settings", <FlyerSettings>{
         playerCount: defaultPlayers.filter(p => p).length,
         playerNames: defaultPlayers,
-        raceTo: 1,
+        raceTo: 1, // TODO: allow changing this per round in a Knockout tournament
         tableCount: 1, // TODO: use this to assign fixtures to tables
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
