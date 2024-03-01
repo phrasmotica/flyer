@@ -23,6 +23,26 @@ export const useMatch = (name: string, f: Result) => {
         return Math.floor((result.value.finishTime! - result.value.startTime!) / 1000)
     })
 
+    const winner = computed(() => {
+        if (!hasStarted.value || !hasFinished.value) {
+            return ""
+        }
+
+        const winningScore = result.value.scores.reduce((s, t) => {
+            if (s.isBye && !t.isBye) {
+                return t
+            }
+
+            if (!s.isBye && t.isBye) {
+                return s
+            }
+
+            return s.score > t.score ? s : t
+        })
+
+        return winningScore.playerId
+    })
+
     const computeDifference = () => differenceInSeconds(Date.now(), startTime.value || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
@@ -63,6 +83,7 @@ export const useMatch = (name: string, f: Result) => {
         hasFinished,
         isInProgress,
         durationSeconds,
+        winner,
         setScore,
         pauseClock,
         resumeClock,

@@ -22,7 +22,19 @@ const emit = defineEmits<{
 
 const flyerStore = useFlyerStore()
 
-const { result } = useMatch("card", props.result)
+const { result, winner } = useMatch("card", props.result)
+
+const playerNameClass = (playerId: string) => {
+    if (winner.value) {
+        if (winner.value === playerId) {
+            return "font-bold"
+        }
+
+        return "text-color-secondary"
+    }
+
+    return ""
+}
 
 watch(props, () => {
     result.value = props.result
@@ -63,7 +75,7 @@ const handleNameClick = (id: string) => {
                     <em>(bye)</em>
                 </span>
 
-                <span v-else-if="result.scores[0].playerId">
+                <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result.scores[0].playerId)">
                     {{ flyerStore.getPlayerName(result.scores[0].playerId) }}
                 </span>
 
@@ -91,7 +103,7 @@ const handleNameClick = (id: string) => {
                     <em>(bye)</em>
                 </span>
 
-                <span v-else-if="result.scores[1].playerId">
+                <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result.scores[1].playerId)">
                     {{ flyerStore.getPlayerName(result.scores[1].playerId) }}
                 </span>
 

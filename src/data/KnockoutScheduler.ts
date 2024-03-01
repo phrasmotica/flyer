@@ -164,6 +164,7 @@ export class KnockoutScheduler implements IScheduler {
             scores: players.map(p => ({
                 playerId: p.id,
                 score: 0,
+                isBye: false,
             })),
             startTime: null,
             finishTime: null,
