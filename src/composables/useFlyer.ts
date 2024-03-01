@@ -40,6 +40,13 @@ export const useFlyer = (f: Flyer) => {
         return Math.floor((flyer.value.finishTime! - flyer.value.startTime!) / 1000)
     })
 
+    const isBusy = (playerId: string) => {
+        return flyer.value.rounds.flatMap(r => r.fixtures).some(f => {
+            const isInProgress = f.startTime && !f.finishTime
+            return isInProgress && f.scores.some(s => s.playerId === playerId)
+        })
+    }
+
     const getRoundStatus = (index: number) => {
         const round = flyer.value.rounds.find(r => r.index === index)
         if (!round) {
@@ -105,6 +112,7 @@ export const useFlyer = (f: Flyer) => {
         readyForNextRound,
         durationSeconds,
 
+        isBusy,
         getRoundStatus,
         pauseClock,
         resumeClock,

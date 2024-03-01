@@ -3,6 +3,7 @@ import { computed, onUnmounted, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
 
 import type { Result, Score } from "../data/Result"
@@ -20,7 +21,7 @@ const emit = defineEmits<{
 
 const flyerStore = useFlyerStore()
 
-const visible = ref(props.visible)
+const { isBusy } = useFlyer(flyerStore.flyer)
 
 const {
     result,
@@ -35,6 +36,8 @@ const {
     pauseClock,
     resumeClock,
 } = useMatch("modal", props.result)
+
+const visible = ref(props.visible)
 
 watch(props, () => {
     visible.value = props.visible
@@ -76,6 +79,10 @@ const startButtonText = computed(() => {
         return "Waiting for a previous result"
     }
 
+    if (result.value.scores.some(s => isBusy(s.playerId))) {
+        return "Waiting for players to be free"
+    }
+
     if (flyerStore.settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
         return "Waiting for round to start"
     }
@@ -89,6 +96,10 @@ const startButtonText = computed(() => {
 
 const disableStart = computed(() => {
     if (result.value.scores.some(s => !s.playerId)) {
+        return true
+    }
+
+    if (result.value.scores.some(s => isBusy(s.playerId))) {
         return true
     }
 
