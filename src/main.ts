@@ -20,6 +20,7 @@ import InputText from "primevue/inputtext"
 import MeterGroup from 'primevue/metergroup'
 import SelectButton from "primevue/selectbutton"
 import Slider from "primevue/slider"
+import TabMenu from 'primevue/tabmenu'
 
 import App from './App.vue'
 import router from './router'
@@ -56,5 +57,6 @@ app.component("InputText", InputText)
 app.component("MeterGroup", MeterGroup)
 app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
+app.component("TabMenu", TabMenu)
 
 app.mount('#app')
