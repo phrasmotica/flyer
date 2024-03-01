@@ -202,16 +202,20 @@ onUpdated(() => {
                     suffix=" per hour" />
             </div>
 
-            <div class="flex align-items-center justify-content-between border-top-1 border-gray-200 mb-2">
-                <div>
+            <div class="flex align-items-center justify-content-between border-top-1 border-gray-200">
+                <span>
                     Estimated cost
-                </div>
+                </span>
 
                 <div class="ml-2">
                     <p class="m-0 text-center font-bold text-xl">
                         {{ gbp(estimatedCost) }}
                     </p>
                 </div>
+            </div>
+
+            <div class="font-italic text-color-secondary">
+                This will be split evenly between ALL players.
             </div>
         </div>
 
