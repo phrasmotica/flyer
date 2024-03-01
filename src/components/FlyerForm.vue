@@ -243,14 +243,23 @@ onUpdated(() => {
     pointer-events: auto;
 }
 
+.p-tabmenu .p-tabmenu-nav {
+    background: var(--color-background);
+    transition: background-color 0.5s;
+}
+
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem {
+    background: var(--color-background);
     flex: 1;
     justify-content: center;
+    transition: background-color 0.5s;
 }
 
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+    background: var(--color-background);
     color: var(--color-text);
     justify-content: center;
+    transition: background-color 0.5s;
 }
 
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
