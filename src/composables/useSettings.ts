@@ -1,7 +1,11 @@
 import { computed, ref } from "vue"
 import type { MeterItem } from "primevue/metergroup"
 
+import { useCurrency } from "./useCurrency"
+
 import { MoneySplit, type FlyerSettings, Format, RuleSet } from "../data/FlyerSettings"
+
+const { gbp } = useCurrency()
 
 const formatDetailsList = [
     {
@@ -47,12 +51,12 @@ export const useSettings = (s: FlyerSettings) => {
     const rulesDetails = computed(() => rulesDetailsList.find(s => s.value === settings.value.ruleSet)?.details || "???")
 
     const entryFeeSummary = computed(() => {
-        return `£${settings.value.entryFee} entry fee => £${prizePot.value} pot`
+        return `${gbp(settings.value.entryFee)} entry fee => ${gbp(prizePot.value)} pot`
     })
 
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
 
-    const prizePotSummary = computed(() => `£${prizePot.value}`)
+    const prizePotSummary = computed(() => `${gbp(prizePot.value)}`)
 
     const prizeMonies = computed(() => {
         if (!settings.value.entryFeeRequired) {

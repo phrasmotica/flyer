@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+import { useCurrency } from "../composables/useCurrency"
+
 import { useFlyerStore } from "../stores/flyer"
+
+const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
 
 const lightsCost = ref(flyerStore.costEstimate)
-
-// TODO: put this in a composable
-const gbp = new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'GBP',
-})
 </script>
 
 <template>
@@ -29,6 +27,6 @@ const gbp = new Intl.NumberFormat('en-GB', {
     </div>
 
     <p class="m-0 mt-2">
-        so every player pays <strong>{{ gbp.format(lightsCost / flyerStore.players.length) }}</strong>
+        so every player pays <strong>{{ gbp(lightsCost / flyerStore.players.length) }}</strong>
     </p>
 </template>

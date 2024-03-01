@@ -3,12 +3,15 @@ import { computed } from "vue"
 
 import LightsCalculator from "./LightsCalculator.vue"
 
+import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 
 import type { Player } from "../data/Player"
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
+
+const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
 
@@ -52,12 +55,6 @@ const getRoundName = (result: Result) => {
     const round = flyerStore.rounds.find(r => r.fixtures.some(f => f.id === result.id))
     return round?.name || "UNKNOWN"
 }
-
-// TODO: put this in a composable
-const gbp = new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'GBP',
-})
 </script>
 
 <template>
@@ -69,7 +66,7 @@ const gbp = new Intl.NumberFormat('en-GB', {
             <p v-if="prizeMonies.length > 0" class="m-0 text-xl">
                 who wins
                 <span class="font-bold">
-                    {{ gbp.format(prizeMonies[0]) }}
+                    {{ gbp(prizeMonies[0]) }}
                 </span>
             </p>
         </div>
@@ -90,7 +87,7 @@ const gbp = new Intl.NumberFormat('en-GB', {
         <p v-if="prizeMonies.length > 1" class="m-0">
             {{ getOpponentName(winner, winnerResults[0]) }} wins
             <span class="font-bold">
-                {{ gbp.format(prizeMonies[1]) }}
+                {{ gbp(prizeMonies[1]) }}
             </span>
         </p>
 

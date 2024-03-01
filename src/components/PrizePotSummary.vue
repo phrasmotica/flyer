@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 
 import type { FlyerSettings } from "../data/FlyerSettings"
@@ -6,6 +7,8 @@ import type { FlyerSettings } from "../data/FlyerSettings"
 const props = defineProps<{
     settings: FlyerSettings
 }>()
+
+const { gbp } = useCurrency()
 
 const {
     prizePot,
@@ -29,7 +32,7 @@ const {
             <div v-for="v in x.value">
                 <div class="flex justify-content-between">
                     <span class="text-sm font-italic">{{ v.label }}</span>
-                    <span class="text-sm font-italic">&pound;{{ v.value }}</span>
+                    <span class="text-sm font-italic">{{ gbp(v.value) }}</span>
                 </div>
             </div>
         </template>

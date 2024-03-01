@@ -3,11 +3,14 @@ import { computed } from "vue"
 
 import LightsCalculator from "./LightsCalculator.vue"
 
+import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
+
+const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
 
@@ -106,7 +109,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 
     <p v-if="winner && prizeMonies.length > 0" class="m-0 text-center text-xl">
         {{ winner.name }} wins
-        <span class="font-bold">&pound;{{ prizeMonies[0] }}</span>
+        <span class="font-bold">{{ gbp(prizeMonies[0]) }}</span>
     </p>
 
     <h4 v-if="incompleteCount > 0">
