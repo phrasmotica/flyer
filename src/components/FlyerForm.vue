@@ -198,7 +198,7 @@ onUpdated(() => {
 
         <div v-if="section === Section.Prizes">
             <LabelledCheckbox
-                label="Entry fee required"
+                label="Require entry fee"
                 v-model="settingsStore.settings.entryFeeRequired" />
 
             <div v-if="settingsStore.settings.entryFeeRequired">
