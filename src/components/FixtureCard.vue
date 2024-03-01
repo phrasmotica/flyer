@@ -46,10 +46,14 @@ const handleNameClick = (id: string) => {
 </script>
 
 <template>
-    <div class="grid m-0 border-round-md" :class="[props.highlightedResultId === result.id && 'highlight']">
+    <div
+        class="grid m-0 py-1 border-round-md border-1"
+        :class="[
+            props.highlightedResultId === result.id ? 'border-dashed' : 'border-transparent'
+        ]">
         <div class="col-5 p-0">
             <div
-                class="p-2 mr-1 border-round-md text-left"
+                class="p-1 mr-1 border-round-md text-left"
                 :class="[
                     props.highlightedResultId === result.parentFixtureIds[0] && 'highlight',
                     result.parentFixtureIds[0] && 'cursor-pointer',
@@ -77,7 +81,7 @@ const handleNameClick = (id: string) => {
 
         <div class="col-5 p-0">
             <div
-                class="p-2 ml-1 border-round-md text-right"
+                class="p-1 ml-1 border-round-md text-right"
                 :class="[
                     props.highlightedResultId === result.parentFixtureIds[1] && 'highlight',
                     result.parentFixtureIds[0] && 'cursor-pointer',

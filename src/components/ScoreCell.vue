@@ -27,7 +27,7 @@ const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 </script>
 
 <template>
-    <div class="p-2 text-center border-round-md"
+    <div class="p-2 py-1 text-center border-round-md"
         :class="[getResultClass(props.result), !isWalkover && 'cursor-pointer']"
         @click="() => emit('clicked')">
         <span v-if="isWalkover">
