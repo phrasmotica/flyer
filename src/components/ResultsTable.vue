@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import LightsCalculator from "./LightsCalculator.vue"
+
 import { useSettings } from "../composables/useSettings"
 
 import type { Result } from "../data/Result"
@@ -89,7 +91,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 
 <template>
     <!-- TODO: ensure table does not need to scroll sideways on narrow screens -->
-    <DataTable :value="tableData" :rowClass="rowClass">
+    <DataTable size="small" :value="tableData" :rowClass="rowClass">
         <Column header="#">
             <template #body="slotProps">
                 {{ slotProps.index + 1 }}
@@ -110,4 +112,8 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
     <h4 v-if="incompleteCount > 0">
         <em>{{ incompleteCount }} player(s) have incomplete results!</em>
     </h4>
+
+    <div class="border-top-1 mt-1 pt-1">
+        <LightsCalculator />
+    </div>
 </template>
