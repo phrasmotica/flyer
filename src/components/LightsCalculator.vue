@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
+import CurrencyStepper from "./CurrencyStepper.vue"
+
 import { useCurrency } from "../composables/useCurrency"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -15,15 +17,9 @@ const lightsCost = ref(flyerStore.costEstimate)
 <template>
     <div class="flex align-items-center gap-1">
         The lights cost&nbsp;
-        <InputNumber
-            showButtons
-            buttonLayout="horizontal"
-            :min="0" :step="0.5"
+        <CurrencyStepper
             v-model="lightsCost"
-            mode="currency"
-            currency="GBP"
-            locale="en-GB"
-            inputClass="w-6rem" />
+            inputClass="text-center font-bold w-6rem" />
     </div>
 
     <p class="m-0 mt-2">
