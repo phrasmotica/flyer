@@ -125,7 +125,7 @@ onUpdated(() => {
         <div v-if="section === Section.Settings">
             <div class="p-fluid mb-2">
                 <label for="raceToStepper" class="font-bold">
-                    Match Length
+                    Match length
                 </label>
 
                 <InputNumber
@@ -213,7 +213,7 @@ onUpdated(() => {
 
             <div class="p-fluid mb-2">
                 <label for="tableCostPerHourStepper" class="font-bold">
-                    Table Cost
+                    Table cost
                 </label>
 
                 <CurrencyStepper
@@ -230,21 +230,15 @@ onUpdated(() => {
 
             <div v-if="settingsStore.settings.entryFeeRequired">
                 <div class="p-fluid mb-2">
-                    <InputNumber
+                    <label for="entryFeeStepper" class="font-bold">
+                        Entry fee
+                    </label>
+
+                    <CurrencyStepper
+                        inputId="entryFeeStepper"
                         v-model="settingsStore.settings.entryFee"
-                        showButtons buttonLayout="horizontal"
                         :min="5" :max="20" :step="5"
-                        mode="currency" currency="GBP" locale="en-GB"
-                        suffix=" entry fee"
-                        inputClass="text-center font-bold"
-                        :disabled="!settingsStore.settings.entryFeeRequired">
-                        <template #incrementbuttonicon>
-                            <span class="pi pi-plus" />
-                        </template>
-                        <template #decrementbuttonicon>
-                            <span class="pi pi-minus" />
-                        </template>
-                    </InputNumber>
+                        suffix=" entry fee" />
                 </div>
 
                 <LabelledDropdown
