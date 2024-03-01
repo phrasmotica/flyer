@@ -155,7 +155,7 @@ onUpdated(() => {
                 </InputNumber>
             </div>
 
-            <div class="grid m-0 mb-2">
+            <div class="grid m-0">
                 <div class="col-12 md:col-6 mb-2 md:mb-0 p-0 p-fluid">
                     <div class="md:mr-1">
                         <LabelledDropdown
@@ -175,25 +175,29 @@ onUpdated(() => {
                 </div>
             </div>
 
+            <p class="m-0 font-bold">
+                Advanced
+            </p>
+
             <LabelledCheckbox
+                v-if="isKnockout"
                 label="Randomly draw all rounds"
-                v-model="settingsStore.settings.randomlyDrawAllRounds"
-                :disabled="!isKnockout" />
+                v-model="settingsStore.settings.randomlyDrawAllRounds" />
 
             <LabelledCheckbox
+                v-if="!isKnockout"
                 label="Require completed rounds"
-                v-model="settingsStore.settings.requireCompletedRounds"
-                :disabled="isKnockout" />
+                v-model="settingsStore.settings.requireCompletedRounds" />
 
             <LabelledCheckbox
+                v-if="!isKnockout"
                 label="Allow early finish"
-                v-model="settingsStore.settings.allowEarlyFinish"
-                :disabled="isKnockout" />
+                v-model="settingsStore.settings.allowEarlyFinish" />
 
             <LabelledCheckbox
+                v-if="!isKnockout"
                 label="Allow draws"
-                v-model="settingsStore.settings.allowDraws"
-                :disabled="isKnockout" />
+                v-model="settingsStore.settings.allowDraws" />
         </div>
 
         <div v-if="section === Section.Prizes">
