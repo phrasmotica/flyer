@@ -36,7 +36,7 @@ const hideModal = () => {
 
 <template>
     <div v-for="r in flyerStore.rounds" class="my-1 px-2 border-1 border-round-md">
-        <RoundSection :name="r.name">
+        <RoundSection :name="r.name" :roundIndex="r.index">
             <div v-for="f, i in r.fixtures" class="py-1" :class="[i > 0 && 'border-gray-200 border-top-1']">
                 <FixtureCard
                     :result="f"

@@ -1,12 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
+
+import { RoundStatus, useFlyer } from "../composables/useFlyer"
+
+import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     name: string
+    roundIndex: number
     hidden?: boolean
 }>()
 
+const flyerStore = useFlyerStore()
+
+const { getRoundStatus } = useFlyer(flyerStore.flyer)
+
 const showContent = ref(!props.hidden)
+
+const status = computed(() => getRoundStatus(props.roundIndex))
 </script>
 
 <template>
@@ -17,8 +28,10 @@ const showContent = ref(!props.hidden)
         <h3 class="font-bold">{{ props.name }}</h3>
 
         <div>
-            <span v-if="showContent" class="font-italic">&nbsp;(click to hide)</span>
-            <span v-else class="font-italic">&nbsp;(click to show)</span>
+            <i v-if="status === RoundStatus.Waiting" class="pi pi-question-circle ml-2" />
+            <i v-if="status === RoundStatus.Ready" class="pi pi-clock ml-2" />
+            <i v-if="status === RoundStatus.InProgress" class="pi pi-circle ml-2" />
+            <i v-if="status === RoundStatus.Finished" class="pi pi-check-circle ml-2" />
         </div>
     </div>
 

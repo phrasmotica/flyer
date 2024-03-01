@@ -40,6 +40,27 @@ export const useFlyer = (f: Flyer) => {
         return Math.floor((flyer.value.finishTime! - flyer.value.startTime!) / 1000)
     })
 
+    const getRoundStatus = (index: number) => {
+        const round = flyer.value.rounds.find(r => r.index === index)
+        if (!round) {
+            throw `Round ${index} not found!`
+        }
+
+        if (round.fixtures.every(f => f.startTime && f.finishTime)) {
+            return RoundStatus.Finished
+        }
+
+        if (round.fixtures.some(f => f.startTime)) {
+            return RoundStatus.InProgress
+        }
+
+        if (round.fixtures.every(f => f.scores.every(s => !!s.playerId))) {
+            return RoundStatus.Ready
+        }
+
+        return RoundStatus.Waiting
+    }
+
     const computeDifference = () => differenceInSeconds(Date.now(), flyer.value.startTime || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
@@ -84,7 +105,15 @@ export const useFlyer = (f: Flyer) => {
         readyForNextRound,
         durationSeconds,
 
+        getRoundStatus,
         pauseClock,
         resumeClock,
     }
+}
+
+export enum RoundStatus {
+    Waiting,
+    Ready,
+    InProgress,
+    Finished,
 }
