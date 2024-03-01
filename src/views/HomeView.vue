@@ -7,7 +7,6 @@ import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import PrizePotSummary from "../components/PrizePotSummary.vue"
 
 import { useSettings } from "../composables/useSettings"
 
@@ -101,11 +100,6 @@ const hideModal = () => {
                     <div class="ml-2">
                         <Clock :elapsedSeconds="settingsStore.estimatedDuration * 60" />
                     </div>
-                </div>
-
-                <div v-if="settings.entryFeeRequired"
-                    class="p-fluid mt-2 border-top-1 border-gray-200 pt-1 mb-2">
-                    <PrizePotSummary :settings="settingsStore.settings" />
                 </div>
 
                 <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />

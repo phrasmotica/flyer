@@ -6,6 +6,7 @@ import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledDropdown from "./LabelledDropdown.vue"
 import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
+import PrizePotSummary from "./PrizePotSummary.vue"
 
 import { Format, MoneySplit, RuleSet } from "../data/FlyerSettings"
 
@@ -200,29 +201,35 @@ onUpdated(() => {
                 label="Entry fee required"
                 v-model="settingsStore.settings.entryFeeRequired" />
 
-            <div class="p-fluid mb-2">
-                <InputNumber
-                    v-model="settingsStore.settings.entryFee"
-                    showButtons buttonLayout="horizontal"
-                    :min="5" :max="20" :step="5"
-                    mode="currency" currency="GBP" locale="en-GB"
-                    suffix=" entry fee"
-                    inputClass="text-center font-bold"
-                    :disabled="!settingsStore.settings.entryFeeRequired">
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
-            </div>
+            <div v-if="settingsStore.settings.entryFeeRequired">
+                <div class="p-fluid mb-2">
+                    <InputNumber
+                        v-model="settingsStore.settings.entryFee"
+                        showButtons buttonLayout="horizontal"
+                        :min="5" :max="20" :step="5"
+                        mode="currency" currency="GBP" locale="en-GB"
+                        suffix=" entry fee"
+                        inputClass="text-center font-bold"
+                        :disabled="!settingsStore.settings.entryFeeRequired">
+                        <template #incrementbuttonicon>
+                            <span class="pi pi-plus" />
+                        </template>
+                        <template #decrementbuttonicon>
+                            <span class="pi pi-minus" />
+                        </template>
+                    </InputNumber>
+                </div>
 
-            <LabelledDropdown
-                label="Money split"
-                v-model="settingsStore.settings.moneySplit"
-                :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
-                :disabled="!settingsStore.settings.entryFeeRequired" />
+                <LabelledDropdown
+                    label="Money split"
+                    v-model="settingsStore.settings.moneySplit"
+                    :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
+                    :disabled="!settingsStore.settings.entryFeeRequired" />
+
+                <div class="mt-2 border-top-1 border-gray-200">
+                    <PrizePotSummary :settings="settingsStore.settings" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
