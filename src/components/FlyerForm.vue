@@ -223,7 +223,7 @@ onUpdated(() => {
                 <LabelledDropdown
                     label="Money split"
                     v-model="settingsStore.settings.moneySplit"
-                    :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty]"
+                    :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty, MoneySplit.SixtyTwentyFiveFifteen]"
                     :disabled="!settingsStore.settings.entryFeeRequired" />
 
                 <div class="mt-2 border-top-1 border-gray-200">

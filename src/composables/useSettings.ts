@@ -37,6 +37,10 @@ export const useSettings = (s: FlyerSettings) => {
             return [roundX(prizePot.value * 0.7, 5), roundX(prizePot.value * 0.3, 5)]
         }
 
+        if (settings.value.moneySplit === MoneySplit.SixtyTwentyFiveFifteen) {
+            return [roundX(prizePot.value * 0.6, 5), roundX(prizePot.value * 0.25, 5), roundX(prizePot.value * 0.15, 5)]
+        }
+
         return [prizePot.value]
     })
 

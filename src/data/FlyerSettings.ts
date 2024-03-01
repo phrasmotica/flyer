@@ -28,4 +28,5 @@ export enum RuleSet {
 export enum MoneySplit {
     WinnerTakesAll = "Winner Takes All",
     SeventyThirty = "70/30",
+    SixtyTwentyFiveFifteen = "60/25/15",
 }
