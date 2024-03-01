@@ -5,6 +5,7 @@ import HistoryView from "../views/HistoryView.vue"
 import HomeView from "../views/HomeView.vue"
 import PlayView from "../views/PlayView.vue"
 import ResultsView from "../views/ResultsView.vue"
+import TestView from "../views/TestView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,5 +44,13 @@ const router = createRouter({
     },
   ]
 })
+
+if (process.env.NODE_ENV === 'development') {
+  router.addRoute({
+    path: '/test',
+    name: 'test',
+    component: TestView,
+  })
+}
 
 export default router
