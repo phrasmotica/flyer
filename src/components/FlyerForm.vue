@@ -8,6 +8,7 @@ import LabelledDropdown from "./LabelledDropdown.vue"
 import LabelledSlider from "./LabelledSlider.vue"
 import PlayerNameInput from "./PlayerNameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
+import Stepper from "./Stepper.vue"
 
 import { useTweaks } from "../composables/useTweaks"
 
@@ -83,19 +84,10 @@ onUpdated(() => {
     <div id="form-content">
         <div v-if="section === Section.Players">
             <div class="p-fluid mb-2 md:hidden">
-                <InputNumber
+                <Stepper
                     v-model="settingsStore.settings.playerCount"
-                    showButtons buttonLayout="horizontal"
                     :min="2" :max="maxPlayersEnv"
-                    suffix=" players"
-                    inputClass="text-center font-bold">
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
+                    suffix=" players" />
             </div>
 
             <div class="mt-2 hidden md:block">
@@ -128,20 +120,11 @@ onUpdated(() => {
                     Match length
                 </label>
 
-                <InputNumber
+                <Stepper
                     inputId="raceToStepper"
                     v-model="settingsStore.settings.raceTo"
-                    showButtons buttonLayout="horizontal"
                     :min="1" :max="maxRaceEnv"
-                    prefix="Race to "
-                    :inputStyle="{ 'text-align': 'center', 'font-weight': 'bold' }">
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
+                    prefix="Race to " />
             </div>
 
             <div class="grid m-0">
@@ -195,20 +178,11 @@ onUpdated(() => {
                     Tables
                 </label>
 
-                <InputNumber
+                <Stepper
                     v-model="settingsStore.settings.tableCount"
-                    showButtons buttonLayout="horizontal"
                     :min="1" :max="Math.floor(settingsStore.settings.playerCount / 2)"
                     suffix=" table(s)"
-                    inputId="tablesStepper"
-                    inputClass="text-center font-bold">
-                    <template #incrementbuttonicon>
-                        <span class="pi pi-plus" />
-                    </template>
-                    <template #decrementbuttonicon>
-                        <span class="pi pi-minus" />
-                    </template>
-                </InputNumber>
+                    inputId="tablesStepper" />
             </div>
 
             <div class="p-fluid mb-2">
