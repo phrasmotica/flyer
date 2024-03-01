@@ -1,7 +1,18 @@
 import { computed, ref } from "vue"
-
-import { MoneySplit, type FlyerSettings, Format } from "../data/FlyerSettings"
 import type { MeterItem } from "primevue/metergroup"
+
+import { MoneySplit, type FlyerSettings, Format, RuleSet } from "../data/FlyerSettings"
+
+const rulesDetailsList = [
+    {
+        value: RuleSet.Blackball,
+        details: "foul gives a free shot and a visit with ball-in-hand behind the baulk line, skill shots are permitted",
+    },
+    {
+        value: RuleSet.International,
+        details: "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted",
+    },
+]
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
@@ -19,6 +30,8 @@ export const useSettings = (s: FlyerSettings) => {
     const raceSummary = computed(() => `Races to ${settings.value.raceTo}`)
 
     const rulesSummary = computed(() => `${settings.value.ruleSet} rules`)
+
+    const rulesDetails = computed(() => rulesDetailsList.find(s => s.value === settings.value.ruleSet)?.details || "???")
 
     const entryFeeSummary = computed(() => {
         return `£${settings.value.entryFee} entry fee => £${prizePot.value} pot`
@@ -64,6 +77,7 @@ export const useSettings = (s: FlyerSettings) => {
         drawSummary,
         raceSummary,
         rulesSummary,
+        rulesDetails,
         entryFeeSummary,
         prizePot,
         prizePotSummary,

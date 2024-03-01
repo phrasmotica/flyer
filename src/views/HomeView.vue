@@ -22,7 +22,10 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
-const { settings } = useSettings(settingsStore.settings)
+const {
+    settings,
+    rulesDetails,
+} = useSettings(settingsStore.settings)
 
 const showModal = ref(false)
 
@@ -92,7 +95,12 @@ const hideModal = () => {
 
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <div class="flex align-items-center justify-content-between mb-2">
+                <div class="mb-2">
+                    <!-- TODO: put this nicely under the dropdown in FlyerForm -->
+                    <strong>{{ settingsStore.settings.ruleSet }} rules</strong>&nbsp;<em>({{ rulesDetails }})</em>
+                </div>
+
+                <div class="flex align-items-center justify-content-between border-top-1 border-gray-200 mb-2">
                     <div>
                         Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
                     </div>
