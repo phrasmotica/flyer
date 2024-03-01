@@ -156,7 +156,7 @@ onUpdated(() => {
             </div>
 
             <div class="grid m-0">
-                <div class="col-12 md:col-6 mb-2 md:mb-0 p-0 p-fluid">
+                <div class="col-12 md:col-6 mb-0 p-0 p-fluid">
                     <div class="md:mr-1">
                         <LabelledDropdown
                             label="Format"
