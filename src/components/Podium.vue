@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import LightsCalculator from "./LightsCalculator.vue"
+
 import { useSettings } from "../composables/useSettings"
 
 import type { Player } from "../data/Player"
@@ -50,6 +52,11 @@ const getRoundName = (result: Result) => {
     const round = flyerStore.rounds.find(r => r.fixtures.some(f => f.id === result.id))
     return round?.name || "UNKNOWN"
 }
+
+const gbp = new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+})
 </script>
 
 <template>
@@ -61,7 +68,7 @@ const getRoundName = (result: Result) => {
             <p v-if="prizeMonies.length > 0" class="m-0 text-xl">
                 who wins
                 <span class="font-bold">
-                    &pound;{{ prizeMonies[0] }}
+                    {{ gbp.format(prizeMonies[0]) }}
                 </span>
             </p>
         </div>
@@ -82,9 +89,13 @@ const getRoundName = (result: Result) => {
         <p v-if="prizeMonies.length > 1" class="m-0">
             {{ getOpponentName(winner, winnerResults[0]) }} wins
             <span class="font-bold">
-                &pound;{{ prizeMonies[1] }}
+                {{ gbp.format(prizeMonies[1]) }}
             </span>
         </p>
+
+        <div class="border-top-1 mt-1 pt-1">
+            <LightsCalculator />
+        </div>
     </div>
 
     <div v-else>
