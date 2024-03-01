@@ -39,6 +39,7 @@ const isKnockout = computed(() => settingsStore.settings.format === Format.Knock
 </script>
 
 <template>
+    <!-- TODO: use a tabbed menu instead? -->
     <FlyerFormSection header="Players">
         <div class="p-fluid mb-2 md:hidden">
             <InputNumber
