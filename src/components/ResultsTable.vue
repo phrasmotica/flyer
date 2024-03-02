@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import LightsCalculator from "./LightsCalculator.vue"
-
 import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 
@@ -115,8 +113,4 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
     <h4 v-if="incompleteCount > 0">
         <em>{{ incompleteCount }} player(s) have incomplete results!</em>
     </h4>
-
-    <div class="border-top-1 mt-1 pt-1">
-        <LightsCalculator />
-    </div>
 </template>

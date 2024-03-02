@@ -4,6 +4,7 @@ import { useRouter } from "vue-router"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
+import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
@@ -68,6 +69,10 @@ const hideGoToSetupModal = () => {
             <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
 
             <Podium v-if="flyerStore.settings.format === Format.Knockout" />
+
+            <div class="border-top-1 mt-1 pt-1">
+                <LightsCalculator />
+            </div>
 
             <ConfirmModal
                 :visible="showGoToSetupModal"

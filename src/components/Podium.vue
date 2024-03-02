@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import LightsCalculator from "./LightsCalculator.vue"
-
 import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 
@@ -90,10 +88,6 @@ const getRoundName = (result: Result) => {
                 {{ gbp(prizeMonies[1]) }}
             </span>
         </p>
-
-        <div class="border-top-1 mt-1 pt-1">
-            <LightsCalculator />
-        </div>
     </div>
 
     <div v-else>
