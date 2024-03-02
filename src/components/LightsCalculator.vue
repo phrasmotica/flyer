@@ -14,7 +14,7 @@ const flyerStore = useFlyerStore()
 
 const { estimatedCost } = useSettings(flyerStore.settings)
 
-const lightsCost = ref(estimatedCost)
+const lightsCost = ref(estimatedCost.value)
 </script>
 
 <template>
