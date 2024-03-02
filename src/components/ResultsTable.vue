@@ -66,6 +66,17 @@ const getDraws = (player: string, results: Result[]) => results.filter(r => isDr
 
 const getLosses = (player: string, results: Result[]) => results.filter(r => getLoser(r) === player).length
 
+const getFrameDifference = (playerId: string, results: Result[]) => {
+    const played = results.filter(r => hasPlayed(r, playerId))
+    return played.map(r => {
+        const playerScore = r.scores.find(s => s.playerId === playerId)!
+        const otherScore = r.scores.find(s => s.playerId !== playerId)!
+
+        // assume a two-player match
+        return playerScore.score - otherScore.score
+    }).reduce((x, y) => x + y)
+}
+
 const isIncomplete = (player: string, results: Result[]) => {
     return results.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
 }
@@ -77,6 +88,7 @@ const tableData = computed(() => {
         wins: getWins(p.id, flyerStore.results),
         draws: getDraws(p.id, flyerStore.results),
         losses: getLosses(p.id, flyerStore.results),
+        diff: getFrameDifference(p.id, flyerStore.results),
         incomplete: isIncomplete(p.id, flyerStore.results),
     }))
 
@@ -119,10 +131,11 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         </Column>
 
         <Column field="name" header="Name"></Column>
-        <Column v-if="props.isInProgress" field="played" header="Played"></Column>
-        <Column field="wins" header="Won"></Column>
-        <Column v-if="settings.allowDraws" field="draws" header="Drew"></Column>
-        <Column field="losses" header="Lost"></Column>
+        <Column v-if="props.isInProgress" field="played" header="P"></Column>
+        <Column field="wins" header="W"></Column>
+        <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
+        <Column field="losses" header="L"></Column>
+        <Column field="diff" header="+/-"></Column>
     </DataTable>
 
     <p v-if="winner && prizeMonies.length > 0" class="m-0 text-center text-xl">
