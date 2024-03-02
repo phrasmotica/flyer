@@ -74,7 +74,7 @@ const items = ref<MenuItem[]>([
         icon: 'pi pi-pound',
         command: _ => section.value = Section.Prizes,
     },
-]);
+])
 
 const isKnockout = computed(() => settingsStore.settings.format === Format.Knockout)
 

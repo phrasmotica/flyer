@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue"
 import { useRouter } from "vue-router"
+import type { MenuItem } from "primevue/menuitem"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PrizePotSummary from "../components/PrizePotSummary.vue"
-// import RoundRobinTable from "../components/RoundRobinTable.vue"
+import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
@@ -16,7 +17,7 @@ import { useFlyerStore } from "../stores/flyer"
 
 enum Display {
     Fixtures = "Fixtures",
-    HeadToHead = "Head-to-Head",
+    Standings = "Standings",
 }
 
 const router = useRouter()
@@ -49,26 +50,21 @@ const showFinishModal = ref(false)
 const showInfoModal = ref(false)
 const showAbandonModal = ref(false)
 
+const items = ref<MenuItem[]>([
+    {
+        icon: 'pi pi-calendar',
+        command: _ => display.value = Display.Fixtures,
+    },
+    {
+        icon: 'pi pi-chart-bar',
+        command: _ => display.value = Display.Standings,
+    },
+])
+
 onMounted(() => {
     if (isInProgress.value) {
         resumeClock()
     }
-})
-
-const progressText = computed(() => {
-    if (hasStarted.value) {
-        if (hasFinished.value) {
-            return "Finished"
-        }
-
-        if (isComplete.value) {
-            return "Completed"
-        }
-
-        return "In progress"
-    }
-
-    return "Ready to start"
 })
 
 const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
@@ -130,29 +126,17 @@ onUnmounted(() => {
 <template>
     <PageTemplate>
         <template #content>
-            <div class="border-bottom-1 pb-1">
-                <h1>{{ settings.name }} - Fixtures</h1>
+            <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
+                <h1>{{ settings.name }}</h1>
 
-                <div class="flex align-items-end justify-content-between">
-                    <p class="m-0 text-lg font-italic">{{ progressText }}</p>
-
-                    <Clock :elapsedSeconds="clockDisplay" />
-                </div>
+                <Clock :elapsedSeconds="clockDisplay" />
             </div>
 
-            <!-- <div class="p-fluid">
-                <SelectButton v-model="display" :options="[Display.Fixtures, Display.HeadToHead]" :allowEmpty="false" aria-labelledby="basic" />
-            </div> -->
+            <TabMenu class="mb-2" :model="items" />
 
             <FixtureList v-if="display === Display.Fixtures" />
 
-            <!-- <RoundRobinTable v-if="display === Display.HeadToHead"
-                :players="actualPlayers"
-                :raceTo="raceTo"
-                :rounds="rounds"
-                :results="results"
-                @start="startFixture"
-                @updateResult="updateResult" /> -->
+            <ResultsTable v-if="display === Display.Standings" isInProgress />
 
             <ConfirmModal
                 :visible="showFinishModal"

@@ -8,6 +8,10 @@ import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 
+const props = defineProps<{
+    isInProgress?: boolean
+}>()
+
 const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
@@ -79,6 +83,10 @@ const tableData = computed(() => {
 })
 
 const rowClass = (data: any) => {
+    if (props.isInProgress) {
+        return ""
+    }
+
     return [
         {
             'bg-primary': !data.incomplete && data.rank === 1,
@@ -110,7 +118,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <span class="font-bold">{{ gbp(prizeMonies[0]) }}</span>
     </p>
 
-    <h4 v-if="incompleteCount > 0">
+    <h4 v-if="!props.isInProgress && incompleteCount > 0">
         <em>{{ incompleteCount }} player(s) have incomplete results!</em>
     </h4>
 </template>
