@@ -2,6 +2,7 @@
 import { computed, onUnmounted, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
+import PlayerScoreInput from "./PlayerScoreInput.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
@@ -167,28 +168,22 @@ onUnmounted(() => {
         </div>
 
         <div v-else-if="hasStarted" id="score-inputs" class="mb-2">
-            <Clock :elapsedSeconds="elapsedSeconds" />
+            <div class="mb-2">
+                <Clock :elapsedSeconds="elapsedSeconds" />
+            </div>
 
-            <div v-for="id, i in players" class="flex flex-column md:flex-row md:align-items-center justify-content-between mb-2">
-                <div class="font-bold">
-                    {{ flyerStore.getPlayerName(id) }}
-                </div>
+            <div class="grid m-0">
+                <PlayerScoreInput
+                    class="col-6"
+                    :playerId="players[0]"
+                    :score="scores[0]"
+                    @setScore="v => setScore(0, v)" />
 
-                <div class="md:ml-3">
-                    <InputNumber
-                        showButtons
-                        buttonLayout="horizontal"
-                        :modelValue="scores[i]"
-                        :min="0" :max="flyerStore.settings.raceTo"
-                        @update:modelValue="v => setScore(i, v)">
-                        <template #incrementbuttonicon>
-                            <span class="pi pi-plus" />
-                        </template>
-                        <template #decrementbuttonicon>
-                            <span class="pi pi-minus" />
-                        </template>
-                    </InputNumber>
-                </div>
+                <PlayerScoreInput
+                    class="col-6"
+                    :playerId="players[1]"
+                    :score="scores[1]"
+                    @setScore="v => setScore(1, v)" />
             </div>
         </div>
 
