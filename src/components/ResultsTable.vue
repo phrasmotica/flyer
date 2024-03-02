@@ -101,6 +101,12 @@ const tableData = computed(() => {
             return q.losses - p.losses
         }
 
+        if (p.diff !== q.diff) {
+            return q.diff - p.diff
+        }
+
+        // TODO: give 3 points for a win, 1 for a draw, etc?
+
         return 0
     }).map((p, i) => ({ rank: i + 1, ...p }))
 })
