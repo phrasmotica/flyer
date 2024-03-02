@@ -23,6 +23,14 @@ const {
 
 const winner = computed(() => flyerStore.winner)
 
+const hasPlayed = (r: Result, playerId: string) => {
+    if (!r.startTime || !r.finishTime) {
+        return false
+    }
+
+    return r.scores.some(s => s.playerId === playerId)
+}
+
 const getWinner = (r: Result) => {
     if (!r.finishTime || isDraw(r)) {
         return null
@@ -50,6 +58,8 @@ const getLoser = (r: Result) => {
     return minScore.playerId
 }
 
+const getPlayed = (player: string, results: Result[]) => results.filter(r => hasPlayed(r, player)).length
+
 const getWins = (player: string, results: Result[]) => results.filter(r => getWinner(r) === player).length
 
 const getDraws = (player: string, results: Result[]) => results.filter(r => isDraw(r) && r.scores.some(s => s.playerId === player)).length
@@ -63,6 +73,7 @@ const isIncomplete = (player: string, results: Result[]) => {
 const tableData = computed(() => {
     const data = flyerStore.players.map(p => ({
         name: p.name,
+        played: getPlayed(p.id, flyerStore.results),
         wins: getWins(p.id, flyerStore.results),
         draws: getDraws(p.id, flyerStore.results),
         losses: getLosses(p.id, flyerStore.results),
@@ -108,6 +119,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         </Column>
 
         <Column field="name" header="Name"></Column>
+        <Column v-if="props.isInProgress" field="played" header="Played"></Column>
         <Column field="wins" header="Won"></Column>
         <Column v-if="settings.allowDraws" field="draws" header="Drew"></Column>
         <Column field="losses" header="Lost"></Column>
