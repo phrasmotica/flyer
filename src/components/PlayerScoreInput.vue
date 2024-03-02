@@ -6,6 +6,7 @@ import { useFlyerStore } from "../stores/flyer"
 const props = defineProps<{
     playerId: string
     score: number
+    finished?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -27,7 +28,11 @@ watch(props, () => {
             {{ flyerStore.getPlayerName(props.playerId) }}
         </div>
 
-        <InputNumber
+        <div v-if="props.finished" class="text-4xl font-bold">
+            {{ score }}
+        </div>
+
+        <InputNumber v-else
             showButtons
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"

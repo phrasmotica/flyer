@@ -157,19 +157,9 @@ onUnmounted(() => {
         v-model:visible="visible"
         :header="header"
         @hide="hide">
-        <div v-if="hasStarted && hasFinished" class="mb-2">
-            <Clock :elapsedSeconds="durationSeconds!" />
-
-            <div class="flex flex-column md:flex-row md:align-items-center justify-content-between">
-                <div v-for="id, i in players" class="font-bold">
-                    {{ flyerStore.getPlayerName(id) }}: {{ scores[i] }}
-                </div>
-            </div>
-        </div>
-
-        <div v-else-if="hasStarted" id="score-inputs" class="mb-2">
+        <div v-if="hasStarted" id="score-inputs" class="mb-2">
             <div class="mb-2">
-                <Clock :elapsedSeconds="elapsedSeconds" />
+                <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" />
             </div>
 
             <div class="grid m-0">
@@ -177,12 +167,14 @@ onUnmounted(() => {
                     class="col-6"
                     :playerId="players[0]"
                     :score="scores[0]"
+                    :finished="hasFinished"
                     @setScore="v => setScore(0, v)" />
 
                 <PlayerScoreInput
                     class="col-6"
                     :playerId="players[1]"
                     :score="scores[1]"
+                    :finished="hasFinished"
                     @setScore="v => setScore(1, v)" />
             </div>
         </div>
