@@ -74,7 +74,7 @@ const getFrameDifference = (playerId: string, results: Result[]) => {
 
         // assume a two-player match
         return playerScore.score - otherScore.score
-    }).reduce((x, y) => x + y)
+    }).reduce((x, y) => x + y, 0)
 }
 
 const isIncomplete = (player: string, results: Result[]) => {
