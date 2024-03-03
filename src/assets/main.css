@@ -30,7 +30,29 @@ a,
   }
 }
 
+.p-button.p-button-secondary, .p-button-group.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button {
+  transition: color 0.5s, background-color 0.5s;
+}
+
 .p-button.p-button-danger, .p-button-group.p-button-danger > .p-button, .p-splitbutton.p-button-danger > .p-button {
   background-color: red;
   border-color: red;
+}
+
+.p-dialog {
+  border-color: var(--color-background)!important;
+}
+
+.p-dialog-header, .p-dialog-content {
+  transition: color 0.5s, background-color 0.5s;
+  color: var(--color-text);
+  background-color: var(--color-background)!important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .p-button.p-button-secondary, .p-button-group.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button {
+    color: #f1f5f9;
+    background-color: #475569!important;
+    border-color: #475569!important;
+  }
 }
