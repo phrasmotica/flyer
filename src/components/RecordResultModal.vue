@@ -162,18 +162,12 @@ onUnmounted(() => {
 
             <div class="grid m-0">
                 <PlayerScoreInput
+                    v-for="p, i in players"
                     class="col-6"
-                    :playerId="players[0]"
-                    :score="scores[0]"
+                    :playerId="p"
+                    :score="scores[i]"
                     :finished="hasFinished"
-                    @setScore="v => setScore(0, v)" />
-
-                <PlayerScoreInput
-                    class="col-6"
-                    :playerId="players[1]"
-                    :score="scores[1]"
-                    :finished="hasFinished"
-                    @setScore="v => setScore(1, v)" />
+                    @setScore="v => setScore(i, v)" />
             </div>
         </div>
 
