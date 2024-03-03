@@ -36,7 +36,7 @@ const toggle = () => {
         <div>
             <i v-if="status === RoundStatus.Waiting" class="pi pi-question-circle ml-2" />
             <i v-if="status === RoundStatus.Ready" class="pi pi-clock ml-2" />
-            <i v-if="status === RoundStatus.InProgress" class="pi pi-circle ml-2" />
+            <i v-if="status === RoundStatus.InProgress" class="pi pi-spin pi-spinner ml-2" />
             <i v-if="status === RoundStatus.Finished" class="pi pi-check-circle ml-2" />
         </div>
     </div>
