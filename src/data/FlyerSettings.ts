@@ -9,6 +9,7 @@ export interface FlyerSettings {
     requireCompletedRounds: boolean
     allowDraws: boolean
     allowEarlyFinish: boolean
+    tieBreaker: TieBreaker
     entryFeeRequired: boolean
     entryFee: number
     moneySplit: MoneySplit
@@ -16,6 +17,7 @@ export interface FlyerSettings {
     name: string
 }
 
+// TODO: store enum members as numeric values, and compute the names elsewhere
 export enum Format {
     Knockout = "Knockout",
     RoundRobin = "Round Robin",
@@ -24,6 +26,10 @@ export enum Format {
 export enum RuleSet {
     International = "International",
     Blackball = "Blackball",
+}
+
+export enum TieBreaker {
+    HeadToHead = "Head-to-Head",
 }
 
 export enum MoneySplit {

@@ -14,7 +14,7 @@ import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
-import { Format, MoneySplit, RuleSet } from "../data/FlyerSettings"
+import { Format, MoneySplit, RuleSet, TieBreaker } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
 
@@ -149,6 +149,16 @@ onUpdated(() => {
                             label="Rules"
                             v-model="settingsStore.settings.ruleSet"
                             :options="[RuleSet.Blackball, RuleSet.International]" />
+                    </div>
+                </div>
+
+                <div v-if="settingsStore.settings.format === Format.RoundRobin"
+                    class="col-12 md:col-6 p-0 p-fluid">
+                    <div class="md:mr-1">
+                        <LabelledDropdown
+                            label="Tie Breaker"
+                            v-model="settingsStore.settings.tieBreaker"
+                            :options="[TieBreaker.HeadToHead]" />
                     </div>
                 </div>
             </div>
