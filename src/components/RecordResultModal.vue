@@ -204,14 +204,14 @@ onUnmounted(() => {
                 :disabled="disableStart"
                 @click="startFixture" />
 
-            <div class="flex gap-2 mb-2">
-                <Button v-if="isInProgress"
+            <div v-if="isInProgress" class="flex gap-2 mb-2">
+                <Button
                     type="button"
                     label="Update"
                     severity="info"
                     @click="() => updateScores(false)" />
 
-                <Button v-if="isInProgress"
+                <Button
                     type="button"
                     label="Finish"
                     :disabled="disableFinish"
