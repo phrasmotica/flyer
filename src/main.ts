@@ -23,6 +23,7 @@ import MeterGroup from 'primevue/metergroup'
 import SelectButton from "primevue/selectbutton"
 import Slider from "primevue/slider"
 import TabMenu from 'primevue/tabmenu'
+import Textarea from 'primevue/textarea'
 
 import App from './App.vue'
 import router from './router'
@@ -62,5 +63,6 @@ app.component("MeterGroup", MeterGroup)
 app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
 app.component("TabMenu", TabMenu)
+app.component("Textarea", Textarea)
 
 app.mount('#app')

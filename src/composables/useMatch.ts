@@ -8,6 +8,7 @@ export const useMatch = (name: string, f: Result) => {
     const result = ref(f)
     const scores = ref(f.scores.map(r => r.score))
     const runouts = ref(f.scores.map(r => r.runouts))
+    const comment = ref(f.comment)
 
     const startTime = computed(() => result.value.startTime)
     const players = computed(() => result.value.scores.map(r => r.playerId))
@@ -59,6 +60,7 @@ export const useMatch = (name: string, f: Result) => {
 
         scores.value = result.value.scores.map(r => r.score)
         runouts.value = result.value.scores.map(r => r.runouts)
+        comment.value = result.value.comment
 
         if (result.value.startTime) {
             clock.resume()
@@ -84,6 +86,7 @@ export const useMatch = (name: string, f: Result) => {
         result,
         scores,
         runouts,
+        comment,
         players,
         elapsedSeconds,
         hasStarted,

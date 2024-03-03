@@ -29,6 +29,7 @@ const {
     result,
     scores,
     runouts,
+    comment,
     players,
     elapsedSeconds,
     hasStarted,
@@ -67,6 +68,8 @@ const startFixture = () => {
 }
 
 const updateScores = (finish: boolean) => {
+    flyerStore.updateComment(result.value.id, comment.value)
+
     const newScores = players.value.map((id, i) => <Score>{
         playerId: id,
         score: scores.value[i],
@@ -176,6 +179,20 @@ onUnmounted(() => {
                     :finished="hasFinished"
                     @setScore="v => setScore(i, v)"
                     @setRunouts="v => setRunouts(i, v)" />
+            </div>
+
+            <div v-if="!hasFinished" class="flex p-fluid mt-2">
+                <Textarea
+                    class="text-xs md:text-sm"
+                    rows="3"
+                    placeholder="Add a comment..."
+                    v-model="comment" />
+            </div>
+
+            <div v-else-if="comment" class="flex p-fluid mt-2">
+                <p class="m-0 text-xs md:text-sm">
+                    {{ comment }}
+                </p>
             </div>
         </div>
 

@@ -136,6 +136,15 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
+    const updateComment = (resultId: string, comment: string) => {
+        for (const r of flyer.value!.rounds) {
+            const idx = r.fixtures.findIndex(f => f.id === resultId)
+            if (idx >= 0) {
+                r.fixtures[idx].comment = comment
+            }
+        }
+    }
+
     const updateScores = (resultId: string, scores: Score[], finish: boolean) => {
         for (const r of flyer.value!.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === resultId)
@@ -229,6 +238,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         getPlayerName,
         start,
         startFixture,
+        updateComment,
         updateScores,
         generateNextRound,
         finish,
