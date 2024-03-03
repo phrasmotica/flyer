@@ -83,11 +83,14 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (settings.value.moneySplit === MoneySplit.SeventyThirty) {
-            return [roundX(prizePot.value * 0.7, 5), roundX(prizePot.value * 0.3, 5)]
+            const winnerPrize = roundX(prizePot.value * 0.7, 5)
+            return [winnerPrize, prizePot.value - winnerPrize]
         }
 
         if (settings.value.moneySplit === MoneySplit.SixtyTwentyFiveFifteen) {
-            return [roundX(prizePot.value * 0.6, 5), roundX(prizePot.value * 0.25, 5), roundX(prizePot.value * 0.15, 5)]
+            const winnerPrize = roundX(prizePot.value * 0.6, 5)
+            const runnerUpPrize = roundX(prizePot.value * 0.25, 5)
+            return [winnerPrize, runnerUpPrize, prizePot.value - winnerPrize - runnerUpPrize]
         }
 
         return [prizePot.value]
