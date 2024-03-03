@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
 import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
-
-import { TieBreaker } from "../data/FlyerSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     isInProgress?: boolean
 }>()
+
+const { greaterOrEqual } = useBreakpoints(breakpointsPrimeFlex)
 
 const { gbp } = useCurrency()
 
@@ -43,6 +44,8 @@ const tableData = computed(() => standings.value.tableData)
 const tieBrokenPlayers = computed(() => standings.value.tieBrokenPlayers)
 
 const incompleteCount = tableData.value.filter(d => d.incomplete).length
+
+const isMedium = computed(() => greaterOrEqual("md").value)
 </script>
 
 <template>
@@ -60,7 +63,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
         <Column field="losses" header="L"></Column>
         <Column field="diff" header="+/-"></Column>
-        <Column v-if="settings.tieBreaker === TieBreaker.Runouts" field="runouts" header="R/O"></Column>
+        <Column v-if="isMedium" field="runouts" header="R/O"></Column>
     </DataTable>
 
     <h4 v-if="!props.isInProgress && incompleteCount > 0">
