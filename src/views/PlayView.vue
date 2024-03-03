@@ -6,8 +6,8 @@ import type { MenuItem } from "primevue/menuitem"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
+import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import PrizePotSummary from "../components/PrizePotSummary.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -18,6 +18,7 @@ import { useFlyerStore } from "../stores/flyer"
 enum Display {
     Fixtures = "Fixtures",
     Standings = "Standings",
+    Info = "Info",
 }
 
 const router = useRouter()
@@ -30,7 +31,6 @@ const {
     hasStarted,
     hasFinished,
     isInProgress,
-    isComplete,
     readyForNextRound,
     pauseClock,
     resumeClock,
@@ -39,15 +39,16 @@ const {
 const {
     settings,
     formatSummary,
+    formatDetails,
     drawSummary,
     raceSummary,
     rulesSummary,
+    rulesDetails,
 } = useSettings(flyerStore.settings)
 
 const display = ref(Display.Fixtures)
 
 const showFinishModal = ref(false)
-const showInfoModal = ref(false)
 const showAbandonModal = ref(false)
 
 const items = ref<MenuItem[]>([
@@ -58,6 +59,10 @@ const items = ref<MenuItem[]>([
     {
         icon: 'pi pi-chart-bar',
         command: _ => display.value = Display.Standings,
+    },
+    {
+        icon: 'pi pi-info-circle',
+        command: _ => display.value = Display.Info,
     },
 ])
 
@@ -104,8 +109,6 @@ const hideFinishModal = () => {
     showFinishModal.value = false
 }
 
-const hideInfoModal = () => showInfoModal.value = false
-
 const abandon = () => {
     flyerStore.clear()
 
@@ -138,6 +141,8 @@ onUnmounted(() => {
 
             <ResultsTable v-if="display === Display.Standings" isInProgress />
 
+            <InfoList v-if="display === Display.Info" />
+
             <ConfirmModal
                 :visible="showFinishModal"
                 header="Finish Flyer"
@@ -147,40 +152,6 @@ onUnmounted(() => {
                 cancelLabel="No"
                 @confirm="finish"
                 @hide="hideFinishModal" />
-
-            <Dialog
-                modal
-                class="mx-4"
-                v-model:visible="showInfoModal"
-                :header="settings.name + ' - Info'"
-                @hide="hideInfoModal">
-                <div class="p-fluid mb-2">
-                    <h4 class="font-bold">Rules</h4>
-
-                    <ul class="m-0">
-                        <li>
-                            {{ formatSummary }}
-                            <span v-if="drawSummary">
-                                <em>({{ drawSummary }})</em>
-                            </span>
-                        </li>
-                        <li>{{ raceSummary }}</li>
-                        <li>{{ rulesSummary }}</li>
-                    </ul>
-                </div>
-
-                <div v-if="settings.entryFeeRequired" class="p-fluid mb-2">
-                    <PrizePotSummary :settings="flyerStore.settings" />
-                </div>
-
-                <div class="p-fluid">
-                    <Button
-                        type="button"
-                        label="Close"
-                        severity="secondary"
-                        @click="hideInfoModal" />
-                </div>
-            </Dialog>
 
             <ConfirmModal
                 :visible="showAbandonModal"
@@ -207,12 +178,6 @@ onUnmounted(() => {
                 :label="finishButtonText"
                 :disabled="!settings.allowEarlyFinish && flyerStore.remainingCount > 0"
                 @click="confirmFinish" />
-
-            <Button
-                class="mb-2"
-                label="Info"
-                severity="info"
-                @click="() => showInfoModal = true" />
 
             <Button
                 v-if="!hasFinished"
