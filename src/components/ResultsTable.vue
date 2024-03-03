@@ -24,7 +24,8 @@ const winner = computed(() => flyerStore.winner)
 
 const {
     tableData,
-} = useStandings(flyerStore.results, flyerStore.players)
+    tieBrokenPlayers,
+} = useStandings(flyerStore.results, flyerStore.players, flyerStore.settings)
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {
@@ -45,12 +46,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 <template>
     <!-- TODO: ensure table does not need to scroll sideways on narrow screens -->
     <DataTable size="small" :value="tableData" :rowClass="rowClass">
-        <Column header="#">
-            <template #body="slotProps">
-                {{ slotProps.index + 1 }}
-            </template>
-        </Column>
-
+        <Column header="#" field="rank"></Column>
         <Column field="name" header="Name"></Column>
         <Column v-if="props.isInProgress" field="played" header="P"></Column>
         <Column field="wins" header="W"></Column>
@@ -59,12 +55,17 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <Column field="diff" header="+/-"></Column>
     </DataTable>
 
+    <h4 v-if="!props.isInProgress && incompleteCount > 0">
+        <em>{{ incompleteCount }} player(s) have incomplete results!</em>
+    </h4>
+
+    <p v-if="tieBrokenPlayers.length > 1" class="m-0">
+        <!-- TODO: put asterisks next to names of players that have been tie-broken -->
+        <em>{{ tieBrokenPlayers.length }} player(s) have been tie-broken via {{ flyerStore.settings.tieBreaker }}</em>
+    </p>
+
     <p v-if="winner && prizeMonies.length > 0" class="m-0 text-center text-xl">
         {{ winner.name }} wins
         <span class="font-bold">{{ gbp(prizeMonies[0]) }}</span>
     </p>
-
-    <h4 v-if="!props.isInProgress && incompleteCount > 0">
-        <em>{{ incompleteCount }} player(s) have incomplete results!</em>
-    </h4>
 </template>

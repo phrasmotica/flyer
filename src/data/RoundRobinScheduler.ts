@@ -26,6 +26,9 @@ export class RoundRobinScheduler implements IScheduler {
             throw "Fixtures have already been generated!"
         }
 
+        // TODO: allow generating multiple many lots of fixtures, i.e. everyone
+        // plays against each other two, three, four times...
+
         let attempts = 0
 
         const oddPlayerCount = players.length % 2 !== 0
