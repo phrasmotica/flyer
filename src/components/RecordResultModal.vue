@@ -152,6 +152,7 @@ onUnmounted(() => {
 <template>
     <Dialog
         modal
+        class="mx-4"
         v-model:visible="visible"
         :header="header"
         @hide="hide">

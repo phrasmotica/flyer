@@ -150,7 +150,7 @@ onUnmounted(() => {
 
             <Dialog
                 modal
-                class="w-full mx-4"
+                class="mx-4"
                 v-model:visible="showInfoModal"
                 :header="settings.name + ' - Info'"
                 @hide="hideInfoModal">
