@@ -66,6 +66,8 @@ const hideGoToSetupModal = () => {
                 <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
             </div>
 
+            <!-- TODO: allow viewing results in a different tab -->
+
             <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
 
             <Podium v-if="flyerStore.settings.format === Format.Knockout" />
