@@ -150,10 +150,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <!-- TODO: make the dialog's width better on different screen sizes -->
     <Dialog
         modal
-        class="w-full mx-4"
         v-model:visible="visible"
         :header="header"
         @hide="hide">
