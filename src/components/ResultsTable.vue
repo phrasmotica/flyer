@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue"
-
 import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
@@ -19,8 +17,6 @@ const {
     settings,
     prizeMonies,
 } = useSettings(flyerStore.settings)
-
-const winner = computed(() => flyerStore.winner)
 
 const {
     tableData,
@@ -64,10 +60,23 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <em>{{ tieBrokenPlayers.length }} player(s) have been tie-broken via {{ flyerStore.settings.tieBreaker }}</em>
     </p>
 
-    <p v-if="winner && prizeMonies.length > 0" class="m-0 text-center text-xl">
-        {{ winner.name }} wins
+    <p v-if="tableData[0] && prizeMonies.length > 0" class="m-0 text-center text-xl">
+        {{ tableData[0].name }} wins
         <span class="font-bold">{{ gbp(prizeMonies[0]) }}</span>
     </p>
+
+    <div v-if="prizeMonies.length > 1" class="border-top-1 mt-1 pt-1">
+        <p class="m-0">
+            Other prize money:
+            <span v-for="_, i in prizeMonies.slice(1)">
+                <span v-if="i > 0">, </span>
+                {{ tableData[i + 1].name }} wins
+                <span class="font-bold">
+                    {{ gbp(prizeMonies[i + 1]) }}
+                </span>
+            </span>
+        </p>
+    </div>
 </template>
 
 <style>
