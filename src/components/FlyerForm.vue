@@ -42,6 +42,11 @@ watch(() => settingsStore.settings.playerCount, () => {
     if (settingsStore.settings.tableCount > Math.floor(settingsStore.settings.playerCount / 2)) {
         settingsStore.settings.tableCount = Math.floor(settingsStore.settings.playerCount / 2)
     }
+
+    if (settingsStore.settings.playerCount === 2) {
+        // TODO: disable the other money split options if this happens
+        settingsStore.settings.moneySplit = MoneySplit.WinnerTakesAll
+    }
 })
 
 watch(() => settingsStore.settings.format, () => {
