@@ -68,7 +68,7 @@ const items = ref<MenuItem[]>([
         command: _ => section.value = Section.Players,
     },
     {
-        icon: 'pi pi-cog',
+        icon: 'pi pi-book',
         command: _ => section.value = Section.Settings,
     },
     {
