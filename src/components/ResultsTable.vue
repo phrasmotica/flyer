@@ -49,7 +49,12 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
     <!-- TODO: ensure table does not need to scroll sideways on narrow screens -->
     <DataTable size="small" :value="tableData" :rowClass="rowClass">
         <Column header="#" field="rank"></Column>
-        <Column field="name" header="Name"></Column>
+        <Column field="name" header="Name">
+            <template #body="slotData">
+                {{ slotData.data.name }}
+                <span v-if="tieBrokenPlayers.includes(slotData.data.playerId)">*</span>
+            </template>
+        </Column>
         <Column v-if="props.isInProgress" field="played" header="P"></Column>
         <Column field="wins" header="W"></Column>
         <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
