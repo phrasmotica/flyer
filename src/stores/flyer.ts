@@ -52,6 +52,10 @@ export const useFlyerStore = defineStore("flyer", () => {
     })
 
     const winner = computed(() => {
+        if (!flyer.value?.startTime || !flyer.value.finishTime) {
+            return null
+        }
+
         const finalRound = rounds.value[rounds.value.length - 1]
         if (finalRound) {
             const final = finalRound.fixtures[finalRound.fixtures.length - 1]
