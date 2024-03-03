@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import PrizePotSummary from "./PrizePotSummary.vue"
+
 import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
