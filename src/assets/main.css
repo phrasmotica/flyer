@@ -29,3 +29,8 @@ a,
     place-items: center;
   }
 }
+
+.p-button.p-button-danger, .p-button-group.p-button-danger > .p-button, .p-splitbutton.p-button-danger > .p-button {
+  background-color: red;
+  border-color: red;
+}
