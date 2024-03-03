@@ -110,8 +110,12 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         })
 
         const tableData = records
-            .sort(sortRecords)
             .sort((p, q) => {
+                const firstSort = sortRecords(p, q)
+                if (firstSort !== 0) {
+                    return firstSort
+                }
+
                 if (settings.value.tieBreaker === TieBreaker.HeadToHead) {
                     // TODO: account for multiple head-to-head matches?
                     const match = results.value.find(
