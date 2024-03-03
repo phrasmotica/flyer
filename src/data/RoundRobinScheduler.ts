@@ -6,6 +6,7 @@ import type { Player } from "./Player"
 import type { Round } from "./Round"
 
 export class RoundRobinScheduler implements IScheduler {
+    generationAttempts: number = 50
     frameTimeEstimateMins: number = 7
 
     private generatedRounds?: Round[]
@@ -49,7 +50,7 @@ export class RoundRobinScheduler implements IScheduler {
         // 7. repeat steps 1-5 until the overall pool has fewer than 2 players
         // 8. add the round to the list of rounds
         let r = 0
-        while (r < numRounds && attempts < 10) {
+        while (r < numRounds && attempts < this.generationAttempts) {
             const round = <Round>{
                 index: r + 1,
                 name: "Round " + (r + 1),
@@ -57,7 +58,7 @@ export class RoundRobinScheduler implements IScheduler {
                 fixtures: [],
             }
 
-            console.log(round.name)
+            console.debug(round.name)
 
             let retry = false
 
@@ -65,7 +66,7 @@ export class RoundRobinScheduler implements IScheduler {
 
             if (oddPlayerCount) {
                 // omit a random player that hasn't been omitted yet
-                console.log("Omitting: " + overallPool[omissionIndexes[r]].name)
+                console.debug("Omitting: " + overallPool[omissionIndexes[r]].name)
                 overallPool.splice(omissionIndexes[r], 1)
             }
 
@@ -77,7 +78,7 @@ export class RoundRobinScheduler implements IScheduler {
                 const possibleOpponents = overallPool.filter(p => !existingOpponents.includes(p.id) && playerA.id !== p.id)
                 if (possibleOpponents.length <= 0) {
                     // just keep retrying for now... address this deterministically later!
-                    console.log("Retrying round...")
+                    console.debug("Retrying round...")
                     retry = true
                     break
                 }
@@ -98,15 +99,16 @@ export class RoundRobinScheduler implements IScheduler {
             r++
         }
 
-        if (attempts >= 10) {
-            console.log("Failed to generate rounds after 10 attempts!")
+        if (attempts >= this.generationAttempts) {
+            // TODO: if this happens, notify the user and let them retry
+            console.debug(`Failed to generate rounds after ${this.generationAttempts} attempts!`)
         }
 
         return this.generatedRounds
     }
 
     private addFixture(round: Round, players: Player[], parentFixtureIds: string[]) {
-        console.log(players.map(p => p.name).join(" v "))
+        console.debug(players.map(p => p.name).join(" v "))
 
         round.fixtures.push({
             id: uuidv4(),
