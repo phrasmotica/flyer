@@ -6,19 +6,23 @@ import { useFlyerStore } from "../stores/flyer"
 const props = defineProps<{
     playerId: string
     score: number
+    runouts: number
     finished?: boolean
 }>()
 
 const emit = defineEmits<{
     setScore: [score: number]
+    setRunouts: [score: number]
 }>()
 
 const flyerStore = useFlyerStore()
 
 const score = ref(props.score)
+const runouts = ref(props.runouts)
 
 watch(props, () => {
     score.value = props.score
+    runouts.value = props.runouts
 })
 </script>
 
@@ -46,5 +50,41 @@ watch(props, () => {
                 <span class="pi pi-minus" />
             </template>
         </InputNumber>
+
+        <div class="text-xs mt-2">
+            Runouts
+        </div>
+
+        <InputNumber
+            class="runout-stepper"
+            showButtons
+            inputClass="w-2rem px-1 text-center"
+            buttonLayout="horizontal"
+            :modelValue="runouts"
+            :min="0" :max="score"
+            @update:modelValue="v => emit('setRunouts', v)">
+            <template #incrementbuttonicon>
+                <span class="pi pi-plus" />
+            </template>
+            <template #decrementbuttonicon>
+                <span class="pi pi-minus" />
+            </template>
+        </InputNumber>
     </div>
 </template>
+
+<style>
+.runout-stepper > * {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.runout-stepper > button.p-inputnumber-button {
+    width: unset;
+    padding: 0rem 0.5rem;
+}
+
+.runout-stepper > button.p-inputnumber-button > span.pi {
+    font-size: 0.75rem;
+}
+</style>

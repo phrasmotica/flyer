@@ -167,6 +167,7 @@ onUnmounted(() => {
                     class="col-6"
                     :playerId="p"
                     :score="scores[i]"
+                    :runouts="0"
                     :finished="hasFinished"
                     @setScore="v => setScore(i, v)" />
             </div>
