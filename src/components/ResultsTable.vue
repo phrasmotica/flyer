@@ -5,6 +5,8 @@ import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
 
+import { TieBreaker } from "../data/FlyerSettings"
+
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
@@ -53,6 +55,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
         <Column field="losses" header="L"></Column>
         <Column field="diff" header="+/-"></Column>
+        <Column v-if="settings.tieBreaker === TieBreaker.Runouts" field="runouts" header="R/O"></Column>
     </DataTable>
 
     <h4 v-if="!props.isInProgress && incompleteCount > 0">
@@ -60,8 +63,8 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
     </h4>
 
     <p v-if="tieBrokenPlayers.length > 1" class="m-0">
-        <!-- TODO: put asterisks next to names of players that have been tie-broken -->
-        <em>{{ tieBrokenPlayers.length }} players have been tie-broken via {{ flyerStore.settings.tieBreaker }}</em>
+        <!-- TODO: remove this? Unnecessary if we have all the data in the table... -->
+        <em>* these players have been tie-broken via {{ flyerStore.settings.tieBreaker }}</em>
     </p>
 
     <p v-if="tableData[0] && prizeMonies.length > 0" class="m-0 text-center text-xl">
