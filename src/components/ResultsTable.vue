@@ -69,3 +69,17 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
         <span class="font-bold">{{ gbp(prizeMonies[0]) }}</span>
     </p>
 </template>
+
+<style>
+.p-datatable-thead th {
+    transition: color 0.5s, background-color 0.5s;
+    color: var(--color-text);
+    background-color: var(--color-background)!important;
+}
+
+.p-datatable-tbody td {
+    transition: color 0.5s, background-color 0.5s;
+    color: var(--color-text);
+    background-color: var(--color-background)!important;
+}
+</style>
