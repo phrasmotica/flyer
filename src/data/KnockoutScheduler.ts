@@ -169,6 +169,7 @@ export class KnockoutScheduler implements IScheduler {
             })),
             startTime: null,
             finishTime: null,
+            comment: "",
         }
 
         for (let i = fixture.scores.length; i < playerCount; i++) {
