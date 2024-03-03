@@ -31,6 +31,7 @@ export enum RuleSet {
 export enum TieBreaker {
     HeadToHead = "Head-to-Head",
     Runouts = "Runouts",
+    PlayOff = "Play-Off",
 }
 
 export enum MoneySplit {
