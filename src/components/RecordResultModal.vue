@@ -28,6 +28,7 @@ const { isBusy } = useFlyer(flyerStore.flyer)
 const {
     result,
     scores,
+    runouts,
     players,
     elapsedSeconds,
     hasStarted,
@@ -35,6 +36,7 @@ const {
     isInProgress,
     durationSeconds,
     setScore,
+    setRunouts,
     pauseClock,
     resumeClock,
 } = useMatch("modal", props.result)
@@ -52,7 +54,7 @@ const round = computed(() => flyerStore.getRound(result.value.id)!)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
-watch([scores], () => {
+watch([scores, runouts], () => {
     blurActive()
 })
 
@@ -66,6 +68,7 @@ const updateScores = (finish: boolean) => {
     const newScores = players.value.map((id, i) => <Score>{
         playerId: id,
         score: scores.value[i],
+        runouts: runouts.value[i],
         isBye: false,
     })
 
@@ -167,9 +170,10 @@ onUnmounted(() => {
                     class="col-6"
                     :playerId="p"
                     :score="scores[i]"
-                    :runouts="0"
+                    :runouts="runouts[i]"
                     :finished="hasFinished"
-                    @setScore="v => setScore(i, v)" />
+                    @setScore="v => setScore(i, v)"
+                    @setRunouts="v => setRunouts(i, v)" />
             </div>
         </div>
 

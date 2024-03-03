@@ -9,5 +9,6 @@ export interface Result {
 export interface Score {
     playerId: string
     score: number
+    runouts: number
     isBye: boolean
 }

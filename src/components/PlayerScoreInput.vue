@@ -6,7 +6,7 @@ import { useFlyerStore } from "../stores/flyer"
 const props = defineProps<{
     playerId: string
     score: number
-    runouts: number
+    runouts: number // TODO: encapsulate score and runouts in a single object
     finished?: boolean
 }>()
 
@@ -55,13 +55,17 @@ watch(props, () => {
             Runouts
         </div>
 
-        <InputNumber
+        <div v-if="props.finished">
+            {{ runouts }}
+        </div>
+
+        <InputNumber v-else
             class="runout-stepper"
             showButtons
             inputClass="w-2rem px-1 text-center"
             buttonLayout="horizontal"
             :modelValue="runouts"
-            :min="0" :max="score"
+            :min="0" :max="flyerStore.settings.raceTo"
             @update:modelValue="v => emit('setRunouts', v)">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />

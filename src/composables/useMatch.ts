@@ -7,6 +7,7 @@ import type { Result } from "../data/Result"
 export const useMatch = (name: string, f: Result) => {
     const result = ref(f)
     const scores = ref(f.scores.map(r => r.score))
+    const runouts = ref(f.scores.map(r => r.runouts))
 
     const startTime = computed(() => result.value.startTime)
     const players = computed(() => result.value.scores.map(r => r.playerId))
@@ -57,6 +58,7 @@ export const useMatch = (name: string, f: Result) => {
         updateClock()
 
         scores.value = result.value.scores.map(r => r.score)
+        runouts.value = result.value.scores.map(r => r.runouts)
 
         if (result.value.startTime) {
             clock.resume()
@@ -71,12 +73,17 @@ export const useMatch = (name: string, f: Result) => {
         scores.value = scores.value.map((s, i) => i === index ? score : s)
     }
 
+    const setRunouts = (index: number, r: number) => {
+        runouts.value = runouts.value.map((s, i) => i === index ? r : s)
+    }
+
     const pauseClock = clock.pause
     const resumeClock = clock.resume
 
     return {
         result,
         scores,
+        runouts,
         players,
         elapsedSeconds,
         hasStarted,
@@ -85,6 +92,7 @@ export const useMatch = (name: string, f: Result) => {
         durationSeconds,
         winner,
         setScore,
+        setRunouts,
         pauseClock,
         resumeClock,
     }
