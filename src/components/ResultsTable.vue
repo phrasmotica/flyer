@@ -57,7 +57,7 @@ const incompleteCount = tableData.value.filter(d => d.incomplete).length
 
     <p v-if="tieBrokenPlayers.length > 1" class="m-0">
         <!-- TODO: put asterisks next to names of players that have been tie-broken -->
-        <em>{{ tieBrokenPlayers.length }} player(s) have been tie-broken via {{ flyerStore.settings.tieBreaker }}</em>
+        <em>{{ tieBrokenPlayers.length }} players have been tie-broken via {{ flyerStore.settings.tieBreaker }}</em>
     </p>
 
     <p v-if="tableData[0] && prizeMonies.length > 0" class="m-0 text-center text-xl">
