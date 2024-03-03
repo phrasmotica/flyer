@@ -163,7 +163,7 @@ onUpdated(() => {
                         <LabelledDropdown
                             label="Tie Breaker"
                             v-model="settingsStore.settings.tieBreaker"
-                            :options="[TieBreaker.HeadToHead]" />
+                            :options="[TieBreaker.HeadToHead, TieBreaker.Runouts]" />
                     </div>
                 </div>
             </div>

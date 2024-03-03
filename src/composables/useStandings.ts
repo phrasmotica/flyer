@@ -70,7 +70,12 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
     }
 
     const getPlayerScore = (playerId: string, result: Result) => {
-        return result.scores.find(s => s.playerId === playerId)?.score
+        return result.scores.find(s => s.playerId === playerId)
+    }
+
+    const getRunouts = (playerId: string) => {
+        const played = results.value.filter(r => hasPlayed(r, playerId))
+        return played.map(r => getPlayerScore(playerId, r)!.runouts).reduce((x, y) => x + y, 0)
     }
 
     const sortRecords = (p: PlayerRecord, q: PlayerRecord) => {
@@ -93,7 +98,7 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
             )
 
             if (match) {
-                const scoreDiff = getPlayerScore(q.playerId, match)! - getPlayerScore(p.playerId, match)!
+                const scoreDiff = getPlayerScore(q.playerId, match)!.score - getPlayerScore(p.playerId, match)!.score
                 if (scoreDiff !== 0) {
                     if (!tieBrokenPlayers.value.includes(p.playerId)) {
                         tieBrokenPlayers.value = [...tieBrokenPlayers.value, p.playerId]
@@ -105,6 +110,20 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
 
                     return scoreDiff
                 }
+            }
+        }
+
+        if (settings.value.tieBreaker === TieBreaker.Runouts) {
+            if (p.runouts !== q.runouts) {
+                if (!tieBrokenPlayers.value.includes(p.playerId)) {
+                    tieBrokenPlayers.value = [...tieBrokenPlayers.value, p.playerId]
+                }
+
+                if (!tieBrokenPlayers.value.includes(q.playerId)) {
+                    tieBrokenPlayers.value = [...tieBrokenPlayers.value, q.playerId]
+                }
+
+                return q.runouts - p.runouts
             }
         }
 
@@ -124,6 +143,7 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
             draws: getDraws(p.id),
             losses: getLosses(p.id),
             diff: getFrameDifference(p.id),
+            runouts: getRunouts(p.id),
             incomplete: isIncomplete(p.id),
         })
 
@@ -146,5 +166,6 @@ interface PlayerRecord {
     draws: number
     losses: number
     diff: number
+    runouts: number
     incomplete: boolean
 }

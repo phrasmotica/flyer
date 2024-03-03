@@ -29,8 +29,8 @@ export enum RuleSet {
 }
 
 export enum TieBreaker {
-    // TODO: allow tie breaking on number of runouts
     HeadToHead = "Head-to-Head",
+    Runouts = "Runouts",
 }
 
 export enum MoneySplit {
