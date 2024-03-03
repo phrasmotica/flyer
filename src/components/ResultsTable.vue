@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue"
+
 import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
@@ -19,8 +21,7 @@ const {
 } = useSettings(flyerStore.settings)
 
 const {
-    tableData,
-    tieBrokenPlayers,
+    standings,
 } = useStandings(flyerStore.results, flyerStore.players, flyerStore.settings)
 
 const rowClass = (data: any) => {
@@ -35,6 +36,9 @@ const rowClass = (data: any) => {
         },
     ]
 }
+
+const tableData = computed(() => standings.value.tableData)
+const tieBrokenPlayers = computed(() => standings.value.tieBrokenPlayers)
 
 const incompleteCount = tableData.value.filter(d => d.incomplete).length
 </script>

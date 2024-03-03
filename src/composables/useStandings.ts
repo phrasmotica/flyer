@@ -9,8 +9,6 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
     const players = ref(p)
     const settings = ref(s)
 
-    const tieBrokenPlayers = ref<string[]>([])
-
     const hasPlayed = (r: Result, playerId: string) => {
         if (!r.startTime || !r.finishTime) {
             return false
@@ -91,51 +89,15 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
             return q.diff - p.diff
         }
 
-        if (settings.value.tieBreaker === TieBreaker.HeadToHead) {
-            // TODO: account for multiple head-to-head matches?
-            const match = results.value.find(
-                f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
-            )
-
-            if (match) {
-                const scoreDiff = getPlayerScore(q.playerId, match)!.score - getPlayerScore(p.playerId, match)!.score
-                if (scoreDiff !== 0) {
-                    if (!tieBrokenPlayers.value.includes(p.playerId)) {
-                        tieBrokenPlayers.value = [...tieBrokenPlayers.value, p.playerId]
-                    }
-
-                    if (!tieBrokenPlayers.value.includes(q.playerId)) {
-                        tieBrokenPlayers.value = [...tieBrokenPlayers.value, q.playerId]
-                    }
-
-                    return scoreDiff
-                }
-            }
-        }
-
-        if (settings.value.tieBreaker === TieBreaker.Runouts) {
-            if (p.runouts !== q.runouts) {
-                if (!tieBrokenPlayers.value.includes(p.playerId)) {
-                    tieBrokenPlayers.value = [...tieBrokenPlayers.value, p.playerId]
-                }
-
-                if (!tieBrokenPlayers.value.includes(q.playerId)) {
-                    tieBrokenPlayers.value = [...tieBrokenPlayers.value, q.playerId]
-                }
-
-                return q.runouts - p.runouts
-            }
-        }
-
         // TODO: give 3 points for a win, 1 for a draw, etc?
 
         return 0
     }
 
-    const tableData = computed(() => {
-        tieBrokenPlayers.value = []
+    const standings = computed(() => {
+        const tieBrokenPlayers = <string[]>[]
 
-        const data = players.value.map(p => <PlayerRecord>{
+        const records = players.value.map(p => <PlayerRecord>{
             playerId: p.id,
             name: p.name,
             played: getPlayed(p.id),
@@ -147,14 +109,59 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
             incomplete: isIncomplete(p.id),
         })
 
-        return data.sort(sortRecords).map((p, i) => ({ rank: i + 1, ...p }))
+        const tableData = records
+            .sort(sortRecords)
+            .sort((p, q) => {
+                if (settings.value.tieBreaker === TieBreaker.HeadToHead) {
+                    // TODO: account for multiple head-to-head matches?
+                    const match = results.value.find(
+                        f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
+                    )
+
+                    if (match) {
+                        const scoreDiff = getPlayerScore(q.playerId, match)!.score - getPlayerScore(p.playerId, match)!.score
+                        if (scoreDiff !== 0) {
+                            if (!tieBrokenPlayers.includes(p.playerId)) {
+                                tieBrokenPlayers.push(p.playerId)
+                            }
+
+                            if (!tieBrokenPlayers.includes(q.playerId)) {
+                                tieBrokenPlayers.push(q.playerId)
+                            }
+
+                            return scoreDiff
+                        }
+                    }
+                }
+
+                if (settings.value.tieBreaker === TieBreaker.Runouts) {
+                    if (p.runouts !== q.runouts) {
+                        if (!tieBrokenPlayers.includes(p.playerId)) {
+                            tieBrokenPlayers.push(p.playerId)
+                        }
+
+                        if (!tieBrokenPlayers.includes(q.playerId)) {
+                            tieBrokenPlayers.push(q.playerId)
+                        }
+
+                        return q.runouts - p.runouts
+                    }
+                }
+
+                return 0
+            })
+            .map((p, i) => ({ rank: i + 1, ...p }))
+
+        return {
+            tableData,
+            tieBrokenPlayers,
+        }
     })
 
     return {
         results,
-        tieBrokenPlayers,
 
-        tableData,
+        standings,
     }
 }
 
