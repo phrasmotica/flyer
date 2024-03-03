@@ -60,8 +60,8 @@ const hideGoToSetupModal = () => {
 <template>
     <PageTemplate>
         <template #content>
-            <div class="flex flex-column md:flex-row justify-content-between md:align-items-end border-bottom-1 mb-1">
-                <h1>{{ flyerStore.settings.name }} - Results</h1>
+            <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
+                <h1>{{ flyerStore.settings.name }}</h1>
 
                 <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
             </div>

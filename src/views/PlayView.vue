@@ -38,12 +38,6 @@ const {
 
 const {
     settings,
-    formatSummary,
-    formatDetails,
-    drawSummary,
-    raceSummary,
-    rulesSummary,
-    rulesDetails,
 } = useSettings(flyerStore.settings)
 
 const display = ref(Display.Fixtures)
