@@ -69,6 +69,10 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         return results.value.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
     }
 
+    const getPlayerScore = (playerId: string, result: Result) => {
+        return result.scores.find(s => s.playerId === playerId)?.score
+    }
+
     const sortRecords = (p: PlayerRecord, q: PlayerRecord) => {
         if (p.wins !== q.wins) {
             return q.wins - p.wins
@@ -85,19 +89,22 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         if (settings.value.tieBreaker === TieBreaker.HeadToHead) {
             // TODO: account for multiple head-to-head matches?
             const match = results.value.find(
-                f => f.scores.some(s => s.playerId === p.playerId) && f.scores.some(s => s.playerId === q.playerId)
+                f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
             )
 
             if (match) {
-                if (!tieBrokenPlayers.value.includes(p.playerId)) {
-                    tieBrokenPlayers.value = [...tieBrokenPlayers.value, p.playerId]
-                }
+                const scoreDiff = getPlayerScore(q.playerId, match)! - getPlayerScore(p.playerId, match)!
+                if (scoreDiff !== 0) {
+                    if (!tieBrokenPlayers.value.includes(p.playerId)) {
+                        tieBrokenPlayers.value = [...tieBrokenPlayers.value, p.playerId]
+                    }
 
-                if (!tieBrokenPlayers.value.includes(q.playerId)) {
-                    tieBrokenPlayers.value = [...tieBrokenPlayers.value, q.playerId]
-                }
+                    if (!tieBrokenPlayers.value.includes(q.playerId)) {
+                        tieBrokenPlayers.value = [...tieBrokenPlayers.value, q.playerId]
+                    }
 
-                return match.scores.find(s => s.playerId === q.playerId)!.score - match.scores.find(s => s.playerId === p.playerId)!.score
+                    return scoreDiff
+                }
             }
         }
 
