@@ -1,6 +1,6 @@
 import { computed, ref } from "vue"
 
-import { type FlyerSettings, TieBreaker } from "../data/FlyerSettings"
+import { type FlyerSettings, TieBreaker, Format } from "../data/FlyerSettings"
 import type { Player } from "../data/Player"
 import type { Result } from "../data/Result"
 
@@ -146,7 +146,9 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
     }
 
     const requiresPlayOff = computed(() => {
-        return settings.value.tieBreaker === TieBreaker.PlayOff && playOffs.value.length > 0
+        return settings.value.tieBreaker === TieBreaker.PlayOff
+            && settings.value.format === Format.RoundRobin
+            && playOffs.value.length > 0
     })
 
     const recordsAreEqual = (r: PlayerRecord, s: PlayerRecord) => {
