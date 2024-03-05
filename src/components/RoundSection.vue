@@ -21,6 +21,7 @@ const { getRoundStatus } = useFlyer(flyerStore.flyer)
 
 const showContent = ref(!props.hidden)
 
+// TODO: create useRound() composable
 const status = computed(() => getRoundStatus(props.roundIndex))
 
 const toggle = () => {

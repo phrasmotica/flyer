@@ -23,6 +23,7 @@ const {
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
+// TODO: create a composable for storing these
 const score = ref(props.score)
 const runouts = ref(props.runouts)
 

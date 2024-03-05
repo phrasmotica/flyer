@@ -12,6 +12,7 @@ export const useMatch = (name: string, f: Result) => {
 
     const startTime = computed(() => result.value.startTime)
     const players = computed(() => result.value.scores.map(r => r.playerId))
+    const isWalkover = computed(() => result.value.scores.some(s => s.isBye))
 
     const hasStarted = computed(() => !!result.value.startTime)
     const hasFinished = computed(() => !!result.value.finishTime)
@@ -88,6 +89,7 @@ export const useMatch = (name: string, f: Result) => {
         runouts,
         comment,
         players,
+        isWalkover,
         elapsedSeconds,
         hasStarted,
         hasFinished,

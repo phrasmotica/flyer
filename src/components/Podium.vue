@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue"
-
 import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
@@ -16,24 +14,13 @@ const flyerStore = useFlyerStore()
 
 const {
     getPlayerName,
+    winner,
+    winnerResults,
 } = useFlyer(flyerStore.flyer)
 
 const {
     prizeMonies,
 } = useSettings(flyerStore.settings)
-
-const winner = computed(() => flyerStore.winner)
-
-const winnerResults = computed(() => {
-    if (!winner.value) {
-        return []
-    }
-
-    const results = flyerStore.results.filter(r => r.scores.some(s => s.playerId === winner.value!.id))
-
-    // ensures reverse chronological order
-    return results.reverse()
-})
 
 const isWalkover = (result: Result) => result.scores.some(s => s.isBye)
 
@@ -77,6 +64,7 @@ const getRoundName = (result: Result) => {
         <ul class="m-0">
             <li v-for="f in winnerResults">
                 <span>
+                    <!-- TODO: put this in its own component -->
                     <span class="font-bold">{{ getScore(f) }}</span>
                     <span v-if="!isWalkover(f)">&nbsp;v {{ getOpponentName(winner, f) }}</span>
                     <span class="font-italic">&nbsp;({{ getRoundName(f) }})</span>

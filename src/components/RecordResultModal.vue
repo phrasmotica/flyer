@@ -157,6 +157,7 @@ const description = computed(() => result.value.scores.map(s => {
 const header = computed(() => `${round.value.name} - ${description.value}`)
 
 const hide = () => {
+    // TODO: reset changes to score/runouts
     emit('hide')
 }
 

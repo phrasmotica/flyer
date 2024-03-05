@@ -26,8 +26,7 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 
 const {
-    elapsedSeconds,
-    durationSeconds,
+    clockDisplay,
     hasStarted,
     hasFinished,
     isInProgress,
@@ -65,8 +64,6 @@ onMounted(() => {
         resumeClock()
     }
 })
-
-const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
 
 const finishButtonText = computed(() => {
     if (hasStarted.value && hasFinished.value) {

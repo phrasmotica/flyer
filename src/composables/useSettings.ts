@@ -71,6 +71,10 @@ export const useSettings = (s: FlyerSettings) => {
 
     const tieBreakerDetails = computed(() => tieBreakerDetailsList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
 
+    const isKnockout = computed(() => settings.value.format === Format.Knockout)
+
+    const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
+
     const estimatedDuration = computed(() => {
         switch (settings.value.format) {
             case Format.Knockout:
@@ -139,6 +143,8 @@ export const useSettings = (s: FlyerSettings) => {
         rulesDetails,
         tieBreakerSummary,
         tieBreakerDetails,
+        isKnockout,
+        isRandomDraw,
         estimatedDuration,
         estimatedCost,
         entryFeeSummary,

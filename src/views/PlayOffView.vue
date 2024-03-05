@@ -28,8 +28,7 @@ const flyerStore = useFlyerStore()
 const playOffStore = usePlayOffStore()
 
 const {
-    elapsedSeconds,
-    durationSeconds,
+    clockDisplay,
     hasStarted,
     hasFinished,
     isInProgress,
@@ -65,8 +64,6 @@ onMounted(() => {
         resumeClock()
     }
 })
-
-const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
 
 const finishButtonText = computed(() => {
     if (hasStarted.value && hasFinished.value) {

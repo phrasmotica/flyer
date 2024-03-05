@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref, watch } from "vue"
+import { onUpdated, ref, watch } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
 import CurrencyStepper from "./CurrencyStepper.vue"
@@ -30,7 +30,10 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const settingsStore = useSettingsStore()
 
-const { estimatedCost } = useSettings(settingsStore.settings)
+const {
+    estimatedCost,
+    isKnockout,
+} = useSettings(settingsStore.settings)
 
 const { gbp } = useCurrency()
 
@@ -80,8 +83,6 @@ const items = ref<MenuItem[]>([
         command: _ => section.value = Section.Prizes,
     },
 ])
-
-const isKnockout = computed(() => settingsStore.settings.format === Format.Knockout)
 
 onUpdated(() => {
     blurNumberInputs("form-content")

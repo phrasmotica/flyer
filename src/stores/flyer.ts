@@ -51,21 +51,6 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
     })
 
-    const winner = computed(() => {
-        if (!flyer.value?.startTime || !flyer.value.finishTime) {
-            return null
-        }
-
-        const finalRound = rounds.value[rounds.value.length - 1]
-        if (finalRound) {
-            const final = finalRound.fixtures[finalRound.fixtures.length - 1]
-            const id = getWinner(final).playerId
-            return players.value.find(p => p.id === id) || null
-        }
-
-        return null
-    })
-
     const start = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
         flyer.value = createFlyer(settings, scheduler, players)
     }
@@ -242,7 +227,6 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         currentRound,
         generationIsComplete,
         durationSeconds,
-        winner,
 
         start,
         startFixture,

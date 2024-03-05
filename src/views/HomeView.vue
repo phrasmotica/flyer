@@ -35,6 +35,7 @@ const {
 const showModal = ref(false)
 const entryFeesPaid = ref(false)
 
+// TODO: create useScreenSizes() composable
 const isSmall = computed(() => smallerOrEqual("sm").value)
 
 const start = () => {

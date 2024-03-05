@@ -12,7 +12,7 @@ import ResultsTable from "../components/ResultsTable.vue"
 import { useFlyer } from "../composables/useFlyer"
 import { useStandings } from "../composables/useStandings"
 
-import { Format, TieBreaker, createPlayOffSettings } from "../data/FlyerSettings"
+import { Format, createPlayOffSettings } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
@@ -35,8 +35,6 @@ const {
 
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
-
-const hasPlayedOff = computed(() => !nextPlayOff.value)
 
 const confirmGoToSetup = () => {
     if (alreadySaved.value) {
@@ -63,6 +61,8 @@ const confirmStartPlayOff = () => {
 }
 
 // TODO: encapsulate these computed properties in some composable
+const hasPlayedOff = computed(() => !nextPlayOff.value)
+
 const requiresPlayOff = computed(() => usesPlayOff.value && orderedPlayOffs.value.length > 0)
 
 const orderedPlayOffs = computed(() => {
@@ -73,6 +73,10 @@ const orderedPlayOffs = computed(() => {
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !playOffIsComplete(p.id))
     return remaining.length > 0 ? remaining[0] : null
+})
+
+const alreadySaved = computed(() => {
+    return flyerHistoryStore.pastFlyers.some(f => f.id === flyerStore.flyer.id)
 })
 
 const startPlayOff = () => {
@@ -94,16 +98,11 @@ const startPlayOff = () => {
     })
 }
 
-const alreadySaved = computed(() => {
-    return flyerHistoryStore.pastFlyers.some(f => f.id === flyerStore.flyer.id)
-})
-
 const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
 
 const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
 
 const save = () => {
-    // TODO: save play-off as part of the flyer object
     if (flyerStore.flyer && !alreadySaved.value) {
         flyerHistoryStore.add(flyerStore.flyer)
     }

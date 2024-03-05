@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed, watch } from "vue"
-
 import ScoreCell from "./ScoreCell.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
+import { useSettings } from "../composables/useSettings"
 
-import { Format } from "../data/FlyerSettings"
 import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -27,7 +25,15 @@ const {
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
-const { result, winner } = useMatch("card", props.result)
+const {
+    result,
+    winner,
+    isWalkover,
+} = useMatch("card", props.result)
+
+const {
+    isRandomDraw,
+} = useSettings(flyerStore.settings)
 
 const playerNameClass = (playerId: string) => {
     if (winner.value) {
@@ -40,14 +46,6 @@ const playerNameClass = (playerId: string) => {
 
     return ""
 }
-
-watch(props, () => {
-    result.value = props.result
-})
-
-const isRandomDraw = computed(() => flyerStore.settings.format === Format.Knockout && flyerStore.settings.randomlyDrawAllRounds)
-
-const isWalkover = computed(() => result.value.scores.some(s => s.isBye))
 
 const handleClick = () => {
     if (!isWalkover.value) {
