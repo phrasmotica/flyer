@@ -3,6 +3,7 @@ import VictoryText from "./VictoryText.vue"
 
 import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
+import { usePodium } from "../composables/usePodium"
 import { useSettings } from "../composables/useSettings"
 
 import type { Player } from "../data/Player"
@@ -16,10 +17,13 @@ const flyerStore = useFlyerStore()
 
 const {
     settings,
-    winner,
-    winnerResults,
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    winner,
+    winnerResults,
+} = usePodium(flyerStore.flyer)
 
 const {
     prizeMonies,

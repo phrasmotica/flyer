@@ -4,7 +4,6 @@ import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import type { Flyer } from "../data/Flyer"
 import { Format, TieBreaker } from "../data/FlyerSettings"
-import type { Result } from "../data/Result"
 
 export const useFlyer = (f: Flyer) => {
     const flyer = ref(f)
@@ -74,35 +73,7 @@ export const useFlyer = (f: Flyer) => {
             && settings.value.format === Format.RoundRobin
     })
 
-    const winner = computed(() => {
-        if (!flyer.value?.startTime || !flyer.value.finishTime) {
-            return null
-        }
-
-        const finalRound = rounds.value[rounds.value.length - 1]
-        if (finalRound) {
-            const final = finalRound.fixtures[finalRound.fixtures.length - 1]
-            const id = getWinner(final).playerId
-            return players.value.find(p => p.id === id) || null
-        }
-
-        return null
-    })
-
-    const winnerResults = computed(() => {
-        if (!winner.value) {
-            return []
-        }
-
-        const winnerResults = results.value.filter(r => r.scores.some(s => s.playerId === winner.value!.id))
-
-        // ensures reverse chronological order
-        return winnerResults.reverse()
-    })
-
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
-
-    const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
     const isBusy = (playerId: string) => {
         return flyer.value.rounds.flatMap(r => r.fixtures).some(f => {
@@ -193,8 +164,6 @@ export const useFlyer = (f: Flyer) => {
         durationMinutes,
         durationSeconds,
         usesPlayOff,
-        winner,
-        winnerResults,
         clockDisplay,
 
         isBusy,

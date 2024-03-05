@@ -3,6 +3,7 @@ import { computed, watch } from "vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
+import { usePodium } from "../composables/usePodium"
 
 import type { Result } from "../data/Result"
 
@@ -15,10 +16,13 @@ const props = defineProps<{
 const flyerStore = useFlyerStore()
 
 const {
-    winner,
     getRound,
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    winner,
+} = usePodium(flyerStore.flyer)
 
 const {
     result,
