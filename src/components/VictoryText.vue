@@ -40,7 +40,8 @@ const score = computed(() => {
         return "W/O"
     }
 
-    return scores.value.sort((a, b) => b - a).join("-")
+    const sortedScores = [...scores.value].sort((a, b) => b - a)
+    return sortedScores.join("-")
 })
 
 const opponentName = computed(() => getPlayerName(getOpponent(winner.value?.id || "")))

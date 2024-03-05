@@ -6,9 +6,6 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePodium } from "../composables/usePodium"
 import { useSettings } from "../composables/useSettings"
 
-import type { Player } from "../data/Player"
-import type { Result } from "../data/Result"
-
 import { useFlyerStore } from "../stores/flyer"
 
 const { gbp } = useCurrency()
@@ -17,26 +14,17 @@ const flyerStore = useFlyerStore()
 
 const {
     settings,
-    getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
 const {
     winner,
     winnerResults,
+    runnerUp,
 } = usePodium(flyerStore.flyer)
 
 const {
     prizeMonies,
 } = useSettings(settings.value)
-
-const getOpponentName = (player: Player, result: Result) => {
-    const opponentScore = result.scores.find(s => s.playerId !== player.id)
-    if (!opponentScore) {
-        return "UNKNOWN"
-    }
-
-    return getPlayerName(opponentScore.playerId)
-}
 </script>
 
 <template>
@@ -64,7 +52,7 @@ const getOpponentName = (player: Player, result: Result) => {
 
             <!-- TODO: show prize monies for ALL other recipients, creating a component for it -->
             <p class="m-0">
-                {{ getOpponentName(winner, winnerResults[0]) }} wins
+                {{ runnerUp!.name }} wins
                 <span class="font-bold">
                     {{ gbp(prizeMonies[1]) }}
                 </span>
