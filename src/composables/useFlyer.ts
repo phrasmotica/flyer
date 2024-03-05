@@ -16,10 +16,8 @@ export const useFlyer = (f: Flyer) => {
     const hasStarted = computed(() => !!flyer.value.startTime)
     const hasFinished = computed(() => !!flyer.value.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
-    const isComplete = computed(() => {
-        return flyer.value.rounds.flatMap(r => r.fixtures).every(x => x.startTime && x.finishTime)
-    })
 
+    const isComplete = computed(() => results.value.every(x => x.startTime && x.finishTime))
     const ongoingCount = computed(() => results.value.filter(f => f.startTime && !f.finishTime).length)
     const remainingCount = computed(() => results.value.filter(f => !f.finishTime).length)
 
@@ -86,27 +84,6 @@ export const useFlyer = (f: Flyer) => {
 
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
 
-    const getRoundStatus = (index: number) => {
-        const round = flyer.value.rounds.find(r => r.index === index)
-        if (!round) {
-            throw `Round ${index} not found!`
-        }
-
-        if (round.fixtures.every(f => f.startTime && f.finishTime)) {
-            return RoundStatus.Finished
-        }
-
-        if (round.fixtures.some(f => f.startTime)) {
-            return RoundStatus.InProgress
-        }
-
-        if (round.fixtures.every(f => f.scores.every(s => !!s.playerId))) {
-            return RoundStatus.Ready
-        }
-
-        return RoundStatus.Waiting
-    }
-
     const playOffIsComplete = (id: string) => {
         return flyer.value.playOffs.some(p => p.id === id)
     }
@@ -169,16 +146,8 @@ export const useFlyer = (f: Flyer) => {
         isBusy,
         getPlayerName,
         getRound,
-        getRoundStatus,
         playOffIsComplete,
         pauseClock,
         resumeClock,
     }
-}
-
-export enum RoundStatus {
-    Waiting,
-    Ready,
-    InProgress,
-    Finished,
 }

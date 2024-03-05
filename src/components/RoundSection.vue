@@ -1,28 +1,30 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 
-import { RoundStatus, useFlyer } from "../composables/useFlyer"
+import FixtureCard from "./FixtureCard.vue"
 
-import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { RoundStatus, useRound } from "../composables/useRound"
+
+import type { Result } from "../data/Result"
+import type { Round } from "../data/Round"
 
 const props = defineProps<{
-    name: string
-    roundIndex: number
-    hidden?: boolean
-    isPlayOff?: boolean
+    round: Round
+    highlightedResultId: string
 }>()
 
-const defaultFlyerStore = useFlyerStore()
-const playOffStore = usePlayOffStore()
+const emit = defineEmits<{
+    showResultModal: [result: Result]
+    highlight: [resultId: string]
+}>()
 
-const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
+const {
+    name,
+    fixtures,
+    status,
+} = useRound(props.round)
 
-const { getRoundStatus } = useFlyer(flyerStore.flyer)
-
-const showContent = ref(!props.hidden)
-
-// TODO: create useRound() composable
-const status = computed(() => getRoundStatus(props.roundIndex))
+const showContent = ref([RoundStatus.Ready, RoundStatus.InProgress].includes(status.value))
 
 const toggle = () => {
     // TODO: don't allow showing content if the round is waiting for a
@@ -36,7 +38,7 @@ const toggle = () => {
         class="flex align-items-baseline justify-content-between cursor-pointer"
         :class="[showContent && 'border-bottom-1']"
         @click="toggle">
-        <h3 class="font-bold">{{ props.name }}</h3>
+        <h3 class="font-bold">{{ name }}</h3>
 
         <div>
             <i v-if="status === RoundStatus.Waiting" class="pi pi-question-circle ml-2" />
@@ -47,6 +49,12 @@ const toggle = () => {
     </div>
 
     <div v-if="showContent">
-        <slot />
+        <div v-for="f, i in fixtures" class="py-1" :class="[i > 0 && 'border-gray-200 border-top-1']">
+            <FixtureCard
+                :result="f"
+                :highlightedResultId="props.highlightedResultId"
+                @showResultModal="emit('showResultModal', f)"
+                @highlight="emit('highlight', f.id)" />
+        </div>
     </div>
 </template>
