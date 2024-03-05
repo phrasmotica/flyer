@@ -3,6 +3,7 @@ import { computed, watch } from "vue"
 
 import ScoreCell from "./ScoreCell.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
 
 import { Format } from "../data/FlyerSettings"
@@ -21,6 +22,10 @@ const emit = defineEmits<{
 }>()
 
 const flyerStore = useFlyerStore()
+
+const {
+    getPlayerName,
+} = useFlyer(flyerStore.flyer)
 
 const { result, winner } = useMatch("card", props.result)
 
@@ -76,7 +81,7 @@ const handleNameClick = (id: string) => {
                 </span>
 
                 <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result.scores[0].playerId)">
-                    {{ flyerStore.getPlayerName(result.scores[0].playerId) }}
+                    {{ getPlayerName(result.scores[0].playerId) }}
                 </span>
 
                 <span v-else-if="result.parentFixtureIds[0] || isRandomDraw">
@@ -104,7 +109,7 @@ const handleNameClick = (id: string) => {
                 </span>
 
                 <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result.scores[1].playerId)">
-                    {{ flyerStore.getPlayerName(result.scores[1].playerId) }}
+                    {{ getPlayerName(result.scores[1].playerId) }}
                 </span>
 
                 <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">

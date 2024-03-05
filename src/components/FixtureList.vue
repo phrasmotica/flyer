@@ -10,9 +10,16 @@ import { RoundStatus, useFlyer } from "../composables/useFlyer"
 import type { Result } from "../data/Result"
 import type { Round } from "../data/Round"
 
-import { useFlyerStore } from "../stores/flyer"
+import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
-const flyerStore = useFlyerStore()
+const props = defineProps<{
+    isPlayOff?: boolean
+}>()
+
+const defaultFlyerStore = useFlyerStore()
+const playOffStore = usePlayOffStore()
+
+const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
     getRoundStatus,
@@ -50,7 +57,7 @@ const hideModal = () => {
 
 <template>
     <div v-for="r in flyerStore.rounds" class="my-1 px-2 border-1 border-round-md">
-        <RoundSection :name="r.name" :roundIndex="r.index" :hidden="shouldCollapse(r)">
+        <RoundSection :name="r.name" :roundIndex="r.index" :hidden="shouldCollapse(r)" :isPlayOff="props.isPlayOff">
             <div v-for="f, i in r.fixtures" class="py-1" :class="[i > 0 && 'border-gray-200 border-top-1']">
                 <FixtureCard
                     :result="f"
@@ -65,5 +72,6 @@ const hideModal = () => {
         v-if="selectedResult"
         :visible="showModal"
         :result="selectedResult"
+        :isPlayOff="props.isPlayOff"
         @hide="hideModal" />
 </template>

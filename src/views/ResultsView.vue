@@ -9,17 +9,34 @@ import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
-import { Format } from "../data/FlyerSettings"
+import { useFlyer } from "../composables/useFlyer"
+import { useStandings } from "../composables/useStandings"
 
-import { useFlyerStore } from "../stores/flyer"
+import { Format, createPlayOffSettings } from "../data/FlyerSettings"
+import { KnockoutScheduler } from "../data/KnockoutScheduler"
+
+import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
+const playOffStore = usePlayOffStore()
+
+const {
+    playOffIsComplete,
+} = useFlyer(flyerStore.flyer)
+
+const {
+    requiresPlayOff,
+    orderedPlayOffs,
+} = useStandings(flyerStore.results, flyerStore.players, flyerStore.settings)
 
 const showGoToSetupModal = ref(false)
+const showStartPlayOffModal = ref(false)
+
+const hasPlayedOff = computed(() => !nextPlayOff.value)
 
 const confirmGoToSetup = () => {
     if (alreadySaved.value) {
@@ -32,11 +49,40 @@ const confirmGoToSetup = () => {
 
 const goToSetup = () => {
     flyerStore.clear()
+    playOffStore.clear()
 
     hideGoToSetupModal()
 
     router.push({
         name: "setup",
+    })
+}
+
+const confirmStartPlayOff = () => {
+    showStartPlayOffModal.value = true
+}
+
+const nextPlayOff = computed(() => {
+    const remaining = orderedPlayOffs.value.filter(p => !playOffIsComplete(p.id))
+    return remaining.length > 0 ? remaining[0] : null
+})
+
+const startPlayOff = () => {
+    if (!nextPlayOff.value) {
+        console.debug("No play-offs remaining!")
+        return
+    }
+
+    playOffStore.start(
+        createPlayOffSettings(flyerStore.flyer, nextPlayOff.value),
+        new KnockoutScheduler(false),
+        nextPlayOff.value.players
+    )
+
+    hideStartPlayOffModal()
+
+    router.push({
+        name: "playOff",
     })
 }
 
@@ -46,7 +92,10 @@ const alreadySaved = computed(() => {
 
 const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
 
+const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
+
 const save = () => {
+    // TODO: save play-off as part of the flyer object
     if (flyerStore.flyer && !alreadySaved.value) {
         flyerHistoryStore.add(flyerStore.flyer)
     }
@@ -54,6 +103,10 @@ const save = () => {
 
 const hideGoToSetupModal = () => {
     showGoToSetupModal.value = false
+}
+
+const hideStartPlayOffModal = () => {
+    showStartPlayOffModal.value = false
 }
 </script>
 
@@ -66,13 +119,11 @@ const hideGoToSetupModal = () => {
                 <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
             </div>
 
-            <!-- TODO: allow viewing results in a different tab -->
-
             <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
 
             <Podium v-if="flyerStore.settings.format === Format.Knockout" />
 
-            <div class="border-top-1 mt-1 pt-1">
+            <div v-if="!requiresPlayOff" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />
             </div>
 
@@ -85,12 +136,28 @@ const hideGoToSetupModal = () => {
                 cancelLabel="No"
                 @confirm="goToSetup"
                 @hide="hideGoToSetupModal" />
+
+            <ConfirmModal
+                :visible="showStartPlayOffModal"
+                header="Start Play-Off"
+                :message="`Are you sure you want to start the ${nextPlayOff?.name || '(UNKNOWN)'}?`"
+                confirmLabel="Yes"
+                :confirmDisabled="false"
+                cancelLabel="No"
+                @confirm="startPlayOff"
+                @hide="hideStartPlayOffModal" />
         </template>
 
         <template #buttons>
-            <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
+            <div v-if="!hasPlayedOff && requiresPlayOff">
+                <Button :label="playOffButtonText" @click="confirmStartPlayOff" />
+            </div>
 
-            <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
+            <div v-else>
+                <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
+
+                <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
+            </div>
         </template>
     </PageTemplate>
 </template>

@@ -9,4 +9,5 @@ export interface Flyer {
     startTime: number | null
     finishTime: number | null
     rounds: Round[]
+    playOffs: Flyer[]
 }

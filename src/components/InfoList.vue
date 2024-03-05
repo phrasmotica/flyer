@@ -3,9 +3,11 @@ import PrizePotSummary from "./PrizePotSummary.vue"
 
 import { useSettings } from "../composables/useSettings"
 
-import { useFlyerStore } from "../stores/flyer"
+import { Format, type FlyerSettings } from "../data/FlyerSettings"
 
-const flyerStore = useFlyerStore()
+const props = defineProps<{
+    settings: FlyerSettings
+}>()
 
 const {
     settings,
@@ -15,7 +17,9 @@ const {
     raceSummary,
     rulesSummary,
     rulesDetails,
-} = useSettings(flyerStore.settings)
+    tieBreakerSummary,
+    tieBreakerDetails,
+} = useSettings(props.settings)
 </script>
 
 <template>
@@ -32,7 +36,11 @@ const {
         <strong>{{ rulesSummary }}</strong>&nbsp;<em>({{ rulesDetails }})</em>
     </div>
 
+    <div v-if="settings.format === Format.RoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong>{{ tieBreakerSummary }}</strong>&nbsp;<em>({{ tieBreakerDetails }})</em>
+    </div>
+
     <div v-if="settings.entryFeeRequired" class="pt-2 border-top-1 border-gray-200 mb-2">
-        <PrizePotSummary :settings="flyerStore.settings" />
+        <PrizePotSummary :settings="settings" />
     </div>
 </template>

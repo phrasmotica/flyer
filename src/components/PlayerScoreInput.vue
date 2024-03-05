@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 
+import { useFlyer } from "../composables/useFlyer"
+
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
@@ -17,6 +19,10 @@ const emit = defineEmits<{
 
 const flyerStore = useFlyerStore()
 
+const {
+    getPlayerName,
+} = useFlyer(flyerStore.flyer)
+
 const score = ref(props.score)
 const runouts = ref(props.runouts)
 
@@ -29,7 +35,7 @@ watch(props, () => {
 <template>
     <div class="flex flex-column align-items-center">
         <div class="font-bold">
-            {{ flyerStore.getPlayerName(props.playerId) }}
+            {{ getPlayerName(props.playerId) }}
         </div>
 
         <div v-if="props.finished" class="text-4xl font-bold">

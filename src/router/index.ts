@@ -4,6 +4,7 @@ import AdminView from "../views/AdminView.vue"
 import HistoryView from "../views/HistoryView.vue"
 import HomeView from "../views/HomeView.vue"
 import PlayView from "../views/PlayView.vue"
+import PlayOffView from "../views/PlayOffView.vue"
 import ResultsView from "../views/ResultsView.vue"
 import TestView from "../views/TestView.vue"
 
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/play',
       name: 'play',
       component: PlayView,
+    },
+    {
+      path: '/playOff',
+      name: 'playOff',
+      component: PlayOffView,
     },
     {
       path: '/results',

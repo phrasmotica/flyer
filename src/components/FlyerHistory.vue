@@ -51,6 +51,7 @@ const hideDeleteModal = () => {
 
 const isSelected = (f: Flyer) => selectedFlyer.value?.id === f.id
 
+// TODO: put this stuff inside a composable
 const getDuration = (f: Flyer) => {
     if (!f.startTime || !f.finishTime) {
         return "???"
@@ -79,6 +80,7 @@ const getWinnerName = (f: Flyer) => flyerHistoryStore.getWinner(f)?.name || "???
             </div>
 
             <div v-if="isSelected(f)" class="font-italic">
+                <!-- TODO: add info about any play-offs that happened -->
                 <div>
                     {{ f.settings.format }} between {{ f.players.length }} players, races to {{ f.settings.raceTo }}.&nbsp;
                     Took {{ getDuration(f) }} minute(s), won by {{ getWinnerName(f) }}.

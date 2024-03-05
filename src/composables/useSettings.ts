@@ -3,7 +3,7 @@ import type { MeterItem } from "primevue/metergroup"
 
 import { useCurrency } from "./useCurrency"
 
-import { MoneySplit, type FlyerSettings, Format, RuleSet } from "../data/FlyerSettings"
+import { MoneySplit, type FlyerSettings, Format, RuleSet, TieBreaker } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
@@ -31,6 +31,21 @@ const rulesDetailsList = [
     },
 ]
 
+const tieBreakerDetailsList = [
+    {
+        value: TieBreaker.HeadToHead,
+        details: "decided by the tied players' head-to-head records",
+    },
+    {
+        value: TieBreaker.PlayOff,
+        details: "decided by a race-to-1 knockout play-off between the tied players",
+    },
+    {
+        value: TieBreaker.Runouts,
+        details: "decided by the number of runouts made by the tied players",
+    },
+]
+
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
@@ -51,6 +66,10 @@ export const useSettings = (s: FlyerSettings) => {
     const rulesSummary = computed(() => `${settings.value.ruleSet} rules`)
 
     const rulesDetails = computed(() => rulesDetailsList.find(s => s.value === settings.value.ruleSet)?.details || "???")
+
+    const tieBreakerSummary = computed(() => `${settings.value.tieBreaker} tie-breaker`)
+
+    const tieBreakerDetails = computed(() => tieBreakerDetailsList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
 
     const estimatedDuration = computed(() => {
         switch (settings.value.format) {
@@ -118,6 +137,8 @@ export const useSettings = (s: FlyerSettings) => {
         raceSummary,
         rulesSummary,
         rulesDetails,
+        tieBreakerSummary,
+        tieBreakerDetails,
         estimatedDuration,
         estimatedCost,
         entryFeeSummary,

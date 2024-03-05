@@ -3,15 +3,19 @@ import { computed, ref } from "vue"
 
 import { RoundStatus, useFlyer } from "../composables/useFlyer"
 
-import { useFlyerStore } from "../stores/flyer"
+import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
 const props = defineProps<{
     name: string
     roundIndex: number
     hidden?: boolean
+    isPlayOff?: boolean
 }>()
 
-const flyerStore = useFlyerStore()
+const defaultFlyerStore = useFlyerStore()
+const playOffStore = usePlayOffStore()
+
+const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const { getRoundStatus } = useFlyer(flyerStore.flyer)
 

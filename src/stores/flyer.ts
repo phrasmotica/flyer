@@ -1,18 +1,18 @@
-import { v4 as uuidv4 } from "uuid"
-
 import { computed, ref } from "vue"
 import { useStorage } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 import { defineStore } from "pinia"
+import { v4 as uuidv4 } from "uuid"
 
 import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
+import type { Player } from "../data/Player"
 import type { Result, Score } from "../data/Result"
 import type { Round } from "../data/Round"
 
-export const useFlyerStore = defineStore("flyer", () => {
-    const flyer = useStorage<Flyer>("flyer", null, localStorage, {
+const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () => {
+    const flyer = useStorage<Flyer>(name, null, localStorage, {
         serializer: {
             read: v => JSON.parse(v) as Flyer,
             write: v => JSON.stringify(v),
@@ -66,44 +66,48 @@ export const useFlyerStore = defineStore("flyer", () => {
         return null
     })
 
-    const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
+    const start = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
+        flyer.value = createFlyer(settings, scheduler, players)
+    }
 
-    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
-
-    const start = (settings: FlyerSettings, scheduler: IScheduler) => {
-        const actualPlayerNames = settings.playerNames.slice(0, settings.playerCount)
-        const players = actualPlayerNames.map(n => ({
-            id: uuidv4(),
-            name: n,
-        }))
-
-        flyer.value = <Flyer>{
-            id: uuidv4(),
-            players,
-            settings,
-            startTime: null,
-            finishTime: null,
-            rounds: scheduler.generateFixtures(players),
+    const createFlyer = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
+        if (players.length <= 0) {
+            // use existing player entries if we can, else generate new ones
+            const actualPlayerNames = settings.playerNames.slice(0, settings.playerCount)
+            players = actualPlayerNames.map(n => ({
+                id: uuidv4(),
+                name: n,
+            }))
         }
 
-        flyer.value.startTime = Date.now()
+        const newFlyer = <Flyer>{
+            id: settings.playOffId || uuidv4(),
+            players,
+            settings,
+            startTime: Date.now(),
+            finishTime: null,
+            rounds: scheduler.generateFixtures(players),
+            playOffs: [],
+        }
 
-        for (const r of flyer.value.rounds) {
-            const walkovers = completeWalkovers(r)
+        for (const r of newFlyer.rounds) {
+            const walkovers = completeWalkovers(r, settings)
 
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
                 // with a bye in both slots
-                const didPropagate = tryPropagate(fixtureId, winnerId)
+                const didPropagate = tryPropagate(newFlyer, fixtureId, winnerId)
                 if (!didPropagate) {
                     // add winner to random draw pool for next round
                     playerPool.value = [...playerPool.value, winnerId]
                 }
             }
         }
+
+        return newFlyer
     }
 
-    const completeWalkovers = (round: Round) => {
+    const completeWalkovers = (round: Round, settings: FlyerSettings) => {
         const ids: [string, string][] = []
 
         for (let f of round.fixtures) {
@@ -119,6 +123,8 @@ export const useFlyerStore = defineStore("flyer", () => {
                 if (!winner) {
                     throw "No winner of walkover " + f.id + "!"
                 }
+
+                winner.score = settings.raceTo
 
                 ids.push([f.id, winner.playerId])
             }
@@ -154,7 +160,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                 if (finish) {
                     r.fixtures[idx].finishTime = Date.now()
 
-                    const didPropagate = tryPropagate(resultId, getWinner(r.fixtures[idx]).playerId)
+                    const didPropagate = tryPropagate(flyer.value, resultId, getWinner(r.fixtures[idx]).playerId)
                     if (!didPropagate) {
                         // add winner to random draw pool for next round
                         playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
@@ -201,8 +207,8 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
-    const tryPropagate = (fixtureId: string, winnerId: string) => {
-        for (const f of flyer.value!.rounds.flatMap(r => r.fixtures)) {
+    const tryPropagate = (flyer: Flyer, fixtureId: string, winnerId: string) => {
+        for (const f of flyer.rounds.flatMap(r => r.fixtures)) {
             const slotIndex = f.parentFixtureIds.indexOf(fixtureId)
             if (slotIndex >= 0) {
                 f.scores[slotIndex].playerId = winnerId
@@ -217,6 +223,10 @@ export const useFlyerStore = defineStore("flyer", () => {
         if (flyer.value && !flyer.value.finishTime) {
             flyer.value.finishTime = Date.now()
         }
+    }
+
+    const addPlayOff = (playOff: Flyer) => {
+        flyer.value.playOffs = [...flyer.value.playOffs, playOff]
     }
 
     const clear = () => flyer.value = null
@@ -234,14 +244,17 @@ export const useFlyerStore = defineStore("flyer", () => {
         durationSeconds,
         winner,
 
-        getRound,
-        getPlayerName,
         start,
         startFixture,
         updateComment,
         updateScores,
         generateNextRound,
         finish,
+        addPlayOff,
         clear,
     }
 })
+
+export const useFlyerStore = useFlyerStoreInternal()
+
+export const usePlayOffStore = useFlyerStoreInternal("playOff")

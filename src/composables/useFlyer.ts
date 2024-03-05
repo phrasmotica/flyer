@@ -7,6 +7,12 @@ import type { Flyer } from "../data/Flyer"
 export const useFlyer = (f: Flyer) => {
     const flyer = ref(f)
 
+    const results = computed(() => flyer.value.rounds.flatMap(r => r.fixtures))
+    const players = computed(() => flyer.value.players)
+    const settings = computed(() => flyer.value.settings)
+
+    const rounds = computed(() => flyer.value?.rounds ?? [])
+
     const hasStarted = computed(() => !!flyer.value.startTime)
     const hasFinished = computed(() => !!flyer.value.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
@@ -47,6 +53,10 @@ export const useFlyer = (f: Flyer) => {
         })
     }
 
+    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
+
+    const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
+
     const getRoundStatus = (index: number) => {
         const round = flyer.value.rounds.find(r => r.index === index)
         if (!round) {
@@ -66,6 +76,10 @@ export const useFlyer = (f: Flyer) => {
         }
 
         return RoundStatus.Waiting
+    }
+
+    const playOffIsComplete = (id: string) => {
+        return flyer.value.playOffs.some(p => p.id === id)
     }
 
     const computeDifference = () => differenceInSeconds(Date.now(), flyer.value.startTime || Date.now())
@@ -104,6 +118,9 @@ export const useFlyer = (f: Flyer) => {
     return {
         flyer,
 
+        results,
+        players,
+        settings,
         elapsedSeconds,
         hasStarted,
         hasFinished,
@@ -113,7 +130,10 @@ export const useFlyer = (f: Flyer) => {
         durationSeconds,
 
         isBusy,
+        getPlayerName,
+        getRound,
         getRoundStatus,
+        playOffIsComplete,
         pauseClock,
         resumeClock,
     }

@@ -44,16 +44,16 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         return minScore.playerId
     }
 
-    const getPlayed = (player: string) => results.value.filter(r => hasPlayed(r, player)).length
+    const getPlayed = (results: Result[], player: string) => results.filter(r => hasPlayed(r, player)).length
 
-    const getWins = (player: string) => results.value.filter(r => getWinner(r) === player).length
+    const getWins = (results: Result[], player: string) => results.filter(r => getWinner(r) === player).length
 
-    const getDraws = (player: string) => results.value.filter(r => isDraw(r) && r.scores.some(s => s.playerId === player)).length
+    const getDraws = (results: Result[], player: string) => results.filter(r => isDraw(r) && r.scores.some(s => s.playerId === player)).length
 
-    const getLosses = (player: string) => results.value.filter(r => getLoser(r) === player).length
+    const getLosses = (results: Result[], player: string) => results.filter(r => getLoser(r) === player).length
 
-    const getFrameDifference = (playerId: string) => {
-        const played = results.value.filter(r => hasPlayed(r, playerId))
+    const getFrameDifference = (results: Result[], playerId: string) => {
+        const played = results.filter(r => hasPlayed(r, playerId))
         return played.map(r => {
             const playerScore = r.scores.find(s => s.playerId === playerId)!
             const otherScore = r.scores.find(s => s.playerId !== playerId)!
@@ -63,16 +63,16 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         }).reduce((x, y) => x + y, 0)
     }
 
-    const isIncomplete = (player: string) => {
-        return results.value.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
+    const isIncomplete = (results: Result[], player: string) => {
+        return results.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
     }
 
     const getPlayerScore = (playerId: string, result: Result) => {
         return result.scores.find(s => s.playerId === playerId)
     }
 
-    const getRunouts = (playerId: string) => {
-        const played = results.value.filter(r => hasPlayed(r, playerId))
+    const getRunouts = (results: Result[], playerId: string) => {
+        const played = results.filter(r => hasPlayed(r, playerId))
         return played.map(r => getPlayerScore(playerId, r)!.runouts).reduce((x, y) => x + y, 0)
     }
 
@@ -82,7 +82,8 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         }
 
         if (p.losses !== q.losses) {
-            return q.losses - p.losses
+            // fewer losses is better
+            return p.losses - q.losses
         }
 
         if (p.diff !== q.diff) {
@@ -94,19 +95,20 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         return 0
     }
 
-    const standings = computed(() => {
-        const tieBrokenPlayers = <string[]>[]
+    const standings = computed(() => computeStandings(results.value, players.value, settings.value))
 
-        const records = players.value.map(p => <PlayerRecord>{
+    const computeStandings = (results: Result[], players: Player[], settings: FlyerSettings) => {
+        const records = players.map(p => <PlayerRecord>{
             playerId: p.id,
             name: p.name,
-            played: getPlayed(p.id),
-            wins: getWins(p.id),
-            draws: getDraws(p.id),
-            losses: getLosses(p.id),
-            diff: getFrameDifference(p.id),
-            runouts: getRunouts(p.id),
-            incomplete: isIncomplete(p.id),
+            played: getPlayed(results, p.id),
+            wins: getWins(results, p.id),
+            draws: getDraws(results, p.id),
+            losses: getLosses(results, p.id),
+            diff: getFrameDifference(results, p.id),
+            runouts: getRunouts(results, p.id),
+            incomplete: isIncomplete(results, p.id),
+            rank: 0,
         })
 
         const tableData = records
@@ -116,60 +118,79 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
                     return firstSort
                 }
 
-                if (settings.value.tieBreaker === TieBreaker.HeadToHead) {
+                if (settings.tieBreaker === TieBreaker.HeadToHead) {
                     // TODO: account for multiple head-to-head matches?
-                    const match = results.value.find(
+                    const match = results.find(
                         f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
                     )
 
                     if (match) {
                         const scoreDiff = getPlayerScore(q.playerId, match)!.score - getPlayerScore(p.playerId, match)!.score
                         if (scoreDiff !== 0) {
-                            if (!tieBrokenPlayers.includes(p.playerId)) {
-                                tieBrokenPlayers.push(p.playerId)
-                            }
-
-                            if (!tieBrokenPlayers.includes(q.playerId)) {
-                                tieBrokenPlayers.push(q.playerId)
-                            }
-
                             return scoreDiff
                         }
                     }
                 }
 
-                if (settings.value.tieBreaker === TieBreaker.Runouts) {
+                if (settings.tieBreaker === TieBreaker.Runouts) {
                     if (p.runouts !== q.runouts) {
-                        if (!tieBrokenPlayers.includes(p.playerId)) {
-                            tieBrokenPlayers.push(p.playerId)
-                        }
-
-                        if (!tieBrokenPlayers.includes(q.playerId)) {
-                            tieBrokenPlayers.push(q.playerId)
-                        }
-
                         return q.runouts - p.runouts
                     }
                 }
 
                 return 0
             })
-            .map((p, i) => ({ rank: i + 1, ...p }))
+            .map((p, i) => <PlayerRecord>{ ...p, rank: i + 1 })
 
-        return {
-            tableData,
-            tieBrokenPlayers,
-        }
+        return tableData
+    }
+
+    const requiresPlayOff = computed(() => {
+        return settings.value.tieBreaker === TieBreaker.PlayOff && playOffs.value.length > 0
     })
+
+    const recordsAreEqual = (r: PlayerRecord, s: PlayerRecord) => {
+        return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
+    }
+
+    const playOffs = computed(() => {
+        const playOffs = <PlayOff[]>[]
+
+        for (const record of standings.value) {
+            const player = players.value.find(p => p.id === record.playerId)!
+            const matchingPlayOff = playOffs.find(p => recordsAreEqual(record, p.records[0]))
+
+            if (matchingPlayOff) {
+                matchingPlayOff.players.push(player)
+            }
+            else {
+                playOffs.push({
+                    id: "play-off-" + playOffs.length,
+                    name: "Play-Off for Position " + record.rank,
+                    forRank: record.rank,
+                    records: [record],
+                    players: [player],
+                })
+            }
+        }
+
+        return playOffs.filter(p => p.players.length > 1)
+    })
+
+    const orderedPlayOffs = computed(() => playOffs.value.sort((a, b) => b.forRank - a.forRank))
 
     return {
         results,
 
         standings,
+        computeStandings,
+        requiresPlayOff,
+        playOffs,
+        orderedPlayOffs,
     }
 }
 
-interface PlayerRecord {
+export interface PlayerRecord {
     playerId: string
     name: string
     played: number
@@ -179,4 +200,13 @@ interface PlayerRecord {
     diff: number
     runouts: number
     incomplete: boolean
+    rank: number
+}
+
+export interface PlayOff {
+    id: string
+    name: string
+    forRank: number
+    records: PlayerRecord[]
+    players: Player[]
 }

@@ -2,6 +2,7 @@
 import { computed } from "vue"
 
 import { useCurrency } from "../composables/useCurrency"
+import { useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
 
 import type { Player } from "../data/Player"
@@ -12,6 +13,10 @@ import { useFlyerStore } from "../stores/flyer"
 const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
+
+const {
+    getPlayerName,
+} = useFlyer(flyerStore.flyer)
 
 const {
     prizeMonies,
@@ -46,7 +51,7 @@ const getOpponentName = (player: Player, result: Result) => {
         return "UNKNOWN"
     }
 
-    return flyerStore.getPlayerName(opponentScore.playerId)
+    return getPlayerName(opponentScore.playerId)
 }
 
 const getRoundName = (result: Result) => {

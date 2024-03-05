@@ -10,20 +10,28 @@ import { useTweaks } from "../composables/useTweaks"
 
 import type { Result, Score } from "../data/Result"
 
-import { useFlyerStore } from "../stores/flyer"
+import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
 const props = defineProps<{
     visible: boolean
     result: Result
+    isPlayOff?: boolean
 }>()
 
 const emit = defineEmits<{
     hide: []
 }>()
 
-const flyerStore = useFlyerStore()
+const defaultFlyerStore = useFlyerStore()
+const playOffStore = usePlayOffStore()
 
-const { isBusy } = useFlyer(flyerStore.flyer)
+const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
+
+const {
+    isBusy,
+    getPlayerName,
+    getRound,
+} = useFlyer(flyerStore.flyer)
 
 const {
     result,
@@ -53,7 +61,7 @@ watch(props, () => {
     result.value = props.result
 })
 
-const round = computed(() => flyerStore.getRound(result.value.id)!)
+const round = computed(() => getRound(result.value.id)!)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -143,7 +151,7 @@ const description = computed(() => result.value.scores.map(s => {
         return "(bye)"
     }
 
-    return flyerStore.getPlayerName(s.playerId) || "???"
+    return getPlayerName(s.playerId)
 }).join(" v "))
 
 const header = computed(() => `${round.value.name} - ${description.value}`)

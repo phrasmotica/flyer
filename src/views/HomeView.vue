@@ -6,6 +6,7 @@ import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
+import InfoList from "../components/InfoList.vue"
 import LabelledCheckbox from "../components/LabelledCheckbox.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
@@ -25,10 +26,6 @@ const settingsStore = useSettingsStore()
 
 const {
     settings,
-    formatSummary,
-    formatDetails,
-    rulesSummary,
-    rulesDetails,
     estimatedDuration,
 } = useSettings(settingsStore.settings)
 
@@ -38,11 +35,11 @@ const entryFeesPaid = ref(false)
 const start = () => {
     switch (settings.value.format) {
         case Format.Knockout:
-            flyerStore.start(settings.value, new KnockoutScheduler(settings.value.randomlyDrawAllRounds))
+            flyerStore.start(settings.value, new KnockoutScheduler(settings.value.randomlyDrawAllRounds), [])
             break
 
         case Format.RoundRobin:
-            flyerStore.start(settings.value, new RoundRobinScheduler())
+            flyerStore.start(settings.value, new RoundRobinScheduler(), [])
             break
 
         default:
@@ -109,23 +106,17 @@ const hideModal = () => {
 
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <div class="mb-2">
-                    <!-- TODO: put this nicely under the dropdown in FlyerForm -->
-                    <strong>{{ formatSummary }}</strong>&nbsp;<em>({{ formatDetails }})</em>
-                </div>
+                <div class="summary-info">
+                    <InfoList :settings="settings" />
 
-                <div class="pt-2 border-top-1 border-gray-200 mb-2">
-                    <!-- TODO: put this nicely under the dropdown in FlyerForm -->
-                    <strong>{{ rulesSummary }}</strong>&nbsp;<em>({{ rulesDetails }})</em>
-                </div>
+                    <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
+                        <div>
+                            Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+                        </div>
 
-                <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
-                    <div>
-                        Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
-                    </div>
-
-                    <div class="ml-2">
-                        <Clock :elapsedSeconds="estimatedDuration * 60" />
+                        <div class="ml-2">
+                            <Clock :elapsedSeconds="estimatedDuration * 60" />
+                        </div>
                     </div>
                 </div>
 
@@ -134,3 +125,10 @@ const hideModal = () => {
         </template>
     </PageTemplate>
 </template>
+
+<style scoped>
+.summary-info {
+    max-height: 30vh;
+    overflow-y: auto;
+}
+</style>

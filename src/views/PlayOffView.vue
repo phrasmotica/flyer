@@ -13,8 +13,9 @@ import ResultsTable from "../components/ResultsTable.vue"
 import { useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
 
-import { useFlyerStore } from "../stores/flyer"
+import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
+// TODO: de-duplicate this
 enum Display {
     Fixtures = "Fixtures",
     Standings = "Standings",
@@ -24,6 +25,7 @@ enum Display {
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
+const playOffStore = usePlayOffStore()
 
 const {
     elapsedSeconds,
@@ -31,19 +33,17 @@ const {
     hasStarted,
     hasFinished,
     isInProgress,
-    readyForNextRound,
     pauseClock,
     resumeClock,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(playOffStore.flyer)
 
 const {
     settings,
-} = useSettings(flyerStore.settings)
+} = useSettings(playOffStore.settings)
 
 const display = ref(Display.Fixtures)
 
 const showFinishModal = ref(false)
-const showAbandonModal = ref(false)
 
 const items = ref<MenuItem[]>([
     {
@@ -76,10 +76,6 @@ const finishButtonText = computed(() => {
     return "Finish"
 })
 
-const generateNextRound = () => {
-    flyerStore.generateNextRound()
-}
-
 const confirmFinish = () => {
     if (hasFinished.value) {
         finish()
@@ -90,7 +86,11 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
-    flyerStore.finish()
+    playOffStore.finish()
+
+    flyerStore.addPlayOff(playOffStore.flyer)
+
+    playOffStore.clear()
 
     hideFinishModal()
 
@@ -103,18 +103,6 @@ const hideFinishModal = () => {
     showFinishModal.value = false
 }
 
-const abandon = () => {
-    flyerStore.clear()
-
-    hideAbandonModal()
-
-    router.push({
-        name: "setup",
-    })
-}
-
-const hideAbandonModal = () => showAbandonModal.value = false
-
 onUnmounted(() => {
     pauseClock()
 })
@@ -124,61 +112,36 @@ onUnmounted(() => {
     <PageTemplate>
         <template #content>
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
-                <h1>{{ settings.name }}</h1>
+                <h1>{{ flyerStore.settings.name }}: {{ settings.name }}</h1>
 
                 <Clock :elapsedSeconds="clockDisplay" />
             </div>
 
             <TabMenu class="mb-2" :model="items" />
 
-            <FixtureList v-if="display === Display.Fixtures" />
+            <FixtureList v-if="display === Display.Fixtures" isPlayOff />
 
-            <ResultsTable v-if="display === Display.Standings" isInProgress />
+            <ResultsTable v-if="display === Display.Standings" isPlayOff isInProgress />
 
             <InfoList v-if="display === Display.Info" :settings="settings" />
 
             <ConfirmModal
                 :visible="showFinishModal"
-                header="Finish Flyer"
-                message="Are you ready to finish the flyer?"
+                header="Finish Play-Off"
+                message="Are you ready to finish the play-off?"
                 confirmLabel="Yes"
                 :confirmDisabled="false"
                 cancelLabel="No"
                 @confirm="finish"
                 @hide="hideFinishModal" />
-
-            <ConfirmModal
-                :visible="showAbandonModal"
-                header="Abandon flyer"
-                message="Are you sure you want to abandon this flyer?"
-                confirmLabel="Yes"
-                :confirmDisabled="false"
-                cancelLabel="No"
-                @confirm="abandon"
-                @hide="hideAbandonModal" />
         </template>
 
         <template #buttons>
             <Button
-                v-if="settings.randomlyDrawAllRounds && !flyerStore.generationIsComplete"
-                class="mb-2"
-                label="Generate next round"
-                :disabled="!readyForNextRound"
-                @click="generateNextRound" />
-
-            <Button
-                v-else
                 class="mb-2"
                 :label="finishButtonText"
-                :disabled="!settings.allowEarlyFinish && flyerStore.remainingCount > 0"
+                :disabled="!settings.allowEarlyFinish && playOffStore.remainingCount > 0"
                 @click="confirmFinish" />
-
-            <Button
-                v-if="!hasFinished"
-                class="mb-2"
-                label="Abandon"
-                severity="danger"
-                @click="() => showAbandonModal = true" />
         </template>
     </PageTemplate>
 </template>
