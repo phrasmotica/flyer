@@ -3,6 +3,7 @@ import { useIntervalFn } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
 import type { Flyer } from "../data/Flyer"
+import { Format, TieBreaker } from "../data/FlyerSettings"
 
 export const useFlyer = (f: Flyer) => {
     const flyer = ref(f)
@@ -44,6 +45,11 @@ export const useFlyer = (f: Flyer) => {
         }
 
         return Math.floor((flyer.value.finishTime! - flyer.value.startTime!) / 1000)
+    })
+
+    const usesPlayOff = computed(() => {
+        return settings.value.tieBreaker === TieBreaker.PlayOff
+            && settings.value.format === Format.RoundRobin
     })
 
     const isBusy = (playerId: string) => {
@@ -128,6 +134,7 @@ export const useFlyer = (f: Flyer) => {
         isComplete,
         readyForNextRound,
         durationSeconds,
+        usesPlayOff,
 
         isBusy,
         getPlayerName,

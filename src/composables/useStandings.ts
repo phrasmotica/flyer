@@ -4,11 +4,7 @@ import { type FlyerSettings, TieBreaker, Format } from "../data/FlyerSettings"
 import type { Player } from "../data/Player"
 import type { Result } from "../data/Result"
 
-export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
-    const results = ref(r)
-    const players = ref(p)
-    const settings = ref(s)
-
+export const useStandings = () => {
     const hasPlayed = (r: Result, playerId: string) => {
         if (!r.startTime || !r.finishTime) {
             return false
@@ -95,8 +91,6 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         return 0
     }
 
-    const standings = computed(() => computeStandings(results.value, players.value, settings.value))
-
     const computeStandings = (results: Result[], players: Player[], settings: FlyerSettings) => {
         const records = players.map(p => <PlayerRecord>{
             playerId: p.id,
@@ -145,21 +139,21 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         return tableData
     }
 
-    const requiresPlayOff = computed(() => {
-        return settings.value.tieBreaker === TieBreaker.PlayOff
-            && settings.value.format === Format.RoundRobin
-            && playOffs.value.length > 0
-    })
-
     const recordsAreEqual = (r: PlayerRecord, s: PlayerRecord) => {
         return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
     }
 
-    const playOffs = computed(() => {
+    const computePlayOffs = (results: Result[], players: Player[], settings: FlyerSettings) => {
+        if (settings.format === Format.Knockout) {
+            return []
+        }
+
         const playOffs = <PlayOff[]>[]
 
-        for (const record of standings.value) {
-            const player = players.value.find(p => p.id === record.playerId)!
+        const standings = computeStandings(results, players, settings)
+
+        for (const record of standings) {
+            const player = players.find(p => p.id === record.playerId)!
             const matchingPlayOff = playOffs.find(p => recordsAreEqual(record, p.records[0]))
 
             if (matchingPlayOff) {
@@ -177,18 +171,11 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         }
 
         return playOffs.filter(p => p.players.length > 1)
-    })
-
-    const orderedPlayOffs = computed(() => playOffs.value.sort((a, b) => b.forRank - a.forRank))
+    }
 
     return {
-        results,
-
-        standings,
         computeStandings,
-        requiresPlayOff,
-        playOffs,
-        orderedPlayOffs,
+        computePlayOffs,
     }
 }
 

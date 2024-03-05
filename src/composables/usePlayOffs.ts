@@ -10,13 +10,15 @@ export const usePlayOffs = (p: Flyer[]) => {
 
     const {
         computeStandings,
-    } = useStandings([], [], <FlyerSettings>{})
+    } = useStandings()
 
     const standings = computed(() => playOffs.value.map(p => computeStandings(
         getResults(p.id),
         getPlayers(p.id),
         getSettings(p.id),
     )))
+
+    const somePlayOffComplete = computed(() => playOffs.value.length > 0)
 
     const getPlayers = (id: string) => {
         const playOff = playOffs.value.find(x => x.id === id)
@@ -71,6 +73,7 @@ export const usePlayOffs = (p: Flyer[]) => {
         playOffs,
 
         standings,
+        somePlayOffComplete,
 
         getPlayOffRank,
         processStandings,

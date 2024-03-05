@@ -12,7 +12,7 @@ import ResultsTable from "../components/ResultsTable.vue"
 import { useFlyer } from "../composables/useFlyer"
 import { useStandings } from "../composables/useStandings"
 
-import { Format, createPlayOffSettings } from "../data/FlyerSettings"
+import { Format, TieBreaker, createPlayOffSettings } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
@@ -25,13 +25,13 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const playOffStore = usePlayOffStore()
 
 const {
+    usesPlayOff,
     playOffIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
-    requiresPlayOff,
-    orderedPlayOffs,
-} = useStandings(flyerStore.results, flyerStore.players, flyerStore.settings)
+    computePlayOffs,
+} = useStandings()
 
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
@@ -61,6 +61,14 @@ const goToSetup = () => {
 const confirmStartPlayOff = () => {
     showStartPlayOffModal.value = true
 }
+
+// TODO: encapsulate these computed properties in some composable
+const requiresPlayOff = computed(() => usesPlayOff.value && orderedPlayOffs.value.length > 0)
+
+const orderedPlayOffs = computed(() => {
+    const playOffs = computePlayOffs(flyerStore.results, flyerStore.players, flyerStore.settings)
+    return playOffs.sort((a, b) => b.forRank - a.forRank)
+})
 
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !playOffIsComplete(p.id))

@@ -4,11 +4,13 @@ import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
 import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
+import { usePlayOffs } from "../composables/usePlayOffs"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
 
+import { Format, TieBreaker } from "../data/FlyerSettings"
+
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
-import { usePlayOffs } from "@/composables/usePlayOffs"
 
 const props = defineProps<{
     isInProgress?: boolean
@@ -28,28 +30,30 @@ const playOffStore = usePlayOffStore()
 
 const {
     playOffIsComplete,
+    results,
+    players,
+    settings,
 } = useFlyer(flyerStore.flyer)
 
 const {
     playOffs: completedPlayOffs,
+    somePlayOffComplete,
     getPlayOffRank,
     processStandings,
 } = usePlayOffs(flyerStore.flyer.playOffs)
 
 const {
-    settings,
     prizeMonies,
 } = useSettings(flyerStore.settings)
 
 const {
-    standings,
-    requiresPlayOff,
-    playOffs,
-} = useStandings(flyerStore.results, flyerStore.players, flyerStore.settings)
+    computeStandings,
+    computePlayOffs,
+} = useStandings()
 
-const {
-    standings: currentPlayOffStandings,
-} = useStandings(playOffStore.results, playOffStore.players, playOffStore.settings)
+const standings = computed(() => computeStandings(flyerStore.results, flyerStore.players, flyerStore.settings))
+
+const currentPlayOffStandings = computed(() => computeStandings(playOffStore.results, playOffStore.players, playOffStore.settings))
 
 const overallStandings = computed(() => {
     if (props.isPlayOff) {
@@ -72,9 +76,18 @@ const rowClass = (data: any) => {
     ]
 }
 
-const somePlayOffComplete = computed(() => completedPlayOffs.value.length > 0)
+// TODO: encapsulate these computed properties in some composable
+const requiresPlayOff = computed(() => {
+    return flyerStore.settings.tieBreaker === TieBreaker.PlayOff
+        && flyerStore.settings.format === Format.RoundRobin
+        && orderedPlayOffs.value.length > 0
+})
 
-const hasPlayedOff = computed(() => playOffs.value.every(x => playOffIsComplete(x.id)))
+const playOffs = computed(() => computePlayOffs(results.value, players.value, settings.value))
+
+const orderedPlayOffs = computed(() => playOffs.value.sort((a, b) => b.forRank - a.forRank))
+
+const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
 
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
@@ -92,7 +105,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column field="name" header="Name">
             <template #body="slotData">
                 {{ slotData.data.name }}
-                <span v-if="!props.isInProgress && !hasPlayedOff && getPlayOffIndex(slotData.data.playerId) >= 0">
+                <span v-if="!props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0">
                     <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId) + 1 }}</sup>
                 </span>
             </template>
@@ -116,7 +129,7 @@ const getPlayOffIndex = (playerId: string) => {
     </h4>
 
     <!-- if a play-off needs to happen -->
-    <div v-if="!props.isInProgress && requiresPlayOff && !hasPlayedOff && playOffs.length > 0" class="mt-1">
+    <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
         <p v-for="p, i in playOffs.filter(x => !playOffIsComplete(x.id))" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
@@ -137,7 +150,7 @@ const getPlayOffIndex = (playerId: string) => {
     </div>
 
     <!-- if the flyer has finished -->
-    <div v-if="!props.isInProgress && (!requiresPlayOff || hasPlayedOff)" class="mt-1">
+    <div v-if="!props.isInProgress && (!requiresPlayOff || allPlayOffsComplete)" class="mt-1">
         <p v-if="overallStandings[0]" class="m-0 text-center text-xl">
             {{ overallStandings[0].name }} wins
             <span v-if="prizeMonies.length > 0" class="font-bold">
