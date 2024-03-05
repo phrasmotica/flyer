@@ -12,7 +12,6 @@ export const useFlyer = (f: Flyer) => {
     const results = computed(() => flyer.value.rounds.flatMap(r => r.fixtures))
     const players = computed(() => flyer.value.players)
     const settings = computed(() => flyer.value.settings)
-
     const rounds = computed(() => flyer.value?.rounds ?? [])
 
     const hasStarted = computed(() => !!flyer.value.startTime)
@@ -21,6 +20,20 @@ export const useFlyer = (f: Flyer) => {
     const isComplete = computed(() => {
         return flyer.value.rounds.flatMap(r => r.fixtures).every(x => x.startTime && x.finishTime)
     })
+
+    const ongoingCount = computed(() => results.value.filter(f => f.startTime && !f.finishTime).length)
+    const remainingCount = computed(() => results.value.filter(f => !f.finishTime).length)
+
+    const currentRound = computed(() => {
+        const oldestInProgressRound = rounds.value.find(r => r.fixtures.some(f => !f.finishTime))
+        if (!oldestInProgressRound) {
+            return 0
+        }
+
+        return oldestInProgressRound.index
+    })
+
+    const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
     const readyForNextRound = computed(() => {
         if (!f.settings.randomlyDrawAllRounds) {
@@ -158,11 +171,16 @@ export const useFlyer = (f: Flyer) => {
         results,
         players,
         settings,
+        rounds,
         elapsedSeconds,
         hasStarted,
         hasFinished,
         isInProgress,
         isComplete,
+        ongoingCount,
+        remainingCount,
+        currentRound,
+        generationIsComplete,
         readyForNextRound,
         durationSeconds,
         usesPlayOff,

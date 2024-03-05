@@ -20,6 +20,7 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
+    settings,
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
@@ -48,7 +49,7 @@ watch(props, () => {
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"
             :modelValue="score"
-            :min="0" :max="flyerStore.settings.raceTo"
+            :min="0" :max="settings.raceTo"
             @update:modelValue="v => emit('setScore', v)">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
@@ -72,7 +73,7 @@ watch(props, () => {
             inputClass="w-2rem px-1 text-center"
             buttonLayout="horizontal"
             :modelValue="runouts"
-            :min="0" :max="flyerStore.settings.raceTo"
+            :min="0" :max="settings.raceTo"
             @update:modelValue="v => emit('setRunouts', v)">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />

@@ -22,6 +22,7 @@ const playOffStore = usePlayOffStore()
 const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
+    rounds,
     getRoundStatus,
 } = useFlyer(flyerStore.flyer)
 
@@ -56,7 +57,7 @@ const hideModal = () => {
 </script>
 
 <template>
-    <div v-for="r in flyerStore.rounds" class="my-1 px-2 border-1 border-round-md">
+    <div v-for="r in rounds" class="my-1 px-2 border-1 border-round-md">
         <RoundSection :name="r.name" :roundIndex="r.index" :hidden="shouldCollapse(r)" :isPlayOff="props.isPlayOff">
             <div v-for="f, i in r.fixtures" class="py-1" :class="[i > 0 && 'border-gray-200 border-top-1']">
                 <FixtureCard

@@ -13,14 +13,16 @@ const { gbp } = useCurrency()
 const flyerStore = useFlyerStore()
 
 const {
-    getPlayerName,
+    settings,
+    rounds,
     winner,
     winnerResults,
+    getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
 const {
     prizeMonies,
-} = useSettings(flyerStore.settings)
+} = useSettings(settings.value)
 
 const isWalkover = (result: Result) => result.scores.some(s => s.isBye)
 
@@ -42,7 +44,7 @@ const getOpponentName = (player: Player, result: Result) => {
 }
 
 const getRoundName = (result: Result) => {
-    const round = flyerStore.rounds.find(r => r.fixtures.some(f => f.id === result.id))
+    const round = rounds.value.find(r => r.fixtures.some(f => f.id === result.id))
     return round?.name || "UNKNOWN"
 }
 </script>

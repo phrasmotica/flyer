@@ -29,11 +29,17 @@ const flyerStore = useFlyerStore()
 const playOffStore = usePlayOffStore()
 
 const {
-    playOffIsComplete,
     results,
     players,
     settings,
+    playOffIsComplete,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    results: playOffResults,
+    players: playOffPlayers,
+    settings: playOffSettings,
+} = useFlyer(playOffStore.flyer)
 
 const {
     playOffs: completedPlayOffs,
@@ -44,16 +50,16 @@ const {
 
 const {
     prizeMonies,
-} = useSettings(flyerStore.settings)
+} = useSettings(settings.value)
 
 const {
     computeStandings,
     computePlayOffs,
 } = useStandings()
 
-const standings = computed(() => computeStandings(flyerStore.results, flyerStore.players, flyerStore.settings))
+const standings = computed(() => computeStandings(results.value, players.value, settings.value))
 
-const currentPlayOffStandings = computed(() => computeStandings(playOffStore.results, playOffStore.players, playOffStore.settings))
+const currentPlayOffStandings = computed(() => computeStandings(playOffResults.value, playOffPlayers.value, playOffSettings.value))
 
 const overallStandings = computed(() => {
     if (props.isPlayOff) {
@@ -78,8 +84,8 @@ const rowClass = (data: any) => {
 
 // TODO: encapsulate these computed properties in some composable
 const requiresPlayOff = computed(() => {
-    return flyerStore.settings.tieBreaker === TieBreaker.PlayOff
-        && flyerStore.settings.format === Format.RoundRobin
+    return settings.value.tieBreaker === TieBreaker.PlayOff
+        && settings.value.format === Format.RoundRobin
         && orderedPlayOffs.value.length > 0
 })
 
@@ -144,7 +150,7 @@ const getPlayOffIndex = (playerId: string) => {
         <p v-for="_, i in playOffs" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
-                these players have been tie-broken via {{ flyerStore.settings.tieBreaker }}
+                these players have been tie-broken via {{ settings.tieBreaker }}
             </em>
         </p>
     </div>

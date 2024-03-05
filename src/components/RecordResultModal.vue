@@ -28,6 +28,9 @@ const playOffStore = usePlayOffStore()
 const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
+    settings,
+    ongoingCount,
+    currentRound,
     isBusy,
     getPlayerName,
     getRound,
@@ -92,7 +95,7 @@ const updateScores = (finish: boolean) => {
 
 const startButtonText = computed(() => {
     if (result.value.scores.some(s => !s.playerId)) {
-        if (flyerStore.settings.randomlyDrawAllRounds) {
+        if (settings.value.randomlyDrawAllRounds) {
             return "Waiting for round to be generated"
         }
 
@@ -103,11 +106,11 @@ const startButtonText = computed(() => {
         return "Waiting for players to be free"
     }
 
-    if (flyerStore.settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
+    if (settings.value.requireCompletedRounds && round.value.index > currentRound.value) {
         return "Waiting for round to start"
     }
 
-    if (flyerStore.ongoingCount >= flyerStore.settings.tableCount) {
+    if (ongoingCount.value >= settings.value.tableCount) {
         return "Waiting for a free table"
     }
 
@@ -123,23 +126,23 @@ const disableStart = computed(() => {
         return true
     }
 
-    if (flyerStore.settings.requireCompletedRounds && round.value.index > flyerStore.currentRound) {
+    if (settings.value.requireCompletedRounds && round.value.index > currentRound.value) {
         return true
     }
 
-    return flyerStore.ongoingCount >= flyerStore.settings.tableCount
+    return ongoingCount.value >= settings.value.tableCount
 })
 
 const disableFinish = computed(() => {
-    if (scores.value.every(s => s < flyerStore.settings.raceTo)) {
+    if (scores.value.every(s => s < settings.value.raceTo)) {
         return true
     }
 
-    if (scores.value.reduce((a, b) => a + b) > 2 * flyerStore.settings.raceTo - 1) {
+    if (scores.value.reduce((a, b) => a + b) > 2 * settings.value.raceTo - 1) {
         return true
     }
 
-    if (!flyerStore.settings.allowDraws && [...new Set(scores.value)].length <= 1) {
+    if (!settings.value.allowDraws && [...new Set(scores.value)].length <= 1) {
         return true
     }
 

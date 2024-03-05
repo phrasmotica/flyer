@@ -11,7 +11,6 @@ import PageTemplate from "../components/PageTemplate.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
-import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
@@ -28,17 +27,19 @@ const flyerStore = useFlyerStore()
 const playOffStore = usePlayOffStore()
 
 const {
+    settings: flyerSettings,
+} = useFlyer(flyerStore.flyer)
+
+const {
+    settings,
     clockDisplay,
     hasStarted,
     hasFinished,
     isInProgress,
+    remainingCount,
     pauseClock,
     resumeClock,
 } = useFlyer(playOffStore.flyer)
-
-const {
-    settings,
-} = useSettings(playOffStore.settings)
 
 const display = ref(Display.Fixtures)
 
@@ -109,7 +110,7 @@ onUnmounted(() => {
     <PageTemplate>
         <template #content>
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
-                <h1>{{ flyerStore.settings.name }}: {{ settings.name }}</h1>
+                <h1>{{ flyerSettings.name }}: {{ settings.name }}</h1>
 
                 <Clock :elapsedSeconds="clockDisplay" />
             </div>
@@ -137,7 +138,7 @@ onUnmounted(() => {
             <Button
                 class="mb-2"
                 :label="finishButtonText"
-                :disabled="!settings.allowEarlyFinish && playOffStore.remainingCount > 0"
+                :disabled="!settings.allowEarlyFinish && remainingCount > 0"
                 @click="confirmFinish" />
         </template>
     </PageTemplate>

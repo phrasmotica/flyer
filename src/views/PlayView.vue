@@ -11,7 +11,6 @@ import PageTemplate from "../components/PageTemplate.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
-import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -26,18 +25,17 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 
 const {
+    settings,
     clockDisplay,
     hasStarted,
     hasFinished,
     isInProgress,
+    remainingCount,
+    generationIsComplete,
     readyForNextRound,
     pauseClock,
     resumeClock,
 } = useFlyer(flyerStore.flyer)
-
-const {
-    settings,
-} = useSettings(flyerStore.settings)
 
 const display = ref(Display.Fixtures)
 
@@ -157,7 +155,7 @@ onUnmounted(() => {
 
         <template #buttons>
             <Button
-                v-if="settings.randomlyDrawAllRounds && !flyerStore.generationIsComplete"
+                v-if="settings.randomlyDrawAllRounds && !generationIsComplete"
                 class="mb-2"
                 label="Generate next round"
                 :disabled="!readyForNextRound"
@@ -167,7 +165,7 @@ onUnmounted(() => {
                 v-else
                 class="mb-2"
                 :label="finishButtonText"
-                :disabled="!settings.allowEarlyFinish && flyerStore.remainingCount > 0"
+                :disabled="!settings.allowEarlyFinish && remainingCount > 0"
                 @click="confirmFinish" />
 
             <Button

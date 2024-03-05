@@ -22,6 +22,7 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
+    settings,
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
@@ -33,7 +34,7 @@ const {
 
 const {
     isRandomDraw,
-} = useSettings(flyerStore.settings)
+} = useSettings(settings.value)
 
 const playerNameClass = (playerId: string) => {
     if (winner.value) {

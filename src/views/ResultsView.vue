@@ -11,8 +11,9 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useStandings } from "../composables/useStandings"
+import { useSettings } from "../composables/useSettings"
 
-import { Format, createPlayOffSettings } from "../data/FlyerSettings"
+import { createPlayOffSettings } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
@@ -25,9 +26,18 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const playOffStore = usePlayOffStore()
 
 const {
+    players,
+    results,
+    settings,
+    durationSeconds,
     usesPlayOff,
     playOffIsComplete,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    isKnockout,
+    isRoundRobin,
+} = useSettings(settings.value)
 
 const {
     computePlayOffs,
@@ -66,7 +76,7 @@ const hasPlayedOff = computed(() => !nextPlayOff.value)
 const requiresPlayOff = computed(() => usesPlayOff.value && orderedPlayOffs.value.length > 0)
 
 const orderedPlayOffs = computed(() => {
-    const playOffs = computePlayOffs(flyerStore.results, flyerStore.players, flyerStore.settings)
+    const playOffs = computePlayOffs(results.value, players.value, settings.value)
     return playOffs.sort((a, b) => b.forRank - a.forRank)
 })
 
@@ -121,14 +131,14 @@ const hideStartPlayOffModal = () => {
     <PageTemplate>
         <template #content>
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
-                <h1>{{ flyerStore.settings.name }}</h1>
+                <h1>{{ settings.name }}</h1>
 
-                <Clock :elapsedSeconds="flyerStore.durationSeconds || 0" />
+                <Clock :elapsedSeconds="durationSeconds || 0" />
             </div>
 
-            <ResultsTable v-if="flyerStore.settings.format === Format.RoundRobin" />
+            <ResultsTable v-if="isRoundRobin" />
 
-            <Podium v-if="flyerStore.settings.format === Format.Knockout" />
+            <Podium v-if="isKnockout" />
 
             <div v-if="!requiresPlayOff" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />

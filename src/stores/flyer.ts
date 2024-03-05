@@ -19,37 +19,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         }
     })
 
-    const players = computed(() => flyer.value?.players ?? [])
-
-    const settings = computed(() => flyer.value?.settings)
-
     const playerPool = ref<string[]>([])
-
-    const rounds = computed(() => flyer.value?.rounds ?? [])
-
-    const results = computed(() => rounds.value.flatMap(r => r.fixtures))
-
-    const ongoingCount = computed(() => results.value.filter(f => f.startTime && !f.finishTime).length)
-    const remainingCount = computed(() => results.value.filter(f => !f.finishTime).length)
-
-    const currentRound = computed(() => {
-        const oldestInProgressRound = rounds.value.find(r => r.fixtures.some(f => !f.finishTime))
-        if (!oldestInProgressRound) {
-            return 0
-        }
-
-        return oldestInProgressRound.index
-    })
-
-    const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
-
-    const durationSeconds = computed(() => {
-        if (!flyer.value?.startTime || !flyer.value?.finishTime) {
-            return null
-        }
-
-        return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
-    })
 
     const start = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
         flyer.value = createFlyer(settings, scheduler, players)
@@ -158,7 +128,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     const generateNextRound = () => {
         const shuffledPlayerIds =  shuffle([...playerPool.value])
 
-        const nextRound = rounds.value.find(r => !r.isGenerated)!
+        const nextRound = flyer.value.rounds.find(r => !r.isGenerated)!
         for (const f of nextRound.fixtures) {
             for (const s of f.scores) {
                 s.playerId = shuffledPlayerIds.pop()!
@@ -218,15 +188,6 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
     return {
         flyer,
-        players,
-        settings,
-        rounds,
-        results,
-        ongoingCount,
-        remainingCount,
-        currentRound,
-        generationIsComplete,
-        durationSeconds,
 
         start,
         startFixture,
