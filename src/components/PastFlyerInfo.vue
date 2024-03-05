@@ -24,7 +24,7 @@ const {
     players,
     settings,
     durationMinutes,
-    winner,
+    // winner, TODO: consume usePodium(), and useStandings() for a round-robin flyer?
 } = useFlyer(props.flyer)
 
 watch(props, () => {
@@ -50,7 +50,7 @@ watch(props, () => {
         <!-- TODO: add info about any play-offs that happened -->
         <div>
             {{ settings.format }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
-            Took {{ durationMinutes! }} minute(s), won by {{ winner!.name }}.
+            <!-- Took {{ durationMinutes! }} minute(s), won by {{ winner!.name }}. -->
         </div>
 
         <div class="p-fluid my-2">
