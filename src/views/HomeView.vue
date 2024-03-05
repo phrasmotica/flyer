@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
+import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -24,6 +25,8 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
+const { smallerOrEqual } = useBreakpoints(breakpointsPrimeFlex)
+
 const {
     settings,
     estimatedDuration,
@@ -31,6 +34,8 @@ const {
 
 const showModal = ref(false)
 const entryFeesPaid = ref(false)
+
+const isSmall = computed(() => smallerOrEqual("sm").value)
 
 const start = () => {
     switch (settings.value.format) {
@@ -106,7 +111,7 @@ const hideModal = () => {
 
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <div class="summary-info">
+                <div class="summary-info" :class="[isSmall && 'maxh-30 overflow-y-auto']">
                     <InfoList :settings="settings" />
 
                     <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
@@ -127,8 +132,7 @@ const hideModal = () => {
 </template>
 
 <style scoped>
-.summary-info {
+.maxh-30 {
     max-height: 30vh;
-    overflow-y: auto;
 }
 </style>

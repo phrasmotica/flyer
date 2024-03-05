@@ -78,7 +78,7 @@ const hasPlayedOff = computed(() => playOffs.value.every(x => playOffIsComplete(
 
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
-const isMedium = computed(() => greaterOrEqual("md").value)
+const isNotSmall = computed(() => greaterOrEqual("md").value)
 
 const getPlayOffIndex = (playerId: string) => {
     return playOffs.value.filter(x => !playOffIsComplete(x.id)).findIndex(p => p.players.some(x => x.id === playerId))
@@ -102,7 +102,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
         <Column field="losses" header="L"></Column>
         <Column field="diff" header="+/-"></Column>
-        <Column v-if="isMedium" field="runouts" header="R/O"></Column>
+        <Column v-if="isNotSmall" field="runouts" header="R/O"></Column>
         <Column v-if="somePlayOffComplete" header="P/O">
             <template #body="slotData">
                 {{ getPlayOffRank(slotData.data.playerId) || "-" }}
