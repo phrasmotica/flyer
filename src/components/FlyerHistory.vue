@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
 
-import ConfirmModal from "../components/ConfirmModal.vue"
+import ConfirmModal from "./ConfirmModal.vue"
+import PastFlyerInfo from "./PastFlyerInfo.vue"
 
 import type { Flyer } from "../data/Flyer"
 
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
-import { differenceInMinutes } from "date-fns"
-
-const { d } = useI18n()
 
 const flyerHistoryStore = useFlyerHistoryStore()
 
@@ -50,47 +47,16 @@ const hideDeleteModal = () => {
 }
 
 const isSelected = (f: Flyer) => selectedFlyer.value?.id === f.id
-
-// TODO: put this stuff inside a composable
-const getDuration = (f: Flyer) => {
-    if (!f.startTime || !f.finishTime) {
-        return "???"
-    }
-
-    return differenceInMinutes(new Date(f.finishTime), new Date(f.startTime))
-}
-
-const getWinnerName = (f: Flyer) => flyerHistoryStore.getWinner(f)?.name || "???"
 </script>
 
 <template>
     <div v-if="flyerHistoryStore.pastFlyers.length > 0">
-        <div v-for="f, i in flyerHistoryStore.pastFlyers">
-            <div
-                class="flex justify-content-between cursor-pointer mt-1 pt-1 mb-1"
-                :class="[i > 0 && 'border-gray-200 border-top-1']"
-                @click="() => setSelectedFlyer(f)">
-                <div :class="[isSelected(f) && 'font-bold']">
-                    {{ f.settings.name }}
-                </div>
-
-                <div class="flex-shrink-0" :class="[isSelected(f) && 'font-bold']">
-                    {{ d(f.startTime!, "long") }}
-                </div>
-            </div>
-
-            <div v-if="isSelected(f)" class="font-italic">
-                <!-- TODO: add info about any play-offs that happened -->
-                <div>
-                    {{ f.settings.format }} between {{ f.players.length }} players, races to {{ f.settings.raceTo }}.&nbsp;
-                    Took {{ getDuration(f) }} minute(s), won by {{ getWinnerName(f) }}.
-                </div>
-
-                <div class="p-fluid my-2">
-                    <Button label="Delete" severity="danger" @click="confirmDelete" />
-                </div>
-            </div>
-        </div>
+        <PastFlyerInfo v-for="f, i in flyerHistoryStore.pastFlyers"
+            :flyer="f"
+            :index="i"
+            :showDetails="isSelected(f)"
+            @setSelected="() => setSelectedFlyer(f)"
+            @confirmDelete="confirmDelete" />
 
         <ConfirmModal
             :visible="showDeleteModal"

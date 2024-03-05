@@ -1,6 +1,6 @@
 import { computed, ref, watch } from "vue"
 import { useIntervalFn } from "@vueuse/core"
-import { differenceInSeconds } from "date-fns"
+import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import type { Flyer } from "../data/Flyer"
 import { Format, TieBreaker } from "../data/FlyerSettings"
@@ -53,12 +53,20 @@ export const useFlyer = (f: Flyer) => {
         return currentRound.fixtures.every(f => f.startTime && f.finishTime)
     })
 
+    const durationMinutes = computed(() => {
+        if (!hasStarted.value || !hasFinished.value) {
+            return null
+        }
+
+        return differenceInMinutes(flyer.value.finishTime!, flyer.value.startTime!)
+    })
+
     const durationSeconds = computed(() => {
         if (!hasStarted.value || !hasFinished.value) {
             return null
         }
 
-        return Math.floor((flyer.value.finishTime! - flyer.value.startTime!) / 1000)
+        return differenceInSeconds(flyer.value.finishTime!, flyer.value.startTime!)
     })
 
     const usesPlayOff = computed(() => {
@@ -182,6 +190,7 @@ export const useFlyer = (f: Flyer) => {
         currentRound,
         generationIsComplete,
         readyForNextRound,
+        durationMinutes,
         durationSeconds,
         usesPlayOff,
         winner,

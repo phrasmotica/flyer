@@ -23,7 +23,7 @@ export const useMatch = (name: string, f: Result) => {
             return null
         }
 
-        return Math.floor((result.value.finishTime! - result.value.startTime!) / 1000)
+        return differenceInSeconds(result.value.finishTime!, result.value.startTime!)
     })
 
     const winner = computed(() => {
