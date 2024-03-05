@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import VictoryText from "./VictoryText.vue"
+
 import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
@@ -14,7 +16,6 @@ const flyerStore = useFlyerStore()
 
 const {
     settings,
-    rounds,
     winner,
     winnerResults,
     getPlayerName,
@@ -24,16 +25,6 @@ const {
     prizeMonies,
 } = useSettings(settings.value)
 
-const isWalkover = (result: Result) => result.scores.some(s => s.isBye)
-
-const getScore = (result: Result) => {
-    if (isWalkover(result)) {
-        return "W/O"
-    }
-
-    return result.scores.map(s => s.score).sort((a, b) => b - a).join("-")
-}
-
 const getOpponentName = (player: Player, result: Result) => {
     const opponentScore = result.scores.find(s => s.playerId !== player.id)
     if (!opponentScore) {
@@ -41,11 +32,6 @@ const getOpponentName = (player: Player, result: Result) => {
     }
 
     return getPlayerName(opponentScore.playerId)
-}
-
-const getRoundName = (result: Result) => {
-    const round = rounds.value.find(r => r.fixtures.some(f => f.id === result.id))
-    return round?.name || "UNKNOWN"
 }
 </script>
 
@@ -65,19 +51,14 @@ const getRoundName = (result: Result) => {
 
         <ul class="m-0">
             <li v-for="f in winnerResults">
-                <span>
-                    <!-- TODO: put this in its own component -->
-                    <span class="font-bold">{{ getScore(f) }}</span>
-                    <span v-if="!isWalkover(f)">&nbsp;v {{ getOpponentName(winner, f) }}</span>
-                    <span class="font-italic">&nbsp;({{ getRoundName(f) }})</span>
-                </span>
+                <VictoryText :result="f" />
             </li>
         </ul>
 
         <div v-if="prizeMonies.length > 1" class="border-top-1 mt-1 pt-1">
             <p class="m-0">Other prize money:</p>
 
-            <!-- TODO: show prize monies for ALL other recipients -->
+            <!-- TODO: show prize monies for ALL other recipients, creating a component for it -->
             <p class="m-0">
                 {{ getOpponentName(winner, winnerResults[0]) }} wins
                 <span class="font-bold">

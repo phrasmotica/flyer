@@ -46,6 +46,11 @@ export const useMatch = (name: string, f: Result) => {
         return winningScore.playerId
     })
 
+    const getOpponent = (playerId: string) => {
+        const opponentScore = result.value.scores.find(s => s.playerId !== playerId)
+        return opponentScore?.playerId || ""
+    }
+
     const computeDifference = () => differenceInSeconds(Date.now(), startTime.value || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
@@ -96,6 +101,7 @@ export const useMatch = (name: string, f: Result) => {
         isInProgress,
         durationSeconds,
         winner,
+        getOpponent,
         setScore,
         setRunouts,
         pauseClock,
