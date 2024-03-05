@@ -76,6 +76,19 @@ export const useSettings = (s: FlyerSettings) => {
 
     const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
 
+    const durationPerFrame = computed(() => {
+        switch (settings.value.format) {
+            case Format.Knockout:
+                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).frameTimeEstimateMins
+
+            case Format.RoundRobin:
+                return new RoundRobinScheduler().frameTimeEstimateMins
+
+            default:
+                throw `Invalid flyer format ${settings.value.format}!`
+        }
+    })
+
     const estimatedDuration = computed(() => {
         switch (settings.value.format) {
             case Format.Knockout:
@@ -133,6 +146,11 @@ export const useSettings = (s: FlyerSettings) => {
         value: x,
     }))
 
+    const isInvalid = computed(() => {
+        const actualPlayerNames = settings.value.playerNames.slice(0, settings.value.playerCount)
+        return actualPlayerNames.some(p => !p)
+    })
+
     return {
         settings,
 
@@ -147,6 +165,7 @@ export const useSettings = (s: FlyerSettings) => {
         isKnockout,
         isRoundRobin,
         isRandomDraw,
+        durationPerFrame,
         estimatedDuration,
         estimatedCost,
         entryFeeSummary,
@@ -154,5 +173,7 @@ export const useSettings = (s: FlyerSettings) => {
         prizePotSummary,
         prizeMonies,
         prizeMoniesMeterItems,
+
+        isInvalid,
     }
 }

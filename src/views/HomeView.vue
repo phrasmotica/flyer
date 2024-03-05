@@ -29,7 +29,9 @@ const { smallerOrEqual } = useBreakpoints(breakpointsPrimeFlex)
 
 const {
     settings,
+    durationPerFrame,
     estimatedDuration,
+    isInvalid,
 } = useSettings(settingsStore.settings)
 
 const showModal = ref(false)
@@ -117,7 +119,7 @@ const hideModal = () => {
 
                     <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
                         <div>
-                            Estimated duration <em>({{ settingsStore.durationPerFrame }} min(s) per frame)</em>
+                            Estimated duration <em>({{ durationPerFrame }} min(s) per frame)</em>
                         </div>
 
                         <div class="ml-2">
@@ -126,7 +128,7 @@ const hideModal = () => {
                     </div>
                 </div>
 
-                <Button label="Start" :disabled="settingsStore.isInvalid" @click="confirmStart" />
+                <Button label="Start" :disabled="isInvalid" @click="confirmStart" />
             </FlyerFormSection>
         </template>
     </PageTemplate>
