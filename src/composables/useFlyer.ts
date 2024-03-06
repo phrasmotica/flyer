@@ -11,7 +11,7 @@ export const useFlyer = (f: Flyer) => {
     const results = computed(() => flyer.value.rounds.flatMap(r => r.fixtures))
     const players = computed(() => flyer.value.players)
     const settings = computed(() => flyer.value.settings)
-    const rounds = computed(() => flyer.value?.rounds ?? [])
+    const rounds = computed(() => flyer.value.rounds)
 
     const hasStarted = computed(() => !!flyer.value.startTime)
     const hasFinished = computed(() => !!flyer.value.finishTime)
@@ -88,7 +88,7 @@ export const useFlyer = (f: Flyer) => {
         return flyer.value.playOffs.some(p => p.id === id)
     }
 
-    const computeDifference = () => differenceInSeconds(Date.now(), flyer.value.startTime || Date.now())
+    const computeDifference = () => differenceInSeconds(Date.now(), flyer.value?.startTime || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
 

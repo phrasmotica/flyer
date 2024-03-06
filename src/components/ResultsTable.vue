@@ -6,11 +6,9 @@ import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useSettings } from "../composables/useSettings"
-import { useStandings } from "../composables/useStandings"
-
-import { Format, TieBreaker } from "../data/FlyerSettings"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { useStandings } from "@/composables/useStandings"
 
 const props = defineProps<{
     isInProgress?: boolean
@@ -53,13 +51,14 @@ const {
 } = useSettings(settings.value)
 
 const {
-    computeStandings,
-    computePlayOffs,
-} = useStandings()
+    standings,
+    playOffs,
+    requiresPlayOff,
+} = useStandings(results.value, players.value, settings.value)
 
-const standings = computed(() => computeStandings(results.value, players.value, settings.value))
-
-const currentPlayOffStandings = computed(() => computeStandings(playOffResults.value, playOffPlayers.value, playOffSettings.value))
+const {
+    standings: currentPlayOffStandings,
+} = useStandings(playOffResults.value, playOffPlayers.value, playOffSettings.value)
 
 const overallStandings = computed(() => {
     if (props.isPlayOff) {
@@ -83,16 +82,6 @@ const rowClass = (data: any) => {
 }
 
 // TODO: encapsulate these computed properties in some composable
-const requiresPlayOff = computed(() => {
-    return settings.value.tieBreaker === TieBreaker.PlayOff
-        && settings.value.format === Format.RoundRobin
-        && orderedPlayOffs.value.length > 0
-})
-
-const playOffs = computed(() => computePlayOffs(results.value, players.value, settings.value))
-
-const orderedPlayOffs = computed(() => playOffs.value.sort((a, b) => b.forRank - a.forRank))
-
 const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
 
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)

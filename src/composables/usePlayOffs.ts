@@ -1,16 +1,17 @@
 import { computed, ref } from "vue"
 
-import { useStandings, type PlayerRecord } from "./useStandings"
+import { useRankings } from "./useRankings"
 
 import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
+import type { PlayerRecord } from "../data/PlayerRecord"
 
 export const usePlayOffs = (p: Flyer[]) => {
     const playOffs = ref(p)
 
     const {
         computeStandings,
-    } = useStandings()
+    } = useRankings()
 
     const standings = computed(() => playOffs.value.map(p => computeStandings(
         getResults(p.id),

@@ -1,6 +1,5 @@
 import type { Flyer } from "./Flyer"
-
-import type { PlayOff } from "../composables/useStandings"
+import type { PlayOff } from "./PlayOff"
 
 export interface FlyerSettings {
     playerCount: number

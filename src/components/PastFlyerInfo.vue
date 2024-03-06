@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue"
+import { watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -34,13 +34,8 @@ const {
 } = usePodium(props.flyer)
 
 const {
-    computeStandings, // TODO: house this inside a useRankings() composable, and call that from useStandings
-} = useStandings()
-
-const firstPlace = computed(() => {
-    const standings = computeStandings(results.value, players.value, settings.value)
-    return players.value.find(p => p.id === standings[0].playerId)!
-})
+    firstPlace,
+} = useStandings(results.value, players.value, settings.value)
 
 watch(props, () => {
     flyer.value = props.flyer

@@ -30,7 +30,6 @@ const {
     results,
     settings,
     durationSeconds,
-    usesPlayOff,
     playOffIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -40,8 +39,9 @@ const {
 } = useSettings(settings.value)
 
 const {
-    computePlayOffs,
-} = useStandings()
+    requiresPlayOff,
+    orderedPlayOffs,
+} = useStandings(results.value, players.value, settings.value)
 
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
@@ -72,13 +72,6 @@ const confirmStartPlayOff = () => {
 
 // TODO: encapsulate these computed properties in some composable
 const hasPlayedOff = computed(() => !nextPlayOff.value)
-
-const requiresPlayOff = computed(() => usesPlayOff.value && orderedPlayOffs.value.length > 0)
-
-const orderedPlayOffs = computed(() => {
-    const playOffs = computePlayOffs(results.value, players.value, settings.value)
-    return playOffs.sort((a, b) => b.forRank - a.forRank)
-})
 
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !playOffIsComplete(p.id))
