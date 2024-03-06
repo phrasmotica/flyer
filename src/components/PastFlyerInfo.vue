@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "../composables/useFlyer"
+import { usePodium } from "../composables/usePodium"
+import { useStandings } from "../composables/useStandings"
 
 import type { Flyer } from "../data/Flyer"
-import { watch } from "vue"
 
 const { d } = useI18n()
 
@@ -21,11 +23,24 @@ const emit = defineEmits<{
 
 const {
     flyer,
+    results,
     players,
     settings,
     durationMinutes,
-    // winner, TODO: consume usePodium(), and useStandings() for a round-robin flyer?
 } = useFlyer(props.flyer)
+
+const {
+    winner,
+} = usePodium(props.flyer)
+
+const {
+    computeStandings, // TODO: house this inside a useRankings() composable, and call that from useStandings
+} = useStandings()
+
+const firstPlace = computed(() => {
+    const standings = computeStandings(results.value, players.value, settings.value)
+    return players.value.find(p => p.id === standings[0].playerId)!
+})
 
 watch(props, () => {
     flyer.value = props.flyer
@@ -50,7 +65,7 @@ watch(props, () => {
         <!-- TODO: add info about any play-offs that happened -->
         <div>
             {{ settings.format }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
-            <!-- Took {{ durationMinutes! }} minute(s), won by {{ winner!.name }}. -->
+            Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.
         </div>
 
         <div class="p-fluid my-2">

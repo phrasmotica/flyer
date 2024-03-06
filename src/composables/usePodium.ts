@@ -4,13 +4,13 @@ import type { Result } from "@/data/Result"
 import { computed, ref } from "vue"
 
 export const usePodium = (f: Flyer) => {
-    if (f.settings.format !== Format.Knockout) {
-        throw `Cannot usePodium for a ${f.settings.format} flyer!`
-    }
-
     const flyer = ref(f)
 
     const finalists = computed(() => {
+        if (f.settings.format === Format.RoundRobin) {
+            return <[string, string]>["", ""]
+        }
+
         if (!flyer.value.startTime || !flyer.value.finishTime) {
             return <[string, string]>["", ""]
         }
