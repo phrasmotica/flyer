@@ -1,6 +1,5 @@
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { useStorage } from "@vueuse/core"
-import { differenceInSeconds } from "date-fns"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
@@ -12,7 +11,7 @@ import type { Result, Score } from "../data/Result"
 import type { Round } from "../data/Round"
 
 const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () => {
-    const flyer = useStorage<Flyer>(name, null, localStorage, {
+    const flyer = useStorage<Flyer | null>(name, null, localStorage, {
         serializer: {
             read: v => JSON.parse(v) as Flyer,
             write: v => JSON.stringify(v),
@@ -115,7 +114,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
                 if (finish) {
                     r.fixtures[idx].finishTime = Date.now()
 
-                    const didPropagate = tryPropagate(flyer.value, resultId, getWinner(r.fixtures[idx]).playerId)
+                    const didPropagate = tryPropagate(flyer.value!, resultId, getWinner(r.fixtures[idx]).playerId)
                     if (!didPropagate) {
                         // add winner to random draw pool for next round
                         playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
@@ -126,6 +125,10 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     }
 
     const generateNextRound = () => {
+        if (!flyer.value) {
+            return
+        }
+
         const shuffledPlayerIds =  shuffle([...playerPool.value])
 
         const nextRound = flyer.value.rounds.find(r => !r.isGenerated)!
@@ -177,11 +180,16 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     const finish = () => {
         if (flyer.value && !flyer.value.finishTime) {
             flyer.value.finishTime = Date.now()
+            return true
         }
+
+        return false
     }
 
     const addPlayOff = (playOff: Flyer) => {
-        flyer.value.playOffs = [...flyer.value.playOffs, playOff]
+        if (flyer.value) {
+            flyer.value.playOffs = [...flyer.value.playOffs, playOff]
+        }
     }
 
     const clear = () => flyer.value = null

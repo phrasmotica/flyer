@@ -31,6 +31,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    flyer: playOffFlyer,
     settings,
     clockDisplay,
     hasStarted,
@@ -84,9 +85,12 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
-    playOffStore.finish()
+    const success = playOffStore.finish()
+    if (!success) {
+        throw "Failed to finish play-off!"
+    }
 
-    flyerStore.addPlayOff(playOffStore.flyer)
+    flyerStore.addPlayOff(playOffFlyer.value!)
 
     playOffStore.clear()
 

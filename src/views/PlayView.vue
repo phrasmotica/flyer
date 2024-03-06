@@ -85,7 +85,10 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
-    flyerStore.finish()
+    const success = flyerStore.finish()
+    if (!success) {
+        throw "Failed to finish flyer!"
+    }
 
     hideFinishModal()
 

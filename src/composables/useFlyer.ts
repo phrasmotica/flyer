@@ -3,18 +3,21 @@ import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import type { Flyer } from "../data/Flyer"
-import { Format, TieBreaker } from "../data/FlyerSettings"
+import { Format, TieBreaker, type FlyerSettings } from "../data/FlyerSettings"
 
-export const useFlyer = (f: Flyer) => {
+// TODO: ideally this would not have to accept null, but we use it in places
+// where the argument can currently be null (see TODO in ResultsTable.vue)
+export const useFlyer = (f: Flyer | null) => {
     const flyer = ref(f)
 
-    const results = computed(() => flyer.value.rounds.flatMap(r => r.fixtures))
-    const players = computed(() => flyer.value.players)
-    const settings = computed(() => flyer.value.settings)
-    const rounds = computed(() => flyer.value.rounds)
+    const results = computed(() => flyer.value?.rounds.flatMap(r => r.fixtures) || [])
+    const players = computed(() => flyer.value?.players || [])
+    const settings = computed(() => flyer.value?.settings || <FlyerSettings>{})
+    const rounds = computed(() => flyer.value?.rounds || [])
+    const playOffs = computed(() => flyer.value?.playOffs || [])
 
-    const hasStarted = computed(() => !!flyer.value.startTime)
-    const hasFinished = computed(() => !!flyer.value.finishTime)
+    const hasStarted = computed(() => !!flyer.value?.startTime)
+    const hasFinished = computed(() => !!flyer.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const isComplete = computed(() => results.value.every(x => x.startTime && x.finishTime))
@@ -33,16 +36,14 @@ export const useFlyer = (f: Flyer) => {
     const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
     const readyForNextRound = computed(() => {
-        if (!f.settings.randomlyDrawAllRounds) {
+        if (!settings.value.randomlyDrawAllRounds) {
             return false
         }
 
-        const rounds = [...flyer.value.rounds]
-
         // don't want to include the always-generated final round, so
         // use a take-while approach
-        const generatedRounds = takeWhile(rounds, r => r.isGenerated)
-        if (generatedRounds.length >= rounds.length) {
+        const generatedRounds = takeWhile([...rounds.value], r => r.isGenerated)
+        if (generatedRounds.length >= rounds.value.length) {
             return false
         }
 
@@ -51,19 +52,19 @@ export const useFlyer = (f: Flyer) => {
     })
 
     const durationMinutes = computed(() => {
-        if (!hasStarted.value || !hasFinished.value) {
+        if (!flyer.value?.startTime || !flyer.value.finishTime) {
             return null
         }
 
-        return differenceInMinutes(flyer.value.finishTime!, flyer.value.startTime!)
+        return differenceInMinutes(flyer.value.finishTime, flyer.value.startTime)
     })
 
     const durationSeconds = computed(() => {
-        if (!hasStarted.value || !hasFinished.value) {
+        if (!flyer.value?.startTime || !flyer.value.finishTime) {
             return null
         }
 
-        return differenceInSeconds(flyer.value.finishTime!, flyer.value.startTime!)
+        return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
     })
 
     const usesPlayOff = computed(() => {
@@ -74,7 +75,7 @@ export const useFlyer = (f: Flyer) => {
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
 
     const isBusy = (playerId: string) => {
-        return flyer.value.rounds.flatMap(r => r.fixtures).some(f => {
+        return rounds.value.flatMap(r => r.fixtures).some(f => {
             const isInProgress = f.startTime && !f.finishTime
             return isInProgress && f.scores.some(s => s.playerId === playerId)
         })
@@ -84,9 +85,7 @@ export const useFlyer = (f: Flyer) => {
 
     const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
 
-    const playOffIsComplete = (id: string) => {
-        return flyer.value.playOffs.some(p => p.id === id)
-    }
+    const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
 
     const computeDifference = () => differenceInSeconds(Date.now(), flyer.value?.startTime || Date.now())
 
@@ -94,14 +93,14 @@ export const useFlyer = (f: Flyer) => {
 
     const updateClock = () => {
         const newValue = computeDifference()
-        console.debug("FlyerClock " + flyer.value.settings.name + ": " + flyer.value.startTime + " + " + newValue)
+        console.debug("FlyerClock " + settings.value.name + ": " + flyer.value?.startTime + " + " + newValue)
         elapsedSeconds.value = newValue
     }
 
     watch(flyer, () => {
         updateClock()
 
-        if (flyer.value.startTime) {
+        if (flyer.value?.startTime) {
             resumeClock()
         }
     })
@@ -128,6 +127,8 @@ export const useFlyer = (f: Flyer) => {
         players,
         settings,
         rounds,
+        playOffs,
+
         elapsedSeconds,
         hasStarted,
         hasFinished,

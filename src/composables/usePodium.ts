@@ -1,13 +1,24 @@
-import type { Flyer } from "@/data/Flyer"
-import { Format } from "@/data/FlyerSettings"
-import type { Result } from "@/data/Result"
-import { computed, ref } from "vue"
+import { computed } from "vue"
 
-export const usePodium = (f: Flyer) => {
-    const flyer = ref(f)
+import { useFlyer } from "./useFlyer"
+
+import type { Flyer } from "../data/Flyer"
+import { Format } from "../data/FlyerSettings"
+import type { Result } from "../data/Result"
+
+// TODO: ideally this would not have to accept null, but useFlyer() currently
+// accepts null (see TODO in ResultsTable.vue)
+export const usePodium = (f: Flyer | null) => {
+    const {
+        flyer,
+        results,
+        players,
+        settings,
+        rounds,
+    } = useFlyer(f)
 
     const finalists = computed(() => {
-        if (f.settings.format === Format.RoundRobin) {
+        if (!flyer.value) {
             return <[string, string]>["", ""]
         }
 
@@ -15,8 +26,11 @@ export const usePodium = (f: Flyer) => {
             return <[string, string]>["", ""]
         }
 
-        const rounds = flyer.value.rounds
-        const finalRound = rounds[rounds.length - 1]
+        if (settings.value.format === Format.RoundRobin) {
+            return <[string, string]>["", ""]
+        }
+
+        const finalRound = rounds.value[rounds.value.length - 1]
         if (!finalRound) {
             return <[string, string]>["", ""]
         }
@@ -30,16 +44,15 @@ export const usePodium = (f: Flyer) => {
         ]
     })
 
-    const winner = computed(() => flyer.value.players.find(p => p.id === finalists.value[0]))
-    const runnerUp = computed(() => flyer.value.players.find(p => p.id === finalists.value[1]))
+    const winner = computed(() => players.value.find(p => p.id === finalists.value[0]))
+    const runnerUp = computed(() => players.value.find(p => p.id === finalists.value[1]))
 
     const winnerResults = computed(() => {
         if (!winner.value) {
             return []
         }
 
-        const results = flyer.value.rounds.flatMap(r => r.fixtures)
-        const winnerResults = results.filter(r => r.scores.some(s => s.playerId === winner.value!.id))
+        const winnerResults = results.value.filter(r => r.scores.some(s => s.playerId === winner.value!.id))
 
         // ensures reverse chronological order
         return winnerResults.reverse()

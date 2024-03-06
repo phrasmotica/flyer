@@ -26,6 +26,7 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const playOffStore = usePlayOffStore()
 
 const {
+    flyer,
     players,
     results,
     settings,
@@ -79,17 +80,22 @@ const nextPlayOff = computed(() => {
 })
 
 const alreadySaved = computed(() => {
-    return flyerHistoryStore.pastFlyers.some(f => f.id === flyerStore.flyer.id)
+    return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)
 })
 
 const startPlayOff = () => {
+    if (!flyer.value) {
+        console.debug("Cannot start play-off for no flyer!")
+        return
+    }
+
     if (!nextPlayOff.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
     playOffStore.start(
-        createPlayOffSettings(flyerStore.flyer, nextPlayOff.value),
+        createPlayOffSettings(flyer.value, nextPlayOff.value),
         new KnockoutScheduler(false),
         nextPlayOff.value.players
     )

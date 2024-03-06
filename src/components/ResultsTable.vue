@@ -6,9 +6,9 @@ import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useSettings } from "../composables/useSettings"
+import { useStandings } from "../composables/useStandings"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
-import { useStandings } from "@/composables/useStandings"
 
 const props = defineProps<{
     isInProgress?: boolean
@@ -20,16 +20,13 @@ const { greaterOrEqual } = useBreakpoints(breakpointsPrimeFlex)
 const { gbp } = useCurrency()
 
 const flyerStore = useFlyerStore()
-
-// TODO: move play-off data into flyer store from the start. This should use
-// a mechanism for pointing to a specific play-off object inside the flyer
-// local storage ref, and then calling the same functions exported by useFlyerStore()
 const playOffStore = usePlayOffStore()
 
 const {
     results,
     players,
     settings,
+    playOffs: playOffFlyers,
     playOffIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -37,14 +34,14 @@ const {
     results: playOffResults,
     players: playOffPlayers,
     settings: playOffSettings,
-} = useFlyer(playOffStore.flyer)
+} = useFlyer(playOffStore.flyer) // TODO: generate play-off flyer before we get here, so that it's not null/undefined
 
 const {
     playOffs: completedPlayOffs,
     somePlayOffComplete,
     getPlayOffRank,
     processStandings,
-} = usePlayOffs(flyerStore.flyer.playOffs)
+} = usePlayOffs(playOffFlyers.value)
 
 const {
     prizeMonies,
