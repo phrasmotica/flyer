@@ -14,7 +14,7 @@ import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
 const props = defineProps<{
     visible: boolean
-    result: Result
+    result: Result | undefined
     isPlayOff?: boolean
 }>()
 
@@ -58,13 +58,15 @@ const { blurActive } = useTweaks()
 const visible = ref(props.visible)
 
 watch(props, () => {
-    // HIGH: fix bug where starting a match, closing the modal, reloading the
-    // page and opening the match modal again does not cause the clock to resume
     visible.value = props.visible
     result.value = props.result
+
+    if (props.visible) {
+        resumeClock()
+    }
 })
 
-const round = computed(() => getRound(result.value.id)!)
+const round = computed(() => getRound(result.value?.id || ""))
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -73,12 +75,20 @@ watch([scores, runouts], () => {
 })
 
 const startFixture = () => {
+    if (!result.value) {
+        return
+    }
+
     flyerStore.startFixture(result.value.id)
 
     resumeClock()
 }
 
 const updateScores = (finish: boolean) => {
+    if (!result.value) {
+        return
+    }
+
     flyerStore.updateComment(result.value.id, comment.value)
 
     const newScores = players.value.map((id, i) => <Score>{
@@ -94,6 +104,10 @@ const updateScores = (finish: boolean) => {
 }
 
 const startButtonText = computed(() => {
+    if (!result.value) {
+        return "???"
+    }
+
     if (result.value.scores.some(s => !s.playerId)) {
         if (settings.value.randomlyDrawAllRounds) {
             return "Waiting for round to be generated"
@@ -106,7 +120,7 @@ const startButtonText = computed(() => {
         return "Waiting for players to be free"
     }
 
-    if (settings.value.requireCompletedRounds && round.value.index > currentRound.value) {
+    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value) {
         return "Waiting for round to start"
     }
 
@@ -118,6 +132,10 @@ const startButtonText = computed(() => {
 })
 
 const disableStart = computed(() => {
+    if (!result.value) {
+        return true
+    }
+
     if (result.value.scores.some(s => !s.playerId)) {
         return true
     }
@@ -126,7 +144,7 @@ const disableStart = computed(() => {
         return true
     }
 
-    if (settings.value.requireCompletedRounds && round.value.index > currentRound.value) {
+    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value) {
         return true
     }
 
@@ -149,15 +167,21 @@ const disableFinish = computed(() => {
     return false
 })
 
-const description = computed(() => result.value.scores.map(s => {
-    if (s.isBye) {
-        return "(bye)"
+const description = computed(() => {
+    if (!result.value) {
+        return "???"
     }
 
-    return getPlayerName(s.playerId)
-}).join(" v "))
+    return result.value.scores.map(s => {
+        if (s.isBye) {
+            return "(bye)"
+        }
 
-const header = computed(() => `${round.value.name} - ${description.value}`)
+        return getPlayerName(s.playerId)
+    }).join(" v ")
+})
+
+const header = computed(() => `${round.value?.name || "???"} - ${description.value}`)
 
 const hide = () => {
     // MEDIUM: reset changes to score/runouts
@@ -171,6 +195,7 @@ onUnmounted(() => {
 
 <template>
     <Dialog
+        v-if="result"
         modal
         class="mx-4"
         v-model:visible="visible"

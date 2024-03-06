@@ -58,7 +58,6 @@ const hideModal = () => {
     </div>
 
     <RecordResultModal
-        v-if="selectedResult"
         :visible="showModal"
         :result="selectedResult"
         :isPlayOff="props.isPlayOff"

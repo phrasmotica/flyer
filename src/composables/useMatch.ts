@@ -4,29 +4,36 @@ import { differenceInSeconds } from "date-fns"
 
 import type { Result } from "../data/Result"
 
-export const useMatch = (name: string, f: Result) => {
+// LOW: ideally this would not have to accept undefined, but we use it in places
+// where the argument can currently be undefined (see RecordResultModal.vue)
+export const useMatch = (name: string, f: Result | undefined) => {
     const result = ref(f)
-    const scores = ref(f.scores.map(r => r.score))
-    const runouts = ref(f.scores.map(r => r.runouts))
-    const comment = ref(f.comment)
 
-    const startTime = computed(() => result.value.startTime)
-    const players = computed(() => result.value.scores.map(r => r.playerId))
-    const isWalkover = computed(() => result.value.scores.some(s => s.isBye))
+    const scores = ref(result.value?.scores.map(r => r.score) || [])
+    const runouts = ref(result.value?.scores.map(r => r.runouts) || [])
+    const comment = ref(result.value?.comment || "")
 
-    const hasStarted = computed(() => !!result.value.startTime)
-    const hasFinished = computed(() => !!result.value.finishTime)
+    const startTime = computed(() => result.value?.startTime)
+    const players = computed(() => result.value?.scores.map(r => r.playerId) || [])
+    const isWalkover = computed(() => result.value?.scores.some(s => s.isBye) || false)
+
+    const hasStarted = computed(() => !!result.value?.startTime)
+    const hasFinished = computed(() => !!result.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const durationSeconds = computed(() => {
-        if (!hasStarted.value || !hasFinished.value) {
+        if (!result.value?.startTime || !result.value.finishTime) {
             return null
         }
 
-        return differenceInSeconds(result.value.finishTime!, result.value.startTime!)
+        return differenceInSeconds(result.value.finishTime, result.value.startTime)
     })
 
     const winner = computed(() => {
+        if (!result.value) {
+            return ""
+        }
+
         if (!hasStarted.value || !hasFinished.value) {
             return ""
         }
@@ -47,7 +54,7 @@ export const useMatch = (name: string, f: Result) => {
     })
 
     const getOpponent = (playerId: string) => {
-        const opponentScore = result.value.scores.find(s => s.playerId !== playerId)
+        const opponentScore = result.value?.scores.find(s => s.playerId !== playerId)
         return opponentScore?.playerId || ""
     }
 
@@ -64,11 +71,11 @@ export const useMatch = (name: string, f: Result) => {
     watch(result, () => {
         updateClock()
 
-        scores.value = result.value.scores.map(r => r.score)
-        runouts.value = result.value.scores.map(r => r.runouts)
-        comment.value = result.value.comment
+        scores.value = result.value?.scores.map(r => r.score) || []
+        runouts.value = result.value?.scores.map(r => r.runouts) || []
+        comment.value = result.value?.comment || ""
 
-        if (result.value.startTime) {
+        if (result.value?.startTime) {
             clock.resume()
         }
     })
