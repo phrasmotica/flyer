@@ -50,7 +50,7 @@ const {
         <div v-if="prizeMonies.length > 1" class="border-top-1 mt-1 pt-1">
             <p class="m-0">Other prize money:</p>
 
-            <!-- TODO: show prize monies for ALL other recipients, creating a component for it -->
+            <!-- HIGH: show prize monies for ALL other recipients, creating a component for it -->
             <p class="m-0">
                 {{ runnerUp!.name }} wins
                 <span class="font-bold">

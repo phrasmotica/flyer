@@ -6,8 +6,8 @@ import type { Flyer } from "../data/Flyer"
 import { Format } from "../data/FlyerSettings"
 import type { Result } from "../data/Result"
 
-// TODO: ideally this would not have to accept null, but useFlyer() currently
-// accepts null (see TODO in ResultsTable.vue)
+// LOW: ideally this would not have to accept null, but useFlyer() currently
+// accepts null (see ResultsTable.vue)
 export const usePodium = (f: Flyer | null) => {
     const {
         flyer,

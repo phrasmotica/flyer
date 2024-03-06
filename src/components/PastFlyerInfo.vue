@@ -58,7 +58,7 @@ watch(props, () => {
         </div>
 
         <div v-if="props.showDetails" class="font-italic">
-            <!-- TODO: add info about any play-offs that happened -->
+            <!-- HIGH: add info about any play-offs that happened -->
             <div>
                 {{ settings.format }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
                 Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.

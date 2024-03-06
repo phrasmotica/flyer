@@ -21,7 +21,7 @@ export interface FlyerSettings {
     playOffId: string
 }
 
-// TODO: store enum members as numeric values, and compute the names elsewhere
+// HIGH: store enum members as numeric values, and compute the names elsewhere
 export enum Format {
     Knockout = "Knockout",
     RoundRobin = "Round Robin",

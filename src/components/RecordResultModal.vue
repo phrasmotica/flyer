@@ -58,7 +58,7 @@ const { blurActive } = useTweaks()
 const visible = ref(props.visible)
 
 watch(props, () => {
-    // TODO: fix bug where starting a match, closing the modal, reloading the
+    // HIGH: fix bug where starting a match, closing the modal, reloading the
     // page and opening the match modal again does not cause the clock to resume
     visible.value = props.visible
     result.value = props.result
@@ -160,7 +160,7 @@ const description = computed(() => result.value.scores.map(s => {
 const header = computed(() => `${round.value.name} - ${description.value}`)
 
 const hide = () => {
-    // TODO: reset changes to score/runouts
+    // MEDIUM: reset changes to score/runouts
     emit('hide')
 }
 

@@ -6,7 +6,7 @@ import { useTweaks } from "../composables/useTweaks"
 
 const value = defineModel<number>()
 
-// TODO: allow providing a different currency
+// MEDIUM: allow providing a different currency
 const props = defineProps<{
     inputId?: string
     min?: number

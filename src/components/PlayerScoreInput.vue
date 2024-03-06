@@ -8,7 +8,7 @@ import { useFlyerStore } from "../stores/flyer"
 const props = defineProps<{
     playerId: string
     score: number
-    runouts: number // TODO: encapsulate score and runouts in a single object
+    runouts: number // LOW: encapsulate score and runouts in a single object
     finished?: boolean
 }>()
 
@@ -24,7 +24,7 @@ const {
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
-// TODO: create a composable for storing these
+// LOW: create a composable for storing these
 const score = ref(props.score)
 const runouts = ref(props.runouts)
 

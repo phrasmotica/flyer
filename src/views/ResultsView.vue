@@ -71,7 +71,7 @@ const confirmStartPlayOff = () => {
     showStartPlayOffModal.value = true
 }
 
-// TODO: encapsulate these computed properties in some composable
+// LOW: encapsulate these computed properties in some composable
 const hasPlayedOff = computed(() => !nextPlayOff.value)
 
 const nextPlayOff = computed(() => {

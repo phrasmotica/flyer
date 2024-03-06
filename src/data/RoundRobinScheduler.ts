@@ -27,7 +27,7 @@ export class RoundRobinScheduler implements IScheduler {
             throw "Fixtures have already been generated!"
         }
 
-        // TODO: allow generating multiple many lots of fixtures, i.e. everyone
+        // MEDIUM: allow generating multiple many lots of fixtures, i.e. everyone
         // plays against each other two, three, four times...
 
         let attempts = 0
@@ -100,7 +100,7 @@ export class RoundRobinScheduler implements IScheduler {
         }
 
         if (attempts >= this.generationAttempts) {
-            // TODO: if this happens, notify the user and let them retry
+            // MEDIUM: if this happens, notify the user and let them retry
             console.debug(`Failed to generate rounds after ${this.generationAttempts} attempts!`)
         }
 

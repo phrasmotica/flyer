@@ -5,8 +5,8 @@ import { differenceInMinutes, differenceInSeconds } from "date-fns"
 import type { Flyer } from "../data/Flyer"
 import { Format, TieBreaker, type FlyerSettings } from "../data/FlyerSettings"
 
-// TODO: ideally this would not have to accept null, but we use it in places
-// where the argument can currently be null (see TODO in ResultsTable.vue)
+// LOW: ideally this would not have to accept null, but we use it in places
+// where the argument can currently be null (see ResultsTable.vue)
 export const useFlyer = (f: Flyer | null) => {
     const flyer = ref(f)
 

@@ -47,7 +47,7 @@ watch(() => settingsStore.settings.playerCount, () => {
     }
 
     if (settingsStore.settings.playerCount === 2) {
-        // TODO: disable the other money split options if this happens
+        // MEDIUM: disable the other money split options if this happens
         settingsStore.settings.moneySplit = MoneySplit.WinnerTakesAll
     }
 })
@@ -92,7 +92,7 @@ onUpdated(() => {
 <template>
     <TabMenu class="mb-2" :model="items" />
 
-    <!-- TODO: only make the form content overflow with a scroll bar, not the tab menu also -->
+    <!-- LOW: only make the form content overflow with a scroll bar, not the tab menu also -->
     <div id="form-content">
         <div v-if="section === Section.Players">
             <div class="p-fluid mb-2 md:hidden">

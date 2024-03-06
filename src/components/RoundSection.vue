@@ -27,7 +27,7 @@ const {
 const showContent = ref([RoundStatus.Ready, RoundStatus.InProgress].includes(status.value))
 
 const toggle = () => {
-    // TODO: don't allow showing content if the round is waiting for a
+    // LOW: don't allow showing content if the round is waiting for a
     // previous one to be completed
     showContent.value = !showContent.value
 }

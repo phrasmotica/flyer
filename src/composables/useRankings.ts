@@ -86,7 +86,7 @@ export const useRankings = () => {
             return q.diff - p.diff
         }
 
-        // TODO: give 3 points for a win, 1 for a draw, etc?
+        // MEDIUM: give 3 points for a win, 1 for a draw, etc?
 
         return 0
     }
@@ -113,7 +113,8 @@ export const useRankings = () => {
                 }
 
                 if (settings.tieBreaker === TieBreaker.HeadToHead) {
-                    // TODO: account for multiple head-to-head matches?
+                    // LOW: account for multiple head-to-head matches? Only required when round-robins feature
+                    // multiple matches between two players...
                     const match = results.find(
                         f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
                     )

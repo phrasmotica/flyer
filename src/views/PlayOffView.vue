@@ -14,7 +14,7 @@ import { useFlyer } from "../composables/useFlyer"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
-// TODO: de-duplicate this
+// HIGH: de-duplicate this
 enum Display {
     Fixtures = "Fixtures",
     Standings = "Standings",

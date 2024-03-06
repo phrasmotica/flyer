@@ -33,7 +33,7 @@ const selectForRecording = (r: Result) => {
 }
 
 const highlight = (resultId: string) => {
-    // TODO: automatically show the round sections containing the parent
+    // LOW: automatically show the round sections containing the parent
     // fixture of the highlighted player name if it's currently hidden
     if (highlightedResultId.value === resultId) {
         highlightedResultId.value = ""
