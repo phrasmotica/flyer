@@ -17,30 +17,30 @@ export const usePodium = (f: Flyer | null) => {
         rounds,
     } = useFlyer(f)
 
-    const finalists = computed(() => {
+    const finalists = computed<[string, string]>(() => {
         if (!flyer.value) {
-            return <[string, string]>["", ""]
+            return ["", ""]
         }
 
         if (!flyer.value.startTime || !flyer.value.finishTime) {
-            return <[string, string]>["", ""]
+            return ["", ""]
         }
 
         if (settings.value.format === Format.RoundRobin) {
-            return <[string, string]>["", ""]
+            return ["", ""]
         }
 
         const finalRound = rounds.value[rounds.value.length - 1]
         if (!finalRound) {
-            return <[string, string]>["", ""]
+            return ["", ""]
         }
 
         const final = finalRound.fixtures[finalRound.fixtures.length - 1]
         const winnerId = getWinner(final).playerId
 
-        return <[string, string]>[
+        return [
             winnerId,
-            ...final.scores.filter(s => s.playerId !== winnerId).map(s => s.playerId)
+            final.scores.filter(s => s.playerId !== winnerId)[0].playerId
         ]
     })
 
