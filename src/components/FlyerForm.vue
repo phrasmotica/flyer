@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref, watch } from "vue"
+import { onUpdated, ref } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
 import CurrencyStepper from "./CurrencyStepper.vue"
@@ -13,8 +13,6 @@ import Stepper from "./Stepper.vue"
 import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
-
-import { MoneySplit } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
 
@@ -46,31 +44,6 @@ const { gbp } = useCurrency()
 const { blurNumberInputs } = useTweaks()
 
 const section = ref(Section.Players)
-
-// MEDIUM: move these two watchers inside the settings store, if it's possible
-watch(() => settingsStore.settings.playerCount, () => {
-    if (settingsStore.settings.tableCount > Math.floor(settingsStore.settings.playerCount / 2)) {
-        settingsStore.settings.tableCount = Math.floor(settingsStore.settings.playerCount / 2)
-    }
-
-    if (settingsStore.settings.playerCount === 2) {
-        // MEDIUM: disable the other money split options if this happens
-        settingsStore.settings.moneySplit = MoneySplit.WinnerTakesAll
-    }
-})
-
-watch(() => settings.value.format, () => {
-    if (isKnockout.value) {
-        settingsStore.settings.requireCompletedRounds = true
-        settingsStore.settings.allowEarlyFinish = false
-        settingsStore.settings.allowDraws = false
-    }
-
-    if (isRoundRobin.value) {
-        settingsStore.settings.randomlyDrawAllRounds = false
-        settingsStore.settings.requireCompletedRounds = false
-    }
-})
 
 const items = ref<MenuItem[]>([
     {

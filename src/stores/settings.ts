@@ -1,5 +1,8 @@
-import { defineStore } from "pinia"
+import { watch } from "vue"
 import { useStorage } from "@vueuse/core"
+import { defineStore } from "pinia"
+
+import { useSettings } from "../composables/useSettings"
 
 import { Format, type FlyerSettings, RuleSet, MoneySplit } from "../data/FlyerSettings"
 
@@ -32,6 +35,35 @@ export const useSettingsStore = defineStore("settings", () => {
         moneySplit: MoneySplit.WinnerTakesAll,
         tableCostPerHour: 9,
         name: "",
+    })
+
+    const {
+        isKnockout,
+        isRoundRobin,
+    } = useSettings(settings.value)
+
+    watch(() => settings.value.playerCount, () => {
+        if (settings.value.tableCount > Math.floor(settings.value.playerCount / 2)) {
+            settings.value.tableCount = Math.floor(settings.value.playerCount / 2)
+        }
+
+        if (settings.value.playerCount === 2) {
+            // MEDIUM: disable the other money split options if this happens
+            settings.value.moneySplit = MoneySplit.WinnerTakesAll
+        }
+    })
+
+    watch(() => settings.value.format, () => {
+        if (isKnockout.value) {
+            settings.value.requireCompletedRounds = true
+            settings.value.allowEarlyFinish = false
+            settings.value.allowDraws = false
+        }
+
+        if (isRoundRobin.value) {
+            settings.value.randomlyDrawAllRounds = false
+            settings.value.requireCompletedRounds = false
+        }
     })
 
     const setName = (index: number, name: string) => {
