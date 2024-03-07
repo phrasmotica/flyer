@@ -3,60 +3,13 @@ import type { MeterItem } from "primevue/metergroup"
 
 import { useCurrency } from "./useCurrency"
 
-import { MoneySplit, type FlyerSettings, Format, RuleSet, TieBreaker } from "../data/FlyerSettings"
+import { MoneySplit, type FlyerSettings, Format, TieBreaker } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
+import { formatList, ruleSetList, tieBreakerList } from "../stores/settings"
+
 const { gbp } = useCurrency()
-
-// TODO: move these lists to the settings store
-const formatList = [
-    {
-        value: Format.Knockout,
-        name: "Knockout",
-        summary: "Knockout format",
-        details: "losers are immediately eliminated until one player remains",
-    },
-    {
-        value: Format.RoundRobin,
-        name: "Round-Robin",
-        summary: "Round-Robin format",
-        details: "every player plays against every other player once",
-    },
-]
-
-const ruleSetList = [
-    {
-        value: RuleSet.Blackball,
-        name: "Blackball",
-        summary: "Blackball rules",
-        details: "foul gives a free shot and a visit with ball-in-hand behind the baulk line, skill shots are permitted",
-    },
-    {
-        value: RuleSet.International,
-        name: "International",
-        summary: "International rules",
-        details: "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted",
-    },
-]
-
-const tieBreakerList = [
-    {
-        value: TieBreaker.HeadToHead,
-        name: "Head-to-Head",
-        details: "decided by the tied players' head-to-head records",
-    },
-    {
-        value: TieBreaker.PlayOff,
-        name: "Play-Off",
-        details: "decided by a race-to-1 knockout play-off between the tied players",
-    },
-    {
-        value: TieBreaker.Runouts,
-        name: "Runouts",
-        details: "decided by the number of runouts made by the tied players",
-    },
-]
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
@@ -213,18 +166,15 @@ export const useSettings = (s: FlyerSettings) => {
         formatName,
         formatSummary,
         formatDetails,
-        formatList,
 
         drawSummary,
         raceSummary,
 
         rulesSummary,
         rulesDetails,
-        ruleSetList,
 
         tieBreakerSummary,
         tieBreakerDetails,
-        tieBreakerList,
 
         isKnockout,
         isRoundRobin,

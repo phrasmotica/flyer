@@ -29,9 +29,6 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 const settingsStore = useSettingsStore()
 
 const {
-    formatList,
-    ruleSetList,
-    tieBreakerList,
     estimatedCost,
     isKnockout,
     isRoundRobin,
@@ -123,7 +120,7 @@ onUpdated(() => {
                         <LabelledDropdown
                             label="Format"
                             v-model="settingsStore.settings.format"
-                            :options="formatList" />
+                            :options="settingsStore.formatList" />
                     </div>
                 </div>
 
@@ -132,7 +129,7 @@ onUpdated(() => {
                         <LabelledDropdown
                             label="Rules"
                             v-model="settingsStore.settings.ruleSet"
-                            :options="ruleSetList" />
+                            :options="settingsStore.ruleSetList" />
                     </div>
                 </div>
 
@@ -142,7 +139,7 @@ onUpdated(() => {
                         <LabelledDropdown
                             label="Tie Breaker"
                             v-model="settingsStore.settings.tieBreaker"
-                            :options="tieBreakerList" />
+                            :options="settingsStore.tieBreakerList" />
                     </div>
                 </div>
             </div>

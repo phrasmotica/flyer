@@ -4,10 +4,58 @@ import { defineStore } from "pinia"
 
 import { useSettings } from "../composables/useSettings"
 
-import { Format, type FlyerSettings, RuleSet, MoneySplit } from "../data/FlyerSettings"
+import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker } from "../data/FlyerSettings"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
+
+export const formatList = [
+    {
+        value: Format.Knockout,
+        name: "Knockout",
+        summary: "Knockout format",
+        details: "losers are immediately eliminated until one player remains",
+    },
+    {
+        value: Format.RoundRobin,
+        name: "Round-Robin",
+        summary: "Round-Robin format",
+        details: "every player plays against every other player once",
+    },
+]
+
+export const ruleSetList = [
+    {
+        value: RuleSet.Blackball,
+        name: "Blackball",
+        summary: "Blackball rules",
+        details: "foul gives a free shot and a visit with ball-in-hand behind the baulk line, skill shots are permitted",
+    },
+    {
+        value: RuleSet.International,
+        name: "International",
+        summary: "International rules",
+        details: "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted",
+    },
+]
+
+export const tieBreakerList = [
+    {
+        value: TieBreaker.HeadToHead,
+        name: "Head-to-Head",
+        details: "decided by the tied players' head-to-head records",
+    },
+    {
+        value: TieBreaker.PlayOff,
+        name: "Play-Off",
+        details: "decided by a race-to-1 knockout play-off between the tied players",
+    },
+    {
+        value: TieBreaker.Runouts,
+        name: "Runouts",
+        details: "decided by the number of runouts made by the tied players",
+    },
+]
 
 const moneySplitList = [
     // MEDIUM: add a "disabled" property to these objects, and specify that
@@ -123,6 +171,9 @@ export const useSettingsStore = defineStore("settings", () => {
     return {
         settings,
 
+        formatList,
+        ruleSetList,
+        tieBreakerList,
         moneySplitOptions,
 
         setName,
