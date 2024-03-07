@@ -1,4 +1,4 @@
-import { watch } from "vue"
+import { computed, watch } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
@@ -8,6 +8,27 @@ import { Format, type FlyerSettings, RuleSet, MoneySplit } from "../data/FlyerSe
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
+
+const moneySplitList = [
+    // MEDIUM: add a "disabled" property to these objects, and specify that
+    // property to the Dropdown inside LabelledDropdown
+    {
+        value: MoneySplit.WinnerTakesAll,
+        name: "Winner Takes All",
+    },
+    {
+        value: MoneySplit.SeventyThirty,
+        name: "70/30",
+    },
+    {
+        value: MoneySplit.SixtyTwentyFiveFifteen,
+        name: "60/25/15",
+    },
+    {
+        value: MoneySplit.SemiFinalists,
+        name: "45/25/15/15",
+    },
+]
 
 let defaultPlayers = <string[]>[]
 if (defaultPlayersEnv) {
@@ -46,11 +67,6 @@ export const useSettingsStore = defineStore("settings", () => {
         if (settings.value.tableCount > Math.floor(settings.value.playerCount / 2)) {
             settings.value.tableCount = Math.floor(settings.value.playerCount / 2)
         }
-
-        if (settings.value.playerCount === 2) {
-            // MEDIUM: disable the other money split options if this happens
-            settings.value.moneySplit = MoneySplit.WinnerTakesAll
-        }
     })
 
     watch(() => settings.value.format, () => {
@@ -63,6 +79,26 @@ export const useSettingsStore = defineStore("settings", () => {
         if (isRoundRobin.value) {
             settings.value.randomlyDrawAllRounds = false
             settings.value.requireCompletedRounds = false
+        }
+    })
+
+    const moneySplitOptions = computed(() => {
+        const exclusions = <MoneySplit[]>[]
+
+        if (settings.value.playerCount < 4) {
+            exclusions.push(MoneySplit.SemiFinalists)
+        }
+
+        if (settings.value.playerCount < 3) {
+            exclusions.push(MoneySplit.SixtyTwentyFiveFifteen)
+        }
+
+        return moneySplitList.filter(m => !exclusions.includes(m.value))
+    })
+
+    watch(moneySplitOptions, () => {
+        if (settings.value.moneySplit >= moneySplitOptions.value.length) {
+            settings.value.moneySplit = moneySplitOptions.value.length - 1
         }
     })
 
@@ -86,6 +122,8 @@ export const useSettingsStore = defineStore("settings", () => {
 
     return {
         settings,
+
+        moneySplitOptions,
 
         setName,
         deleteName,

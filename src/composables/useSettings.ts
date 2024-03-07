@@ -9,6 +9,7 @@ import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 const { gbp } = useCurrency()
 
+// TODO: move these lists to the settings store
 const formatList = [
     {
         value: Format.Knockout,
@@ -54,25 +55,6 @@ const tieBreakerList = [
         value: TieBreaker.Runouts,
         name: "Runouts",
         details: "decided by the number of runouts made by the tied players",
-    },
-]
-
-const moneySplitList = [
-    {
-        value: MoneySplit.WinnerTakesAll,
-        name: "Winner Takes All",
-    },
-    {
-        value: MoneySplit.SeventyThirty,
-        name: "70/30",
-    },
-    {
-        value: MoneySplit.SixtyTwentyFiveFifteen,
-        name: "60/25/15",
-    },
-    {
-        value: MoneySplit.SemiFinalists,
-        name: "45/25/15/15",
     },
 ]
 
@@ -258,7 +240,6 @@ export const useSettings = (s: FlyerSettings) => {
         prizePotSummary,
         prizeMonies,
         prizeMoniesMeterItems,
-        moneySplitList,
 
         isInvalid,
     }

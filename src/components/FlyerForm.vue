@@ -29,14 +29,12 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 const settingsStore = useSettingsStore()
 
 const {
-    settings,
     formatList,
     ruleSetList,
     tieBreakerList,
     estimatedCost,
     isKnockout,
     isRoundRobin,
-    moneySplitList,
 } = useSettings(settingsStore.settings)
 
 const { gbp } = useCurrency()
@@ -236,7 +234,7 @@ onUpdated(() => {
                 <LabelledDropdown
                     label="Money split"
                     v-model="settingsStore.settings.moneySplit"
-                    :options="moneySplitList"
+                    :options="settingsStore.moneySplitOptions"
                     :disabled="!settingsStore.settings.entryFeeRequired" />
 
                 <div class="mt-2 border-top-1 border-gray-200">
