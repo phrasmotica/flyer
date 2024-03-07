@@ -28,6 +28,7 @@ const {
     players,
     settings,
     durationMinutes,
+    playOffs,
 } = useFlyer(props.flyer)
 
 const {
@@ -63,10 +64,13 @@ watch(props, () => {
         </div>
 
         <div v-if="props.showDetails" class="font-italic">
-            <!-- HIGH: add info about any play-offs that happened -->
+            <!-- MEDIUM: allow loading the flyer into the fixture list and results view -->
             <div>
                 {{ formatName }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
                 Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.
+
+                <!-- LOW: add more play-off info -->
+                <span v-if="playOffs.length > 0">Required {{ playOffs.length }} play-off(s).</span>
             </div>
 
             <div class="p-fluid my-2">
