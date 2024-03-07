@@ -1,9 +1,9 @@
 import { computed } from "vue"
 
 import { useFlyer } from "./useFlyer"
+import { useSettings } from "./useSettings"
 
 import type { Flyer } from "../data/Flyer"
-import { Format } from "../data/FlyerSettings"
 import type { Result } from "../data/Result"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
@@ -17,6 +17,10 @@ export const usePodium = (f: Flyer | null) => {
         rounds,
     } = useFlyer(f)
 
+    const {
+        isRoundRobin,
+    } = useSettings(settings.value)
+
     const finalists = computed<[string, string]>(() => {
         if (!flyer.value) {
             return ["", ""]
@@ -26,7 +30,7 @@ export const usePodium = (f: Flyer | null) => {
             return ["", ""]
         }
 
-        if (settings.value.format === Format.RoundRobin) {
+        if (isRoundRobin.value) {
             return ["", ""]
         }
 

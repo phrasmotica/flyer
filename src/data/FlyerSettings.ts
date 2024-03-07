@@ -21,27 +21,26 @@ export interface FlyerSettings {
     playOffId: string
 }
 
-// HIGH: store enum members as numeric values, and compute the names elsewhere
 export enum Format {
-    Knockout = "Knockout",
-    RoundRobin = "Round Robin",
+    Knockout,
+    RoundRobin,
 }
 
 export enum RuleSet {
-    International = "International",
-    Blackball = "Blackball",
+    Blackball,
+    International,
 }
 
 export enum TieBreaker {
-    HeadToHead = "Head-to-Head",
-    Runouts = "Runouts",
-    PlayOff = "Play-Off",
+    HeadToHead,
+    Runouts,
+    PlayOff,
 }
 
 export enum MoneySplit {
-    WinnerTakesAll = "Winner Takes All",
-    SeventyThirty = "70/30",
-    SixtyTwentyFiveFifteen = "60/25/15",
+    WinnerTakesAll,
+    SeventyThirty,
+    SixtyTwentyFiveFifteen,
 }
 
 export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerSettings>{

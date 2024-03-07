@@ -15,9 +15,9 @@ import { useFlyer } from "../composables/useFlyer"
 import { useFlyerStore } from "../stores/flyer"
 
 enum Display {
-    Fixtures = "Fixtures",
-    Standings = "Standings",
-    Info = "Info",
+    Fixtures,
+    Standings,
+    Info,
 }
 
 const router = useRouter()

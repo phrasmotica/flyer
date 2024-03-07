@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid"
 
-const value = defineModel<string>()
+const value = defineModel<string | number>()
 
 const props = defineProps<{
     label: string
-    options: string[]
+    options: { name: string, value: (string | number) }[]
     disabled?: boolean
 }>()
 
@@ -25,6 +25,8 @@ const id = "labelled-dropdown-" + uuidv4()
             :inputId="id"
             v-model="value"
             :options="props.options"
+            optionLabel="name"
+            optionValue="value"
             :disabled="props.disabled" />
     </div>
 </template>

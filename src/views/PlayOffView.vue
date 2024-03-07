@@ -14,11 +14,10 @@ import { useFlyer } from "../composables/useFlyer"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
-// HIGH: de-duplicate this
 enum Display {
-    Fixtures = "Fixtures",
-    Standings = "Standings",
-    Info = "Info",
+    Fixtures,
+    Standings,
+    Info,
 }
 
 const router = useRouter()

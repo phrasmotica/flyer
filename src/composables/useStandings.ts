@@ -1,15 +1,22 @@
 import { computed, ref } from "vue"
 
 import { useRankings } from "./useRankings"
+import { useSettings } from "./useSettings"
 
-import { Format, type FlyerSettings, TieBreaker } from "../data/FlyerSettings"
+import { type FlyerSettings } from "../data/FlyerSettings"
 import type { Player } from "../data/Player"
 import type { Result } from "../data/Result"
 
 export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
     const results = ref(r)
     const players = ref(p)
-    const settings = ref(s)
+
+    const {
+        settings,
+        isKnockout,
+        isRoundRobin,
+        usesPlayOff,
+    } = useSettings(s)
 
     const {
         computeStandings,
@@ -23,13 +30,13 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
     const orderedPlayOffs = computed(() => playOffs.value.sort((a, b) => b.forRank - a.forRank))
 
     const requiresPlayOff = computed(() => {
-        return settings.value.tieBreaker === TieBreaker.PlayOff
-            && settings.value.format === Format.RoundRobin
+        return usesPlayOff.value
+            && isRoundRobin.value
             && orderedPlayOffs.value.length > 0
     })
 
     const firstPlace = computed(() => {
-        if (settings.value.format === Format.Knockout) {
+        if (isKnockout.value) {
             return null
         }
 

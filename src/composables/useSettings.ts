@@ -9,52 +9,101 @@ import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 const { gbp } = useCurrency()
 
-const formatDetailsList = [
+const formatList = [
     {
         value: Format.Knockout,
+        name: "Knockout",
+        summary: "Knockout format",
         details: "losers are immediately eliminated until one player remains",
     },
     {
         value: Format.RoundRobin,
+        name: "Round-Robin",
+        summary: "Round-Robin format",
         details: "every player plays against every other player once",
     },
 ]
 
-const rulesDetailsList = [
+const ruleSetList = [
     {
         value: RuleSet.Blackball,
+        name: "Blackball",
+        summary: "Blackball rules",
         details: "foul gives a free shot and a visit with ball-in-hand behind the baulk line, skill shots are permitted",
     },
     {
         value: RuleSet.International,
+        name: "International",
+        summary: "International rules",
         details: "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted",
     },
 ]
 
-const tieBreakerDetailsList = [
+const tieBreakerList = [
     {
         value: TieBreaker.HeadToHead,
+        name: "Head-to-Head",
         details: "decided by the tied players' head-to-head records",
     },
     {
         value: TieBreaker.PlayOff,
+        name: "Play-Off",
         details: "decided by a race-to-1 knockout play-off between the tied players",
     },
     {
         value: TieBreaker.Runouts,
+        name: "Runouts",
         details: "decided by the number of runouts made by the tied players",
+    },
+]
+
+const moneySplitList = [
+    {
+        value: MoneySplit.WinnerTakesAll,
+        name: "Winner Takes All",
+    },
+    {
+        value: MoneySplit.SeventyThirty,
+        name: "70/30",
+    },
+    {
+        value: MoneySplit.SixtyTwentyFiveFifteen,
+        name: "60/25/15",
     },
 ]
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
-    const formatSummary = computed(() => `${settings.value.format} format`)
+    const formatName = computed(() => {
+        const format = formatList.find(s => s.value === settings.value.format)
+        if (!format) {
+            throw `Invalid format ${settings.value.format}!`
+        }
 
-    const formatDetails = computed(() => formatDetailsList.find(s => s.value === settings.value.format)?.details || "???")
+        return format.name
+    })
+
+    const formatSummary = computed(() => {
+        const format = formatList.find(s => s.value === settings.value.format)
+        if (!format) {
+            throw `Invalid format ${settings.value.format}!`
+        }
+
+        return format.summary
+    })
+
+    const formatDetails = computed(() => {
+        const format = formatList.find(s => s.value === settings.value.format)
+        if (!format) {
+            throw `Invalid format ${settings.value.format}!`
+        }
+
+        return format.details
+    })
 
     const drawSummary = computed(() => {
-        if (settings.value.format === Format.RoundRobin) {
+        if (isRoundRobin.value) {
             return ""
         }
 
@@ -63,43 +112,57 @@ export const useSettings = (s: FlyerSettings) => {
 
     const raceSummary = computed(() => `Races to ${settings.value.raceTo}`)
 
-    const rulesSummary = computed(() => `${settings.value.ruleSet} rules`)
+    const rulesSummary = computed(() => {
+        const ruleSet = ruleSetList.find(s => s.value === settings.value.ruleSet)
+        if (!ruleSet) {
+            throw `Invalid rule set ${settings.value.ruleSet}!`
+        }
 
-    const rulesDetails = computed(() => rulesDetailsList.find(s => s.value === settings.value.ruleSet)?.details || "???")
+        return ruleSet.summary
+    })
+
+    const rulesDetails = computed(() => {
+        const ruleSet = ruleSetList.find(s => s.value === settings.value.ruleSet)
+        if (!ruleSet) {
+            throw `Invalid rule set ${settings.value.ruleSet}!`
+        }
+
+        return ruleSet.details
+    })
 
     const tieBreakerSummary = computed(() => `${settings.value.tieBreaker} tie-breaker`)
 
-    const tieBreakerDetails = computed(() => tieBreakerDetailsList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
+    const tieBreakerDetails = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
 
     const isKnockout = computed(() => settings.value.format === Format.Knockout)
     const isRoundRobin = computed(() => settings.value.format === Format.RoundRobin)
 
     const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
 
+    const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
+
     const durationPerFrame = computed(() => {
-        switch (settings.value.format) {
-            case Format.Knockout:
-                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).frameTimeEstimateMins
-
-            case Format.RoundRobin:
-                return new RoundRobinScheduler().frameTimeEstimateMins
-
-            default:
-                throw `Invalid flyer format ${settings.value.format}!`
+        if (isKnockout.value) {
+            return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).frameTimeEstimateMins
         }
+
+        if (isRoundRobin.value) {
+            return new RoundRobinScheduler().frameTimeEstimateMins
+        }
+
+        throw `Invalid flyer format ${settings.value.format}!`
     })
 
     const estimatedDuration = computed(() => {
-        switch (settings.value.format) {
-            case Format.Knockout:
-                return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).estimateDuration(settings.value)
-
-            case Format.RoundRobin:
-                return new RoundRobinScheduler().estimateDuration(settings.value)
-
-            default:
-                throw `Invalid flyer format ${settings.value.format}!`
+        if (isKnockout.value) {
+            return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).estimateDuration(settings.value)
         }
+
+        if (isRoundRobin.value) {
+            return new RoundRobinScheduler().estimateDuration(settings.value)
+        }
+
+        throw `Invalid flyer format ${settings.value.format}!`
     })
 
     const estimatedCost = computed(() => {
@@ -154,25 +217,37 @@ export const useSettings = (s: FlyerSettings) => {
     return {
         settings,
 
+        formatName,
         formatSummary,
         formatDetails,
+        formatList,
+
         drawSummary,
         raceSummary,
+
         rulesSummary,
         rulesDetails,
+        ruleSetList,
+
         tieBreakerSummary,
         tieBreakerDetails,
+        tieBreakerList,
+
         isKnockout,
         isRoundRobin,
         isRandomDraw,
+        usesPlayOff,
+
         durationPerFrame,
         estimatedDuration,
         estimatedCost,
+
         entryFeeSummary,
         prizePot,
         prizePotSummary,
         prizeMonies,
         prizeMoniesMeterItems,
+        moneySplitList,
 
         isInvalid,
     }

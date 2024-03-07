@@ -3,7 +3,7 @@ import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import type { Flyer } from "../data/Flyer"
-import { Format, TieBreaker, type FlyerSettings } from "../data/FlyerSettings"
+import { type FlyerSettings } from "../data/FlyerSettings"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
@@ -65,11 +65,6 @@ export const useFlyer = (f: Flyer | null) => {
         }
 
         return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
-    })
-
-    const usesPlayOff = computed(() => {
-        return settings.value.tieBreaker === TieBreaker.PlayOff
-            && settings.value.format === Format.RoundRobin
     })
 
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
@@ -141,7 +136,6 @@ export const useFlyer = (f: Flyer | null) => {
         readyForNextRound,
         durationMinutes,
         durationSeconds,
-        usesPlayOff,
         clockDisplay,
 
         isBusy,

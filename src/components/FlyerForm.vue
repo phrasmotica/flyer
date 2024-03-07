@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUpdated, ref, watch } from "vue"
+import { computed, onUpdated, ref, watch } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
 import CurrencyStepper from "./CurrencyStepper.vue"
@@ -14,7 +14,7 @@ import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
-import { Format, MoneySplit, RuleSet, TieBreaker } from "../data/FlyerSettings"
+import { MoneySplit } from "../data/FlyerSettings"
 
 import { useSettingsStore } from "../stores/settings"
 
@@ -31,8 +31,14 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 const settingsStore = useSettingsStore()
 
 const {
+    settings,
+    formatList,
+    ruleSetList,
+    tieBreakerList,
     estimatedCost,
     isKnockout,
+    isRoundRobin,
+    moneySplitList,
 } = useSettings(settingsStore.settings)
 
 const { gbp } = useCurrency()
@@ -41,6 +47,7 @@ const { blurNumberInputs } = useTweaks()
 
 const section = ref(Section.Players)
 
+// MEDIUM: move these two watchers inside the settings store, if it's possible
 watch(() => settingsStore.settings.playerCount, () => {
     if (settingsStore.settings.tableCount > Math.floor(settingsStore.settings.playerCount / 2)) {
         settingsStore.settings.tableCount = Math.floor(settingsStore.settings.playerCount / 2)
@@ -52,14 +59,14 @@ watch(() => settingsStore.settings.playerCount, () => {
     }
 })
 
-watch(() => settingsStore.settings.format, () => {
-    if (settingsStore.settings.format === Format.Knockout) {
+watch(() => settings.value.format, () => {
+    if (isKnockout.value) {
         settingsStore.settings.requireCompletedRounds = true
         settingsStore.settings.allowEarlyFinish = false
         settingsStore.settings.allowDraws = false
     }
 
-    if (settingsStore.settings.format === Format.RoundRobin) {
+    if (isRoundRobin.value) {
         settingsStore.settings.randomlyDrawAllRounds = false
         settingsStore.settings.requireCompletedRounds = false
     }
@@ -145,7 +152,7 @@ onUpdated(() => {
                         <LabelledDropdown
                             label="Format"
                             v-model="settingsStore.settings.format"
-                            :options="[Format.Knockout, Format.RoundRobin]" />
+                            :options="formatList" />
                     </div>
                 </div>
 
@@ -154,17 +161,17 @@ onUpdated(() => {
                         <LabelledDropdown
                             label="Rules"
                             v-model="settingsStore.settings.ruleSet"
-                            :options="[RuleSet.Blackball, RuleSet.International]" />
+                            :options="ruleSetList" />
                     </div>
                 </div>
 
-                <div v-if="settingsStore.settings.format === Format.RoundRobin"
+                <div v-if="isRoundRobin"
                     class="col-12 md:col-6 p-0 p-fluid">
                     <div class="md:mr-1">
                         <LabelledDropdown
                             label="Tie Breaker"
                             v-model="settingsStore.settings.tieBreaker"
-                            :options="[TieBreaker.HeadToHead, TieBreaker.Runouts, TieBreaker.PlayOff]" />
+                            :options="tieBreakerList" />
                     </div>
                 </div>
             </div>
@@ -256,7 +263,7 @@ onUpdated(() => {
                 <LabelledDropdown
                     label="Money split"
                     v-model="settingsStore.settings.moneySplit"
-                    :options="[MoneySplit.WinnerTakesAll, MoneySplit.SeventyThirty, MoneySplit.SixtyTwentyFiveFifteen]"
+                    :options="moneySplitList"
                     :disabled="!settingsStore.settings.entryFeeRequired" />
 
                 <div class="mt-2 border-top-1 border-gray-200">

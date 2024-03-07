@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePodium } from "../composables/usePodium"
+import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
 
 import type { Flyer } from "../data/Flyer"
@@ -34,6 +35,10 @@ const {
 } = usePodium(props.flyer)
 
 const {
+    formatName,
+} = useSettings(settings.value)
+
+const {
     firstPlace,
 } = useStandings(results.value, players.value, settings.value)
 
@@ -60,7 +65,7 @@ watch(props, () => {
         <div v-if="props.showDetails" class="font-italic">
             <!-- HIGH: add info about any play-offs that happened -->
             <div>
-                {{ settings.format }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
+                {{ formatName }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
                 Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.
             </div>
 

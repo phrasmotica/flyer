@@ -3,7 +3,7 @@ import PrizePotSummary from "./PrizePotSummary.vue"
 
 import { useSettings } from "../composables/useSettings"
 
-import { Format, type FlyerSettings } from "../data/FlyerSettings"
+import { type FlyerSettings } from "../data/FlyerSettings"
 
 const props = defineProps<{
     settings: FlyerSettings
@@ -19,6 +19,7 @@ const {
     rulesDetails,
     tieBreakerSummary,
     tieBreakerDetails,
+    isRoundRobin,
 } = useSettings(props.settings)
 </script>
 
@@ -36,7 +37,7 @@ const {
         <strong>{{ rulesSummary }}</strong>&nbsp;<em>({{ rulesDetails }})</em>
     </div>
 
-    <div v-if="settings.format === Format.RoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
+    <div v-if="isRoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
         <strong>{{ tieBreakerSummary }}</strong>&nbsp;<em>({{ tieBreakerDetails }})</em>
     </div>
 
