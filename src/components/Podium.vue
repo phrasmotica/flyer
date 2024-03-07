@@ -2,9 +2,7 @@
 import VictoryText from "./VictoryText.vue"
 
 import { useCurrency } from "../composables/useCurrency"
-import { useFlyer } from "../composables/useFlyer"
 import { usePodium } from "../composables/usePodium"
-import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -13,18 +11,10 @@ const { gbp } = useCurrency()
 const flyerStore = useFlyerStore()
 
 const {
-    settings,
-} = useFlyer(flyerStore.flyer)
-
-const {
     winner,
     winnerResults,
-    runnerUp,
+    moneyRecipients,
 } = usePodium(flyerStore.flyer)
-
-const {
-    prizeMonies,
-} = useSettings(settings.value)
 </script>
 
 <template>
@@ -33,10 +23,10 @@ const {
             <p class="m-0">The winner is</p>
             <h1 class="font-bold">{{ winner.name }}</h1>
 
-            <p v-if="prizeMonies.length > 0" class="m-0 text-xl">
+            <p v-if="moneyRecipients.length > 0" class="m-0 text-xl">
                 who wins
                 <span class="font-bold">
-                    {{ gbp(prizeMonies[0]) }}
+                    {{ gbp(moneyRecipients[0].winnings) }}
                 </span>
             </p>
         </div>
@@ -47,14 +37,13 @@ const {
             </li>
         </ul>
 
-        <div v-if="prizeMonies.length > 1" class="border-top-1 mt-1 pt-1">
+        <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
             <p class="m-0">Other prize money:</p>
 
-            <!-- HIGH: show prize monies for ALL other recipients, creating a component for it -->
-            <p class="m-0">
-                {{ runnerUp!.name }} wins
+            <p v-for="l in moneyRecipients.slice(1)" class="m-0">
+                {{ l.player.name }} wins
                 <span class="font-bold">
-                    {{ gbp(prizeMonies[1]) }}
+                    {{ gbp(l.winnings) }}
                 </span>
             </p>
         </div>
