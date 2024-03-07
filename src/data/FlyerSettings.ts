@@ -41,6 +41,7 @@ export enum MoneySplit {
     WinnerTakesAll,
     SeventyThirty,
     SixtyTwentyFiveFifteen,
+    SemiFinalists,
 }
 
 export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerSettings>{

@@ -70,6 +70,10 @@ const moneySplitList = [
         value: MoneySplit.SixtyTwentyFiveFifteen,
         name: "60/25/15",
     },
+    {
+        value: MoneySplit.SemiFinalists,
+        name: "45/25/15/15",
+    },
 ]
 
 export const useSettings = (s: FlyerSettings) => {
@@ -191,6 +195,13 @@ export const useSettings = (s: FlyerSettings) => {
             const winnerPrize = roundX(prizePot.value * 0.6, 5)
             const runnerUpPrize = roundX(prizePot.value * 0.25, 5)
             return [winnerPrize, runnerUpPrize, prizePot.value - winnerPrize - runnerUpPrize]
+        }
+
+        if (settings.value.moneySplit === MoneySplit.SemiFinalists) {
+            const winnerPrize = roundX(prizePot.value * 0.45, 5)
+            const runnerUpPrize = roundX(prizePot.value * 0.25, 5)
+            const semiFinalistPrize = (prizePot.value - winnerPrize - runnerUpPrize) / 2
+            return [winnerPrize, runnerUpPrize, semiFinalistPrize, semiFinalistPrize]
         }
 
         return [prizePot.value]
