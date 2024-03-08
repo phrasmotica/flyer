@@ -74,7 +74,7 @@ const moneySplitList = [
     },
     {
         value: MoneySplit.SemiFinalists,
-        name: "45/25/15/15",
+        name: "55/25/10/10",
     },
 ]
 

@@ -133,7 +133,7 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (settings.value.moneySplit === MoneySplit.SemiFinalists) {
-            const winnerPrize = roundX(prizePot.value * 0.45, 5)
+            const winnerPrize = roundX(prizePot.value * 0.55, 5)
             const runnerUpPrize = roundX(prizePot.value * 0.25, 5)
             const semiFinalistPrize = (prizePot.value - winnerPrize - runnerUpPrize) / 2
             return [winnerPrize, runnerUpPrize, semiFinalistPrize, semiFinalistPrize]
