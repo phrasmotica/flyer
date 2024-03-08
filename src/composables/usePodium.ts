@@ -20,6 +20,7 @@ export const usePodium = (f: Flyer | null) => {
     const {
         isRoundRobin,
         prizeMonies,
+        prizeColours,
     } = useSettings(settings.value)
 
     const finalists = computed<[string, string]>(() => {
@@ -92,6 +93,7 @@ export const usePodium = (f: Flyer | null) => {
             {
                 player: winner.value,
                 winnings: prizeMonies.value[0],
+                colour: prizeColours.value[0],
             }
         ]
 
@@ -102,6 +104,7 @@ export const usePodium = (f: Flyer | null) => {
         const remainingPrizeMonies = prizeMonies.value.slice(1)
 
         let r = 0
+        let c = 1
 
         while (remainingPrizeMonies.length > 0) {
             const losers = losersByRound.value[r].losers
@@ -115,7 +118,11 @@ export const usePodium = (f: Flyer | null) => {
                 recipients.push({
                     player: l,
                     winnings: remainingPrizeMonies.splice(0, 1)[0],
+                    colour: prizeColours.value[c],
                 })
+
+                // keep using the last colour if necessary
+                c = Math.min(c + 1, prizeColours.value.length - 1)
             }
 
             r++

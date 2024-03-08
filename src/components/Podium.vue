@@ -25,7 +25,7 @@ const {
 
             <p v-if="moneyRecipients.length > 0" class="m-0 text-xl">
                 who wins
-                <span class="font-bold">
+                <span class="font-bold" :style="{color: moneyRecipients[0].colour,}">
                     {{ gbp(moneyRecipients[0].winnings) }}
                 </span>
             </p>
@@ -42,7 +42,7 @@ const {
 
             <p v-for="l in moneyRecipients.slice(1)" class="m-0">
                 {{ l.player.name }} wins
-                <span class="font-bold">
+                <span class="font-bold" :style="{color: l.colour,}">
                     {{ gbp(l.winnings) }}
                 </span>
             </p>

@@ -146,12 +146,12 @@ export const useSettings = (s: FlyerSettings) => {
         return Math.round(v / multiple) * multiple
     }
 
-    const colors = ["#ffd700", "#c0c0c0", "#a0522d", "#c084fc"]
-    const labels = ["Winner", "Runner-Up", "3rd", "4th", "5th", "6th", "7th", "8th"]
+    const prizeColours = computed(() => ["#ffd700", "#c0c0c0", "#a0522d", "#c084fc"])
+    const prizeLabels = computed(() => ["Winner", "Runner-Up", "3rd", "4th", "5th", "6th", "7th", "8th"])
 
     const prizeMoniesMeterItems = computed(() => prizeMonies.value.map((x, i) => <MeterItem>{
-        color: colors[i % colors.length],
-        label: labels[i],
+        color: prizeColours.value[Math.min(i, prizeColours.value.length - 1)],
+        label: prizeLabels.value[i],
         value: x,
     }))
 
@@ -189,6 +189,7 @@ export const useSettings = (s: FlyerSettings) => {
         prizePot,
         prizePotSummary,
         prizeMonies,
+        prizeColours,
         prizeMoniesMeterItems,
 
         isInvalid,
