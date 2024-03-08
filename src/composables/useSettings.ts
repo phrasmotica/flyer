@@ -146,6 +146,7 @@ export const useSettings = (s: FlyerSettings) => {
         return Math.round(v / multiple) * multiple
     }
 
+    // MEDIUM: vary colours and labels depending on the flyer format
     const prizeColours = computed(() => ["#ffd700", "#c0c0c0", "#a0522d", "#c084fc"])
     const prizeLabels = computed(() => ["Winner", "Runner-Up", "3rd", "4th", "5th", "6th", "7th", "8th"])
 
