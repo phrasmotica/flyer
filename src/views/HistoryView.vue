@@ -1,10 +1,33 @@
 <script setup lang="ts">
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
+import { useClipboard } from "@vueuse/core"
 
 import FlyerHistory from "../components/FlyerHistory.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useFlyerHistoryStore } from "../stores/flyerHistory"
+
+const { copy } = useClipboard()
+
+const flyerHistory = useFlyerHistoryStore()
+
 const router = useRouter()
+
+const isExported = ref(false)
+
+const exportButtonLabel = computed(() => isExported.value ? "Data copied to clipboard!" : "Export data")
+
+const exportPastFlyers = () => {
+    const data = JSON.stringify(flyerHistory.pastFlyers)
+    copy(data)
+
+    isExported.value = true
+
+    setTimeout(() => {
+        isExported.value = false
+    }, 2000)
+}
 
 const newFlyer = () => {
     router.push({
@@ -23,6 +46,14 @@ const newFlyer = () => {
             </div>
 
             <FlyerHistory />
+        </template>
+
+        <template #buttons>
+            <Button
+                :label="exportButtonLabel"
+                :disabled="isExported"
+                severity="primary"
+                @click="exportPastFlyers" />
         </template>
     </PageTemplate>
 </template>
