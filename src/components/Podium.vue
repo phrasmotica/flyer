@@ -2,6 +2,7 @@
 import { useI18n } from "vue-i18n"
 
 import VictoryText from "./VictoryText.vue"
+import WinningsList from "./WinningsList.vue"
 
 import { usePodium } from "../composables/usePodium"
 
@@ -39,14 +40,7 @@ const {
         </ul>
 
         <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
-            <p class="m-0">Other prize money:</p>
-
-            <p v-for="l in moneyRecipients.slice(1)" class="m-0">
-                {{ l.player.name }} wins
-                <span class="font-bold" :style="{color: l.colour,}">
-                    {{ n(l.winnings, "currency") }}
-                </span>
-            </p>
+            <WinningsList header="Other prize money:" :winnings="moneyRecipients.slice(1)" />
         </div>
     </div>
 

@@ -3,6 +3,8 @@ import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
+import WinningsList from "./WinningsList.vue"
+
 import { useFlyer } from "../composables/useFlyer"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useSettings } from "../composables/useSettings"
@@ -152,16 +154,7 @@ const getPlayOffIndex = (playerId: string) => {
         </p>
 
         <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
-            <p class="m-0">
-                Other prize money:
-                <span v-for="l, i in moneyRecipients.slice(1)">
-                    <span v-if="i > 0">, </span>
-                    {{ overallStandings[i + 1].name }} wins
-                    <span class="font-bold" :style="{color: l.colour,}">
-                        {{ n(moneyRecipients[i + 1].winnings, "currency") }}
-                    </span>
-                </span>
-            </p>
+            <WinningsList header="Other prize money:" :winnings="moneyRecipients.slice(1)" />
         </div>
     </div>
 </template>
