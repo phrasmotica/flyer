@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import { useRouter } from "vue-router"
 
 import ConfirmModal from "./ConfirmModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
 
 import type { Flyer } from "../data/Flyer"
 
+import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
+const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
+
+const router = useRouter()
 
 const selectedFlyer = ref<Flyer | null>(null)
 const showDeleteModal = ref(false)
@@ -20,6 +25,17 @@ const setSelectedFlyer = (f: Flyer) => {
     else {
         selectedFlyer.value = null
     }
+}
+
+const viewFlyer = (f: Flyer) => {
+    flyerStore.setFlyer(f)
+
+    router.push({
+        name: "play",
+        query: {
+            historic: 1,
+        }
+    })
 }
 
 const confirmDelete = () => {
@@ -56,6 +72,7 @@ const isSelected = (f: Flyer) => selectedFlyer.value?.id === f.id
             :index="i"
             :showDetails="isSelected(f)"
             @setSelected="() => setSelectedFlyer(f)"
+            @view="() => viewFlyer(f)"
             @confirmDelete="confirmDelete" />
 
         <ConfirmModal

@@ -10,6 +10,7 @@ import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
+import { useQueryParams } from "../composables/useQueryParams"
 import { useStandings } from "../composables/useStandings"
 import { useSettings } from "../composables/useSettings"
 
@@ -43,6 +44,10 @@ const {
     requiresPlayOff,
     orderedPlayOffs,
 } = useStandings(results.value, players.value, settings.value)
+
+const {
+    isHistoric,
+} = useQueryParams()
 
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
@@ -124,6 +129,12 @@ const hideGoToSetupModal = () => {
 const hideStartPlayOffModal = () => {
     showStartPlayOffModal.value = false
 }
+
+const goToPastFlyers = () => {
+    router.push({
+        name: "history",
+    })
+}
 </script>
 
 <template>
@@ -139,7 +150,7 @@ const hideStartPlayOffModal = () => {
 
             <Podium v-if="isKnockout" />
 
-            <div v-if="!requiresPlayOff" class="border-top-1 mt-1 pt-1">
+            <div v-if="!requiresPlayOff && !isHistoric" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />
             </div>
 
@@ -170,9 +181,18 @@ const hideStartPlayOffModal = () => {
             </div>
 
             <div v-else>
-                <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
+                <div v-if="!isHistoric">
+                    <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
-                <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
+                    <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
+                </div>
+
+                <div v-else>
+                    <Button
+                        label="Back to past flyers"
+                        severity="info"
+                        @click="goToPastFlyers" />
+                </div>
             </div>
         </template>
     </PageTemplate>

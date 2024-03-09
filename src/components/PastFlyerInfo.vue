@@ -19,6 +19,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     setSelected: []
+    view: []
     confirmDelete: []
 }>()
 
@@ -64,7 +65,6 @@ watch(props, () => {
         </div>
 
         <div v-if="props.showDetails" class="font-italic">
-            <!-- MEDIUM: allow loading the flyer into the fixture list and results view -->
             <div>
                 {{ formatName }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
                 Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.
@@ -73,7 +73,8 @@ watch(props, () => {
                 <span v-if="playOffs.length > 0">Required {{ playOffs.length }} play-off(s).</span>
             </div>
 
-            <div class="p-fluid my-2">
+            <div class="flex p-fluid gap-2 my-2">
+                <Button label="View" severity="info" @click="emit('view')" />
                 <Button label="Delete" severity="danger" @click="emit('confirmDelete')" />
             </div>
         </div>

@@ -3,6 +3,7 @@ import { ref } from "vue"
 
 import FixtureCard from "./FixtureCard.vue"
 
+import { useQueryParams } from "../composables/useQueryParams"
 import { RoundStatus, useRound } from "../composables/useRound"
 
 import type { Result } from "../data/Result"
@@ -24,7 +25,15 @@ const {
     status,
 } = useRound(props.round)
 
-const showContent = ref([RoundStatus.Ready, RoundStatus.InProgress].includes(status.value))
+const {
+    isHistoric,
+} = useQueryParams()
+
+const shouldShowContent = () => {
+    return isHistoric.value || [RoundStatus.Ready, RoundStatus.InProgress].includes(status.value)
+}
+
+const showContent = ref(shouldShowContent())
 
 const toggle = () => {
     // LOW: don't allow showing content if the round is waiting for a

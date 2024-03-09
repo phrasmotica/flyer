@@ -20,6 +20,10 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
     const playerPool = ref<string[]>([])
 
+    const setFlyer = (f: Flyer) => {
+        flyer.value = f
+    }
+
     const start = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
         flyer.value = createFlyer(settings, scheduler, players)
     }
@@ -178,8 +182,11 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     }
 
     const finish = () => {
-        if (flyer.value && !flyer.value.finishTime) {
-            flyer.value.finishTime = Date.now()
+        if (flyer.value) {
+            if (!flyer.value.finishTime) {
+                flyer.value.finishTime = Date.now()
+            }
+
             return true
         }
 
@@ -196,6 +203,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
     return {
         flyer,
+        setFlyer,
 
         start,
         startFixture,

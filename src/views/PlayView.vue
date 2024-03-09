@@ -11,6 +11,7 @@ import PageTemplate from "../components/PageTemplate.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
+import { useQueryParams } from "../composables/useQueryParams"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -37,25 +38,38 @@ const {
     resumeClock,
 } = useFlyer(flyerStore.flyer)
 
+const {
+    queryParams,
+    isHistoric,
+} = useQueryParams()
+
 const display = ref(Display.Fixtures)
 
 const showFinishModal = ref(false)
 const showAbandonModal = ref(false)
 
-const items = ref<MenuItem[]>([
-    {
-        icon: 'pi pi-calendar',
-        command: _ => display.value = Display.Fixtures,
-    },
-    {
-        icon: 'pi pi-chart-bar',
-        command: _ => display.value = Display.Standings,
-    },
-    {
-        icon: 'pi pi-info-circle',
-        command: _ => display.value = Display.Info,
-    },
-])
+const items = computed(() => {
+    const defaultItems = <MenuItem[]>[
+        {
+            icon: 'pi pi-calendar',
+            command: _ => display.value = Display.Fixtures,
+        },
+        {
+            icon: 'pi pi-chart-bar',
+            command: _ => display.value = Display.Standings,
+        },
+        {
+            icon: 'pi pi-info-circle',
+            command: _ => display.value = Display.Info,
+        },
+    ]
+
+    if (isHistoric.value) {
+        defaultItems.splice(1, 1)
+    }
+
+    return defaultItems
+})
 
 onMounted(() => {
     if (isInProgress.value) {
@@ -94,6 +108,7 @@ const finish = () => {
 
     router.push({
         name: "results",
+        query: queryParams.value,
     })
 }
 
@@ -112,6 +127,12 @@ const abandon = () => {
 }
 
 const hideAbandonModal = () => showAbandonModal.value = false
+
+const goToPastFlyers = () => {
+    router.push({
+        name: "history",
+    })
+}
 
 onUnmounted(() => {
     pauseClock()
@@ -158,7 +179,7 @@ onUnmounted(() => {
 
         <template #buttons>
             <Button
-                v-if="settings.randomlyDrawAllRounds && !generationIsComplete"
+                v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
                 class="mb-2"
                 label="Generate next round"
                 :disabled="!readyForNextRound"
@@ -177,6 +198,13 @@ onUnmounted(() => {
                 label="Abandon"
                 severity="danger"
                 @click="() => showAbandonModal = true" />
+
+            <Button
+                v-if="isHistoric"
+                class="mb-2"
+                label="Back to past flyers"
+                severity="info"
+                @click="goToPastFlyers" />
         </template>
     </PageTemplate>
 </template>
