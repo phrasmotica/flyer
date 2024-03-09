@@ -136,6 +136,7 @@ export const useSettingsStore = defineStore("settings", () => {
     ])
 
     watch(moneySplitOptions, () => {
+        // LOW: create some composable for this sort of falling back logic
         const enabledOptions = moneySplitOptions.value.filter(o => !o.disabled)
         if (!enabledOptions.some(o => o.value === settings.value.moneySplit)) {
             settings.value.moneySplit = enabledOptions.at(-1)?.value || MoneySplit.WinnerTakesAll
