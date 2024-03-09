@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onUpdated } from "vue"
+import { computed, onUpdated } from "vue"
 import { v4 as uuidv4 } from "uuid"
 
 import { useTweaks } from "../composables/useTweaks"
+import { useI18n } from "vue-i18n"
 
 const value = defineModel<number>()
 
-// MEDIUM: allow providing a different currency
 const props = defineProps<{
     inputId?: string
     min?: number
@@ -14,6 +14,17 @@ const props = defineProps<{
     step?: number
     suffix?: string
 }>()
+
+const { locale, numberFormats } = useI18n()
+
+const currency = computed(() => {
+    const currentLocale = numberFormats.value[locale.value]
+    if (currentLocale) {
+        return currentLocale.currency.currency
+    }
+
+    return "GBP"
+})
 
 const { blurNumberInputs } = useTweaks()
 
@@ -30,7 +41,7 @@ onUpdated(() => {
         v-model="value"
         showButtons buttonLayout="horizontal"
         :min="props.min || 0" :max="props.max || 100" :step="props.step || 0.5"
-        mode="currency" currency="GBP" locale="en-GB"
+        mode="currency" :currency="currency" :locale="locale"
         :suffix="props.suffix"
         :inputId="props.inputId"
         inputClass="text-center font-bold">
