@@ -24,6 +24,7 @@ export interface FlyerSettings {
 export enum Format {
     Knockout,
     RoundRobin,
+    // HIGH: implement winner-stays-on format
 }
 
 export enum RuleSet {

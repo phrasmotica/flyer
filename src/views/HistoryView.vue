@@ -6,17 +6,52 @@ import { useClipboard } from "@vueuse/core"
 import FlyerHistory from "../components/FlyerHistory.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
+import type { Flyer } from "../data/Flyer"
+
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
-const { copy } = useClipboard()
+const { copy, text: clipboardText } = useClipboard()
 
 const flyerHistory = useFlyerHistoryStore()
 
 const router = useRouter()
 
+const isImported = ref(false)
+const failedToImport = ref(false)
+
 const isExported = ref(false)
 
+const importButtonLabel = computed(() => {
+    if (failedToImport.value) {
+        return "Failed to import from clipboard!"
+    }
+
+    return isImported.value ? "Data imported from clipboard!" : "Import data"
+})
+
 const exportButtonLabel = computed(() => isExported.value ? "Data copied to clipboard!" : "Export data")
+
+const importPastFlyers = () => {
+    try {
+        const data = <Flyer[]>JSON.parse(clipboardText.value)
+        flyerHistory.importFlyers(data)
+
+        isImported.value = true
+
+        setTimeout(() => {
+            isImported.value = false
+        }, 2000)
+    }
+    catch (e) {
+        console.error(e)
+
+        failedToImport.value = true
+
+        setTimeout(() => {
+            failedToImport.value = false
+        }, 2000)
+    }
+}
 
 const exportPastFlyers = () => {
     const data = JSON.stringify(flyerHistory.pastFlyers)
@@ -49,6 +84,13 @@ const newFlyer = () => {
         </template>
 
         <template #buttons>
+            <Button
+                class="mb-2"
+                :label="importButtonLabel"
+                :disabled="failedToImport || isImported"
+                severity="primary"
+                @click="importPastFlyers" />
+
             <Button
                 :label="exportButtonLabel"
                 :disabled="isExported"
