@@ -32,7 +32,9 @@ const {
             <div v-for="v in x.value">
                 <div class="flex justify-content-between">
                     <span class="text-sm font-italic">{{ v.label }}</span>
-                    <span class="text-sm font-italic">{{ n(v.value, "currency") }}</span>
+                    <span class="text-sm font-italic font-bold" :style="{ color: v.color }">
+                        {{ n(v.value, "currency") }}
+                    </span>
                 </div>
             </div>
         </template>
