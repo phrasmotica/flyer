@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 
 import FixtureCard from "./FixtureCard.vue"
 
@@ -28,6 +28,12 @@ const {
 const {
     isHistoric,
 } = useQueryParams()
+
+watch(() => props.round.isGenerated, () => {
+    if (props.round.isGenerated) {
+        showContent.value = true
+    }
+})
 
 const shouldShowContent = () => {
     return isHistoric.value || [RoundStatus.Ready, RoundStatus.InProgress].includes(status.value)
