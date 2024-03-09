@@ -138,8 +138,12 @@ export const useSettings = (s: FlyerSettings) => {
         return Math.round(v / multiple) * multiple
     }
 
-    // MEDIUM: vary colours and labels depending on the flyer format
+    // LOW: vary colours and labels depending on the flyer format and
+    // relative amount of winnings for each place in the standings. E.g. if the
+    // two losing semi-finalists in a knockout tournament each win the same
+    // amount, perhaps their prize colours should be the same?
     const prizeColours = computed(() => ["#ffd700", "#c0c0c0", "#a0522d", "#c084fc"])
+
     const prizeLabels = computed(() => ["Winner", "Runner-Up", "3rd", "4th", "5th", "6th", "7th", "8th"])
 
     const prizeMoniesMeterItems = computed(() => prizeMonies.value.map((x, i) => <MeterItem>{
