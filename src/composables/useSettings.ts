@@ -144,7 +144,18 @@ export const useSettings = (s: FlyerSettings) => {
     // amount, perhaps their prize colours should be the same?
     const prizeColours = computed(() => ["#ffd700", "#c0c0c0", "#a0522d", "#c084fc"])
 
-    const prizeLabels = computed(() => ["Winner", "Runner-Up", "3rd", "4th", "5th", "6th", "7th", "8th"])
+    const prizeLabels = computed(() => {
+        if (isKnockout.value) {
+            return [
+                "Winner",
+                "Runner-Up",
+                "Semi-Finalist 1", "Semi-Finalist 2",
+                "Quarter-Finalist 1", "Quarter-Finalist 2", "Quarter-Finalist 3", "Quarter-Finalist 4"
+            ]
+        }
+
+        return ["Winner", "Runner-Up", "3rd Place", "4th Place", "5th Place", "6th Place", "7th Place", "8th Place"]
+    })
 
     const prizeMoniesMeterItems = computed(() => prizeMonies.value.map((x, i) => <MeterItem>{
         color: prizeColours.value[Math.min(i, prizeColours.value.length - 1)],
