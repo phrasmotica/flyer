@@ -124,7 +124,7 @@ const startButtonText = computed(() => {
         return "Waiting for players to be free"
     }
 
-    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value) {
+    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value.index) {
         return "Waiting for round to start"
     }
 
@@ -148,7 +148,7 @@ const disableStart = computed(() => {
         return true
     }
 
-    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value) {
+    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value.index) {
         return true
     }
 
