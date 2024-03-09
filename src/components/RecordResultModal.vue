@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
@@ -49,7 +49,6 @@ const {
     durationSeconds,
     setScore,
     setRunouts,
-    pauseClock,
     resumeClock,
 } = useMatch("modal", props.result)
 
@@ -203,10 +202,6 @@ const resetPlayerScores = () => {
     scores.value = initialScores.value
     runouts.value = initialRunouts.value
 }
-
-onUnmounted(() => {
-    pauseClock()
-})
 </script>
 
 <template>
