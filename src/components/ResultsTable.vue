@@ -44,7 +44,6 @@ const {
 } = usePlayOffs(playOffFlyers.value)
 
 const {
-    prizeMonies,
     tieBreakerName,
 } = useSettings(settings.value)
 
@@ -52,6 +51,7 @@ const {
     standings,
     playOffs,
     requiresPlayOff,
+    moneyRecipients,
 } = useStandings(results.value, players.value, settings.value)
 
 const {
@@ -146,19 +146,19 @@ const getPlayOffIndex = (playerId: string) => {
     <div v-if="!props.isInProgress && (!requiresPlayOff || allPlayOffsComplete)" class="mt-1">
         <p v-if="overallStandings[0]" class="m-0 text-center text-xl">
             {{ overallStandings[0].name }} wins
-            <span v-if="prizeMonies.length > 0" class="font-bold">
-                {{ n(prizeMonies[0], "currency") }}
+            <span v-if="moneyRecipients.length > 0" class="font-bold" :style="{color: moneyRecipients[0].colour,}">
+                {{ n(moneyRecipients[0].winnings, "currency") }}
             </span>
         </p>
 
-        <div v-if="prizeMonies.length > 1" class="border-top-1 mt-1 pt-1">
+        <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
             <p class="m-0">
                 Other prize money:
-                <span v-for="_, i in prizeMonies.slice(1)">
+                <span v-for="l, i in moneyRecipients.slice(1)">
                     <span v-if="i > 0">, </span>
                     {{ overallStandings[i + 1].name }} wins
-                    <span class="font-bold">
-                        {{ n(prizeMonies[i + 1], "currency") }}
+                    <span class="font-bold" :style="{color: l.colour,}">
+                        {{ n(moneyRecipients[i + 1].winnings, "currency") }}
                     </span>
                 </span>
             </p>
