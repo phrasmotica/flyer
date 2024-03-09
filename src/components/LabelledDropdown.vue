@@ -5,7 +5,7 @@ const value = defineModel<string | number>()
 
 const props = defineProps<{
     label: string
-    options: { name: string, value: (string | number) }[]
+    options: { name: string, value: (string | number), disabled?: boolean }[]
     disabled?: boolean
 }>()
 
@@ -27,6 +27,7 @@ const id = "labelled-dropdown-" + uuidv4()
             :options="props.options"
             optionLabel="name"
             optionValue="value"
+            optionDisabled="disabled"
             :disabled="props.disabled" />
     </div>
 </template>

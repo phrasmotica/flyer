@@ -60,27 +60,6 @@ export const tieBreakerList = [
     },
 ]
 
-const moneySplitList = [
-    // MEDIUM: add a "disabled" property to these objects, and specify that
-    // property to the Dropdown inside LabelledDropdown
-    {
-        value: MoneySplit.WinnerTakesAll,
-        name: "Winner Takes All",
-    },
-    {
-        value: MoneySplit.SeventyThirty,
-        name: "70/30",
-    },
-    {
-        value: MoneySplit.SixtyTwentyFiveFifteen,
-        name: "60/25/15",
-    },
-    {
-        value: MoneySplit.SemiFinalists,
-        name: "55/25/10/10",
-    },
-]
-
 let defaultPlayers = <string[]>[]
 if (defaultPlayersEnv) {
     defaultPlayers = String(defaultPlayersEnv).split(";")
@@ -133,23 +112,33 @@ export const useSettingsStore = defineStore("settings", () => {
         }
     })
 
-    const moneySplitOptions = computed(() => {
-        const exclusions = <MoneySplit[]>[]
-
-        if (settings.value.playerCount < 4) {
-            exclusions.push(MoneySplit.SemiFinalists)
-        }
-
-        if (settings.value.playerCount < 3) {
-            exclusions.push(MoneySplit.SixtyTwentyFiveFifteen)
-        }
-
-        return moneySplitList.filter(m => !exclusions.includes(m.value))
-    })
+    const moneySplitOptions = computed(() => [
+        {
+            value: MoneySplit.WinnerTakesAll,
+            name: "Winner Takes All",
+            disabled: false,
+        },
+        {
+            value: MoneySplit.SeventyThirty,
+            name: "70/30",
+            disabled: false,
+        },
+        {
+            value: MoneySplit.SixtyTwentyFiveFifteen,
+            name: "60/25/15",
+            disabled: settings.value.playerCount < 3,
+        },
+        {
+            value: MoneySplit.SemiFinalists,
+            name: "55/25/10/10",
+            disabled: settings.value.playerCount < 4,
+        },
+    ])
 
     watch(moneySplitOptions, () => {
-        if (settings.value.moneySplit >= moneySplitOptions.value.length) {
-            settings.value.moneySplit = moneySplitOptions.value.length - 1
+        const enabledOptions = moneySplitOptions.value.filter(o => !o.disabled)
+        if (!enabledOptions.some(o => o.value === settings.value.moneySplit)) {
+            settings.value.moneySplit = enabledOptions.at(-1)?.value || MoneySplit.WinnerTakesAll
         }
     })
 
