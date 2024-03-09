@@ -29,6 +29,8 @@ export const useFlyer = (f: Flyer | null) => {
         return notCompletedRounds.find(r => r.fixtures.some(f => f.startTime && !f.finishTime)) || notCompletedRounds[0]
     })
 
+    const nextRound = computed(() => rounds.value.find(r => r.index === currentRound.value.index + 1))
+
     const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
     const readyForNextRound = computed(() => {
@@ -128,6 +130,7 @@ export const useFlyer = (f: Flyer | null) => {
         ongoingCount,
         remainingCount,
         currentRound,
+        nextRound,
         generationIsComplete,
         readyForNextRound,
         durationMinutes,

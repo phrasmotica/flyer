@@ -32,6 +32,7 @@ const {
     hasFinished,
     isInProgress,
     remainingCount,
+    nextRound,
     generationIsComplete,
     readyForNextRound,
     pauseClock,
@@ -75,6 +76,14 @@ onMounted(() => {
     if (isInProgress.value) {
         resumeClock()
     }
+})
+
+const generateNextRoundLabel = computed(() => {
+    if (nextRound.value) {
+        return "Generate " + nextRound.value.name
+    }
+
+    return "Generate next round"
 })
 
 const finishButtonText = computed(() => {
@@ -181,7 +190,7 @@ onUnmounted(() => {
             <Button
                 v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
                 class="mb-2"
-                label="Generate next round"
+                :label="generateNextRoundLabel"
                 :disabled="!readyForNextRound"
                 @click="generateNextRound" />
 
