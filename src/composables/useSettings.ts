@@ -1,15 +1,11 @@
 import { computed, ref } from "vue"
 import type { MeterItem } from "primevue/metergroup"
 
-import { useCurrency } from "./useCurrency"
-
 import { MoneySplit, type FlyerSettings, Format, TieBreaker } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 
 import { formatList, ruleSetList, tieBreakerList } from "../stores/settings"
-
-const { gbp } = useCurrency()
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
@@ -110,13 +106,7 @@ export const useSettings = (s: FlyerSettings) => {
         return settings.value.tableCostPerHour * settings.value.tableCount * estimatedDuration.value / 60
     })
 
-    const entryFeeSummary = computed(() => {
-        return `${gbp(settings.value.entryFee)} entry fee => ${gbp(prizePot.value)} pot`
-    })
-
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
-
-    const prizePotSummary = computed(() => `${gbp(prizePot.value)}`)
 
     const prizeMonies = computed(() => {
         if (!settings.value.entryFeeRequired) {
@@ -189,9 +179,7 @@ export const useSettings = (s: FlyerSettings) => {
         estimatedDuration,
         estimatedCost,
 
-        entryFeeSummary,
         prizePot,
-        prizePotSummary,
         prizeMonies,
         prizeColours,
         prizeMoniesMeterItems,

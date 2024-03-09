@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useCurrency } from "../composables/useCurrency"
+import { useI18n } from "vue-i18n"
+
 import { useSettings } from "../composables/useSettings"
 
 import type { FlyerSettings } from "../data/FlyerSettings"
@@ -8,11 +9,10 @@ const props = defineProps<{
     settings: FlyerSettings
 }>()
 
-const { gbp } = useCurrency()
+const { n } = useI18n()
 
 const {
     prizePot,
-    prizePotSummary,
     prizeMoniesMeterItems,
 } = useSettings(props.settings)
 </script>
@@ -20,7 +20,7 @@ const {
 <template>
     <div class="flex justify-content-between">
         <span class="text-lg font-bold">Total prize pot</span>
-        <span class="text-lg font-bold">{{ prizePotSummary }}</span>
+        <span class="text-lg font-bold">{{ n(prizePot, "currency") }}</span>
     </div>
 
     <MeterGroup
@@ -32,7 +32,7 @@ const {
             <div v-for="v in x.value">
                 <div class="flex justify-content-between">
                     <span class="text-sm font-italic">{{ v.label }}</span>
-                    <span class="text-sm font-italic">{{ gbp(v.value) }}</span>
+                    <span class="text-sm font-italic">{{ n(v.value, "currency") }}</span>
                 </div>
             </div>
         </template>

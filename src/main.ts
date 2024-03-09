@@ -42,6 +42,14 @@ app.use(createI18n({
             }
         }
     },
+    numberFormats: {
+        "en-GB": {
+            currency: {
+                style: "currency",
+                currency: "GBP",
+            }
+        },
+    },
     messages: {},
 }))
 

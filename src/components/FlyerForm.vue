@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onUpdated, ref } from "vue"
+import { useI18n } from "vue-i18n"
 import type { MenuItem } from "primevue/menuitem"
 
 import CurrencyStepper from "./CurrencyStepper.vue"
@@ -10,7 +11,6 @@ import PlayerNameInput from "./PlayerNameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
 
-import { useCurrency } from "../composables/useCurrency"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
@@ -34,7 +34,7 @@ const {
     isRoundRobin,
 } = useSettings(settingsStore.settings)
 
-const { gbp } = useCurrency()
+const { n } = useI18n()
 
 const { blurNumberInputs } = useTweaks()
 
@@ -200,7 +200,7 @@ onUpdated(() => {
 
                 <div class="ml-2">
                     <p class="m-0 text-center font-bold text-xl">
-                        {{ gbp(estimatedCost) }}
+                        {{ n(estimatedCost, "currency") }}
                     </p>
                 </div>
             </div>

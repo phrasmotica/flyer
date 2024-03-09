@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
+
 import VictoryText from "./VictoryText.vue"
 
-import { useCurrency } from "../composables/useCurrency"
 import { usePodium } from "../composables/usePodium"
 
 import { useFlyerStore } from "../stores/flyer"
 
-const { gbp } = useCurrency()
+const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
@@ -26,7 +27,7 @@ const {
             <p v-if="moneyRecipients.length > 0" class="m-0 text-xl">
                 who wins
                 <span class="font-bold" :style="{color: moneyRecipients[0].colour,}">
-                    {{ gbp(moneyRecipients[0].winnings) }}
+                    {{ n(moneyRecipients[0].winnings, "currency") }}
                 </span>
             </p>
         </div>
@@ -43,7 +44,7 @@ const {
             <p v-for="l in moneyRecipients.slice(1)" class="m-0">
                 {{ l.player.name }} wins
                 <span class="font-bold" :style="{color: l.colour,}">
-                    {{ gbp(l.winnings) }}
+                    {{ n(l.winnings, "currency") }}
                 </span>
             </p>
         </div>

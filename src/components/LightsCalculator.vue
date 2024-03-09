@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue"
+import { useI18n } from "vue-i18n"
 
 import CurrencyStepper from "./CurrencyStepper.vue"
 
-import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
-const { gbp } = useCurrency()
+const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
@@ -34,6 +34,6 @@ const lightsCost = ref(estimatedCost.value)
     </div>
 
     <p class="m-0 mt-2">
-        so every player pays <strong>{{ gbp(lightsCost / players.length) }}</strong>
+        so every player pays <strong>{{ n(lightsCost / players.length, "currency") }}</strong>
     </p>
 </template>

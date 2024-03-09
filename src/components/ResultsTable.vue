@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
-import { useCurrency } from "../composables/useCurrency"
 import { useFlyer } from "../composables/useFlyer"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useSettings } from "../composables/useSettings"
@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const { greaterOrEqual } = useBreakpoints(breakpointsPrimeFlex)
 
-const { gbp } = useCurrency()
+const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 const playOffStore = usePlayOffStore()
@@ -147,7 +147,7 @@ const getPlayOffIndex = (playerId: string) => {
         <p v-if="overallStandings[0]" class="m-0 text-center text-xl">
             {{ overallStandings[0].name }} wins
             <span v-if="prizeMonies.length > 0" class="font-bold">
-                {{ gbp(prizeMonies[0]) }}
+                {{ n(prizeMonies[0], "currency") }}
             </span>
         </p>
 
@@ -158,7 +158,7 @@ const getPlayOffIndex = (playerId: string) => {
                     <span v-if="i > 0">, </span>
                     {{ overallStandings[i + 1].name }} wins
                     <span class="font-bold">
-                        {{ gbp(prizeMonies[i + 1]) }}
+                        {{ n(prizeMonies[i + 1], "currency") }}
                     </span>
                 </span>
             </p>
