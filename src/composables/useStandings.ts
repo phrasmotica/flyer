@@ -67,8 +67,8 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
 
         let c = 1
 
-        while (remainingPrizeMonies.length > 0) {
-            for (const s of standings.value.slice(1)) {
+        for (const s of standings.value.slice(1)) {
+            if (remainingPrizeMonies.length > 0) {
                 recipients.push({
                     player: players.value.find(p => p.id === s.playerId)!,
                     winnings: remainingPrizeMonies.splice(0, 1)[0],
