@@ -43,16 +43,19 @@ export const tieBreakerList = [
     {
         value: TieBreaker.HeadToHead,
         name: "Head-to-Head",
+        summary: "Head-to-Head tie-breaker",
         details: "decided by the tied players' head-to-head records",
     },
     {
         value: TieBreaker.PlayOff,
         name: "Play-Off",
+        summary: "Play-Off tie-breaker",
         details: "decided by a race-to-1 knockout play-off between the tied players",
     },
     {
         value: TieBreaker.Runouts,
         name: "Runouts",
+        summary: "Runouts tie-breaker",
         details: "decided by the number of runouts made by the tied players",
     },
 ]

@@ -69,7 +69,9 @@ export const useSettings = (s: FlyerSettings) => {
         return ruleSet.details
     })
 
-    const tieBreakerSummary = computed(() => `${settings.value.tieBreaker} tie-breaker`)
+    const tieBreakerName = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.name || "???")
+
+    const tieBreakerSummary = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.summary || "???")
 
     const tieBreakerDetails = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
 
@@ -174,6 +176,7 @@ export const useSettings = (s: FlyerSettings) => {
         rulesSummary,
         rulesDetails,
 
+        tieBreakerName,
         tieBreakerSummary,
         tieBreakerDetails,
 

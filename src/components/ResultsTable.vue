@@ -45,6 +45,7 @@ const {
 
 const {
     prizeMonies,
+    tieBreakerName,
 } = useSettings(settings.value)
 
 const {
@@ -136,7 +137,7 @@ const getPlayOffIndex = (playerId: string) => {
         <p v-for="_, i in playOffs" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
-                these players have been tie-broken via {{ settings.tieBreaker }}
+                these players have been tie-broken via {{ tieBreakerName }}
             </em>
         </p>
     </div>
