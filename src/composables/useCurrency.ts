@@ -3,12 +3,11 @@ const gbpFormat = new Intl.NumberFormat('en-GB', {
     currency: 'GBP',
 })
 
+// MEDIUM: use vue-i18n's number localisation for this instead
 export const useCurrency = () => {
     const gbp = gbpFormat.format
 
     return {
-        // MEDIUM: export a single function called "currency" that uses whatever
-        // the selected currency and locale is
         gbp,
     }
 }
