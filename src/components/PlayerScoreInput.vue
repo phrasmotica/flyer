@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
-
 import { useFlyer } from "../composables/useFlyer"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -23,15 +21,6 @@ const {
     settings,
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
-
-// LOW: create a composable for storing these
-const score = ref(props.score)
-const runouts = ref(props.runouts)
-
-watch(props, () => {
-    score.value = props.score
-    runouts.value = props.runouts
-})
 </script>
 
 <template>
@@ -48,7 +37,7 @@ watch(props, () => {
             showButtons
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"
-            :modelValue="score"
+            :modelValue="props.score"
             :min="0" :max="settings.raceTo"
             @update:modelValue="v => emit('setScore', v)">
             <template #incrementbuttonicon>
@@ -72,7 +61,7 @@ watch(props, () => {
             showButtons
             inputClass="w-2rem px-1 text-center"
             buttonLayout="horizontal"
-            :modelValue="runouts"
+            :modelValue="props.runouts"
             :min="0" :max="settings.raceTo"
             @update:modelValue="v => emit('setRunouts', v)">
             <template #incrementbuttonicon>

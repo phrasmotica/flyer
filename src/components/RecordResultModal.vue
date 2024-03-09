@@ -57,9 +57,14 @@ const { blurActive } = useTweaks()
 
 const visible = ref(props.visible)
 
+const initialScores = ref(scores.value)
+const initialRunouts = ref(runouts.value)
+
 watch(props, () => {
     visible.value = props.visible
     result.value = props.result
+
+    setInitialPlayerScores(props.result)
 
     if (props.visible) {
         resumeClock()
@@ -184,8 +189,19 @@ const description = computed(() => {
 const header = computed(() => `${round.value?.name || "???"} - ${description.value}`)
 
 const hide = () => {
-    // MEDIUM: reset changes to score/runouts
+    resetPlayerScores()
+
     emit('hide')
+}
+
+const setInitialPlayerScores = (result: Result | undefined) => {
+    initialScores.value = result?.scores.map(r => r.score) || []
+    initialRunouts.value = result?.scores.map(r => r.runouts) || []
+}
+
+const resetPlayerScores = () => {
+    scores.value = initialScores.value
+    runouts.value = initialRunouts.value
 }
 
 onUnmounted(() => {
