@@ -16,6 +16,7 @@ import { useSettings } from "../composables/useSettings"
 import { Format } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
+import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
@@ -29,6 +30,7 @@ const { isSmallScreen } = useScreenSizes()
 
 const {
     settings,
+    isWinnerStaysOn,
     durationPerFrame,
     estimatedDuration,
     isInvalid,
@@ -45,6 +47,10 @@ const start = () => {
 
         case Format.RoundRobin:
             flyerStore.start(settings.value, new RoundRobinScheduler(), [])
+            break
+
+        case Format.WinnerStaysOn:
+            flyerStore.start(settings.value, new WinnerStaysOnScheduler(), [])
             break
 
         default:
@@ -125,7 +131,7 @@ const hideModal = () => {
                     </div>
                 </div>
 
-                <Button label="Start" :disabled="isInvalid" @click="confirmStart" />
+                <Button label="Start" :disabled="isInvalid || isWinnerStaysOn" @click="confirmStart" />
             </FlyerFormSection>
         </template>
     </PageTemplate>

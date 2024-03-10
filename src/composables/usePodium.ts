@@ -19,6 +19,7 @@ export const usePodium = (f: Flyer | null) => {
 
     const {
         isRoundRobin,
+        isWinnerStaysOn,
         prizeMonies,
         prizeColours,
     } = useSettings(settings.value)
@@ -32,7 +33,7 @@ export const usePodium = (f: Flyer | null) => {
             return ["", ""]
         }
 
-        if (isRoundRobin.value) {
+        if (isRoundRobin.value || isWinnerStaysOn.value) {
             return ["", ""]
         }
 

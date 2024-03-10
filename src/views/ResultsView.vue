@@ -39,6 +39,7 @@ const {
 const {
     isKnockout,
     isRoundRobin,
+    isWinnerStaysOn,
 } = useSettings(settings.value)
 
 const {
@@ -183,7 +184,7 @@ const goToPastFlyers = () => {
                     <Clock :elapsedSeconds="durationSeconds || 0" />
                 </div>
 
-                <ResultsTable v-if="isRoundRobin" />
+                <ResultsTable v-if="isRoundRobin || isWinnerStaysOn" />
 
                 <Podium v-if="isKnockout" />
             </div>

@@ -32,6 +32,7 @@ const {
     estimatedCost,
     isKnockout,
     isRoundRobin,
+    isWinnerStaysOn,
 } = useSettings(settingsStore.settings)
 
 const { n } = useI18n()
@@ -154,17 +155,17 @@ onUpdated(() => {
                 v-model="settingsStore.settings.randomlyDrawAllRounds" />
 
             <LabelledCheckbox
-                v-if="!isKnockout"
+                v-if="isRoundRobin"
                 label="Require completed rounds"
                 v-model="settingsStore.settings.requireCompletedRounds" />
 
             <LabelledCheckbox
-                v-if="!isKnockout"
+                v-if="isRoundRobin || isWinnerStaysOn"
                 label="Allow early finish"
                 v-model="settingsStore.settings.allowEarlyFinish" />
 
             <LabelledCheckbox
-                v-if="!isKnockout"
+                v-if="isRoundRobin"
                 label="Allow draws"
                 v-model="settingsStore.settings.allowDraws" />
         </div>

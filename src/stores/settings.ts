@@ -22,6 +22,12 @@ export const formatList = [
         summary: "Round-Robin format",
         details: "every player plays against every other player once",
     },
+    {
+        value: Format.WinnerStaysOn,
+        name: "Winner Stays On",
+        summary: "Winner Stays On format",
+        details: "gauntlet-style until one player has won enough matches",
+    },
 ]
 
 export const ruleSetList = [
@@ -91,6 +97,7 @@ export const useSettingsStore = defineStore("settings", () => {
     const {
         isKnockout,
         isRoundRobin,
+        isWinnerStaysOn,
     } = useSettings(settings.value)
 
     watch(() => settings.value.playerCount, () => {
@@ -109,6 +116,12 @@ export const useSettingsStore = defineStore("settings", () => {
         if (isRoundRobin.value) {
             settings.value.randomlyDrawAllRounds = false
             settings.value.requireCompletedRounds = false
+        }
+
+        if (isWinnerStaysOn.value) {
+            settings.value.randomlyDrawAllRounds = false
+            settings.value.requireCompletedRounds = false
+            settings.value.allowDraws = false
         }
     })
 

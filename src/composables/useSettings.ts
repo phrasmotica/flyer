@@ -4,6 +4,7 @@ import type { MeterItem } from "primevue/metergroup"
 import { MoneySplit, type FlyerSettings, Format, TieBreaker } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
+import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 
 import { formatList, ruleSetList, tieBreakerList } from "../stores/settings"
 
@@ -38,11 +39,11 @@ export const useSettings = (s: FlyerSettings) => {
     })
 
     const drawSummary = computed(() => {
-        if (isRoundRobin.value) {
-            return ""
+        if (isKnockout.value) {
+            return settings.value.randomlyDrawAllRounds ? "random draw" : "fixed draw"
         }
 
-        return settings.value.randomlyDrawAllRounds ? "random draw" : "fixed draw"
+        return ""
     })
 
     const raceSummary = computed(() => `Races to ${settings.value.raceTo}`)
@@ -73,6 +74,7 @@ export const useSettings = (s: FlyerSettings) => {
 
     const isKnockout = computed(() => settings.value.format === Format.Knockout)
     const isRoundRobin = computed(() => settings.value.format === Format.RoundRobin)
+    const isWinnerStaysOn = computed(() => settings.value.format === Format.WinnerStaysOn)
 
     const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
 
@@ -87,6 +89,10 @@ export const useSettings = (s: FlyerSettings) => {
             return new RoundRobinScheduler().frameTimeEstimateMins
         }
 
+        if (isWinnerStaysOn.value) {
+            return new WinnerStaysOnScheduler().frameTimeEstimateMins
+        }
+
         throw `Invalid flyer format ${settings.value.format}!`
     })
 
@@ -97,6 +103,10 @@ export const useSettings = (s: FlyerSettings) => {
 
         if (isRoundRobin.value) {
             return new RoundRobinScheduler().estimateDuration(settings.value)
+        }
+
+        if (isWinnerStaysOn.value) {
+            return new WinnerStaysOnScheduler().estimateDuration(settings.value)
         }
 
         throw `Invalid flyer format ${settings.value.format}!`
@@ -187,6 +197,7 @@ export const useSettings = (s: FlyerSettings) => {
 
         isKnockout,
         isRoundRobin,
+        isWinnerStaysOn,
         isRandomDraw,
         usesPlayOff,
 
