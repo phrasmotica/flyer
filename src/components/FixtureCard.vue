@@ -30,7 +30,6 @@ const {
     result,
     winner,
     isWalkover,
-    comment,
 } = useMatch("card", props.result)
 
 const {
@@ -121,9 +120,9 @@ const handleNameClick = (id: string) => {
             </div>
         </div>
 
-        <div v-if="comment">
+        <div v-if="result.comment">
             <p class="m-0 text-xs md:text-sm">
-                {{ comment }}
+                {{ result.comment }}
             </p>
         </div>
     </div>
