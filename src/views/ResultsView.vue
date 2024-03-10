@@ -52,6 +52,8 @@ const {
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
 
+const imageSaved = ref(false)
+
 const confirmGoToSetup = () => {
     if (alreadySaved.value) {
         goToSetup()
@@ -112,9 +114,20 @@ const startPlayOff = () => {
     })
 }
 
+const saveImageButtonText = computed(() => imageSaved.value ? "Image saved!" : "Save image")
+
 const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
 
 const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
+
+const saveImage = () => {
+    // HIGH: implement image saving
+    imageSaved.value = true
+
+    setTimeout(() => {
+        imageSaved.value = false
+    }, 2000)
+}
 
 const save = () => {
     if (flyerStore.flyer && !alreadySaved.value) {
@@ -182,7 +195,7 @@ const goToPastFlyers = () => {
 
             <div v-else>
                 <div v-if="!isHistoric">
-                    <!-- HIGH: add button for saving results as an image -->
+                    <Button class="mb-2" :label="saveImageButtonText" :disabled="imageSaved" @click="saveImage" />
 
                     <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
