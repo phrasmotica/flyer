@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
-import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
 import WinningsList from "./WinningsList.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePlayOffs } from "../composables/usePlayOffs"
+import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
 
@@ -17,7 +17,7 @@ const props = defineProps<{
     isPlayOff?: boolean
 }>()
 
-const { greaterOrEqual } = useBreakpoints(breakpointsPrimeFlex)
+const { isNotSmallScreen } = useScreenSizes()
 
 const { n } = useI18n()
 
@@ -86,8 +86,6 @@ const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= pla
 
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
-const isNotSmall = computed(() => greaterOrEqual("md").value)
-
 const getPlayOffIndex = (playerId: string) => {
     return playOffs.value.filter(x => !playOffIsComplete(x.id)).findIndex(p => p.players.some(x => x.id === playerId))
 }
@@ -110,7 +108,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
         <Column field="losses" header="L"></Column>
         <Column field="diff" header="+/-"></Column>
-        <Column v-if="isNotSmall" field="runouts" header="R/O"></Column>
+        <Column v-if="isNotSmallScreen" field="runouts" header="R/O"></Column>
         <Column v-if="somePlayOffComplete" header="P/O">
             <template #body="slotData">
                 {{ getPlayOffRank(slotData.data.playerId) || "-" }}

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
-import { breakpointsPrimeFlex, useBreakpoints } from "@vueuse/core"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -11,6 +10,7 @@ import InfoList from "../components/InfoList.vue"
 import LabelledCheckbox from "../components/LabelledCheckbox.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
 
 import { Format } from "../data/FlyerSettings"
@@ -25,7 +25,7 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
-const { smallerOrEqual } = useBreakpoints(breakpointsPrimeFlex)
+const { isSmallScreen } = useScreenSizes()
 
 const {
     settings,
@@ -36,9 +36,6 @@ const {
 
 const showModal = ref(false)
 const entryFeesPaid = ref(false)
-
-// LOW: create useScreenSizes() composable
-const isSmall = computed(() => smallerOrEqual("sm").value)
 
 const start = () => {
     switch (settings.value.format) {
@@ -114,7 +111,7 @@ const hideModal = () => {
 
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <div class="summary-info" :class="[isSmall && 'maxh-30 overflow-y-auto']">
+                <div class="summary-info" :class="[isSmallScreen && 'maxh-30 overflow-y-auto']">
                     <InfoList :settings="settings" />
 
                     <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
