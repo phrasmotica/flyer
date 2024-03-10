@@ -221,9 +221,11 @@ const goToPastFlyers = () => {
 
             <div v-else>
                 <div v-if="!isHistoric">
-                    <Button class="mb-2" :label="saveImageButtonText" :disabled="imageSaved" @click="saveResults" />
+                    <div class="p-fluid flex gap-2 mb-2">
+                        <Button :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
-                    <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
+                        <Button :label="saveImageButtonText" :disabled="imageSaved" @click="saveResults" />
+                    </div>
 
                     <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
                 </div>
