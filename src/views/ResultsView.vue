@@ -19,6 +19,7 @@ import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
+import html2canvas from "html2canvas"
 
 const router = useRouter()
 
@@ -114,19 +115,42 @@ const startPlayOff = () => {
     })
 }
 
-const saveImageButtonText = computed(() => imageSaved.value ? "Image saved!" : "Save image")
+const saveImageButtonText = computed(() => imageSaved.value ? "Downloading..." : "Download image")
 
 const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
 
 const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
 
-const saveImage = () => {
-    // HIGH: implement image saving
-    imageSaved.value = true
+const downloadImage = (blob: string, fileName: string) => {
+    const fakeLink = document.createElement("a")
 
-    setTimeout(() => {
-        imageSaved.value = false
-    }, 2000)
+    fakeLink.download = fileName
+    fakeLink.href = blob
+
+    document.body.appendChild(fakeLink)
+    fakeLink.click()
+    document.body.removeChild(fakeLink)
+
+    fakeLink.remove()
+}
+
+const saveResults = () => {
+    const element = document.getElementById("results-container")!
+
+    html2canvas(element, {
+        onclone: (_, element) => {
+            element.style.padding = "1rem"
+        }
+    })
+    .then(canvas => canvas.toDataURL("image/png", 1.0))
+    .then(blob => downloadImage(blob, settings.value.name + "-" + Date.now()))
+    .then(() => {
+        imageSaved.value = true
+
+        setTimeout(() => {
+            imageSaved.value = false
+        }, 2000)
+    })
 }
 
 const save = () => {
@@ -153,15 +177,17 @@ const goToPastFlyers = () => {
 <template>
     <PageTemplate>
         <template #content>
-            <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
-                <h1>{{ settings.name }}</h1>
+            <div id="results-container">
+                <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
+                    <h1>{{ settings.name }}</h1>
 
-                <Clock :elapsedSeconds="durationSeconds || 0" />
+                    <Clock :elapsedSeconds="durationSeconds || 0" />
+                </div>
+
+                <ResultsTable v-if="isRoundRobin" />
+
+                <Podium v-if="isKnockout" />
             </div>
-
-            <ResultsTable v-if="isRoundRobin" />
-
-            <Podium v-if="isKnockout" />
 
             <div v-if="!requiresPlayOff && !isHistoric" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />
@@ -195,7 +221,7 @@ const goToPastFlyers = () => {
 
             <div v-else>
                 <div v-if="!isHistoric">
-                    <Button class="mb-2" :label="saveImageButtonText" :disabled="imageSaved" @click="saveImage" />
+                    <Button class="mb-2" :label="saveImageButtonText" :disabled="imageSaved" @click="saveResults" />
 
                     <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
