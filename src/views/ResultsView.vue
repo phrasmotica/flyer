@@ -182,6 +182,8 @@ const goToPastFlyers = () => {
 
             <div v-else>
                 <div v-if="!isHistoric">
+                    <!-- HIGH: add button for saving results as an image -->
+
                     <Button class="mb-2" :label="saveButtonText" :disabled="alreadySaved" @click="save" />
 
                     <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
