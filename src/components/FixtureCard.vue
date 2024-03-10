@@ -73,7 +73,7 @@ const handleNameClick = (id: string) => {
                 <div
                     class="p-1 mr-1 border-round-md text-left"
                     :class="[
-                        props.highlightedResultId === result.parentFixtureIds[0] && 'highlight',
+                        props.highlightedResultId && props.highlightedResultId === result.parentFixtureIds[0] && 'highlight',
                         result.parentFixtureIds[0] && 'cursor-pointer',
                     ]"
                     @click="handleNameClick(result.parentFixtureIds[0])">
@@ -101,7 +101,7 @@ const handleNameClick = (id: string) => {
                 <div
                     class="p-1 ml-1 border-round-md text-right"
                     :class="[
-                        props.highlightedResultId === result.parentFixtureIds[1] && 'highlight',
+                        props.highlightedResultId && props.highlightedResultId === result.parentFixtureIds[1] && 'highlight',
                         result.parentFixtureIds[0] && 'cursor-pointer',
                     ]"
                     @click="handleNameClick(result.parentFixtureIds[1])">
