@@ -29,8 +29,8 @@ const {
     isHistoric,
 } = useQueryParams()
 
-watch(() => props.round.isGenerated, () => {
-    if (props.round.isGenerated) {
+watch(status, () => {
+    if (status.value === RoundStatus.Ready) {
         showContent.value = true
     }
 })
