@@ -27,6 +27,12 @@ export class WinnerStaysOnScheduler implements IScheduler {
         this.generatedRounds = <Round[]>[]
 
         // HIGH: implement scheduling
+        // Randomise all players. Create P * (W - 1) + 1 fixtures, where W is
+        // the number of wins required and P is the number of players. Populate
+        // the first fixture with the first two players in the list, then put
+        // the R remaining players in the "away" slot of the next R fixtures.
+        // Propagate the winner of each fixture to the "home" slot of the next
+        // fixture.
 
         return this.generatedRounds
     }
