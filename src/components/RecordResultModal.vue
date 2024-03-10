@@ -58,6 +58,7 @@ const visible = ref(props.visible)
 
 const initialScores = ref(scores.value)
 const initialRunouts = ref(runouts.value)
+const initialComment = ref(comment.value)
 
 watch(props, () => {
     visible.value = props.visible
@@ -196,11 +197,13 @@ const hide = () => {
 const setInitialPlayerScores = (result: Result | undefined) => {
     initialScores.value = result?.scores.map(r => r.score) || []
     initialRunouts.value = result?.scores.map(r => r.runouts) || []
+    initialComment.value = result?.comment || ""
 }
 
 const resetPlayerScores = () => {
     scores.value = initialScores.value
     runouts.value = initialRunouts.value
+    comment.value = initialComment.value
 }
 </script>
 
