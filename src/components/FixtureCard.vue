@@ -30,6 +30,7 @@ const {
     result,
     winner,
     isWalkover,
+    comment,
 } = useMatch("card", props.result)
 
 const {
@@ -63,58 +64,67 @@ const handleNameClick = (id: string) => {
 
 <template>
     <div
-        class="grid m-0 py-1 border-round-md border-1"
+        v-if="result"
+        class="border-round-md border-1"
         :class="[
             props.highlightedResultId === result.id ? 'border-dashed' : 'border-transparent'
         ]">
-        <div class="col-5 p-0">
-            <div
-                class="p-1 mr-1 border-round-md text-left"
-                :class="[
-                    props.highlightedResultId === result.parentFixtureIds[0] && 'highlight',
-                    result.parentFixtureIds[0] && 'cursor-pointer',
-                ]"
-                @click="handleNameClick(result.parentFixtureIds[0])">
-                <span v-if="result.scores[0].isBye" class="text-gray-400">
-                    <em>(bye)</em>
-                </span>
+        <div class="grid m-0 py-1">
+            <div class="col-5 p-0">
+                <div
+                    class="p-1 mr-1 border-round-md text-left"
+                    :class="[
+                        props.highlightedResultId === result.parentFixtureIds[0] && 'highlight',
+                        result.parentFixtureIds[0] && 'cursor-pointer',
+                    ]"
+                    @click="handleNameClick(result.parentFixtureIds[0])">
+                    <span v-if="result.scores[0].isBye" class="text-gray-400">
+                        <em>(bye)</em>
+                    </span>
 
-                <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result.scores[0].playerId)">
-                    {{ getPlayerName(result.scores[0].playerId) }}
-                </span>
+                    <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result.scores[0].playerId)">
+                        {{ getPlayerName(result.scores[0].playerId) }}
+                    </span>
 
-                <span v-else-if="result.parentFixtureIds[0] || isRandomDraw">
-                    <em class="text-gray-400">TBD</em>
-                </span>
+                    <span v-else-if="result.parentFixtureIds[0] || isRandomDraw">
+                        <em class="text-gray-400">TBD</em>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-2 p-0">
+                <ScoreCell
+                    :result="result"
+                    @clicked="handleClick" />
+            </div>
+
+            <div class="col-5 p-0">
+                <div
+                    class="p-1 ml-1 border-round-md text-right"
+                    :class="[
+                        props.highlightedResultId === result.parentFixtureIds[1] && 'highlight',
+                        result.parentFixtureIds[0] && 'cursor-pointer',
+                    ]"
+                    @click="handleNameClick(result.parentFixtureIds[1])">
+                    <span v-if="result.scores[1].isBye" class="text-gray-400">
+                        <em>(bye)</em>
+                    </span>
+
+                    <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result.scores[1].playerId)">
+                        {{ getPlayerName(result.scores[1].playerId) }}
+                    </span>
+
+                    <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">
+                        <em class="text-gray-400">TBD</em>
+                    </span>
+                </div>
             </div>
         </div>
 
-        <div class="col-2 p-0">
-            <ScoreCell
-                :result="result"
-                @clicked="handleClick" />
-        </div>
-
-        <div class="col-5 p-0">
-            <div
-                class="p-1 ml-1 border-round-md text-right"
-                :class="[
-                    props.highlightedResultId === result.parentFixtureIds[1] && 'highlight',
-                    result.parentFixtureIds[0] && 'cursor-pointer',
-                ]"
-                @click="handleNameClick(result.parentFixtureIds[1])">
-                <span v-if="result.scores[1].isBye" class="text-gray-400">
-                    <em>(bye)</em>
-                </span>
-
-                <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result.scores[1].playerId)">
-                    {{ getPlayerName(result.scores[1].playerId) }}
-                </span>
-
-                <span v-else-if="result.parentFixtureIds[1] || isRandomDraw">
-                    <em class="text-gray-400">TBD</em>
-                </span>
-            </div>
+        <div v-if="comment">
+            <p class="m-0 text-xs md:text-sm">
+                {{ comment }}
+            </p>
         </div>
     </div>
 </template>
