@@ -103,7 +103,7 @@ onUpdated(() => {
         </div>
 
         <div v-if="section === Section.Settings">
-            <div class="p-fluid mb-2">
+            <div v-if="isKnockout || isRoundRobin" class="p-fluid mb-2">
                 <label for="raceToStepper" class="font-bold">
                     Match length
                 </label>
@@ -113,6 +113,18 @@ onUpdated(() => {
                     v-model="settingsStore.settings.raceTo"
                     :min="1" :max="maxRaceEnv"
                     prefix="Race to " />
+            </div>
+
+            <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
+                <label for="winsRequiredStepper" class="font-bold">
+                    Wins required
+                </label>
+
+                <Stepper
+                    inputId="winsRequiredStepper"
+                    v-model="settingsStore.settings.winsRequired"
+                    :min="1" :max="maxRaceEnv"
+                    :suffix="settingsStore.settings.winsRequired > 1 ? ' wins' : ' win'" />
             </div>
 
             <div class="grid m-0">

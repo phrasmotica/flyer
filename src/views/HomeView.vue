@@ -131,7 +131,7 @@ const hideModal = () => {
                     </div>
                 </div>
 
-                <Button label="Start" :disabled="isInvalid || isWinnerStaysOn" @click="confirmStart" />
+                <Button label="Start" :disabled="isInvalid" @click="confirmStart" />
             </FlyerFormSection>
         </template>
     </PageTemplate>
