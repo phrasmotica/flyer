@@ -80,6 +80,7 @@ export const useSettingsStore = defineStore("settings", () => {
         playerCount: defaultPlayers.filter(p => p).length,
         playerNames: defaultPlayers,
         raceTo: 1, // LOW: allow changing this per round in a Knockout tournament
+        winsRequired: 1,
         tableCount: 1, // MEDIUM: use this to assign fixtures to tables
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
