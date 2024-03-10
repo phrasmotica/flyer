@@ -6,5 +6,4 @@ export interface IScheduler {
     frameTimeEstimateMins: number
     estimateDuration(settings: FlyerSettings): number
     generateFixtures(players: Player[]): Round[]
-    getCurrentRound(): number
 }

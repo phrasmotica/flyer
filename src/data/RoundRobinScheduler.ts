@@ -130,19 +130,6 @@ export class RoundRobinScheduler implements IScheduler {
         return [...new Set(existingFixtures.map(f => f.scores.map(s => s.playerId).filter(id => id !== player.id)).flatMap(s => s))]
     }
 
-    getCurrentRound() {
-        if (this.generatedRounds === undefined) {
-            return 0
-        }
-
-        const oldestInProgressRound = this.generatedRounds.find(r => r.fixtures.some(f => !f.finishTime))
-        if (!oldestInProgressRound) {
-            return 0
-        }
-
-        return oldestInProgressRound.index
-    }
-
     getRandom<T>(arr: T[]) {
         return arr[Math.floor(Math.random() * arr.length)]
     }

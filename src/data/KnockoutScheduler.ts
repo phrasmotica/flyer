@@ -204,19 +204,6 @@ export class KnockoutScheduler implements IScheduler {
         }
     }
 
-    getCurrentRound() {
-        if (this.generatedRounds === undefined) {
-            return 0
-        }
-
-        const oldestInProgressRound = this.generatedRounds.find(r => r.fixtures.some(f => !f.finishTime))
-        if (!oldestInProgressRound) {
-            return 0
-        }
-
-        return oldestInProgressRound.index
-    }
-
     shuffle<T>(arr: T[]) {
         // https://stackoverflow.com/a/2450976
         let currentIndex = arr.length

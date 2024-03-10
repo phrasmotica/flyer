@@ -30,8 +30,4 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
         return this.generatedRounds
     }
-
-    getCurrentRound() {
-        return 0
-    }
 }
