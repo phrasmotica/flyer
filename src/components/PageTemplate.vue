@@ -12,7 +12,6 @@ const slots = useSlots()
             <slot name="content" />
         </div>
 
-        <!-- LOW: put these in a PrimeVue Sidebar component -->
         <div v-if="slots.buttons" class="nav-buttons p-fluid p-3">
             <slot name="buttons" />
         </div>

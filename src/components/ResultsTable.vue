@@ -81,7 +81,6 @@ const rowClass = (data: any) => {
     ]
 }
 
-// LOW: encapsulate these computed properties in some composable
 const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
 
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)

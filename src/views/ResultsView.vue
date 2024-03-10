@@ -79,13 +79,12 @@ const confirmStartPlayOff = () => {
     showStartPlayOffModal.value = true
 }
 
-// LOW: encapsulate these computed properties in some composable
-const hasPlayedOff = computed(() => !nextPlayOff.value)
-
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !playOffIsComplete(p.id))
     return remaining.length > 0 ? remaining[0] : null
 })
+
+const hasPlayedOff = computed(() => !nextPlayOff.value)
 
 const alreadySaved = computed(() => {
     return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)

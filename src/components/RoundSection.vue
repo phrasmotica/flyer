@@ -42,8 +42,6 @@ const shouldShowContent = () => {
 const showContent = ref(shouldShowContent())
 
 const toggle = () => {
-    // LOW: don't allow showing content if the round is waiting for a
-    // previous one to be completed
     showContent.value = !showContent.value
 }
 </script>
