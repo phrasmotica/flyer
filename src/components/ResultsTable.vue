@@ -47,6 +47,7 @@ const {
 
 const {
     tieBreakerName,
+    isWinnerStaysOn,
 } = useSettings(settings.value)
 
 const {
@@ -97,7 +98,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column field="name" header="Name">
             <template #body="slotData">
                 {{ slotData.data.name }}
-                <span v-if="!props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0">
+                <span v-if="!props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0 && !isWinnerStaysOn">
                     <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId) + 1 }}</sup>
                 </span>
             </template>
@@ -116,12 +117,12 @@ const getPlayOffIndex = (playerId: string) => {
     </DataTable>
 
     <!-- if it was finished early -->
-    <h4 v-if="!props.isInProgress && incompleteCount > 0">
+    <h4 v-if="!props.isInProgress && (incompleteCount > 0 && !isWinnerStaysOn)">
         <em>{{ incompleteCount }} player(s) have incomplete results!</em>
     </h4>
 
     <!-- if a play-off needs to happen -->
-    <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
+    <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
         <p v-for="p, i in playOffs.filter(x => !playOffIsComplete(x.id))" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
@@ -132,7 +133,7 @@ const getPlayOffIndex = (playerId: string) => {
     </div>
 
     <!-- if some players have been tie-broken -->
-    <div v-if="!props.isInProgress && !requiresPlayOff && playOffs.length > 0" class="mt-1">
+    <div v-if="!props.isInProgress && !requiresPlayOff && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
         <p v-for="_, i in playOffs" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
