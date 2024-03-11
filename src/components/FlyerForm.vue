@@ -157,29 +157,31 @@ onUpdated(() => {
                 </div>
             </div>
 
-            <p class="m-0 font-bold">
-                Advanced
-            </p>
+            <div v-if="isKnockout || isRoundRobin">
+                <p class="m-0 font-bold">
+                    Advanced
+                </p>
 
-            <LabelledCheckbox
-                v-if="isKnockout"
-                label="Randomly draw all rounds"
-                v-model="settingsStore.settings.randomlyDrawAllRounds" />
+                <LabelledCheckbox
+                    v-if="isKnockout"
+                    label="Randomly draw all rounds"
+                    v-model="settingsStore.settings.randomlyDrawAllRounds" />
 
-            <LabelledCheckbox
-                v-if="isRoundRobin"
-                label="Require completed rounds"
-                v-model="settingsStore.settings.requireCompletedRounds" />
+                <LabelledCheckbox
+                    v-if="isRoundRobin"
+                    label="Require completed rounds"
+                    v-model="settingsStore.settings.requireCompletedRounds" />
 
-            <LabelledCheckbox
-                v-if="isRoundRobin || isWinnerStaysOn"
-                label="Allow early finish"
-                v-model="settingsStore.settings.allowEarlyFinish" />
+                <LabelledCheckbox
+                    v-if="isRoundRobin"
+                    label="Allow early finish"
+                    v-model="settingsStore.settings.allowEarlyFinish" />
 
-            <LabelledCheckbox
-                v-if="isRoundRobin"
-                label="Allow draws"
-                v-model="settingsStore.settings.allowDraws" />
+                <LabelledCheckbox
+                    v-if="isRoundRobin"
+                    label="Allow draws"
+                    v-model="settingsStore.settings.allowDraws" />
+            </div>
         </div>
 
         <div v-if="section === Section.Tables">
