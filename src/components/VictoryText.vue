@@ -46,7 +46,13 @@ const score = computed(() => {
 
 const opponentName = computed(() => getPlayerName(getOpponent(winner.value?.id || "")))
 
-const roundName = computed(() => getRound(result.value.id)?.name || "UNKNOWN")
+const roundName = computed(() => {
+    if (result.value) {
+        return getRound(result.value.id)?.name || "UNKNOWN"
+    }
+
+    return "UNKNOWN"
+})
 </script>
 
 <template>
