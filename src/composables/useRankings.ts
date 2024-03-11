@@ -140,6 +140,15 @@ export const useRankings = () => {
         return tableData
     }
 
+    const winsRequiredReached = (results: Result[], players: Player[], settings: FlyerSettings) => {
+        if (settings.format !== Format.WinnerStaysOn) {
+            return false
+        }
+
+        const standings = computeStandings(results, players, settings)
+        return standings[0].wins >= settings.winsRequired
+    }
+
     const recordsAreEqual = (r: PlayerRecord, s: PlayerRecord) => {
         return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
     }
@@ -176,6 +185,7 @@ export const useRankings = () => {
 
     return {
         computeStandings,
+        winsRequiredReached,
         computePlayOffs,
     }
 }

@@ -3,6 +3,8 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
+import { useRankings } from "../composables/useRankings"
+
 import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
@@ -19,6 +21,10 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     })
 
     const playerPool = ref<string[]>([])
+
+    const {
+        winsRequiredReached,
+    } = useRankings()
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -109,14 +115,20 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         }
     }
 
-    const updateScores = (resultId: string, scores: Score[], finish: boolean) => {
+    const updateScores = (resultId: string, scores: Score[], finishFixture: boolean) => {
         for (const r of flyer.value!.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === resultId)
             if (idx >= 0) {
                 r.fixtures[idx].scores = scores
 
-                if (finish) {
+                if (finishFixture) {
                     r.fixtures[idx].finishTime = Date.now()
+
+                    if (winsRequiredReached(flyer.value!.rounds.flatMap(r => r.fixtures), flyer.value!.players, flyer.value!.settings)) {
+                        cancelRemaining()
+                        finish()
+                        return
+                    }
 
                     const didPropagateWinner = tryPropagate(flyer.value!, resultId, getWinner(r.fixtures[idx]).playerId, false)
                     if (!didPropagateWinner) {
@@ -185,6 +197,20 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         return false
     }
 
+    const cancelRemaining = () => {
+        if (!flyer.value) {
+            return
+        }
+
+        const remainingFixtures = flyer.value.rounds
+            .flatMap(r => r.fixtures)
+            .filter(f => !f.startTime && !f.finishTime && !f.cancelledTime)
+
+        for (const f of remainingFixtures) {
+            f.cancelledTime = Date.now()
+        }
+    }
+
     const finish = () => {
         if (flyer.value) {
             if (!flyer.value.finishTime) {
@@ -215,6 +241,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         updateScores,
         generateNextRound,
         finish,
+        cancelRemaining,
         addPlayOff,
         clear,
     }
