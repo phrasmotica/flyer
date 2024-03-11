@@ -98,7 +98,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column field="name" header="Name">
             <template #body="slotData">
                 {{ slotData.data.name }}
-                <span v-if="!props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0 && !isWinnerStaysOn">
+                <span v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0">
                     <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId) + 1 }}</sup>
                 </span>
             </template>
@@ -122,7 +122,7 @@ const getPlayOffIndex = (playerId: string) => {
     </h4>
 
     <!-- if a play-off needs to happen -->
-    <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
+    <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
         <p v-for="p, i in playOffs.filter(x => !playOffIsComplete(x.id))" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
