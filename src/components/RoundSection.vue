@@ -53,11 +53,12 @@ const toggle = () => {
         @click="toggle">
         <h3 class="font-bold">{{ name }}</h3>
 
-        <div>
-            <i v-if="status === RoundStatus.Waiting" class="pi pi-question-circle ml-2" />
-            <i v-if="status === RoundStatus.Ready" class="pi pi-clock ml-2" />
-            <i v-if="status === RoundStatus.InProgress" class="pi pi-spin pi-spinner ml-2" />
-            <i v-if="status === RoundStatus.Finished" class="pi pi-check-circle ml-2" />
+        <div class="ml-2">
+            <i v-if="status === RoundStatus.Waiting" class="pi pi-question-circle" />
+            <i v-if="status === RoundStatus.Ready" class="pi pi-clock" />
+            <i v-if="status === RoundStatus.InProgress" class="pi pi-spin pi-spinner" />
+            <i v-if="status === RoundStatus.Finished" class="pi pi-check-circle" />
+            <i v-if="status === RoundStatus.Cancelled" class="pi pi-times-circle" />
         </div>
     </div>
 

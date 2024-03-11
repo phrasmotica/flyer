@@ -4,6 +4,7 @@ export interface Result {
     scores: Score[]
     startTime: number | null
     finishTime: number | null
+    cancelledTime: number | null
     comment: string
 }
 
