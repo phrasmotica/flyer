@@ -85,7 +85,7 @@ export class RoundRobinScheduler implements IScheduler {
 
                 const playerB = this.getRandom(possibleOpponents)
 
-                this.addFixture(round, [playerA, playerB], [])
+                this.addFixture(round, [playerA, playerB])
 
                 overallPool = overallPool.filter(p => ![playerA.id, playerB.id].includes(p.id))
             }
@@ -107,12 +107,12 @@ export class RoundRobinScheduler implements IScheduler {
         return this.generatedRounds
     }
 
-    private addFixture(round: Round, players: Player[], parentFixtureIds: string[]) {
+    private addFixture(round: Round, players: Player[]) {
         console.debug(players.map(p => p.name).join(" v "))
 
         round.fixtures.push({
             id: uuidv4(),
-            parentFixtureIds,
+            parentFixtures: [],
             scores: players.map(p => ({
                 playerId: p.id,
                 score: 0,

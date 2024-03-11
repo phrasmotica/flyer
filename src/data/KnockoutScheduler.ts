@@ -160,7 +160,9 @@ export class KnockoutScheduler implements IScheduler {
     private addPlaceholderFixture(round: Round, players: Player[], playerCount: number, parentFixtureIds: string[]) {
         const fixture = <Result>{
             id: uuidv4(),
-            parentFixtureIds,
+            parentFixtures: parentFixtureIds.map(id => ({
+                fixtureId: id,
+            })),
             scores: players.map(p => ({
                 playerId: p.id,
                 score: 0,

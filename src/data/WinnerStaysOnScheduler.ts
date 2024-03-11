@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
-import type { Result } from "./Result"
+import type { ParentFixture, Result } from "./Result"
 import type { Round } from "./Round"
 
 export class WinnerStaysOnScheduler implements IScheduler {
@@ -60,7 +60,15 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
             for (let i = 0; i < players.length - 1 && fixtureCount < maxFixtureCount; i++) {
                 // we might have enough fixtures midway through a round, so stop early
-                const newFixture = this.addEmptyFixture(newRound, [lastFixtureId, ""])
+                const newFixture = this.addEmptyFixture(newRound, [
+                    {
+                        fixtureId: lastFixtureId,
+                    },
+                    {
+                        fixtureId: "",
+                    },
+                ])
+
                 lastFixtureId = newFixture.id
                 fixtureCount++
             }
@@ -87,10 +95,10 @@ export class WinnerStaysOnScheduler implements IScheduler {
         return this.generatedRounds
     }
 
-    private addEmptyFixture(round: Round, parentFixtureIds: string[]) {
+    private addEmptyFixture(round: Round, parentFixtures: ParentFixture[]) {
         const newFixture = <Result>{
             id: uuidv4(),
-            parentFixtureIds,
+            parentFixtures,
             scores: new Array<number>(2).fill(0).map(_ => ({
                 playerId: "",
                 score: 0,

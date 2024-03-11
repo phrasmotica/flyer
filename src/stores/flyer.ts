@@ -171,7 +171,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
     const tryPropagate = (flyer: Flyer, fixtureId: string, winnerId: string) => {
         for (const f of flyer.rounds.flatMap(r => r.fixtures)) {
-            const slotIndex = f.parentFixtureIds.indexOf(fixtureId)
+            const slotIndex = f.parentFixtures.findIndex(pf => pf.fixtureId === fixtureId)
             if (slotIndex >= 0) {
                 f.scores[slotIndex].playerId = winnerId
                 return true

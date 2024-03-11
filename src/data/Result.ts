@@ -1,10 +1,14 @@
 export interface Result {
     id: string
-    parentFixtureIds: string[]
+    parentFixtures: ParentFixture[]
     scores: Score[]
     startTime: number | null
     finishTime: number | null
     comment: string
+}
+
+export interface ParentFixture {
+    fixtureId: string
 }
 
 export interface Score {
