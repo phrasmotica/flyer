@@ -12,6 +12,10 @@ const emit = defineEmits<{
 }>()
 
 const getResultClass = (result: Result) => {
+    if (result.cancelledTime) {
+        return "bg-pink-400 text-white"
+    }
+
     if (isWalkover.value || result.finishTime) {
         return "bg-primary"
     }
@@ -30,7 +34,10 @@ const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
     <div class="p-2 py-1 text-center border-round-md"
         :class="[getResultClass(props.result), !isWalkover && 'cursor-pointer']"
         @click="() => emit('clicked')">
-        <span v-if="isWalkover">
+        <span v-if="props.result.cancelledTime">
+            <i class="pi pi-times" />
+        </span>
+        <span v-else-if="isWalkover">
             <em>W/O</em>
         </span>
         <span v-else-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
