@@ -9,6 +9,7 @@ export interface Result {
 
 export interface ParentFixture {
     fixtureId: string
+    takeLoser: boolean
 }
 
 export interface Score {

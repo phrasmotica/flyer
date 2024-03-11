@@ -54,7 +54,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
                 // with a bye in both slots
-                const didPropagate = tryPropagate(newFlyer, fixtureId, winnerId)
+                const didPropagate = tryPropagate(newFlyer, fixtureId, winnerId, false)
                 if (!didPropagate) {
                     // add winner to random draw pool for next round
                     playerPool.value = [...playerPool.value, winnerId]
@@ -118,8 +118,8 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
                 if (finish) {
                     r.fixtures[idx].finishTime = Date.now()
 
-                    const didPropagate = tryPropagate(flyer.value!, resultId, getWinner(r.fixtures[idx]).playerId)
-                    if (!didPropagate) {
+                    const didPropagateWinner = tryPropagate(flyer.value!, resultId, getWinner(r.fixtures[idx]).playerId, false)
+                    if (!didPropagateWinner) {
                         // add winner to random draw pool for next round
                         playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
                     }
@@ -169,11 +169,11 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
     const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
-    const tryPropagate = (flyer: Flyer, fixtureId: string, winnerId: string) => {
+    const tryPropagate = (flyer: Flyer, fixtureId: string, playerId: string, takeLoser: boolean) => {
         for (const f of flyer.rounds.flatMap(r => r.fixtures)) {
-            const slotIndex = f.parentFixtures.findIndex(pf => pf.fixtureId === fixtureId)
+            const slotIndex = f.parentFixtures.findIndex(pf => pf.fixtureId === fixtureId && pf.takeLoser === takeLoser)
             if (slotIndex >= 0) {
-                f.scores[slotIndex].playerId = winnerId
+                f.scores[slotIndex].playerId = playerId
                 return true
             }
         }

@@ -63,9 +63,11 @@ export class WinnerStaysOnScheduler implements IScheduler {
                 const newFixture = this.addEmptyFixture(newRound, [
                     {
                         fixtureId: lastFixtureId,
+                        takeLoser: false,
                     },
                     {
                         fixtureId: "",
+                        takeLoser: false,
                     },
                 ])
 
