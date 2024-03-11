@@ -90,7 +90,7 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler().frameTimeEstimateMins
+            return new WinnerStaysOnScheduler(settings.value.winsRequired).frameTimeEstimateMins
         }
 
         throw `Invalid flyer format ${settings.value.format}!`
@@ -106,7 +106,7 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler().estimateDuration(settings.value)
+            return new WinnerStaysOnScheduler(settings.value.winsRequired).estimateDuration(settings.value)
         }
 
         throw `Invalid flyer format ${settings.value.format}!`

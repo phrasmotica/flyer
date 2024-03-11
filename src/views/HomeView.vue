@@ -50,7 +50,7 @@ const start = () => {
             break
 
         case Format.WinnerStaysOn:
-            flyerStore.start(settings.value, new WinnerStaysOnScheduler(), [])
+            flyerStore.start(settings.value, new WinnerStaysOnScheduler(settings.value.winsRequired), [])
             break
 
         default:

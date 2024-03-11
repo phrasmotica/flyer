@@ -11,7 +11,12 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
+    constructor(private winsRequired: number) {
+
+    }
+
     estimateDuration(settings: FlyerSettings) {
+        // MEDIUM: fix this
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const numFixtures = settings.playerCount * (settings.playerCount - 1) / 2
@@ -39,41 +44,55 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
         const playerOrder = this.shuffle([...players])
 
-        const firstRound = <Round>{
-            fixtures: [],
-            index: 1,
-            isGenerated: true,
-            name: "Round 1",
+        const maxFixtureCount = players.length * (this.winsRequired - 1) + 1
+        let fixtureCount = 0
+
+        let roundIndex = 1
+        let lastFixtureId = ""
+
+        while (fixtureCount < maxFixtureCount) {
+            const newRound = <Round>{
+                fixtures: [],
+                index: roundIndex,
+                isGenerated: true,
+                name: "Round " + roundIndex,
+            }
+
+            for (let i = 0; i < players.length - 1 && fixtureCount < maxFixtureCount; i++) {
+                // we might have enough fixtures midway through a round, so stop early
+                const newFixture = this.addEmptyFixture(newRound, [lastFixtureId, ""])
+                lastFixtureId = newFixture.id
+                fixtureCount++
+            }
+
+            this.generatedRounds.push(newRound)
+
+            roundIndex++
         }
 
-        const lastFixture = this.addFixture(firstRound, playerOrder.slice(0, 2), [])
-        let lastFixtureId = lastFixture.id
+        // add the first two players into the first fixture
+        this.addToFixture(this.generatedRounds[0], playerOrder.pop()!, 0)
+        this.addToFixture(this.generatedRounds[0], playerOrder.pop()!, 1)
 
-        for (const p of playerOrder.slice(2)) {
-            const newFixture = this.addFixture(firstRound, [{
-                id: "",
-                name: "TBC",
-            }, p], [lastFixtureId, ""])
-
-            lastFixtureId = newFixture.id
+        // add the rest of the players to the away slots of the next fixtures
+        while (playerOrder.length > 0) {
+            this.addToFixture(this.generatedRounds[0], playerOrder.pop()!, 1)
         }
 
-        this.generatedRounds.push(firstRound)
-
-        // HIGH: created more rounds of P - 1 fixtures, ensuring that a maximum
-        // of P * (W - 1) + 1 fixtures are created
+        // TODO: ensure the away slots of fixtures in rounds after the first round
+        // are populated with the incoming player's name once we know it. I.e.
+        // the loser of the current fixture should be propagated to the away
+        // slot of the next available fixture
 
         return this.generatedRounds
     }
 
-    private addFixture(round: Round, players: Player[], parentFixtureIds: string[]) {
-        console.debug(players.map(p => p.name).join(" v "))
-
+    private addEmptyFixture(round: Round, parentFixtureIds: string[]) {
         const newFixture = <Result>{
             id: uuidv4(),
             parentFixtureIds,
-            scores: players.map(p => ({
-                playerId: p.id,
+            scores: new Array<number>(2).fill(0).map(_ => ({
+                playerId: "",
                 score: 0,
                 runouts: 0,
                 isBye: false,
@@ -86,6 +105,13 @@ export class WinnerStaysOnScheduler implements IScheduler {
         round.fixtures.push(newFixture)
 
         return newFixture
+    }
+
+    private addToFixture(round: Round, player: Player, slot: 0 | 1) {
+        const fixture = round.fixtures.find(f => !f.scores[slot].playerId)
+        if (fixture) {
+            fixture.scores[slot].playerId = player.id
+        }
     }
 
     shuffle<T>(arr: T[]) {
