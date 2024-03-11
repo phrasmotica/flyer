@@ -59,6 +59,8 @@ export class WinnerStaysOnScheduler implements IScheduler {
             }
 
             for (let i = 0; i < players.length - 1 && fixtureCount < maxFixtureCount; i++) {
+                const oneRoundAgoFixture = this.generatedRounds.at(-1)?.fixtures.at(i + 1 - players.length)
+
                 // we might have enough fixtures midway through a round, so stop early
                 const newFixture = this.addEmptyFixture(newRound, [
                     {
@@ -66,8 +68,10 @@ export class WinnerStaysOnScheduler implements IScheduler {
                         takeLoser: false,
                     },
                     {
-                        fixtureId: "",
-                        takeLoser: false,
+                        // ensure the away slots of fixtures in rounds after the first round
+                        // will be filled by the most recent loser
+                        fixtureId: oneRoundAgoFixture ? oneRoundAgoFixture.id : "",
+                        takeLoser: true,
                     },
                 ])
 
@@ -88,11 +92,6 @@ export class WinnerStaysOnScheduler implements IScheduler {
         while (playerOrder.length > 0) {
             this.addToFixture(this.generatedRounds[0], playerOrder.pop()!, 1)
         }
-
-        // TODO: ensure the away slots of fixtures in rounds after the first round
-        // are populated with the incoming player's name once we know it. I.e.
-        // the loser of the current fixture should be propagated to the away
-        // slot of the next available fixture
 
         return this.generatedRounds
     }
