@@ -15,16 +15,22 @@ const {
     formatDetails,
     drawSummary,
     raceSummary,
+    winsRequiredSummary,
     rulesSummary,
     rulesDetails,
     tieBreakerSummary,
     tieBreakerDetails,
     isRoundRobin,
+    isWinnerStaysOn,
 } = useSettings(props.settings)
 </script>
 
 <template>
-    <div class="mb-2">
+    <div v-if="isWinnerStaysOn" class="mb-2">
+        <strong>{{ winsRequiredSummary }}</strong>
+    </div>
+
+    <div v-else class="mb-2">
         <strong>{{ raceSummary }}</strong>
     </div>
 

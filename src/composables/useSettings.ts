@@ -48,6 +48,14 @@ export const useSettings = (s: FlyerSettings) => {
 
     const raceSummary = computed(() => `Races to ${settings.value.raceTo}`)
 
+    const winsRequiredSummary = computed(() => {
+        if (settings.value.winsRequired === 1) {
+            return `First to ${settings.value.winsRequired} win`
+        }
+
+        return `First to ${settings.value.winsRequired} wins`
+    })
+
     const rulesSummary = computed(() => {
         const ruleSet = ruleSetList.find(s => s.value === settings.value.ruleSet)
         if (!ruleSet) {
@@ -187,6 +195,7 @@ export const useSettings = (s: FlyerSettings) => {
 
         drawSummary,
         raceSummary,
+        winsRequiredSummary,
 
         rulesSummary,
         rulesDetails,
