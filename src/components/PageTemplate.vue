@@ -8,6 +8,8 @@ const slots = useSlots()
     <!-- LOW: make this better. This isn't great on wide screens,
     plus it'd be better to not have two scroll bars... -->
     <main class="flex flex-column justify-content-between">
+        <Toast />
+
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <slot name="content" />
         </div>

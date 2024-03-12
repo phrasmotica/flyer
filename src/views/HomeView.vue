@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { useToast } from "primevue/usetoast"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -28,9 +29,10 @@ const settingsStore = useSettingsStore()
 
 const { isSmallScreen } = useScreenSizes()
 
+const toast = useToast()
+
 const {
     settings,
-    isWinnerStaysOn,
     durationPerFrame,
     estimatedDuration,
     isInvalid,
@@ -40,21 +42,36 @@ const showModal = ref(false)
 const entryFeesPaid = ref(false)
 
 const start = () => {
-    switch (settings.value.format) {
-        case Format.Knockout:
-            flyerStore.start(settings.value, new KnockoutScheduler(settings.value.randomlyDrawAllRounds), [])
-            break
+    try {
+        switch (settings.value.format) {
+            case Format.Knockout:
+                flyerStore.start(settings.value, new KnockoutScheduler(settings.value.randomlyDrawAllRounds), [])
+                break
 
-        case Format.RoundRobin:
-            flyerStore.start(settings.value, new RoundRobinScheduler(), [])
-            break
+            case Format.RoundRobin:
+                flyerStore.start(settings.value, new RoundRobinScheduler(), [])
+                break
 
-        case Format.WinnerStaysOn:
-            flyerStore.start(settings.value, new WinnerStaysOnScheduler(settings.value.winsRequired), [])
-            break
+            case Format.WinnerStaysOn:
+                flyerStore.start(settings.value, new WinnerStaysOnScheduler(settings.value.winsRequired), [])
+                break
 
-        default:
-            throw `Invalid flyer format ${settings.value.format}!`
+            default:
+                throw `Invalid flyer format ${settings.value.format}!`
+        }
+    }
+    catch (e) {
+        console.error(e)
+
+        toast.add({
+            group: "errors",
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to start flyer! Please try again.',
+            life: 3000,
+        })
+
+        return
     }
 
     hideModal()

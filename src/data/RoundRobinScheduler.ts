@@ -100,8 +100,7 @@ export class RoundRobinScheduler implements IScheduler {
         }
 
         if (attempts >= this.generationAttempts) {
-            // MEDIUM: if this happens, notify the user and let them retry
-            console.debug(`Failed to generate rounds after ${this.generationAttempts} attempts!`)
+            throw `Failed to generate rounds after ${this.generationAttempts} attempt(s)!`
         }
 
         return this.generatedRounds

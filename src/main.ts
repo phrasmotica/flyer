@@ -24,6 +24,8 @@ import SelectButton from "primevue/selectbutton"
 import Slider from "primevue/slider"
 import TabMenu from 'primevue/tabmenu'
 import Textarea from 'primevue/textarea'
+import Toast from 'primevue/toast'
+import ToastService from 'primevue/toastservice'
 
 import App from './App.vue'
 import router from './router'
@@ -56,6 +58,7 @@ app.use(createI18n({
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)
+app.use(ToastService)
 
 app.component("Button", Button)
 app.component("Checkbox", Checkbox)
@@ -72,5 +75,6 @@ app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
 app.component("TabMenu", TabMenu)
 app.component("Textarea", Textarea)
+app.component("Toast", Toast)
 
 app.mount('#app')
