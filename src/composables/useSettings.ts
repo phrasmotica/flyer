@@ -86,6 +86,14 @@ export const useSettings = (s: FlyerSettings) => {
 
     const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
 
+    const maxTableCount = computed(() => {
+        if (isWinnerStaysOn.value) {
+            return 1
+        }
+
+        return Math.floor(settings.value.playerCount / 2)
+    })
+
     const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
 
     const durationPerFrame = computed(() => {
@@ -208,6 +216,7 @@ export const useSettings = (s: FlyerSettings) => {
         isRoundRobin,
         isWinnerStaysOn,
         isRandomDraw,
+        maxTableCount,
         usesPlayOff,
 
         durationPerFrame,

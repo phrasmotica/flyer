@@ -33,6 +33,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
+    maxTableCount,
 } = useSettings(settingsStore.settings)
 
 const { n } = useI18n()
@@ -196,8 +197,8 @@ onUpdated(() => {
 
                 <Stepper
                     v-model="settingsStore.settings.tableCount"
-                    :min="1" :max="Math.floor(settingsStore.settings.playerCount / 2)"
-                    suffix=" table(s)"
+                    :min="1" :max="maxTableCount"
+                    :suffix="settingsStore.settings.tableCount > 1 ? ' table(s)' : ' table'"
                     inputId="tablesStepper" />
             </div>
 

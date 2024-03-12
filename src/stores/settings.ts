@@ -129,6 +129,8 @@ export const useSettingsStore = defineStore("settings", () => {
             settings.value.requireCompletedRounds = false
             settings.value.allowDraws = false
             settings.value.allowEarlyFinish = true
+
+            settings.value.tableCount = 1
         }
     })
 
