@@ -162,6 +162,7 @@ export class KnockoutScheduler implements IScheduler {
             id: uuidv4(),
             parentFixtures: parentFixtureIds.map(id => ({
                 fixtureId: id,
+                takeLoser: false,
             })),
             scores: players.map(p => ({
                 playerId: p.id,
