@@ -67,7 +67,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
     return [
         isHighlighted && parentFixture?.takeLoser && 'loser',
         isHighlighted && 'highlight',
-        parentFixture?.fixtureId && 'cursor-pointer',
+        'cursor-pointer',
     ]
 }
 </script>
@@ -84,7 +84,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                 <div
                     class="p-1 mr-1 border-round-md text-left"
                     :class="playerCellClass(result, 0)"
-                    @click="handleNameClick(result.parentFixtures[0]?.fixtureId)">
+                    @click="handleNameClick(result.id)">
                     <span v-if="result.scores[0].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
@@ -113,7 +113,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                 <div
                     class="p-1 ml-1 border-round-md text-right"
                     :class="playerCellClass(result, 1)"
-                    @click="handleNameClick(result.parentFixtures[1].fixtureId)">
+                    @click="handleNameClick(result.id)">
                     <span v-if="result.scores[1].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
@@ -126,7 +126,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                         {{ getPlayerName(result.scores[1].playerId) }}
                     </span>
 
-                    <span v-else-if="result.parentFixtures[1].fixtureId || isRandomDraw">
+                    <span v-else-if="result.parentFixtures[1]?.fixtureId || isRandomDraw">
                         <em class="text-gray-400">TBD</em>
                     </span>
                 </div>
