@@ -105,6 +105,11 @@ export const useSettingsStore = defineStore("settings", () => {
         if (settings.value.tableCount > Math.floor(settings.value.playerCount / 2)) {
             settings.value.tableCount = Math.floor(settings.value.playerCount / 2)
         }
+
+        if (settings.value.winsRequired < settings.value.playerCount - 1) {
+            // ensure everyone gets at least one game
+            settings.value.winsRequired = settings.value.playerCount - 1
+        }
     })
 
     watch(() => settings.value.format, () => {
