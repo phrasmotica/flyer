@@ -66,8 +66,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
 
     return [
         isHighlighted && parentFixture?.takeLoser && 'loser',
-        isHighlighted && 'highlight',
-        'text-white',
+        isHighlighted && 'highlight text-white',
         'cursor-pointer',
     ]
 }
