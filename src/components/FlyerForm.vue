@@ -200,7 +200,8 @@ onUpdated(() => {
                     v-model="settingsStore.settings.tableCount"
                     :min="1" :max="maxTableCount"
                     :suffix="settingsStore.settings.tableCount > 1 ? ' table(s)' : ' table'"
-                    inputId="tablesStepper" />
+                    inputId="tablesStepper"
+                    :disabled="isWinnerStaysOn" />
 
                 <p class="m-0 text-xs font-italic text-color-secondary">
                     <span v-if="isWinnerStaysOn">
