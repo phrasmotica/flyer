@@ -16,14 +16,11 @@ export class WinnerStaysOnScheduler implements IScheduler {
     }
 
     estimateDuration(settings: FlyerSettings) {
-        // MEDIUM: fix this
-        // assumes perfect parallelisation across tables, i.e. does not account
-        // for a player making their next opponent wait for their slow match
-        const numFixtures = settings.playerCount * (settings.playerCount - 1) / 2
-        const maxFrames = 2 * settings.raceTo - 1
-        const meanFrames = (settings.raceTo + maxFrames) / 2
-        const expectedFramesTotal = numFixtures * meanFrames
-        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
+        // always one frame per fixture, and one table
+        const maxFrameCount = settings.playerCount * (this.winsRequired - 1) + 1
+        const minFrameCount = this.winsRequired
+        const expectedFramesTotal = (minFrameCount + maxFrameCount) / 2
+        const expectedTime = this.frameTimeEstimateMins * expectedFramesTotal
         return Math.max(this.frameTimeEstimateMins, expectedTime)
     }
 
