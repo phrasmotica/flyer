@@ -67,6 +67,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
     return [
         isHighlighted && parentFixture?.takeLoser && 'loser',
         isHighlighted && 'highlight',
+        'text-white',
         'cursor-pointer',
     ]
 }
@@ -143,10 +144,10 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
 
 <style scoped>
 .highlight {
-    background-color: powderblue!important;
+    background-color: darkgreen!important;
 }
 
 .highlight.loser {
-    background-color: darkred!important;
+    background-color: firebrick!important;
 }
 </style>
