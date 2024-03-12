@@ -73,10 +73,10 @@ const handleNameClick = (id: string) => {
                 <div
                     class="p-1 mr-1 border-round-md text-left"
                     :class="[
-                        props.highlightedResultId && props.highlightedResultId === result.parentFixtures[0].fixtureId && 'highlight',
-                        result.parentFixtures[0].fixtureId && 'cursor-pointer'
+                        props.highlightedResultId && props.highlightedResultId === result.parentFixtures[0]?.fixtureId && 'highlight',
+                        result.parentFixtures[0]?.fixtureId && 'cursor-pointer'
                     ]"
-                    @click="handleNameClick(result.parentFixtures[0].fixtureId)">
+                    @click="handleNameClick(result.parentFixtures[0]?.fixtureId)">
                     <span v-if="result.scores[0].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
@@ -89,7 +89,7 @@ const handleNameClick = (id: string) => {
                         {{ getPlayerName(result.scores[0].playerId) }}
                     </span>
 
-                    <span v-else-if="result.parentFixtures[0].fixtureId || isRandomDraw">
+                    <span v-else-if="result.parentFixtures[0]?.fixtureId || isRandomDraw">
                         <em class="text-gray-400">TBD</em>
                     </span>
                 </div>
@@ -106,7 +106,7 @@ const handleNameClick = (id: string) => {
                     class="p-1 ml-1 border-round-md text-right"
                     :class="[
                         props.highlightedResultId && props.highlightedResultId === result.parentFixtures[1].fixtureId && 'highlight',
-                        result.parentFixtures[0].fixtureId && 'cursor-pointer',
+                        result.parentFixtures[1]?.fixtureId && 'cursor-pointer',
                     ]"
                     @click="handleNameClick(result.parentFixtures[1].fixtureId)">
                     <span v-if="result.scores[1].isBye" class="text-gray-400">
