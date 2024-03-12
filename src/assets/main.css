@@ -49,6 +49,10 @@ a,
   background-color: var(--color-background)!important;
 }
 
+#results-container {
+  background-color: var(--color-background)!important;
+}
+
 @media (prefers-color-scheme: dark) {
   .p-button.p-button-secondary, .p-button-group.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button {
     color: #f1f5f9;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
+import html2canvas from "html2canvas"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -19,7 +20,6 @@ import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
-import html2canvas from "html2canvas"
 
 const router = useRouter()
 
