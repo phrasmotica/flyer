@@ -29,6 +29,7 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 const settingsStore = useSettingsStore()
 
 const {
+    formatSummary,
     estimatedCost,
     isKnockout,
     isRoundRobin,
@@ -200,6 +201,15 @@ onUpdated(() => {
                     :min="1" :max="maxTableCount"
                     :suffix="settingsStore.settings.tableCount > 1 ? ' table(s)' : ' table'"
                     inputId="tablesStepper" />
+
+                <p class="m-0 text-xs font-italic text-color-secondary">
+                    <span v-if="isWinnerStaysOn">
+                        {{ formatSummary }} can only use one table.
+                    </span>
+                    <span v-else>
+                        Cannot be more than half the number of players ({{ maxTableCount }}).
+                    </span>
+                </p>
             </div>
 
             <div class="p-fluid mb-2">
