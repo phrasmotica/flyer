@@ -59,6 +59,17 @@ const handleNameClick = (id: string) => {
         emit('highlight', id)
     }
 }
+
+const playerCellClass = (result: Result, slot: 0 | 1) => {
+    const parentFixture = result.parentFixtures[slot]
+    const isHighlighted = props.highlightedResultId && props.highlightedResultId === parentFixture?.fixtureId
+
+    return [
+        isHighlighted && parentFixture?.takeLoser && 'loser',
+        isHighlighted && 'highlight',
+        parentFixture?.fixtureId && 'cursor-pointer',
+    ]
+}
 </script>
 
 <template>
@@ -72,10 +83,7 @@ const handleNameClick = (id: string) => {
             <div class="col-5 p-0">
                 <div
                     class="p-1 mr-1 border-round-md text-left"
-                    :class="[
-                        props.highlightedResultId && props.highlightedResultId === result.parentFixtures[0]?.fixtureId && 'highlight',
-                        result.parentFixtures[0]?.fixtureId && 'cursor-pointer'
-                    ]"
+                    :class="playerCellClass(result, 0)"
                     @click="handleNameClick(result.parentFixtures[0]?.fixtureId)">
                     <span v-if="result.scores[0].isBye" class="text-gray-400">
                         <em>(bye)</em>
@@ -104,10 +112,7 @@ const handleNameClick = (id: string) => {
             <div class="col-5 p-0">
                 <div
                     class="p-1 ml-1 border-round-md text-right"
-                    :class="[
-                        props.highlightedResultId && props.highlightedResultId === result.parentFixtures[1].fixtureId && 'highlight',
-                        result.parentFixtures[1]?.fixtureId && 'cursor-pointer',
-                    ]"
+                    :class="playerCellClass(result, 1)"
                     @click="handleNameClick(result.parentFixtures[1].fixtureId)">
                     <span v-if="result.scores[1].isBye" class="text-gray-400">
                         <em>(bye)</em>
@@ -141,9 +146,7 @@ const handleNameClick = (id: string) => {
     background-color: powderblue!important;
 }
 
-@media (prefers-color-scheme: dark) {
-    .highlight {
-        background-color: firebrick!important;
-    }
+.highlight.loser {
+    background-color: darkred!important;
 }
 </style>
