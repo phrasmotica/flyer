@@ -121,6 +121,7 @@ export class RoundRobinScheduler implements IScheduler {
             })),
             startTime: null,
             finishTime: null,
+            cancelledTime: null,
             comment: "",
         })
     }
