@@ -123,8 +123,12 @@ onUpdated(() => {
                 <Stepper
                     inputId="winsRequiredStepper"
                     v-model="settingsStore.settings.winsRequired"
-                    :min="1" :max="maxRaceEnv"
+                    :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
                     :suffix="settingsStore.settings.winsRequired > 1 ? ' wins' : ' win'" />
+
+                <p class="m-0 text-xs font-italic text-color-secondary">
+                    Must be at least one fewer than the player count ({{ settingsStore.settings.playerCount - 1 }}).
+                </p>
             </div>
 
             <div class="grid m-0">
