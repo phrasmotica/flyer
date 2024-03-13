@@ -133,7 +133,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
             </div>
         </div>
 
-        <div v-if="result.comment">
+        <div v-if="result.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
             <p class="m-0 text-xs md:text-sm">
                 {{ result.comment }}
             </p>
