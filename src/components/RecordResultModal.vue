@@ -300,7 +300,7 @@ const resetPlayerScores = () => {
                     v-model="comment" />
             </div>
 
-            <div v-else-if="comment" class="flex p-fluid mt-2">
+            <div v-else-if="comment" class="flex p-fluid pt-1 border-top-1 border-none border-dashed border-gray-200">
                 <p class="m-0 text-xs md:text-sm">
                     {{ comment }}
                 </p>
