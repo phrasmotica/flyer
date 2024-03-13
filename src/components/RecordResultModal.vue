@@ -44,6 +44,7 @@ const {
     runouts,
     comment,
     players,
+    isDraw,
     elapsedSeconds,
     hasStarted,
     hasFinished,
@@ -212,7 +213,7 @@ const disableFinish = computed(() => {
         return true
     }
 
-    if (!settings.value.allowDraws && [...new Set(scores.value)].length <= 1) {
+    if (!settings.value.allowDraws && isDraw.value) {
         return true
     }
 

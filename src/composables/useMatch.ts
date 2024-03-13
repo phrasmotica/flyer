@@ -1,5 +1,5 @@
 import { ref, computed, watch } from "vue"
-import { useIntervalFn } from "@vueuse/core"
+import { useArrayUnique, useIntervalFn } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
 import type { Result } from "../data/Result"
@@ -10,12 +10,16 @@ export const useMatch = (name: string, f: Result | undefined) => {
     const result = ref(f)
 
     const scores = ref(result.value?.scores.map(r => r.score) || [])
+    const uniqueScores = useArrayUnique(scores)
+
     const runouts = ref(result.value?.scores.map(r => r.runouts) || [])
     const comment = ref(result.value?.comment || "")
 
     const startTime = computed(() => result.value?.startTime)
     const players = computed(() => result.value?.scores.map(r => r.playerId) || [])
     const isWalkover = computed(() => result.value?.scores.some(s => s.isBye) || false)
+
+    const isDraw = computed(() => uniqueScores.value.length <= 1)
 
     const hasStarted = computed(() => !!result.value?.startTime)
     const hasFinished = computed(() => !!result.value?.finishTime)
@@ -105,6 +109,7 @@ export const useMatch = (name: string, f: Result | undefined) => {
         runouts,
         comment,
         players,
+        isDraw,
         isWalkover,
         elapsedSeconds,
         hasStarted,

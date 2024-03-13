@@ -127,7 +127,8 @@ export class RoundRobinScheduler implements IScheduler {
 
     private getExistingOpponents(r: Round, player: Player) {
         const existingFixtures = r.fixtures.filter(f => f.scores.some(s => s.playerId === player.id))
-        return [...new Set(existingFixtures.map(f => f.scores.map(s => s.playerId).filter(id => id !== player.id)).flatMap(s => s))]
+        const existingOpponentIds = existingFixtures.map(f => f.scores.map(s => s.playerId).filter(id => id !== player.id)).flatMap(s => s)
+        return [...new Set(existingOpponentIds)]
     }
 
     getRandom<T>(arr: T[]) {
