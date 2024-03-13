@@ -128,7 +128,7 @@ onUpdated(() => {
                     :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
                     :suffix="settingsStore.settings.winsRequired > 1 ? ' wins' : ' win'" />
 
-                <p class="m-0 text-xs font-italic text-color-secondary">
+                <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
                     Must be at least one fewer than the player count ({{ settingsStore.settings.playerCount - 1 }}).
                 </p>
             </div>
@@ -203,7 +203,7 @@ onUpdated(() => {
                     inputId="tablesStepper"
                     :disabled="isWinnerStaysOn" />
 
-                <p class="m-0 text-xs font-italic text-color-secondary">
+                <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
                     <span v-if="isWinnerStaysOn">
                         {{ formatSummary }} can only use one table.
                     </span>
@@ -236,7 +236,7 @@ onUpdated(() => {
                 </div>
             </div>
 
-            <div class="font-italic text-color-secondary">
+            <div class="font-italic text-xs md:text-base text-color-secondary">
                 This will be split evenly between ALL players.
             </div>
         </div>

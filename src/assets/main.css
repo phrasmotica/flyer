@@ -52,10 +52,17 @@ a,
 #results-container {
   background-color: var(--color-background)!important;
 }
+
 @media screen and (max-width: 575px) {
   .p-toast {
     left: 20px;
     width: unset;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .md\:text-base {
+    font-size: unset!important;
   }
 }
 
