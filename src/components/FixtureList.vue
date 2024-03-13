@@ -5,6 +5,7 @@ import RecordResultModal from "./RecordResultModal.vue"
 import RoundSection from "./RoundSection.vue"
 
 import { useFlyer } from "../composables/useFlyer"
+import { useStringToggle } from "../composables/useStringToggle"
 
 import type { Result } from "../data/Result"
 
@@ -24,23 +25,12 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const selectedResult = ref<Result>()
-const highlightedResultId = ref("")
+const [highlightedResultId, highlight] = useStringToggle("")
 const showModal = ref(false)
 
 const selectForRecording = (r: Result) => {
     selectedResult.value = r
     showModal.value = true
-}
-
-const highlight = (resultId: string) => {
-    // LOW: automatically show the round sections containing the parent
-    // fixture of the highlighted player name if it's currently hidden
-    if (highlightedResultId.value === resultId) {
-        highlightedResultId.value = ""
-    }
-    else {
-        highlightedResultId.value = resultId
-    }
 }
 
 const hideModal = () => {
