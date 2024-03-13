@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, watch } from "vue"
+import { useSorted } from "@vueuse/core"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
@@ -35,13 +36,14 @@ watch(props, () => {
     result.value = props.result
 })
 
-const score = computed(() => {
+const sortedScores = useSorted(scores, (a, b) => b - a)
+
+const scoreText = computed(() => {
     if (isWalkover.value) {
         return "W/O"
     }
 
-    const sortedScores = [...scores.value].sort((a, b) => b - a)
-    return sortedScores.join("-")
+    return sortedScores.value.join("-")
 })
 
 const opponentName = computed(() => getPlayerName(getOpponent(winner.value?.id || "")))
@@ -57,7 +59,7 @@ const roundName = computed(() => {
 
 <template>
     <span>
-        <span class="font-bold">{{ score }}</span>
+        <span class="font-bold">{{ scoreText }}</span>
         <span v-if="!isWalkover">&nbsp;v {{ opponentName }}</span>
         <span class="font-italic">&nbsp;({{ roundName }})</span>
     </span>

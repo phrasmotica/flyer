@@ -1,4 +1,5 @@
 import { computed, ref } from "vue"
+import { useSorted } from "@vueuse/core"
 
 import { useRankings } from "./useRankings"
 import { useSettings } from "./useSettings"
@@ -29,7 +30,7 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
 
     const playOffs = computed(() => computePlayOffs(results.value, players.value, settings.value))
 
-    const orderedPlayOffs = computed(() => [...playOffs.value].sort((a, b) => b.forRank - a.forRank))
+    const orderedPlayOffs = useSorted(playOffs, (a, b) => b.forRank - a.forRank)
 
     const requiresPlayOff = computed(() => {
         return usesPlayOff.value
