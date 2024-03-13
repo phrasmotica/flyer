@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import ScoreCell from "./ScoreCell.vue"
+
 import { useFlyer } from "../composables/useFlyer"
+
+import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
+    result: Result
     playerId: string
     winner: string
     ranOut: string
@@ -23,8 +28,6 @@ const {
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
 
-const isWinner = computed(() => props.playerId === props.winner)
-
 const didRunOut = computed(() => props.playerId === props.ranOut)
 </script>
 
@@ -35,8 +38,12 @@ const didRunOut = computed(() => props.playerId === props.ranOut)
         </div>
 
         <div v-if="props.finished" class="text-4xl font-bold">
-            <!-- MEDIUM: use a ScoreCell here -->
-            {{ isWinner ? 'W' : 'L' }}
+            <ScoreCell
+                large
+                static
+                simple
+                :result="props.result"
+                :isWinner="winner === props.playerId" />
         </div>
 
         <RadioButton v-else

@@ -271,6 +271,7 @@ const resetPlayerScores = () => {
                 <PlayerWinInput v-if="isWinnerStaysOn"
                     v-for="p, i in players"
                     class="col-6"
+                    :result="result"
                     :playerId="p"
                     :winner="winner"
                     :ranOut="ranOut"
@@ -281,9 +282,11 @@ const resetPlayerScores = () => {
                 <PlayerScoreInput v-else
                     v-for="p, i in players"
                     class="col-6"
+                    :result="result"
                     :playerId="p"
                     :score="scores[i]"
                     :runouts="runouts[i]"
+                    :isWinner="winner === p"
                     :finished="hasFinished"
                     @setScore="v => setScore(i, v)"
                     @setRunouts="v => setRunouts(i, v)" />

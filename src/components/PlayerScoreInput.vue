@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import ScoreCell from "./ScoreCell.vue"
+
 import { useFlyer } from "../composables/useFlyer"
+
+import type { Result } from "../data/Result"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
+    result: Result
     playerId: string
     score: number
-    runouts: number // LOW: encapsulate score and runouts in a single object
+    runouts: number
+    isWinner: boolean
     finished?: boolean
 }>()
 
@@ -29,9 +35,13 @@ const {
             {{ getPlayerName(props.playerId) }}
         </div>
 
-        <div v-if="props.finished" class="text-4xl font-bold">
-            <!-- MEDIUM: use a ScoreCell here -->
-            {{ score }}
+        <div v-if="props.finished">
+            <ScoreCell
+                large
+                static
+                :result="props.result"
+                :score="props.score"
+                :isWinner="props.isWinner" />
         </div>
 
         <InputNumber v-else
@@ -54,7 +64,7 @@ const {
         </div>
 
         <div v-if="props.finished">
-            {{ runouts }}
+            {{ props.runouts }}
         </div>
 
         <InputNumber v-else

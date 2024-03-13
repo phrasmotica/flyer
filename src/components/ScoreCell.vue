@@ -5,8 +5,8 @@ import type { Result } from "../data/Result"
 
 const props = defineProps<{
     result: Result
-    score: number
     isWinner: boolean
+    score?: number
     simple?: boolean
     large?: boolean
     static?: boolean
