@@ -20,6 +20,7 @@ import InputIcon from "primevue/inputicon"
 import InputNumber from "primevue/inputnumber"
 import InputText from "primevue/inputtext"
 import MeterGroup from 'primevue/metergroup'
+import RadioButton from 'primevue/radiobutton'
 import SelectButton from "primevue/selectbutton"
 import Slider from "primevue/slider"
 import TabMenu from 'primevue/tabmenu'
@@ -71,6 +72,7 @@ app.component("InputIcon", InputIcon)
 app.component("InputNumber", InputNumber)
 app.component("InputText", InputText)
 app.component("MeterGroup", MeterGroup)
+app.component("RadioButton", RadioButton)
 app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
 app.component("TabMenu", TabMenu)
