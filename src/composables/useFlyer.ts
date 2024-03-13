@@ -22,7 +22,7 @@ export const useFlyer = (f: Flyer | null) => {
 
     const isComplete = computed(() => results.value.every(x => x.startTime && x.finishTime))
     const ongoingCount = computed(() => results.value.filter(f => f.startTime && !f.finishTime).length)
-    const remainingCount = computed(() => results.value.filter(f => !f.finishTime || !f.cancelledTime).length)
+    const remainingCount = computed(() => results.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
     const currentRound = computed(() => {
         const notCompletedRounds = rounds.value.filter(r => r.fixtures.some(f => !f.startTime || !f.finishTime))
