@@ -37,13 +37,18 @@ const {
     isRandomDraw,
 } = useSettings(settings.value)
 
-const playerNameClass = (playerId: string) => {
+const isHighlighted = (slot: 0 | 1) => {
+    const parentFixture = props.result.parentFixtures[slot]
+    return !!props.highlightedResultId && props.highlightedResultId === parentFixture?.fixtureId
+}
+
+const playerNameClass = (result: Result, playerId: string, slot: 0 | 1) => {
     if (winner.value) {
         if (winner.value === playerId) {
             return "font-bold"
         }
 
-        return "text-color-secondary"
+        return isHighlighted(slot) ? "" : "text-color-secondary"
     }
 
     return ""
@@ -63,11 +68,10 @@ const handleNameClick = (id: string) => {
 
 const playerCellClass = (result: Result, slot: 0 | 1) => {
     const parentFixture = result.parentFixtures[slot]
-    const isHighlighted = props.highlightedResultId && props.highlightedResultId === parentFixture?.fixtureId
 
     return [
-        isHighlighted && parentFixture?.takeLoser && 'loser',
-        isHighlighted && 'highlight text-white',
+        isHighlighted(slot) && parentFixture?.takeLoser && 'loser',
+        isHighlighted(slot) && 'highlight text-white',
         'cursor-pointer',
     ]
 }
@@ -81,9 +85,9 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
             props.highlightedResultId === result.id ? 'border-dashed' : 'border-transparent'
         ]">
         <div class="grid m-0 py-1">
-            <div class="col-5 p-0">
+            <div class="flex justify-content-between col-6 p-0 pr-1">
                 <div
-                    class="p-1 mr-1 border-round-md text-left"
+                    class="p-1 mr-1 border-round-md text-left flex-1"
                     :class="playerCellClass(result, 0)"
                     @click="handleNameClick(result.id)">
                     <span v-if="result.scores[0].isBye" class="text-gray-400">
@@ -94,7 +98,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                         -
                     </span>
 
-                    <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result.scores[0].playerId)">
+                    <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result, result.scores[0].playerId, 0)">
                         {{ getPlayerName(result.scores[0].playerId) }}
                     </span>
 
@@ -102,19 +106,25 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                         <em class="text-gray-400">TBD</em>
                     </span>
                 </div>
-            </div>
 
-            <div class="col-2 p-0">
                 <ScoreCell
                     :result="result"
+                    :score="result.scores[0]"
                     :winner="winner"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
             </div>
 
-            <div class="col-5 p-0">
+            <div class="flex justify-content-between col-6 p-0 pl-1">
+                <ScoreCell
+                    :result="result"
+                    :score="result.scores[1]"
+                    :winner="winner"
+                    :simple="isWinnerStaysOn"
+                    @clicked="handleClick" />
+
                 <div
-                    class="p-1 ml-1 border-round-md text-right"
+                    class="p-1 ml-1 border-round-md text-right flex-1"
                     :class="playerCellClass(result, 1)"
                     @click="handleNameClick(result.id)">
                     <span v-if="result.scores[1].isBye" class="text-gray-400">
@@ -125,7 +135,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                         -
                     </span>
 
-                    <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result.scores[1].playerId)">
+                    <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result, result.scores[1].playerId, 1)">
                         {{ getPlayerName(result.scores[1].playerId) }}
                     </span>
 

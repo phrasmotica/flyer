@@ -30,6 +30,7 @@ const {
         </div>
 
         <div v-if="props.finished" class="text-4xl font-bold">
+            <!-- MEDIUM: use a ScoreCell here -->
             {{ score }}
         </div>
 
