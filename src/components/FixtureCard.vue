@@ -12,6 +12,7 @@ import { useFlyerStore } from "../stores/flyer"
 const props = defineProps<{
     result: Result
     highlightedResultId: string
+    showComment: boolean
 }>()
 
 const emit = defineEmits<{
@@ -146,7 +147,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
             </div>
         </div>
 
-        <div v-if="result.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
+        <div v-if="props.showComment && result.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
             <p class="m-0 text-xs md:text-sm">
                 {{ result.comment }}
             </p>

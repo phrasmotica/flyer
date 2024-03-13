@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { watch } from "vue"
+import { useToggle } from "@vueuse/core"
 
 import FixtureCard from "./FixtureCard.vue"
 
@@ -39,21 +40,24 @@ const shouldShowContent = () => {
     return isHistoric.value || [RoundStatus.Ready, RoundStatus.InProgress].includes(status.value)
 }
 
-const showContent = ref(shouldShowContent())
-
-const toggle = () => {
-    showContent.value = !showContent.value
-}
+const [showContent, toggleContent] = useToggle(shouldShowContent())
+const [showComments, toggleComments] = useToggle(false)
 </script>
 
 <template>
     <div
-        class="flex align-items-baseline justify-content-between cursor-pointer"
-        :class="[showContent && 'border-bottom-1']"
-        @click="toggle">
-        <h3 class="font-bold">{{ name }}</h3>
+        class="flex align-items-baseline"
+        :class="[showContent && 'border-bottom-1']">
+        <h3 class="font-bold cursor-pointer flex-1" @click="toggleContent()">
+            {{ name }}
+        </h3>
 
         <div class="ml-2">
+            <i v-if="showContent"
+                class="pi pi-comments mr-2 cursor-pointer"
+                :class="[showComments ? 'toggle-on' : 'text-color-secondary']"
+                @click="toggleComments()" />
+
             <i v-if="status === RoundStatus.Waiting" class="pi pi-question-circle" />
             <i v-if="status === RoundStatus.Ready" class="pi pi-clock" />
             <i v-if="status === RoundStatus.InProgress" class="pi pi-spin pi-spinner" />
@@ -67,8 +71,15 @@ const toggle = () => {
             <FixtureCard
                 :result="f"
                 :highlightedResultId="props.highlightedResultId"
+                :showComment="showComments"
                 @showResultModal="emit('showResultModal', f)"
                 @highlight="emit('highlight', f.id)" />
         </div>
     </div>
 </template>
+
+<style scoped>
+.toggle-on {
+    color: #0ea5e9;
+}
+</style>
