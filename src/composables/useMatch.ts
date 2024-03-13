@@ -92,6 +92,10 @@ export const useMatch = (name: string, f: Result | undefined) => {
         runouts.value = runouts.value.map((s, i) => i === index ? r : s)
     }
 
+    const clearRunouts = () => {
+        runouts.value = runouts.value.map(_ => 0)
+    }
+
     const pauseClock = clock.pause
     const resumeClock = clock.resume
 
@@ -111,6 +115,7 @@ export const useMatch = (name: string, f: Result | undefined) => {
         getOpponent,
         setScore,
         setRunouts,
+        clearRunouts,
         pauseClock,
         resumeClock,
     }

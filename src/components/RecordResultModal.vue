@@ -3,9 +3,11 @@ import { computed, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
+import PlayerWinInput from "./PlayerWinInput.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
+import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
 import type { Result, Score } from "../data/Result"
@@ -49,8 +51,13 @@ const {
     durationSeconds,
     setScore,
     setRunouts,
+    clearRunouts,
     resumeClock,
 } = useMatch("modal", props.result)
+
+const {
+    isWinnerStaysOn,
+} = useSettings(settings.value)
 
 const { blurActive } = useTweaks()
 
@@ -106,6 +113,46 @@ const updateScores = (finish: boolean) => {
     flyerStore.updateScores(result.value.id, newScores, finish)
 
     hide()
+}
+
+const winner = computed(() => {
+    const maxScore = scores.value.reduce((a, b) => Math.max(a, b), -1)
+
+    if (maxScore > 0 && scores.value.filter(a => a === maxScore).length === 1) {
+        const playerIndex = scores.value.findIndex(a => a === maxScore)
+        return players.value[playerIndex]
+    }
+
+    return ""
+})
+
+const setWinner = (index: number, clear: boolean) => {
+    scores.value.forEach((_, i) =>{
+        setScore(i, i === index ? settings.value.raceTo : 0)
+    })
+
+    if (clear) {
+        clearRunouts()
+    }
+}
+
+const ranOut = computed(() => {
+    const maxRunouts = runouts.value.reduce((a, b) => Math.max(a, b), -1)
+
+    if (maxRunouts > 0 && runouts.value.filter(a => a === maxRunouts).length === 1) {
+        const playerIndex = runouts.value.findIndex(a => a === maxRunouts)
+        return players.value[playerIndex]
+    }
+
+    return ""
+})
+
+const setRanOut = (index: number) => {
+    runouts.value.forEach((r, i) => {
+        setRunouts(i, i === index && r <= 0 ? 1 : 0)
+    })
+
+    setWinner(index, false)
 }
 
 const startButtonText = computed(() => {
@@ -221,7 +268,17 @@ const resetPlayerScores = () => {
             </div>
 
             <div class="grid m-0">
-                <PlayerScoreInput
+                <PlayerWinInput v-if="isWinnerStaysOn"
+                    v-for="p, i in players"
+                    class="col-6"
+                    :playerId="p"
+                    :winner="winner"
+                    :ranOut="ranOut"
+                    :finished="hasFinished"
+                    @setWinner="() => setWinner(i, true)"
+                    @setRanOut="() => setRanOut(i)" />
+
+                <PlayerScoreInput v-else
                     v-for="p, i in players"
                     class="col-6"
                     :playerId="p"
