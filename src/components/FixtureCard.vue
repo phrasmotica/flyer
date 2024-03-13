@@ -33,6 +33,7 @@ const {
 } = useMatch("card", props.result)
 
 const {
+    isWinnerStaysOn,
     isRandomDraw,
 } = useSettings(settings.value)
 
@@ -106,6 +107,8 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
             <div class="col-2 p-0">
                 <ScoreCell
                     :result="result"
+                    :winner="winner"
+                    :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
             </div>
 

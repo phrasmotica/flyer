@@ -5,6 +5,8 @@ import type { Result } from "../data/Result"
 
 const props = defineProps<{
     result: Result
+    winner: string
+    simple?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -27,6 +29,14 @@ const getResultClass = (result: Result) => {
     return "bg-orange-400 text-white"
 }
 
+const scoreText = computed(() => {
+    if (props.simple) {
+        return props.result.scores.map(s => s.playerId === props.winner ? "W" : "L").join("-")
+    }
+
+    return props.result.scores.map(s => s.score).join("-")
+})
+
 const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 </script>
 
@@ -41,7 +51,7 @@ const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
             <em>W/O</em>
         </span>
         <span v-else-if="props.result.startTime" :class="[props.result.finishTime && 'font-bold']">
-            {{ props.result.scores.map(s => s.score).join("-") }}
+            {{ scoreText }}
         </span>
         <span v-else>
             ?-?
