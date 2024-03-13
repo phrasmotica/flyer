@@ -108,7 +108,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
         <Column v-if="!isWinnerStaysOn" field="losses" header="L"></Column>
         <Column v-if="!isWinnerStaysOn" field="diff" header="+/-"></Column>
-        <Column v-if="isNotSmallScreen" field="runouts" header="R/O"></Column>
+        <Column v-if="isNotSmallScreen || isWinnerStaysOn" field="runouts" header="R/O"></Column>
         <Column v-if="somePlayOffComplete" header="P/O">
             <template #body="slotData">
                 {{ getPlayOffRank(slotData.data.playerId) || "-" }}
