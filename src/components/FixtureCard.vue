@@ -109,8 +109,8 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
 
                 <ScoreCell
                     :result="result"
-                    :score="result.scores[0]"
-                    :winner="winner"
+                    :score="result.scores[0].score"
+                    :isWinner="winner === result.scores[0].playerId"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
             </div>
@@ -118,8 +118,8 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
             <div class="flex justify-content-between col-6 p-0 pl-1">
                 <ScoreCell
                     :result="result"
-                    :score="result.scores[1]"
-                    :winner="winner"
+                    :score="result.scores[1].score"
+                    :isWinner="winner === result.scores[1].playerId"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
 

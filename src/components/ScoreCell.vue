@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import type { Result, Score } from "../data/Result"
+import type { Result } from "../data/Result"
 
 const props = defineProps<{
     result: Result
-    score: Score
-    winner: string
+    score: number
+    isWinner: boolean
     simple?: boolean
+    large?: boolean
+    static?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -19,7 +21,7 @@ const cellClass = computed(() => {
         return "bg-pink-400 text-white"
     }
 
-    if (props.result.finishTime && !isWinner.value) {
+    if (props.result.finishTime && !props.isWinner) {
         return "loser text-white text-sm"
     }
 
@@ -36,23 +38,33 @@ const cellClass = computed(() => {
 
 const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 
-const isWinner = computed(() => props.score.playerId === props.winner)
-
 const scoreText = computed(() => {
     if (props.simple) {
-        return isWinner.value ? "W" : "L"
+        return props.isWinner ? "W" : "L"
     }
 
-    return props.score.score
+    return props.score
 })
+
+const handleClick = () => {
+    if (!props.static) {
+        emit('clicked')
+    }
+}
 </script>
 
 <template>
     <div class="score-cell px-2 py-1 flex align-items-center justify-content-center border-round-md"
-        :class="[cellClass, !isWalkover && 'cursor-pointer']"
-        @click="() => emit('clicked')">
+        :class="[cellClass, !props.static && !isWalkover && 'cursor-pointer', props.large && 'large']"
+        @click="handleClick">
         <i v-if="props.result.cancelledTime" class="pi pi-times" />
-        <span v-else-if="props.result.startTime" :class="[props.result.finishTime && isWinner && 'font-bold']">
+        <span v-else-if="props.result.startTime"
+            class="score-text"
+            :class="[
+                isWinner && 'font-bold',
+                props.large && isWinner && 'text-4xl',
+                props.large && !isWinner && 'text-2xl',
+            ]">
             {{ scoreText }}
         </span>
         <span v-else>
@@ -65,6 +77,11 @@ const scoreText = computed(() => {
 .score-cell {
     width: 2rem;
     height: 2rem;
+}
+
+.score-cell.large {
+    width: 4rem;
+    height: 4rem;
 }
 
 .loser {
