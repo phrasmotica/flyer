@@ -91,6 +91,19 @@ export const useRankings = () => {
         return 0
     }
 
+    const sortHeadToHead = (p: PlayerRecord, q: PlayerRecord, fixtures: Fixture[]) => {
+        const matches = fixtures.filter(
+            f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
+        )
+
+        if (matches.length > 0) {
+            const scoreDiffs = matches.map(m => getPlayerScore(q.playerId, m)!.score - getPlayerScore(p.playerId, m)!.score)
+            return scoreDiffs.reduce((a, b) => a + b) // overall frame difference
+        }
+
+        return 0
+    }
+
     const computeStandings = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
         const records = players.map(p => <PlayerRecord>{
             playerId: p.id,
@@ -113,17 +126,9 @@ export const useRankings = () => {
                 }
 
                 if (settings.tieBreaker === TieBreaker.HeadToHead) {
-                    // LOW: account for multiple head-to-head matches? Only required when round-robins feature
-                    // multiple matches between two players...
-                    const match = fixtures.find(
-                        f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
-                    )
-
-                    if (match) {
-                        const scoreDiff = getPlayerScore(q.playerId, match)!.score - getPlayerScore(p.playerId, match)!.score
-                        if (scoreDiff !== 0) {
-                            return scoreDiff
-                        }
+                    const scoreDiff = sortHeadToHead(p, q, fixtures)
+                    if (scoreDiff !== 0) {
+                        return scoreDiff
                     }
                 }
 
