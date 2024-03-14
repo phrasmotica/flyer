@@ -8,6 +8,8 @@ export const useRound = (r: Round) => {
     const name = computed(() => round.value.name)
     const fixtures = computed(() => round.value.fixtures)
 
+    const playableFixtures = computed(() => fixtures.value.filter(f => f.scores.every(s => !s.isBye)))
+
     const status = computed(() => {
         if (fixtures.value.every(f => f.cancelledTime)) {
             return RoundStatus.Cancelled
@@ -17,11 +19,11 @@ export const useRound = (r: Round) => {
             return RoundStatus.Finished
         }
 
-        if (fixtures.value.some(f => f.startTime)) {
+        if (playableFixtures.value.some(f => f.startTime)) {
             return RoundStatus.InProgress
         }
 
-        if (fixtures.value.every(f => f.scores.every(s => s.playerId))) {
+        if (playableFixtures.value.every(f => f.scores.every(s => s.playerId))) {
             return RoundStatus.Ready
         }
 
