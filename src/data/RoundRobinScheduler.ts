@@ -11,6 +11,10 @@ export class RoundRobinScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
+    constructor(private stageCount: number) {
+
+    }
+
     estimateDuration(settings: FlyerSettings) {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match

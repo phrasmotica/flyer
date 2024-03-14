@@ -102,7 +102,7 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (isRoundRobin.value) {
-            return new RoundRobinScheduler().frameTimeEstimateMins
+            return new RoundRobinScheduler(settings.value.stageCount).frameTimeEstimateMins
         }
 
         if (isWinnerStaysOn.value) {
@@ -118,7 +118,7 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (isRoundRobin.value) {
-            return new RoundRobinScheduler().estimateDuration(settings.value)
+            return new RoundRobinScheduler(settings.value.stageCount).estimateDuration(settings.value)
         }
 
         if (isWinnerStaysOn.value) {
