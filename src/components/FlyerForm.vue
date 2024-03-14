@@ -98,7 +98,7 @@ onUpdated(() => {
                         class="ml-2"
                         icon="pi pi-trash"
                         severity="danger"
-                        :disabled="settingsStore.settings.playerCount <= 2 || i >= settingsStore.settings.playerCount"
+                        :disabled="settingsStore.settings.playerCount <= 2"
                         @click="() => settingsStore.deleteName(i)" />
                 </div>
             </div>
@@ -230,8 +230,27 @@ onUpdated(() => {
                         Cannot be more than half the number of players ({{ maxTableCount }}).
                     </span>
                 </p>
+            </div>
 
-                <!-- HIGH: allow specifying table names -->
+            <div class="p-fluid mb-2">
+                <div v-for="p, i in settingsStore.settings.tableNames.slice(0, settingsStore.settings.tableCount)">
+                    <div class="flex mb-2">
+                        <PlayerNameInput
+                            class="flex-grow-1"
+                            :placeholder="'Table ' + (i + 1)"
+                            :name="p"
+                            @setName="n => settingsStore.setTableName(i, n)" />
+
+                        <!-- MEDIUM: allow setting a different hourly cost per table -->
+
+                        <Button
+                            class="ml-2"
+                            icon="pi pi-trash"
+                            severity="danger"
+                            :disabled="settingsStore.settings.tableCount <= 1"
+                            @click="() => settingsStore.deleteTableName(i)" />
+                    </div>
+                </div>
             </div>
 
             <div class="p-fluid mb-2">
