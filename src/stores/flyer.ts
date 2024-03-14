@@ -5,11 +5,11 @@ import { v4 as uuidv4 } from "uuid"
 
 import { useRankings } from "../composables/useRankings"
 
+import type { Fixture, Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import type { Player } from "../data/Player"
-import type { Result, Score } from "../data/Result"
 import type { Round } from "../data/Round"
 
 const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () => {
@@ -106,18 +106,18 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         }
     }
 
-    const updateComment = (resultId: string, comment: string) => {
+    const updateComment = (fixtureId: string, comment: string) => {
         for (const r of flyer.value!.rounds) {
-            const idx = r.fixtures.findIndex(f => f.id === resultId)
+            const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
                 r.fixtures[idx].comment = comment
             }
         }
     }
 
-    const updateScores = (resultId: string, scores: Score[], finishFixture: boolean) => {
+    const updateScores = (fixtureId: string, scores: Score[], finishFixture: boolean) => {
         for (const r of flyer.value!.rounds) {
-            const idx = r.fixtures.findIndex(f => f.id === resultId)
+            const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
                 r.fixtures[idx].scores = scores
 
@@ -130,13 +130,13 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
                         return
                     }
 
-                    const didPropagateWinner = tryPropagate(flyer.value!, resultId, getWinner(r.fixtures[idx]).playerId, false)
+                    const didPropagateWinner = tryPropagate(flyer.value!, fixtureId, getWinner(r.fixtures[idx]).playerId, false)
                     if (!didPropagateWinner) {
                         // add winner to random draw pool for next round
                         playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
                     }
 
-                    tryPropagate(flyer.value!, resultId, getLoser(r.fixtures[idx]).playerId, true)
+                    tryPropagate(flyer.value!, fixtureId, getLoser(r.fixtures[idx]).playerId, true)
                 }
             }
         }
@@ -181,9 +181,9 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         return arr
     }
 
-    const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
+    const getWinner = (f: Fixture) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
-    const getLoser = (f: Result) => f.scores.reduce((s, t) => s.score < t.score ? s : t)
+    const getLoser = (f: Fixture) => f.scores.reduce((s, t) => s.score < t.score ? s : t)
 
     const tryPropagate = (flyer: Flyer, fixtureId: string, playerId: string, takeLoser: boolean) => {
         for (const f of flyer.rounds.flatMap(r => r.fixtures)) {

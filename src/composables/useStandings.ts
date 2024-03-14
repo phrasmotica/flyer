@@ -4,12 +4,12 @@ import { useSorted } from "@vueuse/core"
 import { useRankings } from "./useRankings"
 import { useSettings } from "./useSettings"
 
+import type { Fixture } from "../data/Fixture"
 import { type FlyerSettings } from "../data/FlyerSettings"
 import type { Player } from "../data/Player"
-import type { Result } from "../data/Result"
 
-export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
-    const results = ref(r)
+export const useStandings = (f: Fixture[], p: Player[], s: FlyerSettings) => {
+    const fixtures = ref(f)
     const players = ref(p)
 
     const {
@@ -26,9 +26,9 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
         computePlayOffs,
     } = useRankings()
 
-    const standings = computed(() => computeStandings(results.value, players.value, settings.value))
+    const standings = computed(() => computeStandings(fixtures.value, players.value, settings.value))
 
-    const playOffs = computed(() => computePlayOffs(results.value, players.value, settings.value))
+    const playOffs = computed(() => computePlayOffs(fixtures.value, players.value, settings.value))
 
     const orderedPlayOffs = useSorted(playOffs, (a, b) => b.forRank - a.forRank)
 
@@ -43,7 +43,7 @@ export const useStandings = (r: Result[], p: Player[], s: FlyerSettings) => {
             return null
         }
 
-        const standings = computeStandings(results.value, players.value, settings.value)
+        const standings = computeStandings(fixtures.value, players.value, settings.value)
         return players.value.find(p => p.id === standings[0].playerId)!
     })
 

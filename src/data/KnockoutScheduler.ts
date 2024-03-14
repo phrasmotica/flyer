@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid"
 
+import type { Fixture } from "./Fixture"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
-import type { Result } from "./Result"
 
 export class KnockoutScheduler implements IScheduler {
     frameTimeEstimateMins: number = 7
@@ -158,7 +158,7 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     private addPlaceholderFixture(round: Round, players: Player[], playerCount: number, parentFixtureIds: string[]) {
-        const fixture = <Result>{
+        const fixture = <Fixture>{
             id: uuidv4(),
             parentFixtures: parentFixtureIds.map(id => ({
                 fixtureId: id,

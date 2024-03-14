@@ -7,19 +7,19 @@ import FixtureCard from "./FixtureCard.vue"
 import { useQueryParams } from "../composables/useQueryParams"
 import { RoundStatus, useRound } from "../composables/useRound"
 
-import type { Result } from "../data/Result"
+import type { Fixture } from "../data/Fixture"
 import type { Round } from "../data/Round"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     round: Round
-    highlightedResultId: string
+    highlightedFixtureId: string
 }>()
 
 const emit = defineEmits<{
-    showResultModal: [result: Result]
-    highlight: [resultId: string]
+    showResultModal: [fixture: Fixture]
+    highlight: [fixtureId: string]
 }>()
 
 const {
@@ -75,8 +75,8 @@ const [showComments, toggleComments] = useToggle(false)
     <div v-if="showContent">
         <div v-for="f, i in fixtures" class="py-1" :class="[i > 0 && 'border-gray-200 border-top-1']">
             <FixtureCard
-                :result="f"
-                :highlightedResultId="props.highlightedResultId"
+                :fixture="f"
+                :highlightedFixtureId="props.highlightedFixtureId"
                 :showComment="showComments"
                 @showResultModal="emit('showResultModal', f)"
                 @highlight="emit('highlight', f.id)" />

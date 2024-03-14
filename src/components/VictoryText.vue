@@ -6,12 +6,12 @@ import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
 import { usePodium } from "../composables/usePodium"
 
-import type { Result } from "../data/Result"
+import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
-    result: Result
+    fixture: Fixture
 }>()
 
 const flyerStore = useFlyerStore()
@@ -26,14 +26,14 @@ const {
 } = usePodium(flyerStore.flyer)
 
 const {
-    result,
+    fixture,
     scores,
     isWalkover,
     getOpponent,
-} = useMatch("victoryText", props.result)
+} = useMatch("victoryText", props.fixture)
 
 watch(props, () => {
-    result.value = props.result
+    fixture.value = props.fixture
 })
 
 const sortedScores = useSorted(scores, (a, b) => b - a)
@@ -49,8 +49,8 @@ const scoreText = computed(() => {
 const opponentName = computed(() => getPlayerName(getOpponent(winner.value?.id || "")))
 
 const roundName = computed(() => {
-    if (result.value) {
-        return getRound(result.value.id)?.name || "UNKNOWN"
+    if (fixture.value) {
+        return getRound(fixture.value.id)?.name || "UNKNOWN"
     }
 
     return "UNKNOWN"

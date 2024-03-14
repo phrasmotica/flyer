@@ -2,9 +2,9 @@ import { computed, ref } from "vue"
 
 import { useSettings } from "./useSettings"
 
+import type { Fixture } from "../data/Fixture"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { Round } from "../data/Round"
-import type { Result } from "@/data/Result"
 
 export const useRound = (r: Round, s: FlyerSettings) => {
     const round = ref(r)
@@ -16,7 +16,7 @@ export const useRound = (r: Round, s: FlyerSettings) => {
     const name = computed(() => round.value.name)
     const fixtures = computed(() => round.value.fixtures)
 
-    const isPopulated = (f: Result) => f.scores.every(s => s.playerId)
+    const isPopulated = (f: Fixture) => f.scores.every(s => s.playerId)
 
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {

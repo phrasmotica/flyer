@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 const {
     flyer,
-    results,
+    fixtures,
     players,
     settings,
     durationMinutes,
@@ -42,7 +42,7 @@ const {
 
 const {
     firstPlace,
-} = useStandings(results.value, players.value, settings.value)
+} = useStandings(fixtures.value, players.value, settings.value)
 
 watch(props, () => {
     flyer.value = props.flyer

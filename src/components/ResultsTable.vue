@@ -25,7 +25,7 @@ const flyerStore = useFlyerStore()
 const playOffStore = usePlayOffStore()
 
 const {
-    results,
+    fixtures,
     players,
     settings,
     playOffs: playOffFlyers,
@@ -33,7 +33,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    results: playOffResults,
+    fixtures: playOffFixtures,
     players: playOffPlayers,
     settings: playOffSettings,
 } = useFlyer(playOffStore.flyer)
@@ -55,11 +55,11 @@ const {
     playOffs,
     requiresPlayOff,
     moneyRecipients,
-} = useStandings(results.value, players.value, settings.value)
+} = useStandings(fixtures.value, players.value, settings.value)
 
 const {
     standings: currentPlayOffStandings,
-} = useStandings(playOffResults.value, playOffPlayers.value, playOffSettings.value)
+} = useStandings(playOffFixtures.value, playOffPlayers.value, playOffSettings.value)
 
 const overallStandings = computed(() => {
     if (props.isPlayOff) {

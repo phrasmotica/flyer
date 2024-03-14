@@ -7,7 +7,7 @@ import RoundSection from "./RoundSection.vue"
 import { useFlyer } from "../composables/useFlyer"
 import { useStringToggle } from "../composables/useStringToggle"
 
-import type { Result } from "../data/Result"
+import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
@@ -24,12 +24,12 @@ const {
     rounds,
 } = useFlyer(flyerStore.flyer)
 
-const selectedResult = ref<Result>()
-const [highlightedResultId, highlight] = useStringToggle("")
+const selectedFixture = ref<Fixture>()
+const [highlightedFixtureId, highlight] = useStringToggle("")
 const showModal = ref(false)
 
-const selectForRecording = (r: Result) => {
-    selectedResult.value = r
+const selectForRecording = (f: Fixture) => {
+    selectedFixture.value = f
     showModal.value = true
 }
 
@@ -42,14 +42,14 @@ const hideModal = () => {
     <div v-for="r in rounds" class="my-1 px-2 border-1 border-round-md">
         <RoundSection
             :round="r"
-            :highlightedResultId="highlightedResultId"
+            :highlightedFixtureId="highlightedFixtureId"
             @showResultModal="selectForRecording"
             @highlight="highlight" />
     </div>
 
     <RecordResultModal
         :visible="showModal"
-        :result="selectedResult"
+        :fixture="selectedFixture"
         :isPlayOff="props.isPlayOff"
         @hide="hideModal" />
 </template>

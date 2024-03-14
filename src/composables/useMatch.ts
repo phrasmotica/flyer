@@ -2,39 +2,39 @@ import { ref, computed, watch } from "vue"
 import { useArrayUnique, useIntervalFn } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
-import type { Result } from "../data/Result"
+import type { Fixture } from "../data/Fixture"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see RecordResultModal.vue)
-export const useMatch = (name: string, f: Result | undefined) => {
-    const result = ref(f)
+export const useMatch = (name: string, f: Fixture | undefined) => {
+    const fixture = ref(f)
 
-    const scores = ref(result.value?.scores.map(r => r.score) || [])
+    const scores = ref(fixture.value?.scores.map(s => s.score) || [])
     const uniqueScores = useArrayUnique(scores)
 
-    const runouts = ref(result.value?.scores.map(r => r.runouts) || [])
-    const comment = ref(result.value?.comment || "")
+    const runouts = ref(fixture.value?.scores.map(s => s.runouts) || [])
+    const comment = ref(fixture.value?.comment || "")
 
-    const startTime = computed(() => result.value?.startTime)
-    const players = computed(() => result.value?.scores.map(r => r.playerId) || [])
-    const isWalkover = computed(() => result.value?.scores.some(s => s.isBye) || false)
+    const startTime = computed(() => fixture.value?.startTime)
+    const players = computed(() => fixture.value?.scores.map(s => s.playerId) || [])
+    const isWalkover = computed(() => fixture.value?.scores.some(s => s.isBye) || false)
 
     const isDraw = computed(() => uniqueScores.value.length <= 1)
 
-    const hasStarted = computed(() => !!result.value?.startTime)
-    const hasFinished = computed(() => !!result.value?.finishTime)
+    const hasStarted = computed(() => !!fixture.value?.startTime)
+    const hasFinished = computed(() => !!fixture.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const durationSeconds = computed(() => {
-        if (!result.value?.startTime || !result.value.finishTime) {
+        if (!fixture.value?.startTime || !fixture.value.finishTime) {
             return null
         }
 
-        return differenceInSeconds(result.value.finishTime, result.value.startTime)
+        return differenceInSeconds(fixture.value.finishTime, fixture.value.startTime)
     })
 
     const winner = computed(() => {
-        if (!result.value) {
+        if (!fixture.value) {
             return ""
         }
 
@@ -42,7 +42,7 @@ export const useMatch = (name: string, f: Result | undefined) => {
             return ""
         }
 
-        const winningScore = result.value.scores.reduce((s, t) => {
+        const winningScore = fixture.value.scores.reduce((s, t) => {
             if (s.isBye && !t.isBye) {
                 return t
             }
@@ -58,7 +58,7 @@ export const useMatch = (name: string, f: Result | undefined) => {
     })
 
     const getOpponent = (playerId: string) => {
-        const opponentScore = result.value?.scores.find(s => s.playerId !== playerId)
+        const opponentScore = fixture.value?.scores.find(s => s.playerId !== playerId)
         return opponentScore?.playerId || ""
     }
 
@@ -72,14 +72,14 @@ export const useMatch = (name: string, f: Result | undefined) => {
         elapsedSeconds.value = newValue
     }
 
-    watch(result, () => {
+    watch(fixture, () => {
         updateClock()
 
-        scores.value = result.value?.scores.map(r => r.score) || []
-        runouts.value = result.value?.scores.map(r => r.runouts) || []
-        comment.value = result.value?.comment || ""
+        scores.value = fixture.value?.scores.map(s => s.score) || []
+        runouts.value = fixture.value?.scores.map(s => s.runouts) || []
+        comment.value = fixture.value?.comment || ""
 
-        if (result.value?.startTime) {
+        if (fixture.value?.startTime) {
             clock.resume()
         }
     })
@@ -104,7 +104,7 @@ export const useMatch = (name: string, f: Result | undefined) => {
     const resumeClock = clock.resume
 
     return {
-        result,
+        fixture,
         scores,
         runouts,
         comment,

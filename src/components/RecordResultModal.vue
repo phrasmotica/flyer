@@ -10,13 +10,13 @@ import { useMatch } from "../composables/useMatch"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
-import type { Result, Score } from "../data/Result"
+import type { Fixture, Score } from "../data/Fixture"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
 const props = defineProps<{
     visible: boolean
-    result: Result | undefined
+    fixture: Fixture | undefined
     isPlayOff?: boolean
 }>()
 
@@ -39,7 +39,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    result,
+    fixture,
     scores,
     runouts,
     comment,
@@ -54,7 +54,7 @@ const {
     setRunouts,
     clearRunouts,
     resumeClock,
-} = useMatch("modal", props.result)
+} = useMatch("modal", props.fixture)
 
 const {
     isWinnerStaysOn,
@@ -70,16 +70,16 @@ const initialComment = ref(comment.value)
 
 watch(props, () => {
     visible.value = props.visible
-    result.value = props.result
+    fixture.value = props.fixture
 
-    setInitialPlayerScores(props.result)
+    setInitialPlayerScores(props.fixture)
 
     if (props.visible) {
         resumeClock()
     }
 })
 
-const round = computed(() => getRound(result.value?.id || ""))
+const round = computed(() => getRound(fixture.value?.id || ""))
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -88,21 +88,21 @@ watch([scores, runouts], () => {
 })
 
 const startFixture = () => {
-    if (!result.value) {
+    if (!fixture.value) {
         return
     }
 
-    flyerStore.startFixture(result.value.id)
+    flyerStore.startFixture(fixture.value.id)
 
     resumeClock()
 }
 
 const updateScores = (finish: boolean) => {
-    if (!result.value) {
+    if (!fixture.value) {
         return
     }
 
-    flyerStore.updateComment(result.value.id, comment.value)
+    flyerStore.updateComment(fixture.value.id, comment.value)
 
     const newScores = players.value.map((id, i) => <Score>{
         playerId: id,
@@ -111,7 +111,7 @@ const updateScores = (finish: boolean) => {
         isBye: false,
     })
 
-    flyerStore.updateScores(result.value.id, newScores, finish)
+    flyerStore.updateScores(fixture.value.id, newScores, finish)
 
     hide()
 }
@@ -157,11 +157,11 @@ const setRanOut = (index: number) => {
 }
 
 const startButtonText = computed(() => {
-    if (!result.value) {
+    if (!fixture.value) {
         return "???"
     }
 
-    if (result.value.scores.some(s => !s.playerId)) {
+    if (fixture.value.scores.some(s => !s.playerId)) {
         if (settings.value.randomlyDrawAllRounds) {
             return "Waiting for round to be generated"
         }
@@ -169,7 +169,7 @@ const startButtonText = computed(() => {
         return "Waiting for a previous result"
     }
 
-    if (result.value.scores.some(s => isBusy(s.playerId))) {
+    if (fixture.value.scores.some(s => isBusy(s.playerId))) {
         return "Waiting for players to be free"
     }
 
@@ -185,15 +185,15 @@ const startButtonText = computed(() => {
 })
 
 const disableStart = computed(() => {
-    if (!result.value) {
+    if (!fixture.value) {
         return true
     }
 
-    if (result.value.scores.some(s => !s.playerId)) {
+    if (fixture.value.scores.some(s => !s.playerId)) {
         return true
     }
 
-    if (result.value.scores.some(s => isBusy(s.playerId))) {
+    if (fixture.value.scores.some(s => isBusy(s.playerId))) {
         return true
     }
 
@@ -221,11 +221,11 @@ const disableFinish = computed(() => {
 })
 
 const description = computed(() => {
-    if (!result.value) {
+    if (!fixture.value) {
         return "???"
     }
 
-    return result.value.scores.map(s => {
+    return fixture.value.scores.map(s => {
         if (s.isBye) {
             return "(bye)"
         }
@@ -242,10 +242,10 @@ const hide = () => {
     emit('hide')
 }
 
-const setInitialPlayerScores = (result: Result | undefined) => {
-    initialScores.value = result?.scores.map(r => r.score) || []
-    initialRunouts.value = result?.scores.map(r => r.runouts) || []
-    initialComment.value = result?.comment || ""
+const setInitialPlayerScores = (fixture: Fixture | undefined) => {
+    initialScores.value = fixture?.scores.map(f => f.score) || []
+    initialRunouts.value = fixture?.scores.map(f => f.runouts) || []
+    initialComment.value = fixture?.comment || ""
 }
 
 const resetPlayerScores = () => {
@@ -257,7 +257,7 @@ const resetPlayerScores = () => {
 
 <template>
     <Dialog
-        v-if="result"
+        v-if="fixture"
         modal
         class="mx-4"
         v-model:visible="visible"
@@ -272,7 +272,7 @@ const resetPlayerScores = () => {
                 <PlayerWinInput v-if="isWinnerStaysOn"
                     v-for="p, i in players"
                     class="col-6"
-                    :result="result"
+                    :fixture="fixture"
                     :playerId="p"
                     :winner="winner"
                     :ranOut="ranOut"
@@ -283,7 +283,7 @@ const resetPlayerScores = () => {
                 <PlayerScoreInput v-else
                     v-for="p, i in players"
                     class="col-6"
-                    :result="result"
+                    :fixture="fixture"
                     :playerId="p"
                     :score="scores[i]"
                     :runouts="runouts[i]"

@@ -1,75 +1,75 @@
+import type { Fixture } from "../data/Fixture"
 import { type FlyerSettings, TieBreaker, Format } from "../data/FlyerSettings"
 import type { Player } from "../data/Player"
 import type { PlayerRecord } from "../data/PlayerRecord"
 import type { PlayOff } from "../data/PlayOff"
-import type { Result } from "../data/Result"
 
 export const useRankings = () => {
-    const hasPlayed = (r: Result, playerId: string) => {
-        if (!r.startTime || !r.finishTime) {
+    const hasPlayed = (f: Fixture, playerId: string) => {
+        if (!f.startTime || !f.finishTime) {
             return false
         }
 
-        return r.scores.some(s => s.playerId === playerId)
+        return f.scores.some(s => s.playerId === playerId)
     }
 
-    const getWinner = (r: Result) => {
-        if (!r.finishTime || isDraw(r)) {
+    const getWinner = (f: Fixture) => {
+        if (!f.finishTime || isDraw(f)) {
             return null
         }
 
-        const maxScore = r.scores.reduce((s, t) => s.score > t.score ? s : t)
+        const maxScore = f.scores.reduce((s, t) => s.score > t.score ? s : t)
         return maxScore.playerId
     }
 
-    const isDraw = (r: Result) => {
-        if (!r.finishTime) {
+    const isDraw = (f: Fixture) => {
+        if (!f.finishTime) {
             return false
         }
 
-        const maxScore = r.scores.map(s => s.score).reduce((x, y) => Math.max(x, y))
-        return r.scores.every(s => s.score === maxScore)
+        const maxScore = f.scores.map(s => s.score).reduce((x, y) => Math.max(x, y))
+        return f.scores.every(s => s.score === maxScore)
     }
 
-    const getLoser = (r: Result) => {
-        if (!r.finishTime || isDraw(r)) {
+    const getLoser = (f: Fixture) => {
+        if (!f.finishTime || isDraw(f)) {
             return null
         }
 
-        const minScore = r.scores.reduce((s, t) => s.score < t.score ? s : t)
+        const minScore = f.scores.reduce((s, t) => s.score < t.score ? s : t)
         return minScore.playerId
     }
 
-    const getPlayed = (results: Result[], player: string) => results.filter(r => hasPlayed(r, player)).length
+    const getPlayed = (fixtures: Fixture[], player: string) => fixtures.filter(f => hasPlayed(f, player)).length
 
-    const getWins = (results: Result[], player: string) => results.filter(r => getWinner(r) === player).length
+    const getWins = (fixtures: Fixture[], player: string) => fixtures.filter(f => getWinner(f) === player).length
 
-    const getDraws = (results: Result[], player: string) => results.filter(r => isDraw(r) && r.scores.some(s => s.playerId === player)).length
+    const getDraws = (fixtures: Fixture[], player: string) => fixtures.filter(f => isDraw(f) && f.scores.some(s => s.playerId === player)).length
 
-    const getLosses = (results: Result[], player: string) => results.filter(r => getLoser(r) === player).length
+    const getLosses = (fixtures: Fixture[], player: string) => fixtures.filter(f => getLoser(f) === player).length
 
-    const getFrameDifference = (results: Result[], playerId: string) => {
-        const played = results.filter(r => hasPlayed(r, playerId))
-        return played.map(r => {
-            const playerScore = r.scores.find(s => s.playerId === playerId)!
-            const otherScore = r.scores.find(s => s.playerId !== playerId)!
+    const getFrameDifference = (fixtures: Fixture[], playerId: string) => {
+        const played = fixtures.filter(f => hasPlayed(f, playerId))
+        return played.map(f => {
+            const playerScore = f.scores.find(s => s.playerId === playerId)!
+            const otherScore = f.scores.find(s => s.playerId !== playerId)!
 
             // assume a two-player match
             return playerScore.score - otherScore.score
         }).reduce((x, y) => x + y, 0)
     }
 
-    const isIncomplete = (results: Result[], player: string) => {
-        return results.some(r => r.scores.some(s => s.playerId === player) && !r.finishTime)
+    const isIncomplete = (fixtures: Fixture[], player: string) => {
+        return fixtures.some(f => f.scores.some(s => s.playerId === player) && !f.finishTime)
     }
 
-    const getPlayerScore = (playerId: string, result: Result) => {
-        return result.scores.find(s => s.playerId === playerId)
+    const getPlayerScore = (playerId: string, fixture: Fixture) => {
+        return fixture.scores.find(s => s.playerId === playerId)
     }
 
-    const getRunouts = (results: Result[], playerId: string) => {
-        const played = results.filter(r => hasPlayed(r, playerId))
-        return played.map(r => getPlayerScore(playerId, r)!.runouts).reduce((x, y) => x + y, 0)
+    const getRunouts = (fixtures: Fixture[], playerId: string) => {
+        const played = fixtures.filter(f => hasPlayed(f, playerId))
+        return played.map(f => getPlayerScore(playerId, f)!.runouts).reduce((x, y) => x + y, 0)
     }
 
     const sortRecords = (p: PlayerRecord, q: PlayerRecord) => {
@@ -91,17 +91,17 @@ export const useRankings = () => {
         return 0
     }
 
-    const computeStandings = (results: Result[], players: Player[], settings: FlyerSettings) => {
+    const computeStandings = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
         const records = players.map(p => <PlayerRecord>{
             playerId: p.id,
             name: p.name,
-            played: getPlayed(results, p.id),
-            wins: getWins(results, p.id),
-            draws: getDraws(results, p.id),
-            losses: getLosses(results, p.id),
-            diff: getFrameDifference(results, p.id),
-            runouts: getRunouts(results, p.id),
-            incomplete: isIncomplete(results, p.id),
+            played: getPlayed(fixtures, p.id),
+            wins: getWins(fixtures, p.id),
+            draws: getDraws(fixtures, p.id),
+            losses: getLosses(fixtures, p.id),
+            diff: getFrameDifference(fixtures, p.id),
+            runouts: getRunouts(fixtures, p.id),
+            incomplete: isIncomplete(fixtures, p.id),
             rank: 0,
         })
 
@@ -115,7 +115,7 @@ export const useRankings = () => {
                 if (settings.tieBreaker === TieBreaker.HeadToHead) {
                     // LOW: account for multiple head-to-head matches? Only required when round-robins feature
                     // multiple matches between two players...
-                    const match = results.find(
+                    const match = fixtures.find(
                         f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
                     )
 
@@ -140,12 +140,12 @@ export const useRankings = () => {
         return tableData
     }
 
-    const winsRequiredReached = (results: Result[], players: Player[], settings: FlyerSettings) => {
+    const winsRequiredReached = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
         if (settings.format !== Format.WinnerStaysOn) {
             return false
         }
 
-        const standings = computeStandings(results, players, settings)
+        const standings = computeStandings(fixtures, players, settings)
         return standings[0].wins >= settings.winsRequired
     }
 
@@ -153,14 +153,14 @@ export const useRankings = () => {
         return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
     }
 
-    const computePlayOffs = (results: Result[], players: Player[], settings: FlyerSettings) => {
+    const computePlayOffs = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
         if (settings.format === Format.Knockout) {
             return []
         }
 
         const playOffs = <PlayOff[]>[]
 
-        const standings = computeStandings(results, players, settings)
+        const standings = computeStandings(fixtures, players, settings)
 
         for (const record of standings) {
             const player = players.find(p => p.id === record.playerId)!

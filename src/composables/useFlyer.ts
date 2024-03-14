@@ -10,7 +10,7 @@ import { type FlyerSettings } from "../data/FlyerSettings"
 export const useFlyer = (f: Flyer | null) => {
     const flyer = ref(f)
 
-    const results = computed(() => flyer.value?.rounds.flatMap(r => r.fixtures) || [])
+    const fixtures = computed(() => flyer.value?.rounds.flatMap(r => r.fixtures) || [])
     const players = computed(() => flyer.value?.players || [])
     const settings = computed(() => flyer.value?.settings || <FlyerSettings>{})
     const rounds = computed(() => flyer.value?.rounds || [])
@@ -20,9 +20,9 @@ export const useFlyer = (f: Flyer | null) => {
     const hasFinished = computed(() => !!flyer.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
-    const isComplete = computed(() => results.value.every(x => x.startTime && x.finishTime))
-    const ongoingCount = computed(() => results.value.filter(f => f.startTime && !f.finishTime).length)
-    const remainingCount = computed(() => results.value.filter(f => !f.finishTime && !f.cancelledTime).length)
+    const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
+    const ongoingCount = computed(() => fixtures.value.filter(f => f.startTime && !f.finishTime).length)
+    const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
     const currentRound = computed(() => {
         const notCompletedRounds = rounds.value.filter(r => r.fixtures.some(f => !f.startTime || !f.finishTime))
@@ -76,7 +76,7 @@ export const useFlyer = (f: Flyer | null) => {
 
     const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
 
-    const getRound = (resultId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === resultId))
+    const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
     const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
 
@@ -116,7 +116,7 @@ export const useFlyer = (f: Flyer | null) => {
     return {
         flyer,
 
-        results,
+        fixtures,
         players,
         settings,
         rounds,

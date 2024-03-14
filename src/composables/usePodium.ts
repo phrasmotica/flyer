@@ -3,15 +3,15 @@ import { computed } from "vue"
 import { useFlyer } from "./useFlyer"
 import { useSettings } from "./useSettings"
 
+import type { Fixture } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
-import type { Result } from "../data/Result"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
 // accepts null (see ResultsTable.vue)
 export const usePodium = (f: Flyer | null) => {
     const {
         flyer,
-        results,
+        fixtures,
         players,
         settings,
         rounds,
@@ -54,15 +54,15 @@ export const usePodium = (f: Flyer | null) => {
     const winner = computed(() => players.value.find(p => p.id === finalists.value[0]))
     const runnerUp = computed(() => players.value.find(p => p.id === finalists.value[1]))
 
-    const winnerResults = computed(() => {
+    const winnerFixtures = computed(() => {
         if (!winner.value) {
             return []
         }
 
-        const winnerResults = results.value.filter(r => r.scores.some(s => s.playerId === winner.value!.id))
+        const winnerFixtures = fixtures.value.filter(f => f.scores.some(s => s.playerId === winner.value!.id))
 
         // ensures reverse chronological order
-        return winnerResults.reverse()
+        return winnerFixtures.reverse()
     })
 
     const losersByRound = computed(() => {
@@ -132,11 +132,11 @@ export const usePodium = (f: Flyer | null) => {
         return recipients
     })
 
-    const getWinner = (f: Result) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
+    const getWinner = (f: Fixture) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
     return {
         winner,
-        winnerResults,
+        winnerFixtures,
         runnerUp,
         moneyRecipients,
     }

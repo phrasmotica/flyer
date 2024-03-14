@@ -1,5 +1,4 @@
-// HIGH: rename this, end everything related, to Match
-export interface Result {
+export interface Fixture {
     id: string
     parentFixtures: ParentFixture[]
     scores: Score[]

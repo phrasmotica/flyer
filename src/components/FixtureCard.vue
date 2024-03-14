@@ -5,19 +5,19 @@ import { useFlyer } from "../composables/useFlyer"
 import { useMatch } from "../composables/useMatch"
 import { useSettings } from "../composables/useSettings"
 
-import type { Result } from "../data/Result"
+import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
-    result: Result
-    highlightedResultId: string
+    fixture: Fixture
+    highlightedFixtureId: string
     showComment: boolean
 }>()
 
 const emit = defineEmits<{
     showResultModal: []
-    highlight: [resultId: string]
+    highlight: [fixtureId: string]
 }>()
 
 const flyerStore = useFlyerStore()
@@ -28,10 +28,10 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    result,
+    fixture,
     winner,
     isWalkover,
-} = useMatch("card", props.result)
+} = useMatch("card", props.fixture)
 
 const {
     isWinnerStaysOn,
@@ -39,11 +39,11 @@ const {
 } = useSettings(settings.value)
 
 const isHighlighted = (slot: 0 | 1) => {
-    const parentFixture = props.result.parentFixtures[slot]
-    return !!props.highlightedResultId && props.highlightedResultId === parentFixture?.fixtureId
+    const parentFixture = props.fixture.parentFixtures[slot]
+    return !!props.highlightedFixtureId && props.highlightedFixtureId === parentFixture?.fixtureId
 }
 
-const playerNameClass = (result: Result, playerId: string, slot: 0 | 1) => {
+const playerNameClass = (playerId: string, slot: 0 | 1) => {
     if (winner.value) {
         if (winner.value === playerId) {
             return "font-bold"
@@ -67,8 +67,8 @@ const handleNameClick = (id: string) => {
     }
 }
 
-const playerCellClass = (result: Result, slot: 0 | 1) => {
-    const parentFixture = result.parentFixtures[slot]
+const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
+    const parentFixture = fixture.parentFixtures[slot]
 
     return [
         isHighlighted(slot) && parentFixture?.takeLoser && 'loser',
@@ -80,82 +80,82 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
 
 <template>
     <div
-        v-if="result"
+        v-if="fixture"
         class="border-round-md border-1"
         :class="[
-            props.highlightedResultId === result.id ? 'border-dashed' : 'border-transparent'
+            props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent'
         ]">
         <div class="grid m-0 py-1">
             <div class="flex align-items-center justify-content-between col-6 p-0 pr-1">
                 <div
                     class="p-1 mr-1 border-round-md text-left flex-1"
-                    :class="playerCellClass(result, 0)"
-                    @click="handleNameClick(result.id)">
-                    <span v-if="result.scores[0].isBye" class="text-gray-400">
+                    :class="playerCellClass(fixture, 0)"
+                    @click="handleNameClick(fixture.id)">
+                    <span v-if="fixture.scores[0].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
 
-                    <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result, result.scores[0].playerId, 0)">
-                        {{ getPlayerName(result.scores[0].playerId) }}
+                    <span v-else-if="fixture.scores[0].playerId" :class="playerNameClass(fixture.scores[0].playerId, 0)">
+                        {{ getPlayerName(fixture.scores[0].playerId) }}
                     </span>
 
-                    <span v-else-if="result.parentFixtures[0]?.fixtureId || isRandomDraw">
+                    <span v-else-if="fixture.parentFixtures[0]?.fixtureId || isRandomDraw">
                         <em class="text-gray-400">TBD</em>
                     </span>
                 </div>
 
-                <Badge v-if="result.scores[0].runouts > 0"
+                <Badge v-if="fixture.scores[0].runouts > 0"
                     class="p-badge-sm mr-1 cursor-pointer"
-                    :value="isWinnerStaysOn ? 'R' : result.scores[0].runouts"
+                    :value="isWinnerStaysOn ? 'R' : fixture.scores[0].runouts"
                     severity="contrast"
                     @click="handleClick" />
 
                 <ScoreCell
-                    :result="result"
-                    :score="result.scores[0].score"
-                    :runouts="result.scores[0].runouts"
-                    :isWinner="winner === result.scores[0].playerId"
+                    :fixture="fixture"
+                    :score="fixture.scores[0].score"
+                    :runouts="fixture.scores[0].runouts"
+                    :isWinner="winner === fixture.scores[0].playerId"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
             </div>
 
             <div class="flex align-items-center justify-content-between col-6 p-0 pl-1">
                 <ScoreCell
-                    :result="result"
-                    :score="result.scores[1].score"
-                    :runouts="result.scores[1].runouts"
-                    :isWinner="winner === result.scores[1].playerId"
+                    :fixture="fixture"
+                    :score="fixture.scores[1].score"
+                    :runouts="fixture.scores[1].runouts"
+                    :isWinner="winner === fixture.scores[1].playerId"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
 
-                <Badge v-if="result.scores[1].runouts > 0"
+                <Badge v-if="fixture.scores[1].runouts > 0"
                     class="p-badge-sm ml-1 cursor-pointer"
-                    :value="isWinnerStaysOn ? 'R' : result.scores[1].runouts"
+                    :value="isWinnerStaysOn ? 'R' : fixture.scores[1].runouts"
                     severity="contrast"
                     @click="handleClick" />
 
                 <div
                     class="p-1 ml-1 border-round-md text-right flex-1"
-                    :class="playerCellClass(result, 1)"
-                    @click="handleNameClick(result.id)">
-                    <span v-if="result.scores[1].isBye" class="text-gray-400">
+                    :class="playerCellClass(fixture, 1)"
+                    @click="handleNameClick(fixture.id)">
+                    <span v-if="fixture.scores[1].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
 
-                    <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result, result.scores[1].playerId, 1)">
-                        {{ getPlayerName(result.scores[1].playerId) }}
+                    <span v-else-if="fixture.scores[1].playerId" :class="playerNameClass(fixture.scores[1].playerId, 1)">
+                        {{ getPlayerName(fixture.scores[1].playerId) }}
                     </span>
 
-                    <span v-else-if="result.parentFixtures[1]?.fixtureId || isRandomDraw">
+                    <span v-else-if="fixture.parentFixtures[1]?.fixtureId || isRandomDraw">
                         <em class="text-gray-400">TBD</em>
                     </span>
                 </div>
             </div>
         </div>
 
-        <div v-if="props.showComment && result.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
+        <div v-if="props.showComment && fixture.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
             <p class="m-0 text-xs md:text-sm">
-                {{ result.comment }}
+                {{ fixture.comment }}
             </p>
         </div>
     </div>

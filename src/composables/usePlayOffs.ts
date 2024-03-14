@@ -14,7 +14,7 @@ export const usePlayOffs = (p: Flyer[]) => {
     } = useRankings()
 
     const standings = computed(() => playOffs.value.map(p => computeStandings(
-        getResults(p.id),
+        getFixtures(p.id),
         getPlayers(p.id),
         getSettings(p.id),
     )))
@@ -26,7 +26,7 @@ export const usePlayOffs = (p: Flyer[]) => {
         return playOff?.players || []
     }
 
-    const getResults = (id: string) => {
+    const getFixtures = (id: string) => {
         const playOff = playOffs.value.find(x => x.id === id)
         return playOff?.rounds.flatMap(r => r.fixtures) || []
     }
@@ -46,7 +46,7 @@ export const usePlayOffs = (p: Flyer[]) => {
             return null
         }
 
-        const standings = computeStandings(getResults(playOff.id), getPlayers(playOff.id), getSettings(playOff.id))
+        const standings = computeStandings(getFixtures(playOff.id), getPlayers(playOff.id), getSettings(playOff.id))
         const idx = standings.findIndex(d => d.playerId === playerId)
         return idx >= 0 ? idx + 1 : null
     }

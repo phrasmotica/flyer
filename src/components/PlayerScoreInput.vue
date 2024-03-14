@@ -3,12 +3,12 @@ import ScoreCell from "./ScoreCell.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 
-import type { Result } from "../data/Result"
+import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
-    result: Result
+    fixture: Fixture
     playerId: string
     score: number
     runouts: number
@@ -39,7 +39,7 @@ const {
             <ScoreCell
                 large
                 static
-                :result="props.result"
+                :fixture="props.fixture"
                 :score="props.score"
                 :isWinner="props.isWinner" />
         </div>

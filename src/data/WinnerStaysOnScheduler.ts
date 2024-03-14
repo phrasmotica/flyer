@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid"
 
+import type { ParentFixture, Fixture } from "./Fixture"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
-import type { ParentFixture, Result } from "./Result"
 import type { Round } from "./Round"
 
 export class WinnerStaysOnScheduler implements IScheduler {
@@ -94,7 +94,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
     }
 
     private addEmptyFixture(round: Round, parentFixtures: ParentFixture[]) {
-        const newFixture = <Result>{
+        const newFixture = <Fixture>{
             id: uuidv4(),
             parentFixtures,
             scores: new Array<number>(2).fill(0).map(_ => ({

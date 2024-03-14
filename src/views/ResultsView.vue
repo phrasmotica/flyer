@@ -30,7 +30,7 @@ const playOffStore = usePlayOffStore()
 const {
     flyer,
     players,
-    results,
+    fixtures,
     settings,
     durationSeconds,
     playOffIsComplete,
@@ -45,7 +45,7 @@ const {
 const {
     requiresPlayOff,
     orderedPlayOffs,
-} = useStandings(results.value, players.value, settings.value)
+} = useStandings(fixtures.value, players.value, settings.value)
 
 const {
     isHistoric,

@@ -14,7 +14,7 @@ const flyerStore = useFlyerStore()
 
 const {
     winner,
-    winnerResults,
+    winnerFixtures,
     moneyRecipients,
 } = usePodium(flyerStore.flyer)
 </script>
@@ -34,8 +34,8 @@ const {
         </div>
 
         <ul class="m-0">
-            <li v-for="f in winnerResults">
-                <VictoryText :result="f" />
+            <li v-for="f in winnerFixtures">
+                <VictoryText :fixture="f" />
             </li>
         </ul>
 

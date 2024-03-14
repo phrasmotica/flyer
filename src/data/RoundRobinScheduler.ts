@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid"
 
+import type { Fixture } from "./Fixture"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
-import type { Result } from "./Result"
 import type { Round } from "./Round"
 
 export class RoundRobinScheduler implements IScheduler {
@@ -126,7 +126,7 @@ export class RoundRobinScheduler implements IScheduler {
     private copyRounds(rounds: Round[]) {
         const existingFixtures = rounds.flatMap(r => r.fixtures)
 
-        const newFixtures = this.shuffle(existingFixtures.map(f => <Result>{
+        const newFixtures = this.shuffle(existingFixtures.map(f => <Fixture>{
             ...f,
             id: uuidv4(),
             scores: f.scores.slice().reverse(),
