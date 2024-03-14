@@ -183,7 +183,7 @@ const startButtonText = computed(() => {
         return "Waiting for a free table"
     }
 
-    return "Start"
+    return "Start on " + nextFreeTable.value.name
 })
 
 const disableStart = computed(() => {
