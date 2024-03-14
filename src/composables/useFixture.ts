@@ -6,7 +6,7 @@ import type { Fixture } from "../data/Fixture"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see RecordResultModal.vue)
-export const useMatch = (name: string, f: Fixture | undefined) => {
+export const useFixture = (name: string, f: Fixture | undefined) => {
     const fixture = ref(f)
 
     const scores = ref(fixture.value?.scores.map(s => s.score) || [])
@@ -68,7 +68,7 @@ export const useMatch = (name: string, f: Fixture | undefined) => {
 
     const updateClock = () => {
         const newValue = computeDifference()
-        console.debug("MatchClock " + name + ": " + startTime.value + " + " + newValue)
+        console.debug("FixtureClock " + name + ": " + startTime.value + " + " + newValue)
         elapsedSeconds.value = newValue
     }
 

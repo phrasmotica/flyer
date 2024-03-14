@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import ScoreCell from "./ScoreCell.vue"
 
+import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
-import { useMatch } from "../composables/useMatch"
 import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
@@ -32,7 +32,7 @@ const {
     fixture,
     winner,
     isWalkover,
-} = useMatch("card", props.fixture)
+} = useFixture("card", props.fixture)
 
 const {
     isWinnerStaysOn,

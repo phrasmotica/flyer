@@ -6,8 +6,8 @@ import Clock from "./Clock.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
+import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
-import { useMatch } from "../composables/useMatch"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
@@ -56,7 +56,7 @@ const {
     setRunouts,
     clearRunouts,
     resumeClock,
-} = useMatch("modal", props.fixture)
+} = useFixture("modal", props.fixture)
 
 const {
     isWinnerStaysOn,

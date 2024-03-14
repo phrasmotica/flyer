@@ -2,8 +2,8 @@
 import { computed, watch } from "vue"
 import { useSorted } from "@vueuse/core"
 
+import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
-import { useMatch } from "../composables/useMatch"
 import { usePodium } from "../composables/usePodium"
 
 import type { Fixture } from "../data/Fixture"
@@ -30,7 +30,7 @@ const {
     scores,
     isWalkover,
     getOpponent,
-} = useMatch("victoryText", props.fixture)
+} = useFixture("victoryText", props.fixture)
 
 watch(props, () => {
     fixture.value = props.fixture
