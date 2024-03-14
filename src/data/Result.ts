@@ -1,3 +1,4 @@
+// HIGH: rename this, end everything related, to Match
 export interface Result {
     id: string
     parentFixtures: ParentFixture[]
