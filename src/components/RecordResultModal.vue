@@ -31,9 +31,9 @@ const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
     settings,
-    ongoingCount,
     currentRound,
     isBusy,
+    nextFreeTable,
     getPlayerName,
     getRound,
 } = useFlyer(flyerStore.flyer)
@@ -88,11 +88,11 @@ watch([scores, runouts], () => {
 })
 
 const startFixture = () => {
-    if (!fixture.value) {
+    if (!fixture.value || !nextFreeTable.value) {
         return
     }
 
-    flyerStore.startFixture(fixture.value.id)
+    flyerStore.startFixture(fixture.value.id, nextFreeTable.value.id)
 
     resumeClock()
 }
@@ -177,7 +177,7 @@ const startButtonText = computed(() => {
         return "Waiting for round to start"
     }
 
-    if (ongoingCount.value >= settings.value.tableCount) {
+    if (!nextFreeTable.value) {
         return "Waiting for a free table"
     }
 
@@ -201,7 +201,7 @@ const disableStart = computed(() => {
         return true
     }
 
-    return ongoingCount.value >= settings.value.tableCount
+    return !nextFreeTable.value
 })
 
 const disableFinish = computed(() => {

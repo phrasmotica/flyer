@@ -102,11 +102,12 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         return ids
     }
 
-    const startFixture = (id: string) => {
+    const startFixture = (id: string, tableId: string) => {
         for (const r of flyer.value!.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === id)
             if (idx >= 0) {
                 r.fixtures[idx].startTime = Date.now()
+                r.fixtures[idx].tableId = tableId
             }
         }
     }

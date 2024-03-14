@@ -12,6 +12,7 @@ export const useFlyer = (f: Flyer | null) => {
 
     const fixtures = computed(() => flyer.value?.rounds.flatMap(r => r.fixtures) || [])
     const players = computed(() => flyer.value?.players || [])
+    const tables = computed(() => flyer.value?.tables || [])
     const settings = computed(() => flyer.value?.settings || <FlyerSettings>{})
     const rounds = computed(() => flyer.value?.rounds || [])
     const playOffs = computed(() => flyer.value?.playOffs || [])
@@ -21,7 +22,6 @@ export const useFlyer = (f: Flyer | null) => {
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
-    const ongoingCount = computed(() => fixtures.value.filter(f => f.startTime && !f.finishTime).length)
     const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
     const currentRound = computed(() => {
@@ -66,6 +66,11 @@ export const useFlyer = (f: Flyer | null) => {
     })
 
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
+
+    const nextFreeTable = computed(() => {
+        const freeTables = tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime))
+        return freeTables.at(0)
+    })
 
     const isBusy = (playerId: string) => {
         return rounds.value.flatMap(r => r.fixtures).some(f => {
@@ -127,7 +132,6 @@ export const useFlyer = (f: Flyer | null) => {
         hasFinished,
         isInProgress,
         isComplete,
-        ongoingCount,
         remainingCount,
         currentRound,
         nextRound,
@@ -136,6 +140,7 @@ export const useFlyer = (f: Flyer | null) => {
         durationMinutes,
         durationSeconds,
         clockDisplay,
+        nextFreeTable,
 
         isBusy,
         getPlayerName,
