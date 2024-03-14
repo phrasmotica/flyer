@@ -2,6 +2,7 @@ import { computed, watch } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
+import { useListFallback } from "../composables/useListFallback"
 import { useSettings } from "../composables/useSettings"
 
 import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker } from "../data/FlyerSettings"
@@ -101,6 +102,10 @@ export const useSettingsStore = defineStore("settings", () => {
         isWinnerStaysOn,
     } = useSettings(settings.value)
 
+    const {
+        getFallback,
+    } = useListFallback()
+
     watch(() => settings.value.playerCount, () => {
         if (settings.value.tableCount > Math.floor(settings.value.playerCount / 2)) {
             settings.value.tableCount = Math.floor(settings.value.playerCount / 2)
@@ -158,11 +163,8 @@ export const useSettingsStore = defineStore("settings", () => {
     ])
 
     watch(moneySplitOptions, () => {
-        // LOW: create some composable for this sort of falling back logic
-        const enabledOptions = moneySplitOptions.value.filter(o => !o.disabled)
-        if (!enabledOptions.some(o => o.value === settings.value.moneySplit)) {
-            settings.value.moneySplit = enabledOptions.at(-1)?.value || MoneySplit.WinnerTakesAll
-        }
+        const index = moneySplitOptions.value.findIndex(o => o.value === settings.value.moneySplit)
+        settings.value.moneySplit = getFallback(moneySplitOptions.value, index, MoneySplit.WinnerTakesAll)
     })
 
     const setName = (index: number, name: string) => {
