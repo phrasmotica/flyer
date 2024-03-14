@@ -11,6 +11,7 @@ import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import type { Player } from "../data/Player"
 import type { Round } from "../data/Round"
+import type { Table } from "../data/Table"
 
 const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () => {
     const flyer = useStorage<Flyer | null>(name, null, localStorage, {
@@ -47,6 +48,10 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         const newFlyer = <Flyer>{
             id: settings.playOffId || uuidv4(),
             players,
+            tables: new Array(settings.tableCount).fill(0).map((_, i) => <Table>{
+                id: uuidv4(),
+                name: "Table " + (i + 1),
+            }),
             settings,
             startTime: Date.now(),
             finishTime: null,
