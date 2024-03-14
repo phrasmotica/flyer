@@ -77,7 +77,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         for (let f of round.fixtures) {
             const isWalkover = f.scores.some(s => s.isBye)
             if (isWalkover) {
-                console.log("Walking over " + f.id)
+                console.debug("Walking over " + f.id)
 
                 const now = Date.now()
                 f.startTime = now

@@ -123,7 +123,7 @@ export class KnockoutScheduler implements IScheduler {
             fixtures: [],
         }
 
-        console.log(round.name)
+        console.debug(round.name)
 
         const numFixtures = numSpaces / 2
 
