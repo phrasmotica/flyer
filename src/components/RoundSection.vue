@@ -18,7 +18,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    showResultModal: [fixture: Fixture]
+    showModal: [fixture: Fixture]
     highlight: [fixtureId: string]
 }>()
 
@@ -78,7 +78,7 @@ const [showComments, toggleComments] = useToggle(false)
                 :fixture="f"
                 :highlightedFixtureId="props.highlightedFixtureId"
                 :showComment="showComments"
-                @showResultModal="emit('showResultModal', f)"
+                @showModal="emit('showModal', f)"
                 @highlight="emit('highlight', f.id)" />
         </div>
     </div>

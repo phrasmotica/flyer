@@ -5,7 +5,7 @@ import { differenceInSeconds } from "date-fns"
 import type { Fixture } from "../data/Fixture"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
-// where the argument can currently be undefined (see RecordResultModal.vue)
+// where the argument can currently be undefined (see FixtureModal.vue)
 export const useFixture = (name: string, f: Fixture | undefined) => {
     const fixture = ref(f)
 

@@ -16,7 +16,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    showResultModal: []
+    showModal: []
     highlight: [fixtureId: string]
 }>()
 
@@ -58,7 +58,7 @@ const playerNameClass = (playerId: string, slot: 0 | 1) => {
 
 const handleClick = () => {
     if (!isWalkover.value) {
-        emit("showResultModal")
+        emit("showModal")
     }
 }
 

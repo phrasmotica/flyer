@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-import RecordResultModal from "./RecordResultModal.vue"
+import FixtureModal from "./FixtureModal.vue"
 import RoundSection from "./RoundSection.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -43,11 +43,11 @@ const hideModal = () => {
         <RoundSection
             :round="r"
             :highlightedFixtureId="highlightedFixtureId"
-            @showResultModal="selectForRecording"
+            @showModal="selectForRecording"
             @highlight="highlight" />
     </div>
 
-    <RecordResultModal
+    <FixtureModal
         :visible="showModal"
         :fixture="selectedFixture"
         :isPlayOff="props.isPlayOff"
