@@ -103,6 +103,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
                 runouts: 0,
                 isBye: false,
             })),
+            tableId: "",
             startTime: null,
             finishTime: null,
             comment: "",

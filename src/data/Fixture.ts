@@ -2,6 +2,7 @@ export interface Fixture {
     id: string
     parentFixtures: ParentFixture[]
     scores: Score[]
+    tableId: string
     startTime: number | null
     finishTime: number | null
     cancelledTime: number | null
