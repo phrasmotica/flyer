@@ -27,9 +27,6 @@ export class RoundRobinScheduler implements IScheduler {
             throw "Fixtures have already been generated!"
         }
 
-        // MEDIUM: allow generating multiple many lots of fixtures, i.e. everyone
-        // plays against each other two, three, four times...
-
         let attempts = 0
 
         const oddPlayerCount = players.length % 2 !== 0
@@ -102,6 +99,8 @@ export class RoundRobinScheduler implements IScheduler {
         if (attempts >= this.generationAttempts) {
             throw `Failed to generate rounds after ${this.generationAttempts} attempt(s)!`
         }
+
+        // MEDIUM: generate more stages if stageCount > 1
 
         return this.generatedRounds
     }

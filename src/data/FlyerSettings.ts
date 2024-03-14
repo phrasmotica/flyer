@@ -9,6 +9,7 @@ export interface FlyerSettings {
     ruleSet: RuleSet
     tableCount: number
     format: Format
+    stageCount: number
     randomlyDrawAllRounds: boolean
     requireCompletedRounds: boolean
     allowDraws: boolean
@@ -61,6 +62,7 @@ export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerS
     randomlyDrawAllRounds: false,
     requireCompletedRounds: true,
     ruleSet: flyer.settings.ruleSet,
+    stageCount: 1,
     tableCostPerHour: flyer.settings.tableCostPerHour,
     tableCount: flyer.settings.tableCount,
     tieBreaker: flyer.settings.tieBreaker,

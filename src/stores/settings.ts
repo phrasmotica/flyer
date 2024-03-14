@@ -89,6 +89,7 @@ export const useSettingsStore = defineStore("settings", () => {
         requireCompletedRounds: true,
         allowDraws: false,
         allowEarlyFinish: false,
+        stageCount: 1,
         entryFeeRequired: false,
         entryFee: 5,
         moneySplit: MoneySplit.WinnerTakesAll,
