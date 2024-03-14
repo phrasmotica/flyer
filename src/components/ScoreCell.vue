@@ -39,7 +39,7 @@ const cellClass = computed(() => {
 const isWalkover = computed(() => props.result.scores.some(s => s.isBye))
 
 const scoreText = computed(() => {
-    if (props.simple) {
+    if (props.simple && props.result.finishTime) {
         return props.isWinner ? "W" : "L"
     }
 
