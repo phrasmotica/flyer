@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
+import type { Result } from "./Result"
 import type { Round } from "./Round"
 
 export class RoundRobinScheduler implements IScheduler {
@@ -58,8 +59,15 @@ export class RoundRobinScheduler implements IScheduler {
         }
 
         if (this.stageCount > 1) {
-            // TODO: collect the existing fixtures up into one list, and
-            // distribute them randomly into another set of rounds
+            for (let a = 0; a < this.stageCount - 1; a++) {
+                // copy the last N rounds
+                const roundsToCopy = this.generatedRounds.slice(-numRounds)
+
+                // collect the existing fixtures up into one list, and
+                // distribute them randomly into another set of rounds
+                const newRounds = this.copyRounds(roundsToCopy)
+                this.generatedRounds.push(...newRounds)
+            }
         }
 
         return this.generatedRounds
@@ -113,6 +121,28 @@ export class RoundRobinScheduler implements IScheduler {
         }
 
         return [retry, round]
+    }
+
+    private copyRounds(rounds: Round[]) {
+        const existingFixtures = rounds.flatMap(r => r.fixtures)
+
+        const newFixtures = this.shuffle(existingFixtures.map(f => <Result>{
+            ...f,
+            id: uuidv4(),
+            scores: f.scores.slice().reverse(),
+        }))
+
+        const startIndex = rounds.at(-1)!.index
+        const fixturesPerRound = rounds[0].fixtures.length
+
+        const newRounds = rounds.map((_, r) => <Round>{
+            index: startIndex + (r + 1),
+            name: "Round " + (startIndex + r + 1),
+            isGenerated: true,
+            fixtures: newFixtures.splice(0, fixturesPerRound),
+        })
+
+        return newRounds
     }
 
     private addFixture(round: Round, players: Player[]) {
