@@ -17,8 +17,13 @@ export const useTweaks = () => {
         (<any>document.activeElement)?.blur()
     }
 
+    const selectOnFocus = (e: FocusEvent) => {
+        (<any>e.target)?.select()
+    }
+
     return {
         blurNumberInputs,
         blurActive,
+        selectOnFocus,
     }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useRouter } from "vue-router"
+import { useFocus } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
 import Clock from "../components/Clock.vue"
@@ -13,6 +14,7 @@ import PageTemplate from "../components/PageTemplate.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
+import { useTweaks } from "../composables/useTweaks"
 
 import { Format } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
@@ -31,6 +33,8 @@ const { isSmallScreen } = useScreenSizes()
 
 const toast = useToast()
 
+const { selectOnFocus } = useTweaks()
+
 const {
     settings,
     durationPerFrame,
@@ -38,8 +42,11 @@ const {
     isInvalid,
 } = useSettings(settingsStore.settings)
 
+const nameInput = ref()
 const showModal = ref(false)
 const entryFeesPaid = ref(false)
+
+useFocus(nameInput, { initialValue: true })
 
 const start = () => {
     try {
@@ -119,8 +126,10 @@ const hideModal = () => {
                 @hide="hideModal">
                 <div class="p-fluid mb-2">
                     <InputText
+                        ref="nameInput"
                         placeholder="Flyer name"
-                        v-model="settings.name" />
+                        v-model="settings.name"
+                        @focus="selectOnFocus" />
                 </div>
 
                 <div class="p-fluid mb-2">
