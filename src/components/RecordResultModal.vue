@@ -35,6 +35,7 @@ const {
     isBusy,
     nextFreeTable,
     getPlayerName,
+    getTableName,
     getRound,
 } = useFlyer(flyerStore.flyer)
 
@@ -265,6 +266,10 @@ const resetPlayerScores = () => {
         @hide="hide">
         <div v-if="hasStarted" id="score-inputs" class="mb-2">
             <div class="mb-2">
+                <p v-if="fixture.tableId" class="m-0 text-center text-sm">
+                    {{ getTableName(fixture.tableId) }}
+                </p>
+
                 <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" />
             </div>
 

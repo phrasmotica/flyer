@@ -81,6 +81,8 @@ export const useFlyer = (f: Flyer | null) => {
 
     const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
 
+    const getTableName = (id: string) => tables.value.find(p => p.id === id)?.name ?? id
+
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
     const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
@@ -144,6 +146,7 @@ export const useFlyer = (f: Flyer | null) => {
 
         isBusy,
         getPlayerName,
+        getTableName,
         getRound,
         playOffIsComplete,
         pauseClock,

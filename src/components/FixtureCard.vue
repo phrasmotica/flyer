@@ -25,6 +25,7 @@ const flyerStore = useFlyerStore()
 const {
     settings,
     getPlayerName,
+    getTableName,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -85,6 +86,12 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
         :class="[
             props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent'
         ]">
+        <div v-if="fixture.tableId && !fixture.finishTime" class="text-center">
+            <p class="m-0 text-xs">
+                {{ getTableName(fixture.tableId) }}
+            </p>
+        </div>
+
         <div class="grid m-0 py-1">
             <div class="flex align-items-center justify-content-between col-6 p-0 pr-1">
                 <div
