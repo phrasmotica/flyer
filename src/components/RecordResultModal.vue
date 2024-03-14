@@ -1,3 +1,4 @@
+<!-- MEDIUM: rename this component to FixtureModal.vue -->
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 
