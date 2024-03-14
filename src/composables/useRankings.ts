@@ -92,12 +92,12 @@ export const useRankings = () => {
     }
 
     const sortHeadToHead = (p: PlayerRecord, q: PlayerRecord, fixtures: Fixture[]) => {
-        const matches = fixtures.filter(
+        const relevantFixtures = fixtures.filter(
             f => getPlayerScore(p.playerId, f) && getPlayerScore(q.playerId, f)
         )
 
-        if (matches.length > 0) {
-            const scoreDiffs = matches.map(m => getPlayerScore(q.playerId, m)!.score - getPlayerScore(p.playerId, m)!.score)
+        if (relevantFixtures.length > 0) {
+            const scoreDiffs = relevantFixtures.map(m => getPlayerScore(q.playerId, m)!.score - getPlayerScore(p.playerId, m)!.score)
             return scoreDiffs.reduce((a, b) => a + b) // overall frame difference
         }
 
