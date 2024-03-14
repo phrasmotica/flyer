@@ -161,6 +161,25 @@ onUpdated(() => {
                             :options="settingsStore.tieBreakerList" />
                     </div>
                 </div>
+
+                <div v-if="isRoundRobin"
+                    class="col-12 md:col-6 p-0 p-fluid">
+                    <div class="md:ml-1 mb-2">
+                        <label for="stageCountStepper" class="font-bold">
+                            Number of stages
+                        </label>
+
+                        <Stepper
+                            inputId="stageCountStepper"
+                            v-model="settingsStore.settings.stageCount"
+                            :min="1" :max="4"
+                            :suffix="settingsStore.settings.stageCount > 1 ? ' stages' : ' stage'" />
+
+                        <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
+                            This is the number of times each player will play the others.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <div v-if="isKnockout || isRoundRobin">
