@@ -7,7 +7,7 @@ import CurrencyStepper from "./CurrencyStepper.vue"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledDropdown from "./LabelledDropdown.vue"
 import LabelledSlider from "./LabelledSlider.vue"
-import PlayerNameInput from "./PlayerNameInput.vue"
+import NameInput from "./NameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
 
@@ -88,7 +88,7 @@ onUpdated(() => {
 
             <div v-for="p, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
                 <div class="flex mb-2">
-                    <PlayerNameInput
+                    <NameInput
                         class="flex-grow-1"
                         :placeholder="'Player ' + (i + 1)"
                         :name="p"
@@ -235,7 +235,7 @@ onUpdated(() => {
             <div class="p-fluid mb-2">
                 <div v-for="p, i in settingsStore.settings.tableNames.slice(0, settingsStore.settings.tableCount)">
                     <div class="flex mb-2">
-                        <PlayerNameInput
+                        <NameInput
                             class="flex-grow-1"
                             :placeholder="'Table ' + (i + 1)"
                             :name="p"
