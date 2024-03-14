@@ -86,7 +86,7 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
             props.highlightedResultId === result.id ? 'border-dashed' : 'border-transparent'
         ]">
         <div class="grid m-0 py-1">
-            <div class="flex justify-content-between col-6 p-0 pr-1">
+            <div class="flex align-items-center justify-content-between col-6 p-0 pr-1">
                 <div
                     class="p-1 mr-1 border-round-md text-left flex-1"
                     :class="playerCellClass(result, 0)"
@@ -108,21 +108,35 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                     </span>
                 </div>
 
+                <Badge v-if="result.scores[0].runouts > 0"
+                    class="p-badge-sm mr-1 cursor-pointer"
+                    :value="isWinnerStaysOn ? 'R' : result.scores[0].runouts"
+                    severity="contrast"
+                    @click="handleClick" />
+
                 <ScoreCell
                     :result="result"
                     :score="result.scores[0].score"
+                    :runouts="result.scores[0].runouts"
                     :isWinner="winner === result.scores[0].playerId"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
             </div>
 
-            <div class="flex justify-content-between col-6 p-0 pl-1">
+            <div class="flex align-items-center justify-content-between col-6 p-0 pl-1">
                 <ScoreCell
                     :result="result"
                     :score="result.scores[1].score"
+                    :runouts="result.scores[1].runouts"
                     :isWinner="winner === result.scores[1].playerId"
                     :simple="isWinnerStaysOn"
                     @clicked="handleClick" />
+
+                <Badge v-if="result.scores[1].runouts > 0"
+                    class="p-badge-sm ml-1 cursor-pointer"
+                    :value="isWinnerStaysOn ? 'R' : result.scores[1].runouts"
+                    severity="contrast"
+                    @click="handleClick" />
 
                 <div
                     class="p-1 ml-1 border-round-md text-right flex-1"
@@ -156,6 +170,13 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
 </template>
 
 <style scoped>
+.p-badge.p-badge-sm {
+    font-size: 0.75rem;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+}
+
 .highlight {
     background-color: darkgreen!important;
 }

@@ -9,6 +9,7 @@ import 'primeicons/primeicons.css'
 
 import PrimeVue from 'primevue/config'
 
+import Badge from "primevue/badge"
 import Button from "primevue/button"
 import Checkbox from 'primevue/checkbox'
 import Column from 'primevue/column'
@@ -61,6 +62,7 @@ app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
 
+app.component("Badge", Badge)
 app.component("Button", Button)
 app.component("Checkbox", Checkbox)
 app.component("Column", Column)

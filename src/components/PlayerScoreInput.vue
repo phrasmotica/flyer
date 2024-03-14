@@ -64,7 +64,7 @@ const {
         </div>
 
         <div v-if="props.finished">
-            {{ props.runouts }}
+            <Badge :value="props.runouts" severity="contrast" />
         </div>
 
         <InputNumber v-else
