@@ -1,14 +1,30 @@
 import { computed, ref } from "vue"
 
-import type { Round } from "../data/Round"
+import { useSettings } from "./useSettings"
 
-export const useRound = (r: Round) => {
+import type { FlyerSettings } from "../data/FlyerSettings"
+import type { Round } from "../data/Round"
+import type { Result } from "@/data/Result"
+
+export const useRound = (r: Round, s: FlyerSettings) => {
     const round = ref(r)
+
+    const {
+        isWinnerStaysOn,
+    } = useSettings(s)
 
     const name = computed(() => round.value.name)
     const fixtures = computed(() => round.value.fixtures)
 
-    const playableFixtures = computed(() => fixtures.value.filter(f => f.scores.every(s => !s.isBye)))
+    const isPopulated = (f: Result) => f.scores.every(s => s.playerId)
+
+    const playableFixtures = computed(() => {
+        if (isWinnerStaysOn.value) {
+            return fixtures.value.filter(isPopulated)
+        }
+
+        return fixtures.value.filter(f => f.scores.every(s => !s.isBye))
+    })
 
     const status = computed(() => {
         if (fixtures.value.every(f => f.cancelledTime)) {
@@ -23,7 +39,7 @@ export const useRound = (r: Round) => {
             return RoundStatus.InProgress
         }
 
-        if (playableFixtures.value.every(f => f.scores.every(s => s.playerId))) {
+        if (playableFixtures.value.length > 0 && playableFixtures.value.every(isPopulated)) {
             return RoundStatus.Ready
         }
 

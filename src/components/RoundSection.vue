@@ -10,6 +10,8 @@ import { RoundStatus, useRound } from "../composables/useRound"
 import type { Result } from "../data/Result"
 import type { Round } from "../data/Round"
 
+import { useFlyerStore } from "../stores/flyer"
+
 const props = defineProps<{
     round: Round
     highlightedResultId: string
@@ -21,10 +23,14 @@ const emit = defineEmits<{
 }>()
 
 const {
+    flyer,
+} = useFlyerStore()
+
+const {
     name,
     fixtures,
     status,
-} = useRound(props.round)
+} = useRound(props.round, flyer!.settings)
 
 const {
     isHistoric,
