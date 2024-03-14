@@ -230,6 +230,8 @@ onUpdated(() => {
                         Cannot be more than half the number of players ({{ maxTableCount }}).
                     </span>
                 </p>
+
+                <!-- HIGH: allow specifying table names -->
             </div>
 
             <div class="p-fluid mb-2">
