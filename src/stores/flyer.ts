@@ -32,6 +32,8 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     }
 
     const start = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
+        settings.tableNames = new Array(settings.tableCount).fill(0).map((_, i) => "Table " + (i + 1))
+
         flyer.value = createFlyer(settings, scheduler, players)
     }
 
@@ -48,9 +50,9 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         const newFlyer = <Flyer>{
             id: settings.playOffId || uuidv4(),
             players,
-            tables: new Array(settings.tableCount).fill(0).map((_, i) => <Table>{
+            tables: settings.tableNames.map(name => <Table>{
                 id: uuidv4(),
-                name: "Table " + (i + 1),
+                name,
             }),
             settings,
             startTime: Date.now(),

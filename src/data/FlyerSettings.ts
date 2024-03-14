@@ -8,6 +8,7 @@ export interface FlyerSettings {
     winsRequired: number
     ruleSet: RuleSet
     tableCount: number
+    tableNames: string[]
     format: Format
     stageCount: number
     randomlyDrawAllRounds: boolean
@@ -65,6 +66,7 @@ export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerS
     stageCount: 1,
     tableCostPerHour: flyer.settings.tableCostPerHour,
     tableCount: flyer.settings.tableCount,
+    tableNames: [],
     tieBreaker: flyer.settings.tieBreaker,
     winsRequired: 0,
 }
