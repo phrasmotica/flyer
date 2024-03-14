@@ -95,10 +95,6 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                         <em>(bye)</em>
                     </span>
 
-                    <span v-else-if="result.cancelledTime">
-                        -
-                    </span>
-
                     <span v-else-if="result.scores[0].playerId" :class="playerNameClass(result, result.scores[0].playerId, 0)">
                         {{ getPlayerName(result.scores[0].playerId) }}
                     </span>
@@ -144,10 +140,6 @@ const playerCellClass = (result: Result, slot: 0 | 1) => {
                     @click="handleNameClick(result.id)">
                     <span v-if="result.scores[1].isBye" class="text-gray-400">
                         <em>(bye)</em>
-                    </span>
-
-                    <span v-else-if="result.cancelledTime">
-                        -
                     </span>
 
                     <span v-else-if="result.scores[1].playerId" :class="playerNameClass(result, result.scores[1].playerId, 1)">
