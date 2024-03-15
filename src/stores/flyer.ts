@@ -1,8 +1,8 @@
-import { ref } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
+import { useArray } from "../composables/useArray"
 import { useRankings } from "../composables/useRankings"
 
 import type { Fixture, Score } from "../data/Fixture"
@@ -21,7 +21,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         }
     })
 
-    const playerPool = ref<string[]>([])
+    const [playerPool, addToPlayerPool, clearPlayerPool] = useArray<string>()
 
     const {
         winsRequiredReached,
@@ -68,7 +68,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
                 const didPropagate = tryPropagate(newFlyer, fixtureId, winnerId, false)
                 if (!didPropagate) {
                     // add winner to random draw pool for next round
-                    playerPool.value = [...playerPool.value, winnerId]
+                    addToPlayerPool(winnerId)
                 }
             }
         }
@@ -139,7 +139,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
                     const didPropagateWinner = tryPropagate(flyer.value!, fixtureId, getWinner(r.fixtures[idx]).playerId, false)
                     if (!didPropagateWinner) {
                         // add winner to random draw pool for next round
-                        playerPool.value = [...playerPool.value, getWinner(r.fixtures[idx]).playerId]
+                        addToPlayerPool(getWinner(r.fixtures[idx]).playerId)
                     }
 
                     tryPropagate(flyer.value!, fixtureId, getLoser(r.fixtures[idx]).playerId, true)
@@ -153,7 +153,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
             return
         }
 
-        const shuffledPlayerIds =  shuffle([...playerPool.value])
+        const shuffledPlayerIds = shuffle(playerPool.value.slice())
 
         const nextRound = flyer.value.rounds.find(r => !r.isGenerated)!
         for (const f of nextRound.fixtures) {
@@ -164,7 +164,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
         nextRound.isGenerated = true
 
-        playerPool.value = []
+        clearPlayerPool()
     }
 
     const shuffle = <T>(arr: T[]) => {
