@@ -55,6 +55,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
             startTime: Date.now(),
             finishTime: null,
             rounds: scheduler.generateFixtures(players),
+            phases: [], // TODO: put main flyer into first phase object
             playOffs: [],
         }
 
