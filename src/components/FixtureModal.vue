@@ -139,6 +139,7 @@ const ranOut = computed(() => {
     return ""
 })
 
+// MEDIUM: move this, or some of it, into useFlyer()
 const startButtonText = computed(() => {
     if (!fixture.value) {
         return "???"
