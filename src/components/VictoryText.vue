@@ -17,6 +17,7 @@ const props = defineProps<{
 const flyerStore = useFlyerStore()
 
 const {
+    settings,
     getRound,
     getPlayerName,
 } = useFlyer(flyerStore.flyer)
@@ -30,7 +31,7 @@ const {
     scores,
     isWalkover,
     getOpponent,
-} = useFixture("victoryText", props.fixture)
+} = useFixture("victoryText", props.fixture, settings.value)
 
 watch(props, () => {
     fixture.value = props.fixture

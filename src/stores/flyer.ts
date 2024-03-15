@@ -21,7 +21,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         }
     })
 
-    const [playerPool, addToPlayerPool, clearPlayerPool] = useArray<string>()
+    const [playerPool, addToPlayerPool,, clearPlayerPool] = useArray<string>()
 
     const {
         winsRequiredReached,

@@ -2,17 +2,25 @@ import { ref, computed, watch } from "vue"
 import { useArrayUnique, useIntervalFn } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
+import { useArray } from "./useArray"
+import { useSettings } from "./useSettings"
+
 import type { Fixture } from "../data/Fixture"
+import type { FlyerSettings } from "../data/FlyerSettings"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see FixtureModal.vue)
-export const useFixture = (name: string, f: Fixture | undefined) => {
+export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSettings) => {
     const fixture = ref(f)
 
-    const scores = ref(fixture.value?.scores.map(s => s.score) || [])
+    const {
+        settings,
+    } = useSettings(s)
+
+    const [scores,, setScore] = useArray(fixture.value?.scores.map(s => s.score))
     const uniqueScores = useArrayUnique(scores)
 
-    const runouts = ref(fixture.value?.scores.map(s => s.runouts) || [])
+    const [runouts,, setRunouts] = useArray(fixture.value?.scores.map(s => s.runouts))
     const comment = ref(fixture.value?.comment || "")
 
     const startTime = computed(() => fixture.value?.startTime)
@@ -88,16 +96,22 @@ export const useFixture = (name: string, f: Fixture | undefined) => {
         immediate: false,
     })
 
-    const setScore = (index: number, score: number) => {
-        scores.value = scores.value.map((s, i) => i === index ? score : s)
+    const setWinner = (index: number, clearRunouts: boolean) => {
+        scores.value.forEach((_, i) =>{
+            setScore(i, i === index ? settings.value.raceTo : 0)
+        })
+
+        if (clearRunouts) {
+            runouts.value = runouts.value.map(_ => 0)
+        }
     }
 
-    const setRunouts = (index: number, r: number) => {
-        runouts.value = runouts.value.map((s, i) => i === index ? r : s)
-    }
+    const setRanOut = (index: number) => {
+        runouts.value.forEach((r, i) => {
+            setRunouts(i, i === index && r <= 0 ? 1 : 0)
+        })
 
-    const clearRunouts = () => {
-        runouts.value = runouts.value.map(_ => 0)
+        setWinner(index, false)
     }
 
     const pauseClock = clock.pause
@@ -120,7 +134,8 @@ export const useFixture = (name: string, f: Fixture | undefined) => {
         getOpponent,
         setScore,
         setRunouts,
-        clearRunouts,
+        setWinner,
+        setRanOut,
         pauseClock,
         resumeClock,
     }

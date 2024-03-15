@@ -32,7 +32,7 @@ const {
     fixture,
     winner,
     isWalkover,
-} = useFixture("card", props.fixture)
+} = useFixture("card", props.fixture, settings.value)
 
 const {
     isWinnerStaysOn,

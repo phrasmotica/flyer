@@ -53,9 +53,10 @@ const {
     durationSeconds,
     setScore,
     setRunouts,
-    clearRunouts,
+    setWinner,
+    setRanOut,
     resumeClock,
-} = useFixture("modal", props.fixture)
+} = useFixture("modal", props.fixture, settings.value)
 
 const {
     isWinnerStaysOn,
@@ -128,16 +129,6 @@ const winner = computed(() => {
     return ""
 })
 
-const setWinner = (index: number, clear: boolean) => {
-    scores.value.forEach((_, i) =>{
-        setScore(i, i === index ? settings.value.raceTo : 0)
-    })
-
-    if (clear) {
-        clearRunouts()
-    }
-}
-
 const ranOut = computed(() => {
     const maxRunouts = runouts.value.reduce((a, b) => Math.max(a, b), -1)
 
@@ -148,14 +139,6 @@ const ranOut = computed(() => {
 
     return ""
 })
-
-const setRanOut = (index: number) => {
-    runouts.value.forEach((r, i) => {
-        setRunouts(i, i === index && r <= 0 ? 1 : 0)
-    })
-
-    setWinner(index, false)
-}
 
 const startButtonText = computed(() => {
     if (!fixture.value) {
@@ -294,8 +277,8 @@ const resetPlayerScores = () => {
                     :runouts="runouts[i]"
                     :isWinner="winner === p"
                     :finished="hasFinished"
-                    @setScore="v => setScore(i, v)"
-                    @setRunouts="v => setRunouts(i, v)" />
+                    @setScore="v => setScore(v, i)"
+                    @setRunouts="v => setRunouts(v, i)" />
             </div>
 
             <div v-if="!hasFinished" class="flex p-fluid mt-2">

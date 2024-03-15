@@ -7,6 +7,10 @@ export const useArray = <T>(initial?: T[]) => {
         arr.value = [...arr.value, value]
     }
 
+    const set = (value: T, index: number) => {
+        arr.value = arr.value.map((v, i) => i === index ? value : v)
+    }
+
     const clear = () => {
         arr.value = []
     }
@@ -14,10 +18,12 @@ export const useArray = <T>(initial?: T[]) => {
     return <[
         Ref<T[]>,
         (value: T) => void,
+        (value: T, index: number) => void,
         () => void,
     ]>[
         arr,
         push,
+        set,
         clear,
     ]
 }
