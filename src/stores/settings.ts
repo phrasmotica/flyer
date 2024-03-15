@@ -107,6 +107,7 @@ export const useSettingsStore = defineStore("settings", () => {
         moneySplit: MoneySplit.WinnerTakesAll,
         tieBreaker: TieBreaker.HeadToHead,
         name: "",
+        // HIGH: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
     })
 
     const {
