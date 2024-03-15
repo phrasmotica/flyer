@@ -103,6 +103,35 @@ export const useFlyer = (f: Flyer | null) => {
 
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
+    const getFixtureStatus = (fixture: Fixture | undefined) => {
+        if (!fixture) {
+            return FixtureStatus.Unknown
+        }
+
+        if (fixture.scores.some(s => !s.playerId)) {
+            if (settings.value.randomlyDrawAllRounds) {
+                return FixtureStatus.WaitingForRoundGeneration
+            }
+
+            return FixtureStatus.WaitingForPreviousResult
+        }
+
+        if (fixture.scores.some(s => isBusy(s.playerId))) {
+            return FixtureStatus.WaitingForPlayers
+        }
+
+        const round = getRound(fixture.id)
+        if (settings.value.requireCompletedRounds && (round?.index || -1) > currentRound.value.index) {
+            return FixtureStatus.WaitingForRound
+        }
+
+        if (!nextFreeTable.value) {
+            return FixtureStatus.WaitingForTable
+        }
+
+        return FixtureStatus.ReadyToStart
+    }
+
     const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
 
     const computeDifference = () => differenceInSeconds(Date.now(), flyer.value?.startTime || Date.now())
@@ -167,8 +196,19 @@ export const useFlyer = (f: Flyer | null) => {
         getPlayerName,
         getTableName,
         getRound,
+        getFixtureStatus,
         playOffIsComplete,
         pauseClock,
         resumeClock,
     }
+}
+
+export enum FixtureStatus {
+    Unknown,
+    WaitingForRoundGeneration,
+    WaitingForPreviousResult,
+    WaitingForPlayers,
+    WaitingForRound,
+    WaitingForTable,
+    ReadyToStart,
 }

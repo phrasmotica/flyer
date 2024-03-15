@@ -6,7 +6,7 @@ import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
 import { useFixture } from "../composables/useFixture"
-import { useFlyer } from "../composables/useFlyer"
+import { FixtureStatus, useFlyer } from "../composables/useFlyer"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
@@ -31,13 +31,12 @@ const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
     settings,
-    currentRound,
     canStartFixture,
-    isBusy,
     nextFreeTable,
     getPlayerName,
     getTableName,
     getRound,
+    getFixtureStatus,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -139,33 +138,34 @@ const ranOut = computed(() => {
     return ""
 })
 
-// MEDIUM: move this, or some of it, into useFlyer()
 const startButtonText = computed(() => {
-    if (!fixture.value) {
+    const status = getFixtureStatus(fixture.value)
+
+    if (status === FixtureStatus.Unknown) {
         return "???"
     }
 
-    if (fixture.value.scores.some(s => !s.playerId)) {
-        if (settings.value.randomlyDrawAllRounds) {
-            return "Waiting for round to be generated"
-        }
+    if (status === FixtureStatus.WaitingForRoundGeneration) {
+        return "Waiting for round to be generated"
+    }
 
+    if (status === FixtureStatus.WaitingForPreviousResult) {
         return "Waiting for a previous result"
     }
 
-    if (fixture.value.scores.some(s => isBusy(s.playerId))) {
+    if (status === FixtureStatus.WaitingForPlayers) {
         return "Waiting for players to be free"
     }
 
-    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value.index) {
+    if (status === FixtureStatus.WaitingForRound) {
         return "Waiting for round to start"
     }
 
-    if (!nextFreeTable.value) {
+    if (status === FixtureStatus.WaitingForTable) {
         return "Waiting for a free table"
     }
 
-    return "Start on " + nextFreeTable.value.name
+    return "Start on " + nextFreeTable.value!.name
 })
 
 const description = computed(() => {
