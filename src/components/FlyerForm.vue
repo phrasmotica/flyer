@@ -214,12 +214,14 @@ onUpdated(() => {
                     Tables
                 </label>
 
-                <Stepper
-                    v-model="settingsStore.settings.tableCount"
-                    :min="1" :max="maxTableCount"
-                    :suffix="settingsStore.settings.tableCount > 1 ? ' table(s)' : ' table'"
-                    inputId="tablesStepper"
-                    :disabled="isWinnerStaysOn" />
+                <div class="md:hidden">
+                    <Stepper
+                        v-model="settingsStore.settings.tableCount"
+                        :min="1" :max="maxTableCount"
+                        :suffix="settingsStore.settings.tableCount > 1 ? ' table(s)' : ' table'"
+                        inputId="tablesStepper"
+                        :disabled="isWinnerStaysOn" />
+                </div>
 
                 <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
                     <span v-if="isWinnerStaysOn">
@@ -229,6 +231,12 @@ onUpdated(() => {
                         Cannot be more than half the number of players rounded down ({{ maxTableCount }}).
                     </span>
                 </p>
+
+                <div class="hidden md:block">
+                    <LabelledSlider
+                        v-model="settingsStore.settings.tableCount"
+                        :min="1" :max="maxTableCount" />
+                </div>
             </div>
 
             <div class="p-fluid mb-2">
