@@ -226,7 +226,7 @@ onUpdated(() => {
                         {{ formatSummary }} can only use one table.
                     </span>
                     <span v-else>
-                        Cannot be more than half the number of players ({{ maxTableCount }}).
+                        Cannot be more than half the number of players rounded down ({{ maxTableCount }}).
                     </span>
                 </p>
             </div>
