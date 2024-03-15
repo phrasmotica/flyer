@@ -2,6 +2,7 @@ import { computed, ref, watch } from "vue"
 import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
+import type { Fixture } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
 import { type FlyerSettings } from "../data/FlyerSettings"
 
@@ -71,6 +72,23 @@ export const useFlyer = (f: Flyer | null) => {
         const freeTables = tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime))
         return freeTables.at(0)
     })
+
+    const canStartFixture = (fixture: Fixture | undefined) => {
+        if (!fixture) {
+            return false
+        }
+
+        if (fixture.scores.some(s => !s.playerId || isBusy(s.playerId))) {
+            return false
+        }
+
+        const round = getRound(fixture.id)
+        if (settings.value.requireCompletedRounds && (round?.index || -1) > currentRound.value.index) {
+            return false
+        }
+
+        return !!nextFreeTable.value
+    }
 
     const isBusy = (playerId: string) => {
         return rounds.value.flatMap(r => r.fixtures).some(f => {
@@ -144,6 +162,7 @@ export const useFlyer = (f: Flyer | null) => {
         clockDisplay,
         nextFreeTable,
 
+        canStartFixture,
         isBusy,
         getPlayerName,
         getTableName,

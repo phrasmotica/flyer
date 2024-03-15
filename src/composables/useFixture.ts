@@ -33,6 +33,22 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
     const hasFinished = computed(() => !!fixture.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
+    const canBeFinished = computed(() => {
+        if (scores.value.every(s => s < settings.value.raceTo)) {
+            return false
+        }
+
+        if (scores.value.reduce((a, b) => a + b) > 2 * settings.value.raceTo - 1) {
+            return false
+        }
+
+        if (!settings.value.allowDraws && isDraw.value) {
+            return false
+        }
+
+        return true
+    })
+
     const durationSeconds = computed(() => {
         if (!fixture.value?.startTime || !fixture.value.finishTime) {
             return null
@@ -123,12 +139,12 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
         runouts,
         comment,
         players,
-        isDraw,
         isWalkover,
         elapsedSeconds,
         hasStarted,
         hasFinished,
         isInProgress,
+        canBeFinished,
         durationSeconds,
         winner,
         getOpponent,

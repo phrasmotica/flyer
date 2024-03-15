@@ -32,6 +32,7 @@ const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 const {
     settings,
     currentRound,
+    canStartFixture,
     isBusy,
     nextFreeTable,
     getPlayerName,
@@ -45,11 +46,11 @@ const {
     runouts,
     comment,
     players,
-    isDraw,
     elapsedSeconds,
     hasStarted,
     hasFinished,
     isInProgress,
+    canBeFinished,
     durationSeconds,
     setWinner,
     setRanOut,
@@ -166,42 +167,6 @@ const startButtonText = computed(() => {
     return "Start on " + nextFreeTable.value.name
 })
 
-const disableStart = computed(() => {
-    if (!fixture.value) {
-        return true
-    }
-
-    if (fixture.value.scores.some(s => !s.playerId)) {
-        return true
-    }
-
-    if (fixture.value.scores.some(s => isBusy(s.playerId))) {
-        return true
-    }
-
-    if (settings.value.requireCompletedRounds && (round.value?.index || -1) > currentRound.value.index) {
-        return true
-    }
-
-    return !nextFreeTable.value
-})
-
-const disableFinish = computed(() => {
-    if (scores.value.every(s => s < settings.value.raceTo)) {
-        return true
-    }
-
-    if (scores.value.reduce((a, b) => a + b) > 2 * settings.value.raceTo - 1) {
-        return true
-    }
-
-    if (!settings.value.allowDraws && isDraw.value) {
-        return true
-    }
-
-    return false
-})
-
 const description = computed(() => {
     if (!fixture.value) {
         return "???"
@@ -297,7 +262,7 @@ const resetPlayerScores = () => {
                 class="mb-2"
                 type="button"
                 :label="startButtonText"
-                :disabled="disableStart"
+                :disabled="!canStartFixture(fixture)"
                 @click="startFixture" />
 
             <div v-if="isInProgress" class="flex gap-2 mb-2">
@@ -310,7 +275,7 @@ const resetPlayerScores = () => {
                 <Button
                     type="button"
                     label="Finish"
-                    :disabled="disableFinish"
+                    :disabled="!canBeFinished"
                     @click="() => updateScores(true)" />
             </div>
 
