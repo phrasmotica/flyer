@@ -4,18 +4,18 @@ import { useFlyer } from "./useFlyer"
 import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
-import type { Flyer } from "../data/Flyer"
+import type { Phase } from "../data/Phase"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
 // accepts null (see ResultsTable.vue)
-export const usePodium = (f: Flyer | null) => {
+export const usePodium = (p: Phase | null) => {
     const {
         flyer,
         fixtures,
         players,
         settings,
         rounds,
-    } = useFlyer(f)
+    } = useFlyer(p)
 
     const {
         isRoundRobin,

@@ -25,11 +25,11 @@ export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
     }
 
     const getWinner = (flyer: Flyer) => {
-        const finalRound = flyer.rounds[flyer.rounds.length - 1]
+        const finalRound = flyer.phases[0].rounds[flyer.phases[0].rounds.length - 1]
         if (finalRound) {
             const final = finalRound.fixtures[finalRound.fixtures.length - 1]
             const id = getFixtureWinner(final).playerId
-            return flyer.players.find(p => p.id === id) || null
+            return flyer.phases[0].players.find(p => p.id === id) || null
         }
 
         return null

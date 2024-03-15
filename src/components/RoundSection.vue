@@ -30,7 +30,7 @@ const {
     name,
     fixtures,
     status,
-} = useRound(props.round, flyer!.settings)
+} = useRound(props.round, flyer!.phases[0].settings)
 
 const {
     isHistoric,

@@ -20,11 +20,11 @@ const {
     settings,
     getRound,
     getPlayerName,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const {
     winner,
-} = usePodium(flyerStore.flyer)
+} = usePodium(flyerStore.flyer?.phases[0] || null)
 
 const {
     fixture,

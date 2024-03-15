@@ -30,13 +30,13 @@ const {
     settings,
     playOffs: playOffFlyers,
     playOffIsComplete,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const {
     fixtures: playOffFixtures,
     players: playOffPlayers,
     settings: playOffSettings,
-} = useFlyer(playOffStore.flyer)
+} = useFlyer(playOffStore.flyer?.phases[0] || null)
 
 const {
     playOffs: completedPlayOffs,

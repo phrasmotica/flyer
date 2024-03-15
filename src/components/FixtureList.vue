@@ -22,7 +22,7 @@ const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
     rounds,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const selectedFixture = ref<Fixture>()
 const [highlightedFixtureId, highlight] = useStringToggle("")

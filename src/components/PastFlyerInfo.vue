@@ -30,11 +30,11 @@ const {
     settings,
     durationMinutes,
     playOffs,
-} = useFlyer(props.flyer)
+} = useFlyer(props.flyer.phases[0])
 
 const {
     winner,
-} = usePodium(props.flyer)
+} = usePodium(props.flyer.phases[0])
 
 const {
     formatName,
@@ -45,7 +45,7 @@ const {
 } = useStandings(fixtures.value, players.value, settings.value)
 
 watch(props, () => {
-    flyer.value = props.flyer
+    flyer.value = props.flyer.phases[0]
 })
 </script>
 

@@ -22,7 +22,7 @@ const flyerStore = useFlyerStore()
 const {
     settings,
     getPlayerName,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 </script>
 
 <template>

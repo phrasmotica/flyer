@@ -37,7 +37,7 @@ const {
     readyForNextRound,
     pauseClock,
     resumeClock,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const {
     queryParams,

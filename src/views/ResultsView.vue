@@ -34,7 +34,7 @@ const {
     settings,
     durationSeconds,
     playOffIsComplete,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const {
     isKnockout,

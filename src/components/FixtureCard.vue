@@ -26,7 +26,7 @@ const {
     settings,
     getPlayerName,
     getTableName,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const {
     fixture,

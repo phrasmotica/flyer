@@ -47,7 +47,7 @@ const deleteMessage = computed(() => {
         return ""
     }
 
-    return `Are you sure you want to delete ${selectedFlyer.value.settings.name}? This cannot be undone!`
+    return `Are you sure you want to delete ${selectedFlyer.value.phases[0].settings.name}? This cannot be undone!`
 })
 
 const deleteSelectedFlyer = () => {

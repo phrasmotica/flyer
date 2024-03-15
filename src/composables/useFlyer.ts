@@ -3,23 +3,23 @@ import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import type { Fixture } from "../data/Fixture"
-import type { Flyer } from "../data/Flyer"
 import { type FlyerSettings } from "../data/FlyerSettings"
+import type { Phase } from "../data/Phase"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
-export const useFlyer = (f: Flyer | null) => {
-    const flyer = ref(f)
+export const useFlyer = (p: Phase | null) => {
+    const phase = ref(p)
 
-    const fixtures = computed(() => flyer.value?.rounds.flatMap(r => r.fixtures) || [])
-    const players = computed(() => flyer.value?.players || [])
-    const tables = computed(() => flyer.value?.tables || [])
-    const settings = computed(() => flyer.value?.settings || <FlyerSettings>{})
-    const rounds = computed(() => flyer.value?.rounds || [])
-    const playOffs = computed(() => flyer.value?.playOffs || [])
+    const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
+    const players = computed(() => phase.value?.players || [])
+    const tables = computed(() => phase.value?.tables || [])
+    const settings = computed(() => phase.value?.settings || <FlyerSettings>{})
+    const rounds = computed(() => phase.value?.rounds || [])
+    const playOffs = computed(() => phase.value?.playOffs || [])
 
-    const hasStarted = computed(() => !!flyer.value?.startTime)
-    const hasFinished = computed(() => !!flyer.value?.finishTime)
+    const hasStarted = computed(() => !!phase.value?.startTime)
+    const hasFinished = computed(() => !!phase.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
@@ -51,19 +51,19 @@ export const useFlyer = (f: Flyer | null) => {
     })
 
     const durationMinutes = computed(() => {
-        if (!flyer.value?.startTime || !flyer.value.finishTime) {
+        if (!phase.value?.startTime || !phase.value.finishTime) {
             return null
         }
 
-        return differenceInMinutes(flyer.value.finishTime, flyer.value.startTime)
+        return differenceInMinutes(phase.value.finishTime, phase.value.startTime)
     })
 
     const durationSeconds = computed(() => {
-        if (!flyer.value?.startTime || !flyer.value.finishTime) {
+        if (!phase.value?.startTime || !phase.value.finishTime) {
             return null
         }
 
-        return differenceInSeconds(flyer.value.finishTime, flyer.value.startTime)
+        return differenceInSeconds(phase.value.finishTime, phase.value.startTime)
     })
 
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
@@ -152,20 +152,20 @@ export const useFlyer = (f: Flyer | null) => {
 
     const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
 
-    const computeDifference = () => differenceInSeconds(Date.now(), flyer.value?.startTime || Date.now())
+    const computeDifference = () => differenceInSeconds(Date.now(), phase.value?.startTime || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
 
     const updateClock = () => {
         const newValue = computeDifference()
-        console.debug("FlyerClock " + settings.value.name + ": " + flyer.value?.startTime + " + " + newValue)
+        console.debug("FlyerClock " + settings.value.name + ": " + phase.value?.startTime + " + " + newValue)
         elapsedSeconds.value = newValue
     }
 
-    watch(flyer, () => {
+    watch(phase, () => {
         updateClock()
 
-        if (flyer.value?.startTime) {
+        if (phase.value?.startTime) {
             resumeClock()
         }
     })
@@ -186,7 +186,7 @@ export const useFlyer = (f: Flyer | null) => {
     }
 
     return {
-        flyer,
+        flyer: phase,
 
         fixtures,
         players,

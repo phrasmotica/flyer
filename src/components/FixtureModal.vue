@@ -36,7 +36,7 @@ const {
     getTableName,
     getFixtureStatus,
     getFixtureHeader,
-} = useFlyer(flyerStore.flyer)
+} = useFlyer(flyerStore.flyer?.phases[0] || null)
 
 const {
     fixture,

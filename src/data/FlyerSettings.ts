@@ -1,4 +1,4 @@
-import type { Flyer } from "./Flyer"
+import type { Phase } from "./Phase"
 import type { PlayOff } from "./PlayOff"
 import type { Table } from "./Table"
 
@@ -48,7 +48,7 @@ export enum MoneySplit {
     SemiFinalists,
 }
 
-export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerSettings>{
+export const createPlayOffSettings = (phase: Phase, playOff: PlayOff) => <FlyerSettings>{
     allowDraws: false,
     allowEarlyFinish: false,
     entryFee: 0,
@@ -62,10 +62,10 @@ export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerS
     raceTo: 1,
     randomlyDrawAllRounds: false,
     requireCompletedRounds: true,
-    ruleSet: flyer.settings.ruleSet,
+    ruleSet: phase.settings.ruleSet,
     stageCount: 1,
-    tables: flyer.settings.tables,
-    tableCount: flyer.settings.tableCount,
-    tieBreaker: flyer.settings.tieBreaker,
+    tables: phase.settings.tables,
+    tableCount: phase.settings.tableCount,
+    tieBreaker: phase.settings.tieBreaker,
     winsRequired: 0,
 }
