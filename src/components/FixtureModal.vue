@@ -51,8 +51,6 @@ const {
     hasFinished,
     isInProgress,
     durationSeconds,
-    setScore,
-    setRunouts,
     setWinner,
     setRanOut,
     resumeClock,
@@ -273,12 +271,10 @@ const resetPlayerScores = () => {
                     class="col-6"
                     :fixture="fixture"
                     :playerId="p"
-                    :score="scores[i]"
-                    :runouts="runouts[i]"
+                    v-model:score="scores[i]"
+                    v-model:runouts="runouts[i]"
                     :isWinner="winner === p"
-                    :finished="hasFinished"
-                    @setScore="v => setScore(v, i)"
-                    @setRunouts="v => setRunouts(v, i)" />
+                    :finished="hasFinished" />
             </div>
 
             <div v-if="!hasFinished" class="flex p-fluid mt-2">

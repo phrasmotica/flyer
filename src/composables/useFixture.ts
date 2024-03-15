@@ -132,8 +132,6 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
         durationSeconds,
         winner,
         getOpponent,
-        setScore,
-        setRunouts,
         setWinner,
         setRanOut,
         pauseClock,

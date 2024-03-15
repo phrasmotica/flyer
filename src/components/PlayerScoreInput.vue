@@ -7,18 +7,14 @@ import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 
+const score = defineModel<number>("score")
+const runouts = defineModel<number>("runouts")
+
 const props = defineProps<{
     fixture: Fixture
     playerId: string
-    score: number
-    runouts: number
     isWinner: boolean
     finished?: boolean
-}>()
-
-const emit = defineEmits<{
-    setScore: [score: number]
-    setRunouts: [score: number]
 }>()
 
 const flyerStore = useFlyerStore()
@@ -40,7 +36,7 @@ const {
                 large
                 static
                 :fixture="props.fixture"
-                :score="props.score"
+                :score="score"
                 :isWinner="props.isWinner" />
         </div>
 
@@ -48,9 +44,8 @@ const {
             showButtons
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"
-            :modelValue="props.score"
-            :min="0" :max="settings.raceTo"
-            @update:modelValue="v => emit('setScore', v)">
+            v-model="score"
+            :min="0" :max="settings.raceTo">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>
@@ -64,7 +59,7 @@ const {
         </div>
 
         <div v-if="props.finished">
-            <Badge :value="props.runouts" severity="contrast" />
+            <Badge :value="runouts" severity="contrast" />
         </div>
 
         <InputNumber v-else
@@ -72,9 +67,8 @@ const {
             showButtons
             inputClass="w-2rem px-1 text-center"
             buttonLayout="horizontal"
-            :modelValue="props.runouts"
-            :min="0" :max="settings.raceTo"
-            @update:modelValue="v => emit('setRunouts', v)">
+            v-model="runouts"
+            :min="0" :max="settings.raceTo">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>
