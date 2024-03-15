@@ -234,14 +234,20 @@ onUpdated(() => {
 
             <div class="p-fluid mb-2">
                 <div v-for="p, i in settingsStore.settings.tableNames.slice(0, settingsStore.settings.tableCount)">
-                    <div class="flex mb-2">
-                        <NameInput
-                            class="flex-grow-1"
-                            :placeholder="'Table ' + (i + 1)"
-                            :name="p"
-                            @setName="n => settingsStore.setTableName(i, n)" />
+                    <div class="flex" :class="i > 0 && 'mt-1 pt-1 border-none border-top-1 border-dashed border-gray-200'">
+                        <div class="flex-grow-1">
+                            <NameInput
+                                :placeholder="'Table ' + (i + 1)"
+                                :name="p"
+                                @setName="n => settingsStore.setTableName(i, n)" />
 
-                        <!-- MEDIUM: allow setting a different hourly cost per table -->
+                            <!-- MEDIUM: allow setting a different hourly cost per table -->
+                            <CurrencyStepper
+                                class="mt-1"
+                                :inputId="'tableCostPerHourStepper-' + (i + 1)"
+                                v-model="settingsStore.settings.tableCostPerHour"
+                                suffix=" per hour" />
+                        </div>
 
                         <Button
                             class="ml-2"
@@ -251,17 +257,6 @@ onUpdated(() => {
                             @click="() => settingsStore.deleteTableName(i)" />
                     </div>
                 </div>
-            </div>
-
-            <div class="p-fluid mb-2">
-                <label for="tableCostPerHourStepper" class="font-bold">
-                    Table cost
-                </label>
-
-                <CurrencyStepper
-                    inputId="tableCostPerHourStepper"
-                    v-model="settingsStore.settings.tableCostPerHour"
-                    suffix=" per hour" />
             </div>
 
             <div class="flex align-items-center justify-content-between border-top-1 border-gray-200">
