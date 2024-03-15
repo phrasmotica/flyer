@@ -3,12 +3,12 @@ import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import type { Fixture } from "../data/Fixture"
-import { type FlyerSettings } from "../data/FlyerSettings"
+import type { FlyerSettings } from "../data/FlyerSettings"
 import type { Phase } from "../data/Phase"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
-export const useFlyer = (p: Phase | null) => {
+export const usePhase = (p: Phase | null) => {
     const phase = ref(p)
 
     const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])

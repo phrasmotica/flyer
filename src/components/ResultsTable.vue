@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n"
 
 import WinningsList from "./WinningsList.vue"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
@@ -30,13 +30,13 @@ const {
     settings,
     playOffs: playOffFlyers,
     playOffIsComplete,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     fixtures: playOffFixtures,
     players: playOffPlayers,
     settings: playOffSettings,
-} = useFlyer(playOffStore.flyer?.phases[0] || null)
+} = usePhase(playOffStore.flyer?.phases[0] || null)
 
 const {
     playOffs: completedPlayOffs,

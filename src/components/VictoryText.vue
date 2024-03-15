@@ -3,7 +3,7 @@ import { computed, watch } from "vue"
 import { useSorted } from "@vueuse/core"
 
 import { useFixture } from "../composables/useFixture"
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { usePodium } from "../composables/usePodium"
 
 import type { Fixture } from "../data/Fixture"
@@ -20,7 +20,7 @@ const {
     settings,
     getRound,
     getPlayerName,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     winner,

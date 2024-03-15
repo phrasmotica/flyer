@@ -10,7 +10,7 @@ import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -37,7 +37,7 @@ const {
     readyForNextRound,
     pauseClock,
     resumeClock,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     queryParams,

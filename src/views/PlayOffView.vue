@@ -10,7 +10,7 @@ import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 
 import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
 
@@ -27,7 +27,7 @@ const playOffStore = usePlayOffStore()
 
 const {
     settings: flyerSettings,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     flyer: playOffFlyer,
@@ -39,7 +39,7 @@ const {
     remainingCount,
     pauseClock,
     resumeClock,
-} = useFlyer(playOffStore.flyer?.phases[0] || null)
+} = usePhase(playOffStore.flyer?.phases[0] || null)
 
 const display = ref(Display.Fixtures)
 

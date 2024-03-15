@@ -2,7 +2,7 @@
 import { watch } from "vue"
 import { useI18n } from "vue-i18n"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { usePodium } from "../composables/usePodium"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
@@ -30,7 +30,7 @@ const {
     settings,
     durationMinutes,
     playOffs,
-} = useFlyer(props.flyer.phases[0])
+} = usePhase(props.flyer.phases[0])
 
 const {
     winner,

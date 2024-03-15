@@ -4,7 +4,7 @@ import { ref } from "vue"
 import FixtureModal from "./FixtureModal.vue"
 import RoundSection from "./RoundSection.vue"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { useStringToggle } from "../composables/useStringToggle"
 
 import type { Fixture } from "../data/Fixture"
@@ -22,7 +22,7 @@ const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
 
 const {
     rounds,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const selectedFixture = ref<Fixture>()
 const [highlightedFixtureId, highlight] = useStringToggle("")

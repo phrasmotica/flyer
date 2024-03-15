@@ -10,7 +10,7 @@ import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useStandings } from "../composables/useStandings"
 import { useSettings } from "../composables/useSettings"
@@ -34,7 +34,7 @@ const {
     settings,
     durationSeconds,
     playOffIsComplete,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     isKnockout,

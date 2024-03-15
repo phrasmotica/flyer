@@ -6,7 +6,7 @@ import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
 import { useFixture } from "../composables/useFixture"
-import { FixtureStatus, useFlyer } from "../composables/useFlyer"
+import { FixtureStatus, usePhase } from "../composables/usePhase"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
@@ -36,7 +36,7 @@ const {
     getTableName,
     getFixtureStatus,
     getFixtureHeader,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     fixture,

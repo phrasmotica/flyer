@@ -1,6 +1,6 @@
 import { computed } from "vue"
 
-import { useFlyer } from "./useFlyer"
+import { usePhase } from "./usePhase"
 import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
@@ -15,7 +15,7 @@ export const usePodium = (p: Phase | null) => {
         players,
         settings,
         rounds,
-    } = useFlyer(p)
+    } = usePhase(p)
 
     const {
         isRoundRobin,

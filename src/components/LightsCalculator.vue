@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n"
 
 import CurrencyStepper from "./CurrencyStepper.vue"
 
-import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -16,7 +16,7 @@ const flyerStore = useFlyerStore()
 const {
     settings,
     players,
-} = useFlyer(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.flyer?.phases[0] || null)
 
 const {
     estimatedCost,
