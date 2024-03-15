@@ -33,10 +33,9 @@ const {
     settings,
     canStartFixture,
     nextFreeTable,
-    getPlayerName,
     getTableName,
-    getRound,
     getFixtureStatus,
+    getFixtureHeader,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -78,8 +77,6 @@ watch(props, () => {
         resumeClock()
     }
 })
-
-const round = computed(() => getRound(fixture.value?.id || ""))
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -168,22 +165,6 @@ const startButtonText = computed(() => {
     return "Start on " + nextFreeTable.value!.name
 })
 
-const description = computed(() => {
-    if (!fixture.value) {
-        return "???"
-    }
-
-    return fixture.value.scores.map(s => {
-        if (s.isBye) {
-            return "(bye)"
-        }
-
-        return getPlayerName(s.playerId)
-    }).join(" v ")
-})
-
-const header = computed(() => `${round.value?.name || "???"} - ${description.value}`)
-
 const hide = () => {
     resetPlayerScores()
 
@@ -209,7 +190,7 @@ const resetPlayerScores = () => {
         modal
         class="mx-4"
         v-model:visible="visible"
-        :header="header"
+        :header="getFixtureHeader(fixture)"
         @hide="hide">
         <div v-if="hasStarted" id="score-inputs" class="mb-2">
             <div class="mb-2">

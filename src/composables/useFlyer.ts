@@ -132,6 +132,24 @@ export const useFlyer = (f: Flyer | null) => {
         return FixtureStatus.ReadyToStart
     }
 
+    const getFixtureDescription = (fixture: Fixture | undefined) => {
+        if (!fixture) {
+            return "???"
+        }
+
+        return fixture.scores.map(s => {
+            if (s.isBye) {
+                return "(bye)"
+            }
+
+            return getPlayerName(s.playerId)
+        }).join(" v ")
+    }
+
+    const getFixtureHeader = (fixture: Fixture | undefined) => {
+        return `${getRound(fixture?.id || "")?.name || "???"} - ${getFixtureDescription(fixture)}`
+    }
+
     const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
 
     const computeDifference = () => differenceInSeconds(Date.now(), flyer.value?.startTime || Date.now())
@@ -197,6 +215,7 @@ export const useFlyer = (f: Flyer | null) => {
         getTableName,
         getRound,
         getFixtureStatus,
+        getFixtureHeader,
         playOffIsComplete,
         pauseClock,
         resumeClock,
