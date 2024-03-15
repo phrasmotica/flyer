@@ -218,7 +218,7 @@ onUpdated(() => {
                     <Stepper
                         v-model="settingsStore.settings.tableCount"
                         :min="1" :max="maxTableCount"
-                        :suffix="settingsStore.settings.tableCount > 1 ? ' table(s)' : ' table'"
+                        :suffix="settingsStore.settings.tableCount > 1 ? ' tables' : ' table'"
                         inputId="tablesStepper"
                         :disabled="isWinnerStaysOn" />
                 </div>
