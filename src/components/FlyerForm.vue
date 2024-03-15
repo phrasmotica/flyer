@@ -245,7 +245,7 @@ onUpdated(() => {
                             <CurrencyStepper
                                 class="mt-1"
                                 :inputId="'tableCostPerHourStepper-' + (i + 1)"
-                                v-model="settingsStore.settings.tableCostPerHour"
+                                v-model="settingsStore.settings.tableCostsPerHour[i]"
                                 suffix=" per hour" />
                         </div>
 
@@ -254,7 +254,7 @@ onUpdated(() => {
                             icon="pi pi-trash"
                             severity="danger"
                             :disabled="settingsStore.settings.tableCount <= 1"
-                            @click="() => settingsStore.deleteTableName(i)" />
+                            @click="() => settingsStore.deleteTable(i)" />
                     </div>
                 </div>
             </div>

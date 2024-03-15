@@ -72,21 +72,26 @@ if (defaultPlayersEnv) {
     defaultPlayers = String(defaultPlayersEnv).split(";")
 }
 
+const defaultPlayerCount = defaultPlayers.length
+const defaultTableCount = Math.floor(defaultPlayerCount / 2)
+
 if (defaultPlayers.length < maxPlayersEnv) {
     defaultPlayers = [...defaultPlayers, ...new Array(maxPlayersEnv - defaultPlayers.length).fill("")]
 }
 
-const defaultMaxTableCount = Math.floor(maxPlayersEnv / 2)
-const defaultTables = new Array(defaultMaxTableCount).fill(0).map((_, i) => "Table " + (i + 1))
+const maxTableCount = Math.floor(defaultPlayers.length / 2)
+const defaultTables = new Array(maxTableCount).fill(0).map((_, i) => "Table " + (i + 1))
+const defaultTableCostsPerHour = defaultTables.map(_ => 9)
 
 export const useSettingsStore = defineStore("settings", () => {
     const settings = useStorage("settings", <FlyerSettings>{
-        playerCount: defaultPlayers.filter(p => p).length,
+        playerCount: defaultPlayerCount,
         playerNames: defaultPlayers,
         raceTo: 1, // LOW: allow changing this per round in a Knockout tournament
         winsRequired: 1,
-        tableCount: defaultTables.length,
+        tableCount: defaultTableCount,
         tableNames: defaultTables,
+        tableCostsPerHour: defaultTableCostsPerHour,
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
         randomlyDrawAllRounds: false,
@@ -195,18 +200,24 @@ export const useSettingsStore = defineStore("settings", () => {
         settings.value.tableNames = settings.value.tableNames.map((v, i) => i === index ? name : v)
     }
 
-    const deleteTableName = (index: number) => {
+    const deleteTable = (index: number) => {
         if (settings.value.tableCount <= 1) {
             return
         }
 
         settings.value.tableCount = settings.value.tableCount - 1
 
-        const newNames = [...settings.value.tableNames]
+        const newNames = settings.value.tableNames.slice()
         newNames.splice(index, 1)
         newNames.push("")
 
         settings.value.tableNames = newNames
+
+        const newCosts = settings.value.tableCostsPerHour.slice()
+        newCosts.splice(index, 1)
+        newCosts.push(9)
+
+        settings.value.tableCostsPerHour = newCosts
     }
 
     return {
@@ -220,6 +231,6 @@ export const useSettingsStore = defineStore("settings", () => {
         setName,
         deleteName,
         setTableName,
-        deleteTableName,
+        deleteTable,
     }
 })
