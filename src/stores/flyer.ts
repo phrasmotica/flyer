@@ -45,13 +45,12 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
             }))
         }
 
+        const actualTables = settings.tables.slice(0, settings.tableCount)
+
         const newFlyer = <Flyer>{
             id: settings.playOffId || uuidv4(),
             players,
-            tables: settings.tableNames.slice(0, settings.tableCount).map(name => <Table>{
-                id: uuidv4(),
-                name,
-            }),
+            tables: actualTables.map(t => <Table>{ ...t, id: uuidv4() }),
             settings,
             startTime: Date.now(),
             finishTime: null,

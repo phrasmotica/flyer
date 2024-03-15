@@ -1,5 +1,6 @@
 import type { Flyer } from "./Flyer"
 import type { PlayOff } from "./PlayOff"
+import type { Table } from "./Table"
 
 export interface FlyerSettings {
     playerCount: number
@@ -8,8 +9,7 @@ export interface FlyerSettings {
     winsRequired: number
     ruleSet: RuleSet
     tableCount: number
-    tableNames: string[]
-    tableCostsPerHour: number[]
+    tables: Table[]
     format: Format
     stageCount: number
     randomlyDrawAllRounds: boolean
@@ -20,7 +20,6 @@ export interface FlyerSettings {
     entryFeeRequired: boolean
     entryFee: number
     moneySplit: MoneySplit
-    tableCostPerHour: number
     name: string
     playOffId: string
 }
@@ -65,10 +64,8 @@ export const createPlayOffSettings = (flyer: Flyer, playOff: PlayOff) => <FlyerS
     requireCompletedRounds: true,
     ruleSet: flyer.settings.ruleSet,
     stageCount: 1,
-    tableCostPerHour: flyer.settings.tableCostPerHour,
-    tableCostsPerHour: flyer.settings.tableCostsPerHour,
+    tables: flyer.settings.tables,
     tableCount: flyer.settings.tableCount,
-    tableNames: [],
     tieBreaker: flyer.settings.tieBreaker,
     winsRequired: 0,
 }

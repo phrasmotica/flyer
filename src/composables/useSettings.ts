@@ -129,7 +129,9 @@ export const useSettings = (s: FlyerSettings) => {
     })
 
     const estimatedCost = computed(() => {
-        return settings.value.tableCostPerHour * settings.value.tableCount * estimatedDuration.value / 60
+        const tablesToUse = settings.value.tables.slice(0, settings.value.tableCount)
+        const meanCostPerHour = tablesToUse.map(t => t.costPerHour).reduce((a, b) => a + b, 0) / tablesToUse.length
+        return meanCostPerHour * settings.value.tableCount * estimatedDuration.value / 60
     })
 
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)

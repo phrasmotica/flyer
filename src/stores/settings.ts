@@ -6,6 +6,7 @@ import { useListFallback } from "../composables/useListFallback"
 import { useSettings } from "../composables/useSettings"
 
 import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker } from "../data/FlyerSettings"
+import type { Table } from "../data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
@@ -80,8 +81,11 @@ if (defaultPlayers.length < maxPlayersEnv) {
 }
 
 const maxTableCount = Math.floor(defaultPlayers.length / 2)
-const defaultTables = new Array(maxTableCount).fill(0).map((_, i) => "Table " + (i + 1))
-const defaultTableCostsPerHour = defaultTables.map(_ => 9)
+const defaultTables = new Array(maxTableCount).fill(0).map((_, i) => <Table>{
+    id: "",
+    name: "Table " + (i + 1),
+    costPerHour: 9,
+})
 
 export const useSettingsStore = defineStore("settings", () => {
     const settings = useStorage("settings", <FlyerSettings>{
@@ -90,8 +94,7 @@ export const useSettingsStore = defineStore("settings", () => {
         raceTo: 1, // LOW: allow changing this per round in a Knockout tournament
         winsRequired: 1,
         tableCount: defaultTableCount,
-        tableNames: defaultTables,
-        tableCostsPerHour: defaultTableCostsPerHour,
+        tables: defaultTables,
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
         randomlyDrawAllRounds: false,
@@ -103,7 +106,6 @@ export const useSettingsStore = defineStore("settings", () => {
         entryFee: 5,
         moneySplit: MoneySplit.WinnerTakesAll,
         tieBreaker: TieBreaker.HeadToHead,
-        tableCostPerHour: 9,
         name: "",
     })
 
@@ -178,11 +180,7 @@ export const useSettingsStore = defineStore("settings", () => {
         settings.value.moneySplit = getFallback(moneySplitOptions.value, index, MoneySplit.WinnerTakesAll)
     })
 
-    const setName = (index: number, name: string) => {
-        settings.value.playerNames = settings.value.playerNames.map((v, i) => i === index ? name : v)
-    }
-
-    const deleteName = (index: number) => {
+    const deletePlayer = (index: number) => {
         if (settings.value.playerCount <= 2) {
             return
         }
@@ -196,10 +194,6 @@ export const useSettingsStore = defineStore("settings", () => {
         settings.value.playerNames = newNames
     }
 
-    const setTableName = (index: number, name: string) => {
-        settings.value.tableNames = settings.value.tableNames.map((v, i) => i === index ? name : v)
-    }
-
     const deleteTable = (index: number) => {
         if (settings.value.tableCount <= 1) {
             return
@@ -207,17 +201,15 @@ export const useSettingsStore = defineStore("settings", () => {
 
         settings.value.tableCount = settings.value.tableCount - 1
 
-        const newNames = settings.value.tableNames.slice()
-        newNames.splice(index, 1)
-        newNames.push("")
+        const newTables = settings.value.tables.slice()
+        newTables.splice(index, 1)
+        newTables.push({
+            id: "",
+            name: "Table " + (newTables.length + 1),
+            costPerHour: 9,
+        })
 
-        settings.value.tableNames = newNames
-
-        const newCosts = settings.value.tableCostsPerHour.slice()
-        newCosts.splice(index, 1)
-        newCosts.push(9)
-
-        settings.value.tableCostsPerHour = newCosts
+        settings.value.tables = newTables
     }
 
     return {
@@ -228,9 +220,7 @@ export const useSettingsStore = defineStore("settings", () => {
         tieBreakerList,
         moneySplitOptions,
 
-        setName,
-        deleteName,
-        setTableName,
+        deletePlayer,
         deleteTable,
     }
 })

@@ -86,20 +86,19 @@ onUpdated(() => {
                     :min="2" :max="maxPlayersEnv" />
             </div>
 
-            <div v-for="p, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
+            <div v-for="_, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
                 <div class="flex mb-2">
                     <NameInput
+                        v-model="settingsStore.settings.playerNames[i]"
                         class="flex-grow-1"
-                        :placeholder="'Player ' + (i + 1)"
-                        :name="p"
-                        @setName="n => settingsStore.setName(i, n)" />
+                        :placeholder="'Player ' + (i + 1)" />
 
                     <Button
                         class="ml-2"
                         icon="pi pi-trash"
                         severity="danger"
                         :disabled="settingsStore.settings.playerCount <= 2"
-                        @click="() => settingsStore.deleteName(i)" />
+                        @click="() => settingsStore.deletePlayer(i)" />
                 </div>
             </div>
         </div>
@@ -233,19 +232,17 @@ onUpdated(() => {
             </div>
 
             <div class="p-fluid mb-2">
-                <div v-for="p, i in settingsStore.settings.tableNames.slice(0, settingsStore.settings.tableCount)">
+                <div v-for="_, i in settingsStore.settings.tables.slice(0, settingsStore.settings.tableCount)">
                     <div class="flex" :class="i > 0 && 'mt-1 pt-1 border-none border-top-1 border-dashed border-gray-200'">
                         <div class="flex-grow-1">
                             <NameInput
-                                :placeholder="'Table ' + (i + 1)"
-                                :name="p"
-                                @setName="n => settingsStore.setTableName(i, n)" />
+                                v-model="settingsStore.settings.tables[i].name"
+                                :placeholder="'Table ' + (i + 1)" />
 
-                            <!-- MEDIUM: allow setting a different hourly cost per table -->
                             <CurrencyStepper
                                 class="mt-1"
                                 :inputId="'tableCostPerHourStepper-' + (i + 1)"
-                                v-model="settingsStore.settings.tableCostsPerHour[i]"
+                                v-model="settingsStore.settings.tables[i].costPerHour"
                                 suffix=" per hour" />
                         </div>
 
