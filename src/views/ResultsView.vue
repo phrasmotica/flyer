@@ -34,7 +34,7 @@ const {
     settings,
     durationSeconds,
     playOffIsComplete,
-} = usePhase(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.currentPhase)
 
 const {
     isKnockout,

@@ -23,14 +23,14 @@ const emit = defineEmits<{
 }>()
 
 const {
-    flyer,
+    currentPhase,
 } = useFlyerStore()
 
 const {
     name,
     fixtures,
     status,
-} = useRound(props.round, flyer!.phases[0].settings)
+} = useRound(props.round, currentPhase!.settings)
 
 const {
     isHistoric,

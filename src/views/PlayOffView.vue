@@ -27,7 +27,7 @@ const playOffStore = usePlayOffStore()
 
 const {
     settings: flyerSettings,
-} = usePhase(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.currentPhase)
 
 const {
     flyer: playOffFlyer,
@@ -39,7 +39,7 @@ const {
     remainingCount,
     pauseClock,
     resumeClock,
-} = usePhase(playOffStore.flyer?.phases[0] || null)
+} = usePhase(playOffStore.currentPhase)
 
 const display = ref(Display.Fixtures)
 

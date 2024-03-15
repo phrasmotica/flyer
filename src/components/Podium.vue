@@ -16,7 +16,7 @@ const {
     winner,
     winnerFixtures,
     moneyRecipients,
-} = usePodium(flyerStore.flyer?.phases[0] || null)
+} = usePodium(flyerStore.currentPhase)
 </script>
 
 <template>

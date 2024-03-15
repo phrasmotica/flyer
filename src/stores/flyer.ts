@@ -1,3 +1,4 @@
+import { computed } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
@@ -27,6 +28,8 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     const {
         winsRequiredReached,
     } = useRankings()
+
+    const currentPhase = computed(() => flyer.value?.phases[0] || null)
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -249,6 +252,8 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     return {
         flyer,
         setFlyer,
+
+        currentPhase,
 
         start,
         startFixture,

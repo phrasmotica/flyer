@@ -16,7 +16,7 @@ const flyerStore = useFlyerStore()
 const {
     settings,
     players,
-} = usePhase(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.currentPhase)
 
 const {
     estimatedCost,

@@ -26,7 +26,7 @@ const flyerStore = useFlyerStore()
 
 const {
     getPlayerName,
-} = usePhase(flyerStore.flyer?.phases[0] || null)
+} = usePhase(flyerStore.currentPhase)
 
 const didRunOut = computed(() => props.playerId === props.ranOut)
 </script>
