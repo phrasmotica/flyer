@@ -3,6 +3,7 @@ import { computed } from "vue"
 
 import ScoreCell from "./ScoreCell.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 
 import type { Fixture } from "../data/Fixture"
@@ -25,8 +26,12 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
     getPlayerName,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(currentPhase.value)
 
 const didRunOut = computed(() => props.playerId === props.ranOut)
 </script>

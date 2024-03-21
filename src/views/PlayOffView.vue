@@ -10,9 +10,10 @@ import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 
-import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { useFlyerStore } from "../stores/flyer"
 
 enum Display {
     Fixtures,
@@ -23,14 +24,17 @@ enum Display {
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
-const playOffStore = usePlayOffStore()
+
+const {
+    mainPhase,
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
 
 const {
     settings: flyerSettings,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(mainPhase.value)
 
 const {
-    flyer: playOffFlyer,
     settings,
     clockDisplay,
     hasStarted,
@@ -39,7 +43,7 @@ const {
     remainingCount,
     pauseClock,
     resumeClock,
-} = usePhase(playOffStore.currentPhase)
+} = usePhase(currentPhase.value)
 
 const display = ref(Display.Fixtures)
 
@@ -84,14 +88,10 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
-    const success = playOffStore.finish()
+    const success = flyerStore.finish()
     if (!success) {
         throw "Failed to finish play-off!"
     }
-
-    flyerStore.addPlayOff(playOffFlyer.value!)
-
-    playOffStore.clear()
 
     hideFinishModal()
 
@@ -120,9 +120,9 @@ onUnmounted(() => {
 
             <TabMenu class="mb-2" :model="items" />
 
-            <FixtureList v-if="display === Display.Fixtures" isPlayOff />
+            <FixtureList v-if="display === Display.Fixtures" />
 
-            <ResultsTable v-if="display === Display.Standings" isPlayOff isInProgress />
+            <ResultsTable v-if="display === Display.Standings" isInProgress />
 
             <InfoList v-if="display === Display.Info" :settings="settings" />
 

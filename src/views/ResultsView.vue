@@ -10,22 +10,24 @@ import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useStandings } from "../composables/useStandings"
 import { useSettings } from "../composables/useSettings"
 
-import { createPlayOffSettings } from "../data/FlyerSettings"
-import { KnockoutScheduler } from "../data/KnockoutScheduler"
-
-import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
-const playOffStore = usePlayOffStore()
+
+const {
+    phaseIsComplete,
+    mainPhase,
+} = useFlyer(flyerStore.flyer)
 
 const {
     flyer,
@@ -33,8 +35,7 @@ const {
     fixtures,
     settings,
     durationSeconds,
-    playOffIsComplete,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(mainPhase.value)
 
 const {
     isKnockout,
@@ -67,7 +68,6 @@ const confirmGoToSetup = () => {
 
 const goToSetup = () => {
     flyerStore.clear()
-    playOffStore.clear()
 
     hideGoToSetupModal()
 
@@ -81,7 +81,7 @@ const confirmStartPlayOff = () => {
 }
 
 const nextPlayOff = computed(() => {
-    const remaining = orderedPlayOffs.value.filter(p => !playOffIsComplete(p.id))
+    const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
     return remaining.length > 0 ? remaining[0] : null
 })
 
@@ -97,16 +97,12 @@ const startPlayOff = () => {
         return
     }
 
-    if (!nextPlayOff.value) {
+    if (!nextPlayOff.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
-    playOffStore.start(
-        createPlayOffSettings(flyer.value, nextPlayOff.value),
-        new KnockoutScheduler(false),
-        nextPlayOff.value.players
-    )
+    flyerStore.addPlayOff(nextPlayOff.value, mainPhase.value)
 
     hideStartPlayOffModal()
 

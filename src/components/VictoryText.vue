@@ -3,6 +3,7 @@ import { computed, watch } from "vue"
 import { useSorted } from "@vueuse/core"
 
 import { useFixture } from "../composables/useFixture"
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePodium } from "../composables/usePodium"
 
@@ -17,14 +18,18 @@ const props = defineProps<{
 const flyerStore = useFlyerStore()
 
 const {
+    mainPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
     settings,
     getRound,
     getPlayerName,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(mainPhase.value)
 
 const {
     winner,
-} = usePodium(flyerStore.currentPhase)
+} = usePodium(mainPhase.value)
 
 const {
     fixture,

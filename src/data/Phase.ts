@@ -12,5 +12,4 @@ export interface Phase {
     startTime: number | null
     finishTime: number | null
     rounds: Round[]
-    playOffs: Phase[]
 }

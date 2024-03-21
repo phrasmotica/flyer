@@ -1,17 +1,19 @@
-import { computed } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
 import { useArray } from "../composables/useArray"
+import { useFlyer } from "../composables/useFlyer"
 import { useRankings } from "../composables/useRankings"
 
 import type { Fixture, Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
-import type { FlyerSettings } from "../data/FlyerSettings"
+import { createPlayOffSettings, type FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
+import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import type { Phase } from "../data/Phase"
 import type { Player } from "../data/Player"
+import type { PlayOff } from "../data/PlayOff"
 import type { Round } from "../data/Round"
 import type { Table } from "../data/Table"
 
@@ -26,10 +28,12 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     const [playerPool, addToPlayerPool,, clearPlayerPool] = useArray<string>()
 
     const {
+        currentPhase,
+    } = useFlyer(flyer.value)
+
+    const {
         winsRequiredReached,
     } = useRankings()
-
-    const currentPhase = computed(() => flyer.value?.phases[0] || null)
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -40,6 +44,13 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     }
 
     const createFlyer = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
+        return <Flyer>{
+            id: uuidv4(),
+            phases: [createPhase(settings, scheduler, players)],
+        }
+    }
+
+    const createPhase = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
         if (players.length <= 0) {
             // use existing player entries if we can, else generate new ones
             const actualPlayerNames = settings.playerNames.slice(0, settings.playerCount)
@@ -51,7 +62,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
 
         const actualTables = settings.tables.slice(0, settings.tableCount)
 
-        const firstPhase = <Phase>{
+        const phase = <Phase>{
             id: settings.playOffId || uuidv4(),
             order: 1,
             players,
@@ -60,16 +71,15 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
             startTime: Date.now(),
             finishTime: null,
             rounds: scheduler.generateFixtures(players),
-            playOffs: [],
         }
 
-        for (const r of firstPhase.rounds) {
+        for (const r of phase.rounds) {
             const walkovers = completeWalkovers(r, settings)
 
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
                 // with a bye in both slots
-                const didPropagate = tryPropagate(firstPhase, fixtureId, winnerId, false)
+                const didPropagate = tryPropagate(phase, fixtureId, winnerId, false)
                 if (!didPropagate) {
                     // add winner to random draw pool for next round
                     addToPlayerPool(winnerId)
@@ -77,10 +87,7 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
             }
         }
 
-        return <Flyer>{
-            id: uuidv4(),
-            phases: [firstPhase],
-        }
+        return phase
     }
 
     const completeWalkovers = (round: Round, settings: FlyerSettings) => {
@@ -129,7 +136,10 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     }
 
     const updateScores = (fixtureId: string, scores: Score[], finishFixture: boolean) => {
-        const phase = flyer.value!.phases[0]
+        const phase = currentPhase.value
+        if (!phase) {
+            return
+        }
 
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
@@ -140,9 +150,9 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
                     r.fixtures[idx].finishTime = Date.now()
 
                     if (winsRequiredReached(
-                        flyer.value!.phases.flatMap(p => p.rounds).flatMap(r => r.fixtures),
-                        flyer.value!.phases[0].players,
-                        flyer.value!.phases[0].settings)) {
+                        phase.rounds.flatMap(r => r.fixtures),
+                        phase.players,
+                        phase.settings)) {
                         cancelRemaining()
                         finish()
                         return
@@ -164,6 +174,9 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         if (!flyer.value) {
             return
         }
+
+        // LOW: create player pool from scratch here, rather than maintaining
+        // it in a ref
 
         const shuffledPlayerIds = shuffle(playerPool.value.slice())
 
@@ -230,9 +243,10 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     }
 
     const finish = () => {
-        if (flyer.value) {
-            if (!flyer.value.phases[0].finishTime) {
-                flyer.value.phases[0].finishTime = Date.now()
+        if (currentPhase.value) {
+            if (!currentPhase.value.finishTime) {
+                const phase = flyer.value!.phases.find(p => p.id === currentPhase.value!.id)!
+                phase.finishTime = Date.now()
             }
 
             return true
@@ -241,9 +255,15 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         return false
     }
 
-    const addPlayOff = (playOff: Phase) => {
-        if (flyer.value?.phases[0]) {
-            flyer.value.phases[0].playOffs = [...flyer.value.phases[0].playOffs, playOff]
+    const addPlayOff = (playOff: PlayOff, forPhase: Phase) => {
+        const playOffPhase = createPhase(
+            createPlayOffSettings(forPhase, playOff),
+            new KnockoutScheduler(false),
+            playOff.players
+        )
+
+        if (flyer.value) {
+            flyer.value.phases = [...flyer.value.phases, playOffPhase]
         }
     }
 
@@ -252,8 +272,6 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
     return {
         flyer,
         setFlyer,
-
-        currentPhase,
 
         start,
         startFixture,

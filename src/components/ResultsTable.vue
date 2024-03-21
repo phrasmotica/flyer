@@ -4,17 +4,17 @@ import { useI18n } from "vue-i18n"
 
 import WinningsList from "./WinningsList.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
 import { useStandings } from "../composables/useStandings"
 
-import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     isInProgress?: boolean
-    isPlayOff?: boolean
 }>()
 
 const { isNotSmallScreen } = useScreenSizes()
@@ -22,28 +22,33 @@ const { isNotSmallScreen } = useScreenSizes()
 const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
-const playOffStore = usePlayOffStore()
+
+// HIGH: simplify all of these composables
+const {
+    mainPhase,
+    playOffPhases,
+    currentPlayOffPhase,
+    phaseIsComplete,
+} = useFlyer(flyerStore.flyer)
 
 const {
     fixtures,
     players,
     settings,
-    playOffs: playOffFlyers,
-    playOffIsComplete,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(mainPhase.value)
 
 const {
     fixtures: playOffFixtures,
     players: playOffPlayers,
     settings: playOffSettings,
-} = usePhase(playOffStore.currentPhase)
+} = usePhase(currentPlayOffPhase.value)
 
 const {
     playOffs: completedPlayOffs,
     somePlayOffComplete,
     getPlayOffRank,
     processStandings,
-} = usePlayOffs(playOffFlyers.value)
+} = usePlayOffs(playOffPhases.value)
 
 const {
     tieBreakerName,
@@ -62,7 +67,7 @@ const {
 } = useStandings(playOffFixtures.value, playOffPlayers.value, playOffSettings.value)
 
 const overallStandings = computed(() => {
-    if (props.isPlayOff) {
+    if (currentPlayOffPhase.value) {
         return currentPlayOffStandings.value
     }
 
@@ -87,7 +92,7 @@ const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= pla
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
 const getPlayOffIndex = (playerId: string) => {
-    return playOffs.value.filter(x => !playOffIsComplete(x.id)).findIndex(p => p.players.some(x => x.id === playerId))
+    return playOffs.value.filter(x => !phaseIsComplete(x.id)).findIndex(p => p.players.some(x => x.id === playerId))
 }
 </script>
 
@@ -123,7 +128,7 @@ const getPlayOffIndex = (playerId: string) => {
 
     <!-- if a play-off needs to happen -->
     <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
-        <p v-for="p, i in playOffs.filter(x => !playOffIsComplete(x.id))" class="m-0">
+        <p v-for="p, i in playOffs.filter(x => !phaseIsComplete(x.id))" class="m-0">
             <em>
                 <sup class="text-xs">{{ i + 1 }}</sup>
                 these players must take part in the

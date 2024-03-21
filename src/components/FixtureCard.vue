@@ -2,6 +2,7 @@
 import ScoreCell from "./ScoreCell.vue"
 
 import { useFixture } from "../composables/useFixture"
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useSettings } from "../composables/useSettings"
 
@@ -23,10 +24,14 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
     settings,
     getPlayerName,
     getTableName,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(currentPhase.value)
 
 const {
     fixture,

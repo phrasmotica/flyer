@@ -4,25 +4,23 @@ import { ref } from "vue"
 import FixtureModal from "./FixtureModal.vue"
 import RoundSection from "./RoundSection.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useStringToggle } from "../composables/useStringToggle"
 
 import type { Fixture } from "../data/Fixture"
 
-import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { useFlyerStore } from "../stores/flyer"
 
-const props = defineProps<{
-    isPlayOff?: boolean
-}>()
+const flyerStore = useFlyerStore()
 
-const defaultFlyerStore = useFlyerStore()
-const playOffStore = usePlayOffStore()
-
-const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
+const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
 
 const {
     rounds,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(currentPhase.value)
 
 const selectedFixture = ref<Fixture>()
 const [highlightedFixtureId, highlight] = useStringToggle("")
@@ -50,6 +48,5 @@ const hideModal = () => {
     <FixtureModal
         :visible="showModal"
         :fixture="selectedFixture"
-        :isPlayOff="props.isPlayOff"
         @hide="hideModal" />
 </template>

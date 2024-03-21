@@ -6,28 +6,29 @@ import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
 import { useFixture } from "../composables/useFixture"
+import { useFlyer } from "../composables/useFlyer"
 import { FixtureStatus, usePhase } from "../composables/usePhase"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
 import type { Fixture, Score } from "../data/Fixture"
 
-import { useFlyerStore, usePlayOffStore } from "../stores/flyer"
+import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     visible: boolean
     fixture: Fixture | undefined
-    isPlayOff?: boolean
 }>()
 
 const emit = defineEmits<{
     hide: []
 }>()
 
-const defaultFlyerStore = useFlyerStore()
-const playOffStore = usePlayOffStore()
+const flyerStore = useFlyerStore()
 
-const flyerStore = props.isPlayOff ? playOffStore : defaultFlyerStore
+const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
 
 const {
     settings,
@@ -36,7 +37,7 @@ const {
     getTableName,
     getFixtureStatus,
     getFixtureHeader,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(currentPhase.value)
 
 const {
     fixture,

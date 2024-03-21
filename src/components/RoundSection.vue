@@ -4,6 +4,8 @@ import { useToggle } from "@vueuse/core"
 
 import FixtureCard from "./FixtureCard.vue"
 
+import { useFlyer } from "@/composables/useFlyer"
+import { usePhase } from "@/composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { RoundStatus, useRound } from "../composables/useRound"
 
@@ -22,15 +24,21 @@ const emit = defineEmits<{
     highlight: [fixtureId: string]
 }>()
 
+const flyerStore = useFlyerStore()
+
 const {
     currentPhase,
-} = useFlyerStore()
+} = useFlyer(flyerStore.flyer)
+
+const {
+    settings,
+} = usePhase(currentPhase.value)
 
 const {
     name,
     fixtures,
     status,
-} = useRound(props.round, currentPhase!.settings)
+} = useRound(props.round, settings.value)
 
 const {
     isHistoric,

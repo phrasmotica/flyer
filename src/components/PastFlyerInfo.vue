@@ -2,6 +2,7 @@
 import { watch } from "vue"
 import { useI18n } from "vue-i18n"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePodium } from "../composables/usePodium"
 import { useSettings } from "../composables/useSettings"
@@ -24,17 +25,21 @@ const emit = defineEmits<{
 }>()
 
 const {
+    mainPhase,
+    playOffPhases,
+} = useFlyer(props.flyer)
+
+const {
     flyer,
     fixtures,
     players,
     settings,
     durationMinutes,
-    playOffs,
-} = usePhase(props.flyer.phases[0])
+} = usePhase(mainPhase.value)
 
 const {
     winner,
-} = usePodium(props.flyer.phases[0])
+} = usePodium(mainPhase.value)
 
 const {
     formatName,
@@ -70,7 +75,7 @@ watch(props, () => {
                 Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.
 
                 <!-- LOW: add more play-off info -->
-                <span v-if="playOffs.length > 0">Required {{ playOffs.length }} play-off(s).</span>
+                <span v-if="playOffPhases.length > 0">Required {{ playOffPhases.length }} play-off(s).</span>
             </div>
 
             <div class="flex p-fluid gap-2 my-2">

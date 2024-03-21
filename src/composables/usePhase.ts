@@ -16,7 +16,6 @@ export const usePhase = (p: Phase | null) => {
     const tables = computed(() => phase.value?.tables || [])
     const settings = computed(() => phase.value?.settings || <FlyerSettings>{})
     const rounds = computed(() => phase.value?.rounds || [])
-    const playOffs = computed(() => phase.value?.playOffs || [])
 
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
@@ -150,8 +149,6 @@ export const usePhase = (p: Phase | null) => {
         return `${getRound(fixture?.id || "")?.name || "???"} - ${getFixtureDescription(fixture)}`
     }
 
-    const playOffIsComplete = (id: string) => playOffs.value.some(p => p.id === id)
-
     const computeDifference = () => differenceInSeconds(Date.now(), phase.value?.startTime || Date.now())
 
     const elapsedSeconds = ref(computeDifference())
@@ -192,7 +189,6 @@ export const usePhase = (p: Phase | null) => {
         players,
         settings,
         rounds,
-        playOffs,
 
         elapsedSeconds,
         hasStarted,
@@ -216,7 +212,6 @@ export const usePhase = (p: Phase | null) => {
         getRound,
         getFixtureStatus,
         getFixtureHeader,
-        playOffIsComplete,
         pauseClock,
         resumeClock,
     }

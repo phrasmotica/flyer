@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 import VictoryText from "./VictoryText.vue"
 import WinningsList from "./WinningsList.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePodium } from "../composables/usePodium"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -13,10 +14,14 @@ const { n } = useI18n()
 const flyerStore = useFlyerStore()
 
 const {
+    mainPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
     winner,
     winnerFixtures,
     moneyRecipients,
-} = usePodium(flyerStore.currentPhase)
+} = usePodium(mainPhase.value)
 </script>
 
 <template>

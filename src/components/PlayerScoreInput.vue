@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ScoreCell from "./ScoreCell.vue"
 
+import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 
 import type { Fixture } from "../data/Fixture"
@@ -20,9 +21,13 @@ const props = defineProps<{
 const flyerStore = useFlyerStore()
 
 const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
     settings,
     getPlayerName,
-} = usePhase(flyerStore.currentPhase)
+} = usePhase(currentPhase.value)
 </script>
 
 <template>
