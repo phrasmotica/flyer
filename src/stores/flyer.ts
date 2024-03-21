@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { useArray } from "../composables/useArray"
 import { useFlyer } from "../composables/useFlyer"
-import { useRankings } from "../composables/useRankings"
+import { usePhase } from "../composables/usePhase"
 
 import type { Fixture, Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
@@ -33,7 +33,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const {
         winsRequiredReached,
-    } = useRankings()
+    } = usePhase(currentPhase.value)
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -149,10 +149,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                 if (finishFixture) {
                     r.fixtures[idx].finishTime = Date.now()
 
-                    if (winsRequiredReached(
-                        phase.rounds.flatMap(r => r.fixtures),
-                        phase.players,
-                        phase.settings)) {
+                    if (winsRequiredReached.value) {
                         cancelRemaining()
                         finish()
                         return
