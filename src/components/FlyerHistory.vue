@@ -5,6 +5,8 @@ import { useRouter } from "vue-router"
 import ConfirmModal from "./ConfirmModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
 
+import { useFlyer } from "../composables/useFlyer"
+
 import type { Flyer } from "../data/Flyer"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -15,15 +17,19 @@ const flyerHistoryStore = useFlyerHistoryStore()
 
 const router = useRouter()
 
-const selectedFlyer = ref<Flyer | null>(null)
+const {
+    flyer,
+    mainPhase,
+} = useFlyer(null)
+
 const showDeleteModal = ref(false)
 
 const setSelectedFlyer = (f: Flyer) => {
-    if (selectedFlyer.value?.id !== f.id) {
-        selectedFlyer.value = f
+    if (flyer.value?.id !== f.id) {
+        flyer.value = f
     }
     else {
-        selectedFlyer.value = null
+        flyer.value = null
     }
 }
 
@@ -43,17 +49,16 @@ const confirmDelete = () => {
 }
 
 const deleteMessage = computed(() => {
-    if (!selectedFlyer.value) {
+    if (!mainPhase.value) {
         return ""
     }
 
-    // MEDIUM: use mainPhase from useFlyer() instead of phases[0]
-    return `Are you sure you want to delete ${selectedFlyer.value.phases[0].settings.name}? This cannot be undone!`
+    return `Are you sure you want to delete ${mainPhase.value.settings.name}? This cannot be undone!`
 })
 
 const deleteSelectedFlyer = () => {
-    if (selectedFlyer.value) {
-        flyerHistoryStore.deleteFlyer(selectedFlyer.value)
+    if (flyer.value) {
+        flyerHistoryStore.deleteFlyer(flyer.value)
 
         hideDeleteModal()
     }
@@ -63,7 +68,7 @@ const hideDeleteModal = () => {
     showDeleteModal.value = false
 }
 
-const isSelected = (f: Flyer) => selectedFlyer.value?.id === f.id
+const isSelected = (f: Flyer) => flyer.value?.id === f.id
 </script>
 
 <template>
