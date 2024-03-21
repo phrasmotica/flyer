@@ -25,7 +25,11 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     })
 
-    const [playerPool, addToPlayerPool,, clearPlayerPool] = useArray<string>()
+    const {
+        arr: playerPool,
+        push: addToPlayerPool,
+        clear: clearPlayerPool,
+    } = useArray<string>()
 
     const {
         currentPhase, // HIGH: figure out why this is null until we reload the play page after beginning the flyer

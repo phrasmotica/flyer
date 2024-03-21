@@ -17,10 +17,18 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
         settings,
     } = useSettings(s)
 
-    const [scores,, setScore] = useArray(fixture.value?.scores.map(s => s.score))
+    const {
+        arr: scores,
+        set: setScore,
+    } = useArray(fixture.value?.scores.map(s => s.score))
+
     const uniqueScores = useArrayUnique(scores)
 
-    const [runouts,, setRunouts] = useArray(fixture.value?.scores.map(s => s.runouts))
+    const {
+        arr: runouts,
+        set: setRunouts,
+    } = useArray(fixture.value?.scores.map(s => s.runouts))
+
     const comment = ref(fixture.value?.comment || "")
 
     const startTime = computed(() => fixture.value?.startTime)

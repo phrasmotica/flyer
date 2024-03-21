@@ -15,15 +15,10 @@ export const useArray = <T>(initial?: T[]) => {
         arr.value = []
     }
 
-    return <[
-        Ref<T[]>,
-        (value: T) => void,
-        (value: T, index: number) => void,
-        () => void,
-    ]>[
+    return {
         arr,
         push,
         set,
         clear,
-    ]
+    }
 }
