@@ -109,6 +109,7 @@ onUnmounted(() => {
 })
 </script>
 
+<!-- HIGH: consolidate this logic into PlayView.vue -->
 <template>
     <PageTemplate>
         <template #content>
