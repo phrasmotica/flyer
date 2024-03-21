@@ -2,7 +2,6 @@ import { computed, ref } from "vue"
 
 import { useRankings } from "./useRankings"
 
-import type { FlyerSettings } from "../data/FlyerSettings"
 import type { Phase } from "../data/Phase"
 import type { PlayerRecord } from "../data/PlayerRecord"
 
@@ -13,41 +12,27 @@ export const usePlayOffs = (p: Phase[]) => {
         computeStandings,
     } = useRankings()
 
+    const completedPlayOffs = computed(() => playOffs.value.filter(p => p.startTime && p.finishTime))
+
     const standings = computed(() => playOffs.value.map(p => computeStandings(
-        getFixtures(p.id),
-        getPlayers(p.id),
-        getSettings(p.id),
+        p.rounds.flatMap(r => r.fixtures),
+        p.players,
+        p.settings,
     )))
 
-    const somePlayOffComplete = computed(() => playOffs.value.length > 0)
-
-    const getPlayers = (id: string) => {
-        const playOff = playOffs.value.find(x => x.id === id)
-        return playOff?.players || []
-    }
-
-    const getFixtures = (id: string) => {
-        const playOff = playOffs.value.find(x => x.id === id)
-        return playOff?.rounds.flatMap(r => r.fixtures) || []
-    }
-
-    const getSettings = (id: string) => {
-        const playOff = playOffs.value.find(x => x.id === id)
-        return playOff?.settings || <FlyerSettings>{}
-    }
-
-    const findPlayOff = (playerId: string) => {
-        return playOffs.value.find(p => p.players.some(x => x.id === playerId))
+    const findPlayOffIndex = (playerId: string) => {
+        return playOffs.value.findIndex(p => p.players.some(x => x.id === playerId))
     }
 
     const getPlayOffRank = (playerId: string) => {
-        const playOff = findPlayOff(playerId)
-        if (!playOff) {
+        const playOffIdx = findPlayOffIndex(playerId)
+        if (playOffIdx < 0) {
             return null
         }
 
-        const standings = computeStandings(getFixtures(playOff.id), getPlayers(playOff.id), getSettings(playOff.id))
-        const idx = standings.findIndex(d => d.playerId === playerId)
+        const relevantStandings = standings.value[playOffIdx]
+
+        const idx = relevantStandings.findIndex(d => d.playerId === playerId)
         return idx >= 0 ? idx + 1 : null
     }
 
@@ -71,10 +56,8 @@ export const usePlayOffs = (p: Phase[]) => {
     }
 
     return {
-        playOffs,
-
         standings,
-        somePlayOffComplete,
+        completedPlayOffs,
 
         getPlayOffRank,
         processStandings,

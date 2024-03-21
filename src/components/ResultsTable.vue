@@ -23,7 +23,7 @@ const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
-// HIGH: simplify all of these composables
+// MEDIUM: simplify all of these composables
 const {
     mainPhase,
     playOffPhases,
@@ -44,8 +44,7 @@ const {
 } = usePhase(currentPlayOffPhase.value)
 
 const {
-    playOffs: completedPlayOffs,
-    somePlayOffComplete,
+    completedPlayOffs,
     getPlayOffRank,
     processStandings,
 } = usePlayOffs(playOffPhases.value)
@@ -114,7 +113,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column v-if="!isWinnerStaysOn" field="losses" header="L"></Column>
         <Column v-if="!isWinnerStaysOn" field="diff" header="+/-"></Column>
         <Column v-if="isNotSmallScreen || isWinnerStaysOn" field="runouts" header="R/O"></Column>
-        <Column v-if="somePlayOffComplete" header="P/O">
+        <Column v-if="completedPlayOffs.length > 0" header="P/O">
             <template #body="slotData">
                 {{ getPlayOffRank(slotData.data.playerId) || "-" }}
             </template>
