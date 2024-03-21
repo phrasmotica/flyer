@@ -2,20 +2,14 @@ import { computed, ref, watch } from "vue"
 import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
-import { useRankings } from "./useRankings"
-
 import type { Fixture } from "../data/Fixture"
-import { Format, type FlyerSettings } from "../data/FlyerSettings"
+import { type FlyerSettings } from "../data/FlyerSettings"
 import type { Phase } from "../data/Phase"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
 export const usePhase = (p: Phase | null) => {
     const phase = ref(p)
-
-    const {
-        computeStandings,
-    } = useRankings()
 
     const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
     const players = computed(() => phase.value?.players || [])
@@ -76,15 +70,6 @@ export const usePhase = (p: Phase | null) => {
     const nextFreeTable = computed(() => {
         const freeTables = tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime))
         return freeTables.at(0)
-    })
-
-    const winsRequiredReached = computed(() => {
-        if (settings.value.format !== Format.WinnerStaysOn) {
-            return false
-        }
-
-        const standings = computeStandings(fixtures.value, players.value, settings.value)
-        return standings[0].wins >= settings.value.winsRequired
     })
 
     const canStartFixture = (fixture: Fixture | undefined) => {
@@ -219,7 +204,6 @@ export const usePhase = (p: Phase | null) => {
         durationSeconds,
         clockDisplay,
         nextFreeTable,
-        winsRequiredReached,
 
         canStartFixture,
         isBusy,

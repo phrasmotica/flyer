@@ -127,7 +127,11 @@ const confirmFinish = () => {
 }
 
 const finish = () => {
-    const success = flyerStore.finish()
+    if (!currentPhase.value) {
+        throw "No phase to finish!"
+    }
+
+    const success = flyerStore.finish(currentPhase.value)
     if (!success) {
         throw "Failed to finish phase!"
     }

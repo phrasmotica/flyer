@@ -3,12 +3,11 @@ import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
 import { useArray } from "../composables/useArray"
-import { useFlyer } from "../composables/useFlyer"
-import { usePhase } from "../composables/usePhase"
+import { useRankings } from "../composables/useRankings"
 
 import type { Fixture, Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
-import { createPlayOffSettings, type FlyerSettings } from "../data/FlyerSettings"
+import { createPlayOffSettings, Format, type FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import type { Phase } from "../data/Phase"
@@ -32,12 +31,8 @@ export const useFlyerStore = defineStore("flyer", () => {
     } = useArray<string>()
 
     const {
-        currentPhase, // HIGH: figure out why this is null until we reload the play page after beginning the flyer
-    } = useFlyer(flyer.value)
-
-    const {
-        winsRequiredReached,
-    } = usePhase(currentPhase.value)
+        computeStandings,
+    } = useRankings()
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -139,12 +134,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateScores = (fixtureId: string, scores: Score[], finishFixture: boolean) => {
-        const phase = currentPhase.value
-        if (!phase) {
-            return
-        }
-
+    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
@@ -153,9 +143,9 @@ export const useFlyerStore = defineStore("flyer", () => {
                 if (finishFixture) {
                     r.fixtures[idx].finishTime = Date.now()
 
-                    if (winsRequiredReached.value) {
+                    if (winsRequiredReached(phase)) {
                         cancelRemaining()
-                        finish()
+                        finish(phase)
                         return
                     }
 
@@ -169,6 +159,20 @@ export const useFlyerStore = defineStore("flyer", () => {
                 }
             }
         }
+    }
+
+    const winsRequiredReached = (phase: Phase) => {
+        if (phase.settings.format !== Format.WinnerStaysOn) {
+            return false
+        }
+
+        const standings = computeStandings(
+            phase.rounds.flatMap(r => r.fixtures),
+            phase.players,
+            phase.settings
+        )
+
+        return standings[0].wins >= phase.settings.winsRequired
     }
 
     const generateNextRound = () => {
@@ -243,17 +247,17 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const finish = () => {
-        if (currentPhase.value) {
-            if (!currentPhase.value.finishTime) {
-                const phase = flyer.value!.phases.find(p => p.id === currentPhase.value!.id)!
-                phase.finishTime = Date.now()
-            }
-
-            return true
+    const finish = (p: Phase) => {
+        const phase = flyer.value!.phases.find(x => x.id === p.id)
+        if (!phase) {
+            return false
         }
 
-        return false
+        if (!phase.finishTime) {
+            phase.finishTime = Date.now()
+        }
+
+        return true
     }
 
     const addPlayOff = (playOff: PlayOff, forPhase: Phase) => {

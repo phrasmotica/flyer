@@ -96,7 +96,7 @@ const startFixture = () => {
 }
 
 const updateScores = (finish: boolean) => {
-    if (!fixture.value) {
+    if (!fixture.value || !currentPhase.value) {
         return
     }
 
@@ -109,7 +109,7 @@ const updateScores = (finish: boolean) => {
         isBye: false,
     })
 
-    flyerStore.updateScores(fixture.value.id, newScores, finish)
+    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
 
     hide()
 }
