@@ -17,8 +17,8 @@ import type { PlayOff } from "../data/PlayOff"
 import type { Round } from "../data/Round"
 import type { Table } from "../data/Table"
 
-const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () => {
-    const flyer = useStorage<Flyer | null>(name, null, localStorage, {
+export const useFlyerStore = defineStore("flyer", () => {
+    const flyer = useStorage<Flyer | null>("flyer", null, localStorage, {
         serializer: {
             read: v => JSON.parse(v) as Flyer,
             write: v => JSON.stringify(v),
@@ -284,7 +284,3 @@ const useFlyerStoreInternal = (name: string = "flyer") => defineStore(name, () =
         clear,
     }
 })
-
-export const useFlyerStore = useFlyerStoreInternal()
-
-export const usePlayOffStore = useFlyerStoreInternal("playOff")
