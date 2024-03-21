@@ -11,12 +11,12 @@ export const useFlyer = (f: Flyer | null) => {
 
     const currentPhase = computed(() => {
         const newestPhases = [...flyer.value?.phases || []].reverse()
-        return newestPhases.find(p => p.startTime && !p.finishTime) || null
+        return newestPhases.find(p => p.startTime) || null
     })
 
     const currentPlayOffPhase = computed(() => {
         const newestPhases = [...playOffPhases.value].reverse()
-        return newestPhases.find(p => p.startTime && !p.finishTime) || null
+        return newestPhases.find(p => p.startTime) || null
     })
 
     const phaseIsComplete = (id: string) => {
