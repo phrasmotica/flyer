@@ -10,7 +10,7 @@ import type { Phase } from "../data/Phase"
 // accepts null (see ResultsTable.vue)
 export const usePodium = (p: Phase | null) => {
     const {
-        flyer,
+        phase,
         fixtures,
         players,
         settings,
@@ -25,11 +25,11 @@ export const usePodium = (p: Phase | null) => {
     } = useSettings(settings.value)
 
     const finalists = computed<[string, string]>(() => {
-        if (!flyer.value) {
+        if (!phase.value) {
             return ["", ""]
         }
 
-        if (!flyer.value.startTime || !flyer.value.finishTime) {
+        if (!phase.value.startTime || !phase.value.finishTime) {
             return ["", ""]
         }
 

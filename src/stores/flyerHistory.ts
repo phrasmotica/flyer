@@ -1,7 +1,6 @@
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
-import type { Fixture } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
 
 export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
@@ -24,27 +23,11 @@ export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
         }
     }
 
-    const getWinner = (flyer: Flyer) => {
-        // MEDIUM: use mainPhase from useFlyer() instead of phases[0]
-        const finalRound = flyer.phases[0].rounds[flyer.phases[0].rounds.length - 1]
-        if (finalRound) {
-            const final = finalRound.fixtures[finalRound.fixtures.length - 1]
-            const id = getFixtureWinner(final).playerId
-            return flyer.phases[0].players.find(p => p.id === id) || null
-        }
-
-        return null
-    }
-
-    const getFixtureWinner = (f: Fixture) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
-
     return {
         pastFlyers,
 
         add,
         importFlyers,
         deleteFlyer,
-
-        getWinner,
     }
 })

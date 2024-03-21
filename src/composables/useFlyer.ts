@@ -25,10 +25,13 @@ export const useFlyer = (f: Flyer | null) => {
     }
 
     return {
+        flyer,
+
         playOffPhases,
         mainPhase,
         currentPhase,
         currentPlayOffPhase,
+
         phaseIsComplete,
     }
 }

@@ -30,7 +30,7 @@ const {
 } = useFlyer(props.flyer)
 
 const {
-    flyer,
+    phase,
     fixtures,
     players,
     settings,
@@ -50,12 +50,12 @@ const {
 } = useStandings(fixtures.value, players.value, settings.value)
 
 watch(props, () => {
-    flyer.value = props.flyer.phases[0]
+    phase.value = props.flyer.phases[0]
 })
 </script>
 
 <template>
-    <div v-if="flyer">
+    <div v-if="phase">
         <div
             class="flex justify-content-between cursor-pointer mt-1 pt-1 mb-1"
             :class="[props.index > 0 && 'border-gray-200 border-top-1']"
@@ -65,7 +65,7 @@ watch(props, () => {
             </div>
 
             <div class="flex-shrink-0" :class="[props.showDetails && 'font-bold']">
-                {{ d(flyer.startTime!, "long") }}
+                {{ d(phase.startTime!, "long") }}
             </div>
         </div>
 

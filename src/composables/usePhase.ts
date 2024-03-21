@@ -198,7 +198,7 @@ export const usePhase = (p: Phase | null) => {
     }
 
     return {
-        flyer: phase,
+        phase,
 
         fixtures,
         players,

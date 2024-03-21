@@ -25,12 +25,12 @@ const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
 
 const {
-    phaseIsComplete,
+    flyer,
     mainPhase,
+    phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
-    flyer,
     players,
     fixtures,
     settings,
@@ -92,11 +92,6 @@ const alreadySaved = computed(() => {
 })
 
 const startPlayOff = () => {
-    if (!flyer.value) {
-        console.debug("Cannot start play-off for no flyer!")
-        return
-    }
-
     if (!nextPlayOff.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
