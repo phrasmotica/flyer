@@ -25,6 +25,7 @@ export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
     }
 
     const getWinner = (flyer: Flyer) => {
+        // MEDIUM: use mainPhase from useFlyer() instead of phases[0]
         const finalRound = flyer.phases[0].rounds[flyer.phases[0].rounds.length - 1]
         if (finalRound) {
             const final = finalRound.fixtures[finalRound.fixtures.length - 1]

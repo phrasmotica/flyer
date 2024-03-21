@@ -47,6 +47,7 @@ const deleteMessage = computed(() => {
         return ""
     }
 
+    // MEDIUM: use mainPhase from useFlyer() instead of phases[0]
     return `Are you sure you want to delete ${selectedFlyer.value.phases[0].settings.name}? This cannot be undone!`
 })
 
