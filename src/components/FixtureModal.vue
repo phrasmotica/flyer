@@ -100,7 +100,7 @@ const updateScores = (finish: boolean) => {
         return
     }
 
-    flyerStore.updateComment(fixture.value.id, comment.value)
+    flyerStore.updateComment(currentPhase.value, fixture.value.id, comment.value)
 
     const newScores = players.value.map((id, i) => <Score>{
         playerId: id,

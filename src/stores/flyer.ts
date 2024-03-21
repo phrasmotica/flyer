@@ -125,8 +125,13 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateComment = (fixtureId: string, comment: string) => {
-        for (const r of flyer.value!.phases.flatMap(p => p.rounds)) {
+    const updateComment = (p: Phase, fixtureId: string, comment: string) => {
+        const phase = flyer.value!.phases.find(x => x.id === p.id)
+        if (!phase) {
+            return
+        }
+
+        for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
                 r.fixtures[idx].comment = comment
