@@ -102,7 +102,7 @@ const startPlayOff = () => {
     hideStartPlayOffModal()
 
     router.push({
-        name: "playOff",
+        name: "play",
     })
 }
 

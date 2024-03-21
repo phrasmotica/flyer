@@ -28,7 +28,13 @@ const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
+    currentPhase,
+    currentPlayOffPhase,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    settings: mainPhaseSettings,
+} = usePhase(mainPhase.value)
 
 const {
     settings,
@@ -42,7 +48,7 @@ const {
     readyForNextRound,
     pauseClock,
     resumeClock,
-} = usePhase(mainPhase.value)
+} = usePhase(currentPhase.value)
 
 const {
     queryParams,
@@ -83,6 +89,14 @@ onMounted(() => {
     }
 })
 
+const header = computed(() => {
+    if (currentPlayOffPhase.value) {
+        return mainPhaseSettings.value.name + ": " + settings.value.name
+    }
+
+    return settings.value.name
+})
+
 const generateNextRoundLabel = computed(() => {
     if (nextRound.value) {
         return "Generate " + nextRound.value.name
@@ -115,7 +129,7 @@ const confirmFinish = () => {
 const finish = () => {
     const success = flyerStore.finish()
     if (!success) {
-        throw "Failed to finish flyer!"
+        throw "Failed to finish phase!"
     }
 
     hideFinishModal()
@@ -157,7 +171,7 @@ onUnmounted(() => {
     <PageTemplate>
         <template #content>
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
-                <h1>{{ settings.name }}</h1>
+                <h1>{{ header }}</h1>
 
                 <Clock :elapsedSeconds="clockDisplay" />
             </div>
