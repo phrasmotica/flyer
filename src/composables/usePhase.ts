@@ -40,7 +40,7 @@ export const usePhase = (p: Phase | null) => {
             return startTime1 - startTime2
         })
 
-        return startedRounds[0]
+        return startedRounds[0] || rounds.value[0]
     })
 
     const nextRound = computed(() => {
