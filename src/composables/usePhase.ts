@@ -83,7 +83,10 @@ export const usePhase = (p: Phase | null) => {
 
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
 
-    const totalCost = computed(() => costPerHour.value * elapsedSeconds.value / 3600)
+    const totalCost = computed(() => {
+        const durationHours = (durationSeconds.value || elapsedSeconds.value) / 3600
+        return costPerHour.value * durationHours
+    })
 
     const nextFreeTable = computed(() => {
         const freeTables = tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime))
