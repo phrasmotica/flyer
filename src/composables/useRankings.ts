@@ -181,6 +181,7 @@ export const useRankings = () => {
 
     return {
         getWinner,
+        getLoser,
         computeStandings,
         computePlayOffs,
     }

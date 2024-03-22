@@ -25,6 +25,8 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const {
         computeStandings,
+        getWinner,
+        getLoser,
     } = useRankings()
 
     const setFlyer = (f: Flyer) => {
@@ -143,8 +145,15 @@ export const useFlyerStore = defineStore("flyer", () => {
                         return
                     }
 
-                    tryPropagate(phase, fixtureId, getWinner(r.fixtures[idx]).playerId, false)
-                    tryPropagate(phase, fixtureId, getLoser(r.fixtures[idx]).playerId, true)
+                    const winnerId = getWinner(r.fixtures[idx])
+                    const loserId = getLoser(r.fixtures[idx])
+
+                    if (!winnerId || !loserId) {
+                        throw `Could not compute winner or loser of finished fixture ${fixtureId}!`
+                    }
+
+                    tryPropagate(phase, fixtureId, winnerId, false)
+                    tryPropagate(phase, fixtureId, loserId, true)
                 }
             }
         }
@@ -202,10 +211,6 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         return arr
     }
-
-    const getWinner = (f: Fixture) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
-
-    const getLoser = (f: Fixture) => f.scores.reduce((s, t) => s.score < t.score ? s : t)
 
     const tryPropagate = (phase: Phase, fixtureId: string, playerId: string, takeLoser: boolean) => {
         for (const f of phase.rounds.flatMap(r => r.fixtures)) {

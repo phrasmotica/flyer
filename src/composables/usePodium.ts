@@ -1,9 +1,9 @@
 import { computed } from "vue"
 
 import { usePhase } from "./usePhase"
+import { useRankings } from "./useRankings"
 import { useSettings } from "./useSettings"
 
-import type { Fixture } from "../data/Fixture"
 import type { Phase } from "../data/Phase"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
@@ -16,6 +16,10 @@ export const usePodium = (p: Phase | null) => {
         settings,
         rounds,
     } = usePhase(p)
+
+    const {
+        getWinner,
+    } = useRankings()
 
     const {
         isRoundRobin,
@@ -43,7 +47,11 @@ export const usePodium = (p: Phase | null) => {
         }
 
         const final = finalRound.fixtures[finalRound.fixtures.length - 1]
-        const winnerId = getWinner(final).playerId
+
+        const winnerId = getWinner(final)
+        if (!winnerId) {
+            return ["", ""]
+        }
 
         return [
             winnerId,
@@ -71,7 +79,7 @@ export const usePodium = (p: Phase | null) => {
         let entrants = [...players.value]
 
         for (const r of rounds.value) {
-            const winners = r.fixtures.map(f => getWinner(f).playerId)
+            const winners = r.fixtures.map(f => getWinner(f) || "")
             const losers = entrants.filter(e => !winners.includes(e.id)).map(l => l.id)
 
             losersByRound.push({
@@ -131,8 +139,6 @@ export const usePodium = (p: Phase | null) => {
 
         return recipients
     })
-
-    const getWinner = (f: Fixture) => f.scores.reduce((s, t) => s.score > t.score ? s : t)
 
     return {
         winner,
