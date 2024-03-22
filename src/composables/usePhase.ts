@@ -39,8 +39,8 @@ export const usePhase = (p: Phase | null) => {
     })
 
     const nextRound = computed(() => {
-        // BUG: don't rely on the indexes being consecutive
-        return rounds.value.find(r => r.index === currentRound.value.index + 1)
+        const currentRoundIdx = rounds.value.findIndex(r => r.index === currentRound.value.index)
+        return rounds.value[currentRoundIdx + 1]
     })
 
     const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
