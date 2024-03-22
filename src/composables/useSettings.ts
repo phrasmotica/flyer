@@ -128,11 +128,13 @@ export const useSettings = (s: FlyerSettings) => {
         throw `Invalid flyer format ${settings.value.format}!`
     })
 
-    const estimatedCost = computed(() => {
+    const costPerHour = computed(() => {
         const tablesToUse = settings.value.tables.slice(0, settings.value.tableCount)
         const meanCostPerHour = tablesToUse.map(t => t.costPerHour).reduce((a, b) => a + b, 0) / tablesToUse.length
-        return meanCostPerHour * settings.value.tableCount * estimatedDuration.value / 60
+        return meanCostPerHour * settings.value.tableCount
     })
+
+    const estimatedCost = computed(() => costPerHour.value * estimatedDuration.value / 60)
 
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
 
@@ -223,6 +225,7 @@ export const useSettings = (s: FlyerSettings) => {
 
         durationPerFrame,
         estimatedDuration,
+        costPerHour,
         estimatedCost,
 
         prizePot,
