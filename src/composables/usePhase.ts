@@ -3,6 +3,7 @@ import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
 import { RoundStatus } from "./useRound"
+import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
 import { type FlyerSettings } from "../data/FlyerSettings"
@@ -18,6 +19,10 @@ export const usePhase = (p: Phase | null) => {
     const tables = computed(() => phase.value?.tables || [])
     const settings = computed(() => phase.value?.settings || <FlyerSettings>{})
     const rounds = computed(() => phase.value?.rounds || [])
+
+    const {
+        costPerHour,
+    } = useSettings(settings.value)
 
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
@@ -77,6 +82,8 @@ export const usePhase = (p: Phase | null) => {
     })
 
     const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
+
+    const totalCost = computed(() => costPerHour.value * elapsedSeconds.value / 3600)
 
     const nextFreeTable = computed(() => {
         const freeTables = tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime))
@@ -154,7 +161,7 @@ export const usePhase = (p: Phase | null) => {
 
     const updateClock = () => {
         const newValue = computeDifference()
-        console.debug("FlyerClock " + settings.value.name + ": " + phase.value?.startTime + " + " + newValue)
+        console.debug("PhaseClock " + settings.value.name + ": " + phase.value?.startTime + " + " + newValue)
         elapsedSeconds.value = newValue
     }
 
@@ -202,6 +209,7 @@ export const usePhase = (p: Phase | null) => {
         durationMinutes,
         durationSeconds,
         clockDisplay,
+        totalCost,
         nextFreeTable,
 
         canStartFixture,

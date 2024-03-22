@@ -1,9 +1,6 @@
 import { computed, ref } from "vue"
-import { differenceInSeconds } from "date-fns"
 
-import { usePhase } from "./usePhase"
 import { usePlayOffs } from "./usePlayOffs"
-import { useSettings } from "./useSettings"
 import { useStandings } from "./useStandings"
 
 import type { Flyer } from "../data/Flyer"
@@ -14,14 +11,6 @@ export const useFlyer = (f: Flyer | null) => {
     const mainPhase = computed(() => flyer.value?.phases[0] || null)
 
     const playOffPhases = computed(() => flyer.value?.phases.slice(1) || [])
-
-    const {
-        settings,
-    } = usePhase(mainPhase.value)
-
-    const {
-        costPerHour,
-    } = useSettings(settings.value)
 
     const {
         completedPlayOffs,
@@ -58,19 +47,6 @@ export const useFlyer = (f: Flyer | null) => {
         return processStandings(standings.value)
     })
 
-    const totalDurationSeconds = computed(() => {
-        if (!mainPhase.value?.startTime) {
-            return 0
-        }
-
-        return differenceInSeconds(mainPhase.value.finishTime || Date.now(), mainPhase.value.startTime)
-    })
-
-    const totalCost = computed(() => {
-        const durationHours = totalDurationSeconds.value / 3600
-        return costPerHour.value * durationHours
-    })
-
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
         return !!phase?.startTime && !!phase.finishTime
@@ -90,7 +66,6 @@ export const useFlyer = (f: Flyer | null) => {
         moneyRecipients,
 
         overallStandings,
-        totalCost,
 
         getPlayOffRank,
         phaseIsComplete,

@@ -15,11 +15,11 @@ const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
-    totalCost,
 } = useFlyer(flyerStore.flyer)
 
 const {
     players,
+    totalCost,
 } = usePhase(mainPhase.value)
 
 const lightsCost = ref(totalCost.value)
