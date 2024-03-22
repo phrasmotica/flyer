@@ -2,6 +2,7 @@
 import { computed, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
+import PlayerBreakInput from "./PlayerBreakInput.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
@@ -47,6 +48,7 @@ const {
 
 const {
     fixture,
+    breakerId,
     scores,
     runouts,
     comment,
@@ -70,6 +72,7 @@ const { blurActive } = useTweaks()
 
 const visible = ref(props.visible)
 
+const initialBreakerId = ref(breakerId.value)
 const initialScores = ref(scores.value)
 const initialRunouts = ref(runouts.value)
 const initialComment = ref(comment.value)
@@ -96,7 +99,7 @@ const startFixture = () => {
         return
     }
 
-    flyerStore.startFixture(fixture.value.id, nextFreeTable.value.id)
+    flyerStore.startFixture(fixture.value.id, nextFreeTable.value.id, breakerId.value)
 
     resumeClock()
 }
@@ -142,6 +145,8 @@ const ranOut = computed(() => {
     return ""
 })
 
+const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.value, currentRoundStatus.value))
+
 const startButtonText = computed(() => {
     const status = getFixtureStatus(fixture.value, currentRoundStatus.value)
 
@@ -179,12 +184,14 @@ const hide = () => {
 }
 
 const setInitialPlayerScores = (fixture: Fixture | undefined) => {
+    initialBreakerId.value = fixture?.breakerId || ""
     initialScores.value = fixture?.scores.map(f => f.score) || []
     initialRunouts.value = fixture?.scores.map(f => f.runouts) || []
     initialComment.value = fixture?.comment || ""
 }
 
 const resetPlayerScores = () => {
+    breakerId.value = initialBreakerId.value
     scores.value = initialScores.value
     runouts.value = initialRunouts.value
     comment.value = initialComment.value
@@ -245,13 +252,24 @@ const resetPlayerScores = () => {
                 </p>
             </div>
         </div>
+        <div v-else>
+            <div class="grid m-0">
+                <PlayerBreakInput
+                    v-for="p in players"
+                    class="col-6"
+                    :fixture="fixture"
+                    :playerId="p"
+                    :breakerId="breakerId"
+                    @setBreakerId="breakerId = p" />
+            </div>
+        </div>
 
         <div class="p-fluid">
             <Button v-if="!hasStarted"
                 class="mb-2"
                 type="button"
                 :label="startButtonText"
-                :disabled="!canStartFixture(fixture, currentRoundStatus)"
+                :disabled="!canStart"
                 @click="startFixture" />
 
             <div v-if="isInProgress" class="flex gap-2 mb-2">

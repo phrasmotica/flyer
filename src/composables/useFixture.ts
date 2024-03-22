@@ -17,6 +17,8 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
         settings,
     } = useSettings(s)
 
+    const breakerId = ref("")
+
     const {
         arr: scores,
         set: setScore,
@@ -143,6 +145,7 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
 
     return {
         fixture,
+        breakerId,
         scores,
         runouts,
         comment,

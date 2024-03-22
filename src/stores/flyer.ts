@@ -106,12 +106,13 @@ export const useFlyerStore = defineStore("flyer", () => {
         return ids
     }
 
-    const startFixture = (id: string, tableId: string) => {
+    const startFixture = (id: string, tableId: string, breakerId: string) => {
         for (const r of flyer.value!.phases.flatMap(p => p.rounds)) {
             const idx = r.fixtures.findIndex(f => f.id === id)
             if (idx >= 0) {
                 r.fixtures[idx].startTime = Date.now()
                 r.fixtures[idx].tableId = tableId
+                r.fixtures[idx].breakerId = breakerId
             }
         }
     }
