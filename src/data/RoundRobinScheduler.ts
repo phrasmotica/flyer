@@ -158,6 +158,7 @@ export class RoundRobinScheduler implements IScheduler {
                 isBye: false,
             })),
             tableId: "",
+            breakerId: "",
             startTime: null,
             finishTime: null,
             cancelledTime: null,

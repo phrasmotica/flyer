@@ -171,6 +171,7 @@ export class KnockoutScheduler implements IScheduler {
                 isBye: false,
             })),
             tableId: "",
+            breakerId: "",
             startTime: null,
             finishTime: null,
             comment: "",
