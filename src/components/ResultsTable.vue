@@ -9,7 +9,6 @@ import { usePhase } from "../composables/usePhase"
 import { usePlayOffs } from "../composables/usePlayOffs"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
-import { useStandings } from "../composables/useStandings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -27,51 +26,26 @@ const flyerStore = useFlyerStore()
 const {
     mainPhase,
     playOffPhases,
-    currentPlayOffPhase,
+    overallStandings,
+    playOffs,
+    requiresPlayOff,
+    moneyRecipients,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
-    fixtures,
-    players,
     settings,
 } = usePhase(mainPhase.value)
 
 const {
-    fixtures: playOffFixtures,
-    players: playOffPlayers,
-    settings: playOffSettings,
-} = usePhase(currentPlayOffPhase.value)
-
-const {
     completedPlayOffs,
     getPlayOffRank,
-    processStandings,
 } = usePlayOffs(playOffPhases.value)
 
 const {
     tieBreakerName,
     isWinnerStaysOn,
 } = useSettings(settings.value)
-
-const {
-    standings,
-    playOffs,
-    requiresPlayOff,
-    moneyRecipients,
-} = useStandings(fixtures.value, players.value, settings.value)
-
-const {
-    standings: currentPlayOffStandings,
-} = useStandings(playOffFixtures.value, playOffPlayers.value, playOffSettings.value)
-
-const overallStandings = computed(() => {
-    if (currentPlayOffPhase.value) {
-        return currentPlayOffStandings.value
-    }
-
-    return processStandings(standings.value)
-})
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {

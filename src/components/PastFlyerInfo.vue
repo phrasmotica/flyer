@@ -31,7 +31,6 @@ const {
 
 const {
     phase,
-    fixtures,
     players,
     settings,
     durationMinutes,
@@ -47,7 +46,7 @@ const {
 
 const {
     firstPlace,
-} = useStandings(fixtures.value, players.value, settings.value)
+} = useStandings(mainPhase.value)
 
 watch(props, () => {
     phase.value = props.flyer.phases[0]

@@ -1,5 +1,8 @@
 import { computed, ref } from "vue"
 
+import { usePlayOffs } from "./usePlayOffs"
+import { useStandings } from "./useStandings"
+
 import type { Flyer } from "../data/Flyer"
 
 export const useFlyer = (f: Flyer | null) => {
@@ -9,6 +12,17 @@ export const useFlyer = (f: Flyer | null) => {
 
     const playOffPhases = computed(() => flyer.value?.phases.slice(1) || [])
 
+    const {
+        processStandings,
+    } = usePlayOffs(playOffPhases.value)
+
+    const {
+        standings,
+        playOffs,
+        requiresPlayOff,
+        moneyRecipients,
+    } = useStandings(mainPhase.value)
+
     const currentPhase = computed(() => {
         const newestPhases = [...flyer.value?.phases || []].reverse()
         return newestPhases.find(p => p.startTime) || null
@@ -17,6 +31,18 @@ export const useFlyer = (f: Flyer | null) => {
     const currentPlayOffPhase = computed(() => {
         const newestPhases = [...playOffPhases.value].reverse()
         return newestPhases.find(p => p.startTime) || null
+    })
+
+    const {
+        standings: currentPlayOffStandings,
+    } = useStandings(currentPlayOffPhase.value)
+
+    const overallStandings = computed(() => {
+        if (currentPlayOffPhase.value) {
+            return currentPlayOffStandings.value
+        }
+
+        return processStandings(standings.value)
     })
 
     const phaseIsComplete = (id: string) => {
@@ -31,6 +57,12 @@ export const useFlyer = (f: Flyer | null) => {
         mainPhase,
         currentPhase,
         currentPlayOffPhase,
+
+        playOffs,
+        requiresPlayOff,
+        moneyRecipients,
+
+        overallStandings,
 
         phaseIsComplete,
     }

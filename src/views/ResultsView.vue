@@ -31,8 +31,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    players,
-    fixtures,
     settings,
     durationSeconds,
 } = usePhase(mainPhase.value)
@@ -46,7 +44,7 @@ const {
 const {
     requiresPlayOff,
     orderedPlayOffs,
-} = useStandings(fixtures.value, players.value, settings.value)
+} = useStandings(mainPhase.value)
 
 const {
     isHistoric,

@@ -1,25 +1,26 @@
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { useSorted } from "@vueuse/core"
 
 import { useRankings } from "./useRankings"
 import { useSettings } from "./useSettings"
 
-import type { Fixture } from "../data/Fixture"
-import { type FlyerSettings } from "../data/FlyerSettings"
-import type { Player } from "../data/Player"
+import type { Phase } from "../data/Phase"
+import { usePhase } from "./usePhase"
 
-export const useStandings = (f: Fixture[], p: Player[], s: FlyerSettings) => {
-    const fixtures = ref(f)
-    const players = ref(p)
+export const useStandings = (p: Phase | null) => {
+    const {
+        fixtures,
+        players,
+        settings,
+    } = usePhase(p)
 
     const {
-        settings,
         isKnockout,
         isRoundRobin,
         usesPlayOff,
         prizeMonies,
         prizeColours,
-    } = useSettings(s)
+    } = useSettings(settings.value)
 
     const {
         computeStandings,
