@@ -1,5 +1,6 @@
 import { computed, ref } from "vue"
 
+import { useRankings } from "./useRankings"
 import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
@@ -10,13 +11,15 @@ export const useRound = (r: Round, s: FlyerSettings) => {
     const round = ref(r)
 
     const {
+        getWinner,
+    } = useRankings()
+
+    const {
         isWinnerStaysOn,
     } = useSettings(s)
 
     const name = computed(() => round.value.name)
     const fixtures = computed(() => round.value.fixtures)
-
-    const isPopulated = (f: Fixture) => f.scores.every(s => s.playerId)
 
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {
@@ -46,10 +49,15 @@ export const useRound = (r: Round, s: FlyerSettings) => {
         return RoundStatus.Waiting
     })
 
+    const winners = computed(() => fixtures.value.map(f => getWinner(f) || ""))
+
+    const isPopulated = (f: Fixture) => f.scores.every(s => s.playerId)
+
     return {
         name,
         fixtures,
         status,
+        winners,
     }
 }
 

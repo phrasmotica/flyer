@@ -180,6 +180,7 @@ export const useRankings = () => {
     }
 
     return {
+        getWinner,
         computeStandings,
         computePlayOffs,
     }

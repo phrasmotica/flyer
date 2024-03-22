@@ -2,6 +2,8 @@ import { computed, ref, watch } from "vue"
 import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
+import { RoundStatus } from "./useRound"
+
 import type { Fixture } from "../data/Fixture"
 import { type FlyerSettings } from "../data/FlyerSettings"
 import type { Phase } from "../data/Phase"
@@ -25,11 +27,15 @@ export const usePhase = (p: Phase | null) => {
     const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
     const currentRound = computed(() => {
-        const notCompletedRounds = rounds.value.filter(r => r.fixtures.some(f => !f.startTime || !f.finishTime))
-        return notCompletedRounds.find(r => r.fixtures.some(f => f.startTime && !f.finishTime)) || notCompletedRounds[0]
+        // BUG: sort these by start time, newest first, then just return the first one
+        const startedRounds = rounds.value.filter(r => r.fixtures.some(f => f.startTime))
+        return startedRounds.at(-1) || startedRounds[0]
     })
 
-    const nextRound = computed(() => rounds.value.find(r => r.index === currentRound.value.index + 1))
+    const nextRound = computed(() => {
+        // BUG: don't rely on the indexes being consecutive
+        return rounds.value.find(r => r.index === currentRound.value.index + 1)
+    })
 
     const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
@@ -45,8 +51,7 @@ export const usePhase = (p: Phase | null) => {
             return false
         }
 
-        const currentRound = generatedRounds[generatedRounds.length - 1]
-        return currentRound.fixtures.every(f => f.startTime && f.finishTime)
+        return currentRound.value.fixtures.every(f => f.startTime && f.finishTime)
     })
 
     const durationMinutes = computed(() => {
@@ -72,21 +77,8 @@ export const usePhase = (p: Phase | null) => {
         return freeTables.at(0)
     })
 
-    const canStartFixture = (fixture: Fixture | undefined) => {
-        if (!fixture) {
-            return false
-        }
-
-        if (fixture.scores.some(s => !s.playerId || isBusy(s.playerId))) {
-            return false
-        }
-
-        const round = getRound(fixture.id)
-        if (settings.value.requireCompletedRounds && (round?.index || -1) > currentRound.value.index) {
-            return false
-        }
-
-        return !!nextFreeTable.value
+    const canStartFixture = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
+        return getFixtureStatus(fixture, currentRoundStatus) === FixtureStatus.ReadyToStart
     }
 
     const isBusy = (playerId: string) => {
@@ -102,7 +94,7 @@ export const usePhase = (p: Phase | null) => {
 
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
-    const getFixtureStatus = (fixture: Fixture | undefined) => {
+    const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
         if (!fixture) {
             return FixtureStatus.Unknown
         }
@@ -120,7 +112,8 @@ export const usePhase = (p: Phase | null) => {
         }
 
         const round = getRound(fixture.id)
-        if (settings.value.requireCompletedRounds && (round?.index || -1) > currentRound.value.index) {
+        const currentRoundNotFinished = currentRoundStatus !== RoundStatus.Finished
+        if (settings.value.requireCompletedRounds && currentRoundNotFinished && (round?.index || -1) > currentRound.value.index) {
             return FixtureStatus.WaitingForRound
         }
 

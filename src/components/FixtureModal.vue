@@ -8,6 +8,7 @@ import PlayerWinInput from "./PlayerWinInput.vue"
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { FixtureStatus, usePhase } from "../composables/usePhase"
+import { useRound } from "../composables/useRound"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
@@ -32,12 +33,17 @@ const {
 
 const {
     settings,
+    currentRound,
     canStartFixture,
     nextFreeTable,
     getTableName,
     getFixtureStatus,
     getFixtureHeader,
 } = usePhase(currentPhase.value)
+
+const {
+    status: currentRoundStatus,
+} = useRound(currentRound.value, settings.value)
 
 const {
     fixture,
@@ -137,7 +143,7 @@ const ranOut = computed(() => {
 })
 
 const startButtonText = computed(() => {
-    const status = getFixtureStatus(fixture.value)
+    const status = getFixtureStatus(fixture.value, currentRoundStatus.value)
 
     if (status === FixtureStatus.Unknown) {
         return "???"
@@ -245,7 +251,7 @@ const resetPlayerScores = () => {
                 class="mb-2"
                 type="button"
                 :label="startButtonText"
-                :disabled="!canStartFixture(fixture)"
+                :disabled="!canStartFixture(fixture, currentRoundStatus)"
                 @click="startFixture" />
 
             <div v-if="isInProgress" class="flex gap-2 mb-2">

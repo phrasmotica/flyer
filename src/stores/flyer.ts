@@ -2,7 +2,6 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
-import { useArray } from "../composables/useArray"
 import { useRankings } from "../composables/useRankings"
 
 import type { Fixture, Score } from "../data/Fixture"
@@ -23,12 +22,6 @@ export const useFlyerStore = defineStore("flyer", () => {
             write: v => JSON.stringify(v),
         }
     })
-
-    const {
-        arr: playerPool,
-        push: addToPlayerPool,
-        clear: clearPlayerPool,
-    } = useArray<string>()
 
     const {
         computeStandings,
@@ -78,11 +71,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
                 // with a bye in both slots
-                const didPropagate = tryPropagate(phase, fixtureId, winnerId, false)
-                if (!didPropagate) {
-                    // add winner to random draw pool for next round
-                    addToPlayerPool(winnerId)
-                }
+                tryPropagate(phase, fixtureId, winnerId, false)
             }
         }
 
@@ -154,12 +143,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                         return
                     }
 
-                    const didPropagateWinner = tryPropagate(phase, fixtureId, getWinner(r.fixtures[idx]).playerId, false)
-                    if (!didPropagateWinner) {
-                        // add winner to random draw pool for next round
-                        addToPlayerPool(getWinner(r.fixtures[idx]).playerId)
-                    }
-
+                    tryPropagate(phase, fixtureId, getWinner(r.fixtures[idx]).playerId, false)
                     tryPropagate(phase, fixtureId, getLoser(r.fixtures[idx]).playerId, true)
                 }
             }
@@ -180,26 +164,23 @@ export const useFlyerStore = defineStore("flyer", () => {
         return standings[0].wins >= phase.settings.winsRequired
     }
 
-    const generateNextRound = () => {
+    const generateRound = (phaseId: string, nextRoundIndex: number, winners: string[]) => {
         if (!flyer.value) {
             return
         }
 
-        // LOW: create player pool from scratch here, rather than maintaining
-        // it in a ref
+        const shuffledPlayerIds = shuffle([...winners])
 
-        const shuffledPlayerIds = shuffle(playerPool.value.slice())
+        const phase = flyer.value.phases.find(p => p.id === phaseId)!
+        const round = phase.rounds.find(r => r.index === nextRoundIndex)!
 
-        const nextRound = flyer.value.phases.flatMap(p => p.rounds).find(r => !r.isGenerated)!
-        for (const f of nextRound.fixtures) {
+        for (const f of round.fixtures) {
             for (const s of f.scores) {
                 s.playerId = shuffledPlayerIds.pop()!
             }
         }
 
-        nextRound.isGenerated = true
-
-        clearPlayerPool()
+        round.isGenerated = true
     }
 
     const shuffle = <T>(arr: T[]) => {
@@ -287,7 +268,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         startFixture,
         updateComment,
         updateScores,
-        generateNextRound,
+        generateRound,
         finish,
         cancelRemaining,
         addPlayOff,

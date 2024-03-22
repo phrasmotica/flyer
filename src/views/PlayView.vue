@@ -13,6 +13,7 @@ import ResultsTable from "../components/ResultsTable.vue"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
+import { useRound } from "../composables/useRound"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -43,12 +44,17 @@ const {
     hasFinished,
     isInProgress,
     remainingCount,
+    currentRound,
     nextRound,
     generationIsComplete,
     readyForNextRound,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
+
+const {
+    winners,
+} = useRound(currentRound.value, settings.value)
 
 const {
     queryParams,
@@ -114,7 +120,14 @@ const finishButtonText = computed(() => {
 })
 
 const generateNextRound = () => {
-    flyerStore.generateNextRound()
+    if (!currentPhase.value || !nextRound.value || winners.value.length <= 0) {
+        return
+    }
+
+    flyerStore.generateRound(
+        currentPhase.value.id,
+        nextRound.value.index,
+        winners.value)
 }
 
 const confirmFinish = () => {
