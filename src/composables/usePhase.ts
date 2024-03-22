@@ -27,9 +27,15 @@ export const usePhase = (p: Phase | null) => {
     const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
     const currentRound = computed(() => {
-        // BUG: sort these by start time, newest first, then just return the first one
-        const startedRounds = rounds.value.filter(r => r.fixtures.some(f => f.startTime))
-        return startedRounds.at(-1) || startedRounds[0]
+        const startedRounds = [...rounds.value.filter(r => r.fixtures.some(f => f.startTime))]
+
+        startedRounds.sort((r, s) => {
+            const startTime1 = r.fixtures.map(f => f.startTime!).reduce((t1, t2) => Math.min(t1, t2))
+            const startTime2 = s.fixtures.map(f => f.startTime!).reduce((t1, t2) => Math.min(t1, t2))
+            return startTime1 - startTime2
+        })
+
+        return startedRounds[0]
     })
 
     const nextRound = computed(() => {
