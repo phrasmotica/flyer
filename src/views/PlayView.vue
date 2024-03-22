@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue"
+import { useToggle } from "@vueuse/core"
 import { useRouter } from "vue-router"
 import type { MenuItem } from "primevue/menuitem"
 
@@ -8,6 +9,7 @@ import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
 import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import Price from "../components/Price.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -40,6 +42,7 @@ const {
 const {
     settings,
     clockDisplay,
+    totalCost,
     hasStarted,
     hasFinished,
     isInProgress,
@@ -63,6 +66,7 @@ const {
 
 const display = ref(Display.Fixtures)
 
+const [showPrice, toggleShowPrice] = useToggle()
 const showFinishModal = ref(false)
 const showAbandonModal = ref(false)
 
@@ -190,7 +194,10 @@ onUnmounted(() => {
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                 <h1>{{ header }}</h1>
 
-                <Clock :elapsedSeconds="clockDisplay" />
+                <div class="cursor-pointer" @click="() => toggleShowPrice()">
+                    <Price v-if="showPrice" :amount="totalCost" />
+                    <Clock v-else :elapsedSeconds="clockDisplay" />
+                </div>
             </div>
 
             <TabMenu class="mb-2" :model="items" />
