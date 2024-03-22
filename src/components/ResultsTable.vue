@@ -32,7 +32,6 @@ const {
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
-// MEDIUM: export main phase data from useFlyer()?
 const {
     settings,
 } = usePhase(mainPhase.value)
