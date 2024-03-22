@@ -6,7 +6,6 @@ import WinningsList from "./WinningsList.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
-import { usePlayOffs } from "../composables/usePlayOffs"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
 
@@ -22,25 +21,21 @@ const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
-// MEDIUM: simplify all of these composables
 const {
     mainPhase,
-    playOffPhases,
     overallStandings,
     playOffs,
     requiresPlayOff,
+    completedPlayOffs,
     moneyRecipients,
+    getPlayOffRank,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
+// MEDIUM: export main phase data from useFlyer()?
 const {
     settings,
 } = usePhase(mainPhase.value)
-
-const {
-    completedPlayOffs,
-    getPlayOffRank,
-} = usePlayOffs(playOffPhases.value)
 
 const {
     tieBreakerName,

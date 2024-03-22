@@ -13,6 +13,8 @@ export const useFlyer = (f: Flyer | null) => {
     const playOffPhases = computed(() => flyer.value?.phases.slice(1) || [])
 
     const {
+        completedPlayOffs,
+        getPlayOffRank,
         processStandings,
     } = usePlayOffs(playOffPhases.value)
 
@@ -60,10 +62,12 @@ export const useFlyer = (f: Flyer | null) => {
 
         playOffs,
         requiresPlayOff,
+        completedPlayOffs,
         moneyRecipients,
 
         overallStandings,
 
+        getPlayOffRank,
         phaseIsComplete,
     }
 }
