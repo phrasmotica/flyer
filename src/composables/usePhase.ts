@@ -107,7 +107,7 @@ export const usePhase = (p: Phase | null) => {
         })
     }
 
-    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name ?? id
+    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name || id || "???"
 
     const getTableName = (id: string) => tables.value.find(p => p.id === id)?.name ?? id
 
