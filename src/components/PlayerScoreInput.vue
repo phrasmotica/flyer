@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, onUpdated } from "vue"
+import { v4 as uuidv4 } from "uuid"
 
 import ScoreCell from "./ScoreCell.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { useTweaks } from "../composables/useTweaks"
 
 import type { Fixture } from "../data/Fixture"
 
@@ -38,6 +40,16 @@ const breakerLabel = computed(() => {
 
     return props.fixture.breakerId === props.playerId ? "Broke first" : "Broke second"
 })
+
+const { blurNumberInputs } = useTweaks()
+
+const scoreInputId = "player-score-input-" + uuidv4()
+const runoutsInputId = "player-runouts-input-" + uuidv4()
+
+onUpdated(() => {
+    blurNumberInputs(scoreInputId)
+    blurNumberInputs(runoutsInputId)
+})
 </script>
 
 <template>
@@ -62,6 +74,7 @@ const breakerLabel = computed(() => {
         </div>
 
         <InputNumber v-else
+            :id="scoreInputId"
             showButtons
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"
@@ -84,6 +97,7 @@ const breakerLabel = computed(() => {
         </div>
 
         <InputNumber v-else
+            :id="runoutsInputId"
             class="runout-stepper"
             showButtons
             inputClass="w-2rem px-1 text-center"
