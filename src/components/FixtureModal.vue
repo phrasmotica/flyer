@@ -147,30 +147,30 @@ const ranOut = computed(() => {
 
 const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.value, currentRoundStatus.value))
 
-const startButtonText = computed(() => {
-    const status = getFixtureStatus(fixture.value, currentRoundStatus.value)
+const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
 
-    if (status === FixtureStatus.Unknown) {
+const startButtonText = computed(() => {
+    if (fixtureStatus.value === FixtureStatus.Unknown) {
         return "???"
     }
 
-    if (status === FixtureStatus.WaitingForRoundGeneration) {
+    if (fixtureStatus.value === FixtureStatus.WaitingForRoundGeneration) {
         return "Waiting for round to be generated"
     }
 
-    if (status === FixtureStatus.WaitingForPreviousResult) {
+    if (fixtureStatus.value === FixtureStatus.WaitingForPreviousResult) {
         return "Waiting for a previous result"
     }
 
-    if (status === FixtureStatus.WaitingForPlayers) {
+    if (fixtureStatus.value === FixtureStatus.WaitingForPlayers) {
         return "Waiting for players to be free"
     }
 
-    if (status === FixtureStatus.WaitingForRound) {
+    if (fixtureStatus.value === FixtureStatus.WaitingForRound) {
         return "Waiting for round to start"
     }
 
-    if (status === FixtureStatus.WaitingForTable) {
+    if (fixtureStatus.value === FixtureStatus.WaitingForTable) {
         return "Waiting for a free table"
     }
 
@@ -252,7 +252,7 @@ const resetPlayerScores = () => {
                 </p>
             </div>
         </div>
-        <div v-else>
+        <div v-else-if="fixtureStatus === FixtureStatus.ReadyToStart">
             <p class="m-0 text-center">Who will break first?</p>
 
             <div class="grid m-0">
