@@ -84,6 +84,7 @@ export class RoundRobinScheduler implements IScheduler {
         const round: Round = {
             index,
             name: "Round " + index,
+            raceTo: null,
             isGenerated: true,
             fixtures: [],
         }
@@ -138,6 +139,7 @@ export class RoundRobinScheduler implements IScheduler {
         const newRounds = rounds.map<Round>((_, r) => ({
             index: startIndex + (r + 1),
             name: "Round " + (startIndex + r + 1),
+            raceTo: null,
             isGenerated: true,
             fixtures: newFixtures.splice(0, fixturesPerRound),
         }))

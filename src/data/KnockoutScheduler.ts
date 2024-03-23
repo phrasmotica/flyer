@@ -119,6 +119,7 @@ export class KnockoutScheduler implements IScheduler {
         const round: Round = {
             index: r + 1,
             name: this.getRoundName(numSpaces),
+            raceTo: null, // TODO: set this to whatever override is specified in flyer settings
             isGenerated: r === 0 || takeFromParents,
             fixtures: [],
         }
