@@ -253,6 +253,8 @@ const resetPlayerScores = () => {
             </div>
         </div>
         <div v-else>
+            <p class="m-0 text-center">Who will break first?</p>
+
             <div class="grid m-0">
                 <PlayerBreakInput
                     v-for="p in players"

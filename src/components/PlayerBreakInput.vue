@@ -30,7 +30,7 @@ const {
 <template>
     <div class="flex flex-column align-items-center">
         <div class="font-bold">
-            {{ getPlayerName(props.playerId) }} breaks
+            {{ getPlayerName(props.playerId) }}
         </div>
 
         <RadioButton
