@@ -29,6 +29,7 @@ const {
 
 const {
     settings,
+    getRound,
     getPlayerName,
     getTableName,
 } = usePhase(currentPhase.value)
@@ -37,7 +38,7 @@ const {
     fixture,
     winner,
     isWalkover,
-} = useFixture("card", props.fixture, settings.value)
+} = useFixture("card", props.fixture, getRound(props.fixture.id), settings.value)
 
 const {
     isWinnerStaysOn,

@@ -11,6 +11,7 @@ import { useTweaks } from "../composables/useTweaks"
 import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
+import { useFixture } from "@/composables/useFixture"
 
 const score = defineModel<number>("score")
 const runouts = defineModel<number>("runouts")
@@ -31,10 +32,15 @@ const {
 const {
     settings,
     getPlayerName,
+    getRound,
 } = usePhase(currentPhase.value)
 
+const {
+    raceTo,
+} = useFixture("scoreInput", props.fixture, getRound(props.fixture.id), settings.value)
+
 const breakerLabel = computed(() => {
-    if (settings.value.raceTo === 1) {
+    if (raceTo.value === 1) {
         return props.fixture.breakerId === props.playerId ? "Broke" : "Did not break"
     }
 
@@ -79,7 +85,7 @@ onUpdated(() => {
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"
             v-model="score"
-            :min="0" :max="settings.raceTo">
+            :min="0" :max="raceTo">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>
@@ -103,7 +109,7 @@ onUpdated(() => {
             inputClass="w-2rem px-1 text-center"
             buttonLayout="horizontal"
             v-model="runouts"
-            :min="0" :max="settings.raceTo">
+            :min="0" :max="raceTo">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>

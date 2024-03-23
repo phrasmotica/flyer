@@ -3,15 +3,22 @@ import { useArrayUnique, useIntervalFn } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
 import { useArray } from "./useArray"
+import { useRound } from "./useRound"
 import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
 import type { FlyerSettings } from "../data/FlyerSettings"
+import type { Round } from "../data/Round"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see FixtureModal.vue)
-export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSettings) => {
+export const useFixture = (name: string, f: Fixture | undefined, r: Round | undefined, s: FlyerSettings) => {
     const fixture = ref(f)
+
+    const {
+        round,
+        raceTo,
+    } = useRound(r, s)
 
     const {
         settings,
@@ -44,11 +51,11 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const canBeFinished = computed(() => {
-        if (scores.value.every(s => s < settings.value.raceTo)) {
+        if (scores.value.every(s => s < raceTo.value)) {
             return false
         }
 
-        if (scores.value.reduce((a, b) => a + b) > 2 * settings.value.raceTo - 1) {
+        if (scores.value.reduce((a, b) => a + b) > 2 * raceTo.value - 1) {
             return false
         }
 
@@ -123,7 +130,7 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
     })
 
     const setWinner = (index: number, clearRunouts: boolean) => {
-        scores.value.forEach((_, i) =>{
+        scores.value.forEach((_, i) => {
             setScore(i, i === index ? settings.value.raceTo : 0)
         })
 
@@ -145,7 +152,9 @@ export const useFixture = (name: string, f: Fixture | undefined, s: FlyerSetting
 
     return {
         fixture,
+        round,
         breakerId,
+        raceTo,
         scores,
         runouts,
         comment,

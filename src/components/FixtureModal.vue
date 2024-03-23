@@ -37,6 +37,7 @@ const {
     currentRound,
     canStartFixture,
     nextFreeTable,
+    getRound,
     getTableName,
     getFixtureStatus,
     getFixtureHeader,
@@ -48,6 +49,7 @@ const {
 
 const {
     fixture,
+    round,
     breakerId,
     scores,
     runouts,
@@ -62,7 +64,7 @@ const {
     setWinner,
     setRanOut,
     resumeClock,
-} = useFixture("modal", props.fixture, settings.value)
+} = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), settings.value)
 
 const {
     isWinnerStaysOn,
@@ -80,6 +82,9 @@ const initialComment = ref(comment.value)
 watch(props, () => {
     visible.value = props.visible
     fixture.value = props.fixture
+
+    // LOW: recompute this entirely inside useFixture()
+    round.value = getRound(props.fixture?.id || "")
 
     setInitialPlayerScores(props.fixture)
 
@@ -111,12 +116,12 @@ const updateScores = (finish: boolean) => {
 
     flyerStore.updateComment(currentPhase.value, fixture.value.id, comment.value)
 
-    const newScores = players.value.map((id, i) => <Score>{
+    const newScores = players.value.map<Score>((id, i) => ({
         playerId: id,
         score: scores.value[i],
         runouts: runouts.value[i],
         isBye: false,
-    })
+    }))
 
     flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
 

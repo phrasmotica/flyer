@@ -7,7 +7,7 @@ import type { Fixture } from "../data/Fixture"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { Round } from "../data/Round"
 
-export const useRound = (r: Round, s: FlyerSettings) => {
+export const useRound = (r: Round | undefined, s: FlyerSettings) => {
     const round = ref(r)
 
     const {
@@ -18,8 +18,9 @@ export const useRound = (r: Round, s: FlyerSettings) => {
         isWinnerStaysOn,
     } = useSettings(s)
 
-    const name = computed(() => round.value.name)
-    const fixtures = computed(() => round.value.fixtures)
+    const name = computed(() => round.value?.name || "")
+    const fixtures = computed(() => round.value?.fixtures || [])
+    const raceTo = computed(() => round.value?.raceTo || s.raceTo)
 
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {
@@ -54,8 +55,10 @@ export const useRound = (r: Round, s: FlyerSettings) => {
     const isPopulated = (f: Fixture) => f.scores.every(s => s.playerId)
 
     return {
+        round,
         name,
         fixtures,
+        raceTo,
         status,
         winners,
     }
