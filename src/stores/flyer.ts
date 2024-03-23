@@ -251,9 +251,11 @@ export const useFlyerStore = defineStore("flyer", () => {
     }
 
     const addPlayOff = (playOff: PlayOff, forPhase: Phase) => {
+        const settings = createPlayOffSettings(forPhase, playOff)
+
         const playOffPhase = createPhase(
-            createPlayOffSettings(forPhase, playOff),
-            new KnockoutScheduler(false),
+            settings,
+            new KnockoutScheduler(settings),
             playOff.players
         )
 

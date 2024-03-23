@@ -98,7 +98,7 @@ export const useSettings = (s: FlyerSettings) => {
 
     const durationPerFrame = computed(() => {
         if (isKnockout.value) {
-            return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).frameTimeEstimateMins
+            return new KnockoutScheduler(settings.value).frameTimeEstimateMins
         }
 
         if (isRoundRobin.value) {
@@ -114,7 +114,7 @@ export const useSettings = (s: FlyerSettings) => {
 
     const estimatedDuration = computed(() => {
         if (isKnockout.value) {
-            return new KnockoutScheduler(settings.value.randomlyDrawAllRounds).estimateDuration(settings.value)
+            return new KnockoutScheduler(settings.value).estimateDuration(settings.value)
         }
 
         if (isRoundRobin.value) {

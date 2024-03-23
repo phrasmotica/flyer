@@ -52,7 +52,7 @@ const start = () => {
     try {
         switch (settings.value.format) {
             case Format.Knockout:
-                flyerStore.start(settings.value, new KnockoutScheduler(settings.value.randomlyDrawAllRounds), [])
+                flyerStore.start(settings.value, new KnockoutScheduler(settings.value), [])
                 break
 
             case Format.RoundRobin:

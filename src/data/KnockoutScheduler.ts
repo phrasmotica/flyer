@@ -11,7 +11,7 @@ export class KnockoutScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private randomDraw: boolean) {
+    constructor(private settings: FlyerSettings) {
 
     }
 
@@ -44,7 +44,7 @@ export class KnockoutScheduler implements IScheduler {
     computeFixturesPerRound(playerCount: number) {
         const numFixtures = playerCount - 1
 
-        if (numFixtures === 1 || !this.randomDraw) {
+        if (numFixtures === 1 || !this.settings.randomlyDrawAllRounds) {
             return [numFixtures]
         }
 
@@ -87,7 +87,7 @@ export class KnockoutScheduler implements IScheduler {
         let r = 0
         while (r < numRounds) {
             // ensure the final round (match) always draws from the two semi-finals
-            const takeFromParents = !this.randomDraw || r === numRounds - 1
+            const takeFromParents = !this.settings.randomlyDrawAllRounds || r === numRounds - 1
 
             const round = this.generateRound(r, overallPool, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
@@ -116,10 +116,12 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     generateRound(r: number, overallPool: Player[], numSpaces: number, takeFromParents: boolean) {
+        const raceToOverride = this.settings.raceToPerRound.at(r)
+
         const round: Round = {
             index: r + 1,
             name: this.getRoundName(numSpaces),
-            raceTo: null, // TODO: set this to whatever override is specified in flyer settings
+            raceTo: raceToOverride || null,
             isGenerated: r === 0 || takeFromParents,
             fixtures: [],
         }
