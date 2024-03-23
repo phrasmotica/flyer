@@ -5,6 +5,7 @@ import type { Table } from "./Table"
 export interface FlyerSettings {
     playerCount: number
     playerNames: string[]
+    matchLengthModel: MatchLengthModel
     raceTo: number
     raceToPerRound: number[]
     winsRequired: number
@@ -23,6 +24,11 @@ export interface FlyerSettings {
     moneySplit: MoneySplit
     name: string
     playOffId: string
+}
+
+export enum MatchLengthModel {
+    Fixed,
+    Variable,
 }
 
 export enum Format {
@@ -55,6 +61,7 @@ export const createPlayOffSettings = (phase: Phase, playOff: PlayOff): FlyerSett
     entryFee: 0,
     entryFeeRequired: false,
     format: Format.Knockout,
+    matchLengthModel: MatchLengthModel.Fixed,
     moneySplit: MoneySplit.WinnerTakesAll,
     name: playOff.name,
     playerCount: playOff.players.length,

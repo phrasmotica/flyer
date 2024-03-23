@@ -90,6 +90,7 @@ const defaultTables = new Array(maxTableCount).fill(0).map<Table>((_, i) => ({
 const defaultSettings: FlyerSettings = {
     playerCount: defaultPlayerCount,
     playerNames: defaultPlayers,
+    matchLengthModel: MatchLengthModel.Fixed,
     raceTo: 1,
     raceToPerRound: [],
     winsRequired: 1,

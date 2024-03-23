@@ -116,12 +116,14 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     generateRound(r: number, overallPool: Player[], numSpaces: number, takeFromParents: boolean) {
-        const raceToOverride = this.settings.raceToPerRound.at(r)
+        const raceTo = this.settings.matchLengthModel === MatchLengthModel.Variable
+            ? this.settings.raceToPerRound.at(r) || null
+            : null
 
         const round: Round = {
             index: r + 1,
             name: this.getRoundName(numSpaces),
-            raceTo: raceToOverride || null,
+            raceTo,
             isGenerated: r === 0 || takeFromParents,
             fixtures: [],
         }
