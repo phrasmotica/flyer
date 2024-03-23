@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue"
+
 import ScoreCell from "./ScoreCell.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -28,12 +30,26 @@ const {
     settings,
     getPlayerName,
 } = usePhase(currentPhase.value)
+
+const breakerLabel = computed(() => {
+    if (settings.value.raceTo === 1) {
+        return props.fixture.breakerId === props.playerId ? "Broke" : "Did not break"
+    }
+
+    return props.fixture.breakerId === props.playerId ? "Broke first" : "Broke second"
+})
 </script>
 
 <template>
     <div class="flex flex-column align-items-center">
         <div class="font-bold">
             {{ getPlayerName(props.playerId) }}
+        </div>
+
+        <div class="mb-2">
+            <Badge
+                :value="breakerLabel"
+                severity="secondary" />
         </div>
 
         <div v-if="props.finished">
