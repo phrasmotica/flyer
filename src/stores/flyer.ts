@@ -37,14 +37,12 @@ export const useFlyerStore = defineStore("flyer", () => {
         flyer.value = createFlyer(settings, scheduler, players)
     }
 
-    const createFlyer = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
-        return <Flyer>{
-            id: uuidv4(),
-            phases: [createPhase(settings, scheduler, players)],
-        }
-    }
+    const createFlyer = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]): Flyer => ({
+        id: uuidv4(),
+        phases: [createPhase(settings, scheduler, players)],
+    })
 
-    const createPhase = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
+    const createPhase = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]): Phase => {
         if (players.length <= 0) {
             // use existing player entries if we can, else generate new ones
             const actualPlayerNames = settings.playerNames.slice(0, settings.playerCount)
@@ -56,11 +54,11 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         const actualTables = settings.tables.slice(0, settings.tableCount)
 
-        const phase = <Phase>{
+        const phase: Phase = {
             id: settings.playOffId || uuidv4(),
             order: 1,
             players,
-            tables: actualTables.map(t => <Table>{ ...t, id: uuidv4() }),
+            tables: actualTables.map<Table>(t => ({ ...t, id: uuidv4() })),
             settings,
             startTime: Date.now(),
             finishTime: null,

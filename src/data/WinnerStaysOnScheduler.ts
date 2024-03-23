@@ -48,7 +48,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
         let lastFixtureId = ""
 
         while (fixtureCount < maxFixtureCount) {
-            const newRound = <Round>{
+            const newRound: Round = {
                 fixtures: [],
                 index: roundIndex,
                 isGenerated: true,
@@ -94,7 +94,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
     }
 
     private addEmptyFixture(round: Round, parentFixtures: ParentFixture[]) {
-        const newFixture = <Fixture>{
+        const newFixture: Fixture = {
             id: uuidv4(),
             parentFixtures,
             scores: new Array<number>(2).fill(0).map(_ => ({
@@ -103,9 +103,11 @@ export class WinnerStaysOnScheduler implements IScheduler {
                 runouts: 0,
                 isBye: false,
             })),
+            breakerId: "",
             tableId: "",
             startTime: null,
             finishTime: null,
+            cancelledTime: null,
             comment: "",
         }
 

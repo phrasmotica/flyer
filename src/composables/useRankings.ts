@@ -105,7 +105,7 @@ export const useRankings = () => {
     }
 
     const computeStandings = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
-        const records = players.map(p => <PlayerRecord>{
+        const records = players.map<PlayerRecord>(p => ({
             playerId: p.id,
             name: p.name,
             played: getPlayed(fixtures, p.id),
@@ -116,7 +116,7 @@ export const useRankings = () => {
             runouts: getRunouts(fixtures, p.id),
             incomplete: isIncomplete(fixtures, p.id),
             rank: 0,
-        })
+        }))
 
         const tableData = records
             .sort((p, q) => {
@@ -140,7 +140,7 @@ export const useRankings = () => {
 
                 return 0
             })
-            .map((p, i) => <PlayerRecord>{ ...p, rank: i + 1 })
+            .map<PlayerRecord>((p, i) => ({ ...p, rank: i + 1 }))
 
         return tableData
     }

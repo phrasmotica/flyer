@@ -81,34 +81,37 @@ if (defaultPlayers.length < maxPlayersEnv) {
 }
 
 const maxTableCount = Math.floor(defaultPlayers.length / 2)
-const defaultTables = new Array(maxTableCount).fill(0).map((_, i) => <Table>{
+const defaultTables = new Array(maxTableCount).fill(0).map<Table>((_, i) => ({
     id: "",
     name: "Table " + (i + 1),
     costPerHour: 9,
-})
+}))
+
+const defaultSettings: FlyerSettings = {
+    playerCount: defaultPlayerCount,
+    playerNames: defaultPlayers,
+    raceTo: 1, // LOW: allow changing this per round in a Knockout tournament
+    winsRequired: 1,
+    tableCount: defaultTableCount,
+    tables: defaultTables,
+    format: Format.Knockout,
+    ruleSet: RuleSet.Blackball,
+    randomlyDrawAllRounds: false,
+    requireCompletedRounds: true,
+    allowDraws: false,
+    allowEarlyFinish: false,
+    stageCount: 1,
+    entryFeeRequired: false,
+    entryFee: 5,
+    moneySplit: MoneySplit.WinnerTakesAll,
+    tieBreaker: TieBreaker.HeadToHead,
+    name: "",
+    playOffId: "",
+    // HIGH: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
+}
 
 export const useSettingsStore = defineStore("settings", () => {
-    const settings = useStorage("settings", <FlyerSettings>{
-        playerCount: defaultPlayerCount,
-        playerNames: defaultPlayers,
-        raceTo: 1, // LOW: allow changing this per round in a Knockout tournament
-        winsRequired: 1,
-        tableCount: defaultTableCount,
-        tables: defaultTables,
-        format: Format.Knockout,
-        ruleSet: RuleSet.Blackball,
-        randomlyDrawAllRounds: false,
-        requireCompletedRounds: true,
-        allowDraws: false,
-        allowEarlyFinish: false,
-        stageCount: 1,
-        entryFeeRequired: false,
-        entryFee: 5,
-        moneySplit: MoneySplit.WinnerTakesAll,
-        tieBreaker: TieBreaker.HeadToHead,
-        name: "",
-        // HIGH: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
-    })
+    const settings = useStorage("settings", defaultSettings)
 
     const {
         isKnockout,

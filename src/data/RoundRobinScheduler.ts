@@ -81,7 +81,7 @@ export class RoundRobinScheduler implements IScheduler {
         // 5. add a fixture for player A vs player B to this round. E.g. 1v4
         // 6. remove those IDs from the overall pool. E.g. [2, 3]
         // 7. repeat steps 1-5 until the overall pool has fewer than 2 players
-        const round = <Round>{
+        const round: Round = {
             index,
             name: "Round " + index,
             isGenerated: true,
@@ -126,21 +126,21 @@ export class RoundRobinScheduler implements IScheduler {
     private copyRounds(rounds: Round[]) {
         const existingFixtures = rounds.flatMap(r => r.fixtures)
 
-        const newFixtures = this.shuffle(existingFixtures.map(f => <Fixture>{
+        const newFixtures = this.shuffle(existingFixtures.map<Fixture>(f => ({
             ...f,
             id: uuidv4(),
             scores: f.scores.slice().reverse(),
-        }))
+        })))
 
         const startIndex = rounds.at(-1)!.index
         const fixturesPerRound = rounds[0].fixtures.length
 
-        const newRounds = rounds.map((_, r) => <Round>{
+        const newRounds = rounds.map<Round>((_, r) => ({
             index: startIndex + (r + 1),
             name: "Round " + (startIndex + r + 1),
             isGenerated: true,
             fixtures: newFixtures.splice(0, fixturesPerRound),
-        })
+        }))
 
         return newRounds
     }

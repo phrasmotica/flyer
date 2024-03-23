@@ -187,11 +187,12 @@ export const useSettings = (s: FlyerSettings) => {
         return ["Winner", "Runner-Up", "3rd Place", "4th Place", "5th Place", "6th Place", "7th Place", "8th Place"]
     })
 
-    const prizeMoniesMeterItems = computed(() => prizeMonies.value.map((x, i) => <MeterItem>{
+    const prizeMoniesMeterItems = computed(() => prizeMonies.value.map<MeterItem>((x, i) => ({
+        icon: "",
         color: prizeColours.value[Math.min(i, prizeColours.value.length - 1)],
         label: prizeLabels.value[i],
         value: x,
-    }))
+    })))
 
     const isInvalid = computed(() => {
         const actualPlayerNames = settings.value.playerNames.slice(0, settings.value.playerCount)

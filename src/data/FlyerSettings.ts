@@ -48,7 +48,7 @@ export enum MoneySplit {
     SemiFinalists,
 }
 
-export const createPlayOffSettings = (phase: Phase, playOff: PlayOff) => <FlyerSettings>{
+export const createPlayOffSettings = (phase: Phase, playOff: PlayOff): FlyerSettings => ({
     allowDraws: false,
     allowEarlyFinish: false,
     entryFee: 0,
@@ -68,4 +68,4 @@ export const createPlayOffSettings = (phase: Phase, playOff: PlayOff) => <FlyerS
     tableCount: phase.settings.tableCount,
     tieBreaker: phase.settings.tieBreaker,
     winsRequired: 0,
-}
+})

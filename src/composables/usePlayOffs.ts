@@ -52,7 +52,7 @@ export const usePlayOffs = (p: Phase[]) => {
             })
         }
 
-        return finalStandings.map((p, i) => <PlayerRecord>{ ...p, rank: i + 1 })
+        return finalStandings.map<PlayerRecord>((p, i) => ({ ...p, rank: i + 1 }))
     }
 
     return {

@@ -17,7 +17,10 @@ export const usePhase = (p: Phase | null) => {
     const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
     const players = computed(() => phase.value?.players || [])
     const tables = computed(() => phase.value?.tables || [])
+
+    // LOW: do something better here than casting an empty object to FlyerSettings
     const settings = computed(() => phase.value?.settings || <FlyerSettings>{})
+
     const rounds = computed(() => phase.value?.rounds || [])
 
     const {

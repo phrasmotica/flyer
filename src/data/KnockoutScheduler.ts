@@ -116,7 +116,7 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     generateRound(r: number, overallPool: Player[], numSpaces: number, takeFromParents: boolean) {
-        const round = <Round>{
+        const round: Round = {
             index: r + 1,
             name: this.getRoundName(numSpaces),
             isGenerated: r === 0 || takeFromParents,
@@ -158,7 +158,7 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     private addPlaceholderFixture(round: Round, players: Player[], playerCount: number, parentFixtureIds: string[]) {
-        const fixture = <Fixture>{
+        const fixture: Fixture = {
             id: uuidv4(),
             parentFixtures: parentFixtureIds.map(id => ({
                 fixtureId: id,
@@ -174,6 +174,7 @@ export class KnockoutScheduler implements IScheduler {
             breakerId: "",
             startTime: null,
             finishTime: null,
+            cancelledTime: null,
             comment: "",
         }
 
