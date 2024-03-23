@@ -150,6 +150,7 @@ const ranOut = computed(() => {
     return ""
 })
 
+// BUG: ensure breakerId is reset when the fixture changes
 const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.value, currentRoundStatus.value))
 
 const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
