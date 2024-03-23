@@ -6,6 +6,7 @@ export interface FlyerSettings {
     playerCount: number
     playerNames: string[]
     raceTo: number
+    raceToPerRound: number[]
     winsRequired: number
     ruleSet: RuleSet
     tableCount: number
@@ -60,6 +61,7 @@ export const createPlayOffSettings = (phase: Phase, playOff: PlayOff): FlyerSett
     playerNames: [],
     playOffId: playOff.id,
     raceTo: 1,
+    raceToPerRound: [],
     randomlyDrawAllRounds: false,
     requireCompletedRounds: true,
     ruleSet: phase.settings.ruleSet,

@@ -90,7 +90,8 @@ const defaultTables = new Array(maxTableCount).fill(0).map<Table>((_, i) => ({
 const defaultSettings: FlyerSettings = {
     playerCount: defaultPlayerCount,
     playerNames: defaultPlayers,
-    raceTo: 1, // LOW: allow changing this per round in a Knockout tournament
+    raceTo: 1,
+    raceToPerRound: [],
     winsRequired: 1,
     tableCount: defaultTableCount,
     tables: defaultTables,
