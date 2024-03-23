@@ -5,11 +5,24 @@ import { defineStore } from "pinia"
 import { useListFallback } from "../composables/useListFallback"
 import { useSettings } from "../composables/useSettings"
 
-import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker } from "../data/FlyerSettings"
+import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/FlyerSettings"
 import type { Table } from "../data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
+
+export const matchLengthModelList = [
+    {
+        value: MatchLengthModel.Fixed,
+        name: "Fixed",
+        summary: "Fixed races",
+    },
+    {
+        value: MatchLengthModel.Variable,
+        name: "Variable",
+        summary: "Variable races",
+    },
+]
 
 export const formatList = [
     {
@@ -144,17 +157,20 @@ export const useSettingsStore = defineStore("settings", () => {
         }
 
         if (isRoundRobin.value) {
+            settings.value.matchLengthModel = MatchLengthModel.Fixed
+
             settings.value.randomlyDrawAllRounds = false
             settings.value.requireCompletedRounds = false
         }
 
         if (isWinnerStaysOn.value) {
+            settings.value.matchLengthModel = MatchLengthModel.Fixed
+            settings.value.tableCount = 1
+
             settings.value.randomlyDrawAllRounds = false
             settings.value.requireCompletedRounds = false
             settings.value.allowDraws = false
             settings.value.allowEarlyFinish = true
-
-            settings.value.tableCount = 1
         }
     })
 
@@ -221,6 +237,7 @@ export const useSettingsStore = defineStore("settings", () => {
     return {
         settings,
 
+        matchLengthModelList,
         formatList,
         ruleSetList,
         tieBreakerList,

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 
 import type { Fixture } from "./Fixture"
-import type { FlyerSettings } from "./FlyerSettings"
+import { MatchLengthModel, type FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
@@ -67,6 +67,17 @@ export class KnockoutScheduler implements IScheduler {
         return numFixturesPerGroup
     }
 
+    computeRoundNames(playerCount: number): string[] {
+        const numRounds = Math.ceil(Math.log2(playerCount))
+        const numSpaces = 2 ** numRounds
+
+        if (numSpaces < 2) {
+            return []
+        }
+
+        return [this.getRoundName(numSpaces), ...this.computeRoundNames(numSpaces / 2)]
+    }
+
     generateFixtures(players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
@@ -76,7 +87,7 @@ export class KnockoutScheduler implements IScheduler {
 
         const overallPool = this.shuffle([...players])
 
-        let numSpaces = Math.pow(2, numRounds)
+        let numSpaces = 2 ** numRounds
 
         this.generatedRounds = <Round[]>[]
 

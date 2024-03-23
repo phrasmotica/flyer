@@ -1,15 +1,33 @@
 import { computed, ref } from "vue"
 import type { MeterItem } from "primevue/metergroup"
 
-import { MoneySplit, type FlyerSettings, Format, TieBreaker } from "../data/FlyerSettings"
+import { MoneySplit, type FlyerSettings, Format, TieBreaker, MatchLengthModel } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 
-import { formatList, ruleSetList, tieBreakerList } from "../stores/settings"
+import { formatList, matchLengthModelList, ruleSetList, tieBreakerList } from "../stores/settings"
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
+
+    const matchLengthModelName = computed(() => {
+        const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
+        if (!matchLengthModel) {
+            throw `Invalid match length model ${settings.value.matchLengthModel}!`
+        }
+
+        return matchLengthModel.name
+    })
+
+    const matchLengthModelSummary = computed(() => {
+        const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
+        if (!matchLengthModel) {
+            throw `Invalid match length model ${settings.value.matchLengthModel}!`
+        }
+
+        return matchLengthModel.summary
+    })
 
     const formatName = computed(() => {
         const format = formatList.find(s => s.value === settings.value.format)
@@ -80,6 +98,9 @@ export const useSettings = (s: FlyerSettings) => {
 
     const tieBreakerDetails = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
 
+    const isFixedMatchLength = computed(() => settings.value.matchLengthModel === MatchLengthModel.Fixed)
+    const isVariableMatchLength = computed(() => settings.value.matchLengthModel === MatchLengthModel.Variable)
+
     const isKnockout = computed(() => settings.value.format === Format.Knockout)
     const isRoundRobin = computed(() => settings.value.format === Format.RoundRobin)
     const isWinnerStaysOn = computed(() => settings.value.format === Format.WinnerStaysOn)
@@ -126,6 +147,14 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         throw `Invalid flyer format ${settings.value.format}!`
+    })
+
+    const roundNames = computed(() => {
+        if (isKnockout.value) {
+            return new KnockoutScheduler(settings.value).computeRoundNames(settings.value.playerCount)
+        }
+
+        return []
     })
 
     const costPerHour = computed(() => {
@@ -202,6 +231,9 @@ export const useSettings = (s: FlyerSettings) => {
     return {
         settings,
 
+        matchLengthModelName,
+        matchLengthModelSummary,
+
         formatName,
         formatSummary,
         formatDetails,
@@ -217,6 +249,8 @@ export const useSettings = (s: FlyerSettings) => {
         tieBreakerSummary,
         tieBreakerDetails,
 
+        isFixedMatchLength,
+        isVariableMatchLength,
         isKnockout,
         isRoundRobin,
         isWinnerStaysOn,
@@ -226,6 +260,7 @@ export const useSettings = (s: FlyerSettings) => {
 
         durationPerFrame,
         estimatedDuration,
+        roundNames,
         costPerHour,
         estimatedCost,
 

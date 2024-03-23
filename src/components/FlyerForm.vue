@@ -31,6 +31,9 @@ const settingsStore = useSettingsStore()
 const {
     formatSummary,
     estimatedCost,
+    roundNames,
+    isFixedMatchLength,
+    isVariableMatchLength,
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
@@ -104,9 +107,20 @@ onUpdated(() => {
         </div>
 
         <div v-if="section === Section.Settings">
-            <div v-if="isKnockout || isRoundRobin" class="p-fluid mb-2">
+            <div class="p-fluid mb-1">
+                <SelectButton
+                    id="matchLengthModelSelect"
+                    v-model="settingsStore.settings.matchLengthModel"
+                    :disabled="!isKnockout"
+                    :options="settingsStore.matchLengthModelList"
+                    optionLabel="summary"
+                    optionValue="value"
+                    aria-labelledby="basic" />
+            </div>
+
+            <div v-if="(isKnockout && isFixedMatchLength) || isRoundRobin" class="p-fluid mb-2">
                 <label for="raceToStepper" class="font-bold">
-                    Match length
+                    All rounds
                 </label>
 
                 <Stepper
@@ -114,6 +128,20 @@ onUpdated(() => {
                     v-model="settingsStore.settings.raceTo"
                     :min="1" :max="maxRaceEnv"
                     prefix="Race to " />
+            </div>
+
+            <div v-if="isKnockout && isVariableMatchLength">
+                <div v-for="r, i of roundNames" class="p-fluid mb-2">
+                    <label :for="'raceToRoundStepper' + i" class="font-bold">
+                        {{ r }}
+                    </label>
+
+                    <Stepper
+                        :inputId="'raceToRoundStepper' + i"
+                        v-model="settingsStore.settings.raceToPerRound[i]"
+                        :min="1" :max="maxRaceEnv"
+                        prefix="Race to " />
+                </div>
             </div>
 
             <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
@@ -345,5 +373,9 @@ onUpdated(() => {
     margin-right: 0;
     font-size: 1.5rem;
     padding-bottom: 0.125rem;
+}
+
+.p-selectbutton .p-button .pi, .p-selectbutton .p-button .p-button-label {
+    font-size: 12px;
 }
 </style>
