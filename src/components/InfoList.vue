@@ -31,7 +31,6 @@ const {
     </div>
 
     <div v-else class="mb-2">
-        <!-- TODO: show variable match lengths, if applicable -->
         <strong>{{ raceSummary }}</strong>
     </div>
 

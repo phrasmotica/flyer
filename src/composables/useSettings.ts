@@ -64,7 +64,14 @@ export const useSettings = (s: FlyerSettings) => {
         return ""
     })
 
-    const raceSummary = computed(() => `Races to ${settings.value.raceTo}`)
+    const raceSummary = computed(() => {
+        if (isVariableMatchLength.value) {
+            // TODO: describe variable match lengths...
+            return matchLengthModelSummary.value
+        }
+
+        return `Races to ${settings.value.raceTo}`
+    })
 
     const winsRequiredSummary = computed(() => {
         if (settings.value.winsRequired === 1) {

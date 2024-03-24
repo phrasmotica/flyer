@@ -20,7 +20,7 @@ export const matchLengthModelList = [
     {
         value: MatchLengthModel.Variable,
         name: "Variable",
-        summary: "Variable races",
+        summary: "Variable-length races",
     },
 ]
 
