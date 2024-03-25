@@ -118,46 +118,48 @@ onUpdated(() => {
                     aria-labelledby="basic" />
             </div>
 
-            <div v-if="(isKnockout && isFixedMatchLength) || isRoundRobin" class="p-fluid mb-2">
-                <label for="raceToStepper" class="font-bold">
-                    All rounds
-                </label>
-
-                <Stepper
-                    inputId="raceToStepper"
-                    v-model="settingsStore.settings.raceTo"
-                    :min="1" :max="maxRaceEnv"
-                    prefix="Race to " />
-            </div>
-
-            <div v-if="isKnockout && isVariableMatchLength">
-                <div v-for="r, i of roundNames" class="p-fluid mb-2">
-                    <label :for="'raceToRoundStepper' + i" class="font-bold">
-                        {{ r }}
+            <div class="mb-2 px-2 border-1 border-gray-200 border-round-md">
+                <div v-if="isRoundRobin || (isKnockout && isFixedMatchLength)" class="p-fluid mb-2">
+                    <label for="raceToStepper" class="font-bold">
+                        All rounds
                     </label>
 
                     <Stepper
-                        :inputId="'raceToRoundStepper' + i"
-                        v-model="settingsStore.settings.raceToPerRound[i]"
+                        inputId="raceToStepper"
+                        v-model="settingsStore.settings.raceTo"
                         :min="1" :max="maxRaceEnv"
-                        prefix="Race to " />
+                        prefix="Races to " />
                 </div>
-            </div>
 
-            <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
-                <label for="winsRequiredStepper" class="font-bold">
-                    Wins required
-                </label>
+                <div v-else-if="isKnockout && isVariableMatchLength">
+                    <div v-for="r, i of roundNames" class="p-fluid mb-2">
+                        <label :for="'raceToRoundStepper' + i" class="font-bold">
+                            {{ r }}
+                        </label>
 
-                <Stepper
-                    inputId="winsRequiredStepper"
-                    v-model="settingsStore.settings.winsRequired"
-                    :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
-                    :suffix="settingsStore.settings.winsRequired > 1 ? ' wins' : ' win'" />
+                        <Stepper
+                            :inputId="'raceToRoundStepper' + i"
+                            v-model="settingsStore.settings.raceToPerRound[i]"
+                            :min="1" :max="maxRaceEnv"
+                            prefix="Races to " />
+                    </div>
+                </div>
 
-                <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
-                    Must be at least one fewer than the player count ({{ settingsStore.settings.playerCount - 1 }}).
-                </p>
+                <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
+                    <label for="winsRequiredStepper" class="font-bold">
+                        Wins required
+                    </label>
+
+                    <Stepper
+                        inputId="winsRequiredStepper"
+                        v-model="settingsStore.settings.winsRequired"
+                        :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
+                        :suffix="settingsStore.settings.winsRequired > 1 ? ' wins' : ' win'" />
+
+                    <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
+                        Must be at least one fewer than the player count ({{ settingsStore.settings.playerCount - 1 }}).
+                    </p>
+                </div>
             </div>
 
             <div class="grid m-0">
