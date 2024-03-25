@@ -3,6 +3,7 @@ import { watch } from "vue"
 import { useToggle } from "@vueuse/core"
 
 import FixtureCard from "./FixtureCard.vue"
+import RaceToBadge from "./RaceToBadge.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -43,7 +44,7 @@ const {
     name,
     fixtures,
     status,
-    raceToSummary,
+    raceTo,
 } = useRound(props.round, settings.value)
 
 const {
@@ -75,10 +76,9 @@ const [showComments, toggleComments] = useToggle(false)
                 {{ name }}
             </h3>
 
-            <Badge v-if="isVariableMatchLength"
+            <RaceToBadge v-if="isVariableMatchLength"
                 class="ml-2"
-                :value="raceToSummary"
-                severity="secondary"/>
+                :value="raceTo" />
         </div>
 
         <div class="ml-2">

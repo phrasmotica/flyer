@@ -22,8 +22,6 @@ export const useRound = (r: Round | undefined, s: FlyerSettings) => {
     const fixtures = computed(() => round.value?.fixtures || [])
     const raceTo = computed(() => round.value?.raceTo || s.raceTo)
 
-    const raceToSummary = computed(() => `Races to ${raceTo.value}`)
-
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {
             return fixtures.value.filter(isPopulated)
@@ -61,7 +59,6 @@ export const useRound = (r: Round | undefined, s: FlyerSettings) => {
         name,
         fixtures,
         raceTo,
-        raceToSummary,
         status,
         winners,
     }
