@@ -4,10 +4,11 @@ import { useToggle } from "@vueuse/core"
 
 import FixtureCard from "./FixtureCard.vue"
 
-import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
+import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { RoundStatus, useRound } from "../composables/useRound"
+import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
 import type { Round } from "../data/Round"
@@ -35,9 +36,14 @@ const {
 } = usePhase(currentPhase.value)
 
 const {
+    isVariableMatchLength,
+} = useSettings(settings.value)
+
+const {
     name,
     fixtures,
     status,
+    raceToSummary,
 } = useRound(props.round, settings.value)
 
 const {
@@ -62,9 +68,18 @@ const [showComments, toggleComments] = useToggle(false)
     <div
         class="flex align-items-baseline"
         :class="[showContent && 'border-bottom-1']">
-        <h3 class="font-bold cursor-pointer flex-1" @click="toggleContent()">
-            {{ name }}
-        </h3>
+        <div
+            class="flex align-items-center flex-1 cursor-pointer"
+            @click="toggleContent()">
+            <h3 class="font-bold">
+                {{ name }}
+            </h3>
+
+            <Badge v-if="isVariableMatchLength"
+                class="ml-2"
+                :value="raceToSummary"
+                severity="secondary"/>
+        </div>
 
         <div class="ml-2">
             <i v-if="showContent"
