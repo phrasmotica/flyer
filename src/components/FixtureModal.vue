@@ -5,6 +5,7 @@ import Clock from "./Clock.vue"
 import PlayerBreakInput from "./PlayerBreakInput.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
+import RaceToBadge from "./RaceToBadge.vue"
 
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
@@ -65,6 +66,10 @@ const {
     setRanOut,
     resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), settings.value)
+
+const {
+    raceTo,
+} = useRound(round.value, settings.value)
 
 const {
     isWinnerStaysOn,
@@ -217,10 +222,15 @@ const resetPlayerScores = () => {
         :header="getFixtureHeader(fixture)"
         @hide="hide">
         <div v-if="hasStarted" id="score-inputs" class="mb-2">
+            <!-- MEDIUM: this is getting crowded. Design a better layout -->
             <div class="mb-2">
                 <p v-if="fixture.tableId" class="m-0 text-center text-sm">
                     {{ getTableName(fixture.tableId) }}
                 </p>
+
+                <div class="p-fluid flex justify-content-center">
+                    <RaceToBadge singular :value="raceTo" />
+                </div>
 
                 <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" />
             </div>

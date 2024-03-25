@@ -2,10 +2,17 @@
 import { computed } from "vue"
 
 const props = defineProps<{
-    value: number,
+    value: number
+    singular?: boolean
 }>()
 
-const summary = computed(() => `Races to ${props.value}`)
+const summary = computed(() => {
+    if (props.singular) {
+        return `Race to ${props.value}`
+    }
+
+    return `Races to ${props.value}`
+})
 </script>
 
 <template>
