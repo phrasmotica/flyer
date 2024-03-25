@@ -15,6 +15,7 @@ const {
     formatDetails,
     drawSummary,
     raceSummary,
+    variableRacesSummary,
     winsRequiredSummary,
     rulesSummary,
     rulesDetails,
@@ -30,7 +31,11 @@ const {
         <strong>{{ winsRequiredSummary }}</strong>
     </div>
 
-    <div v-else class="mb-2">
+    <div v-else-if="variableRacesSummary" class="mb-2">
+        <strong>{{ variableRacesSummary }}</strong>
+    </div>
+
+    <div v-else-if="raceSummary" class="mb-2">
         <strong>{{ raceSummary }}</strong>
     </div>
 

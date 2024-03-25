@@ -66,11 +66,19 @@ export const useSettings = (s: FlyerSettings) => {
 
     const raceSummary = computed(() => {
         if (isVariableMatchLength.value) {
-            // TODO: describe variable match lengths...
-            return matchLengthModelSummary.value
+            return ""
         }
 
         return `Races to ${settings.value.raceTo}`
+    })
+
+    const variableRacesSummary = computed(() => {
+        if (isFixedMatchLength.value) {
+            return ""
+        }
+
+        // MEDIUM: distinguish these by round name
+        return "Races to " + settings.value.raceToPerRound.map(r => r.toString()).join(", then ")
     })
 
     const winsRequiredSummary = computed(() => {
@@ -247,6 +255,7 @@ export const useSettings = (s: FlyerSettings) => {
 
         drawSummary,
         raceSummary,
+        variableRacesSummary,
         winsRequiredSummary,
 
         rulesSummary,
