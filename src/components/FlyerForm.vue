@@ -94,7 +94,7 @@ onUpdated(() => {
                     <NameInput
                         v-model="settingsStore.settings.playerNames[i]"
                         class="flex-grow-1"
-                        :placeholder="'Player ' + (i + 1)" />
+                        placeholder="Name" />
 
                     <Button
                         class="ml-2"
