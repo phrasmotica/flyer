@@ -89,8 +89,8 @@ if (defaultPlayersEnv) {
 const defaultPlayerCount = defaultPlayers.length
 const defaultTableCount = Math.floor(defaultPlayerCount / 2)
 
-if (defaultPlayers.length < maxPlayersEnv) {
-    defaultPlayers = [...defaultPlayers, ...new Array(maxPlayersEnv - defaultPlayers.length).fill("")]
+while (defaultPlayers.length < maxPlayersEnv) {
+    defaultPlayers.push("Player " + (defaultPlayers.length + 1))
 }
 
 const maxTableCount = Math.floor(defaultPlayers.length / 2)
