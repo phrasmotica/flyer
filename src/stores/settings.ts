@@ -125,6 +125,9 @@ const defaultSettings: FlyerSettings = {
     // HIGH: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
 }
 
+const expectedKnockoutRoundsCount = Math.ceil(Math.log2(maxPlayersEnv))
+defaultSettings.raceToPerRound = new Array(expectedKnockoutRoundsCount).fill(defaultSettings.raceTo)
+
 export const useSettingsStore = defineStore("settings", () => {
     const settings = useStorage("settings", defaultSettings)
 
