@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { useTweaks } from "../composables/useTweaks"
+
 const value = defineModel<string>()
 
 const props = defineProps<{
     placeholder: string
     disabled?: boolean
 }>()
+
+const { selectOnFocus } = useTweaks()
 </script>
 
 <template>
@@ -16,7 +20,8 @@ const props = defineProps<{
                 v-model="value"
                 :placeholder="props.placeholder"
                 :disabled="props.disabled"
-                :invalid="!value" />
+                :invalid="!value"
+                @focus="selectOnFocus" />
         </IconField>
     </div>
 </template>

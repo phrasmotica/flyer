@@ -97,6 +97,7 @@ onUpdated(() => {
                         placeholder="Name" />
 
                     <Button
+                        tabindex="-1"
                         class="ml-2"
                         icon="pi pi-trash"
                         severity="danger"
