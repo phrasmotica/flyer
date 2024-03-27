@@ -8,7 +8,10 @@ import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
 import type { FlyerSettings } from "../data/FlyerSettings"
+import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import type { Round } from "../data/Round"
+import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
+import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see FixtureModal.vue)
@@ -22,6 +25,10 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const {
         settings,
+        isKnockout,
+        isRoundRobin,
+        isWinnerStaysOn,
+        isVariableMatchLength,
     } = useSettings(s)
 
     const breakerId = ref("")
@@ -64,6 +71,26 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         }
 
         return true
+    })
+
+    const estimatedDuration = computed(() => {
+        const actualRaceTo = isVariableMatchLength.value ? raceTo.value : settings.value.raceTo
+        const meanFrames = actualRaceTo + (2 * actualRaceTo - 1) / 2
+
+        // TODO: move this logic into a method on the Scheduler classes
+        if (isKnockout.value) {
+            return new KnockoutScheduler(settings.value).frameTimeEstimateMins * meanFrames
+        }
+
+        if (isRoundRobin.value) {
+            return new RoundRobinScheduler(settings.value.stageCount).frameTimeEstimateMins * meanFrames
+        }
+
+        if (isWinnerStaysOn.value) {
+            return new WinnerStaysOnScheduler(settings.value.winsRequired).frameTimeEstimateMins * meanFrames
+        }
+
+        throw `Invalid flyer format ${settings.value.format}!`
     })
 
     const durationSeconds = computed(() => {
@@ -165,6 +192,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         hasFinished,
         isInProgress,
         canBeFinished,
+        estimatedDuration,
         durationSeconds,
         winner,
         getOpponent,

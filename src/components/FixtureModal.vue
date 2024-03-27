@@ -61,6 +61,7 @@ const {
     hasFinished,
     isInProgress,
     canBeFinished,
+    estimatedDuration,
     durationSeconds,
     setWinner,
     setRanOut,
@@ -232,7 +233,7 @@ const resetPlayerScores = () => {
                     <RaceToBadge singular :value="raceTo" />
                 </div>
 
-                <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" />
+                <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" :warnAfterSeconds="estimatedDuration" />
             </div>
 
             <div class="grid m-0">
