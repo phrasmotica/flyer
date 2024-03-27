@@ -77,8 +77,11 @@ export const useSettings = (s: FlyerSettings) => {
             return ""
         }
 
-        // MEDIUM: distinguish these by round name
-        return "Races to " + settings.value.raceToPerRound.map(r => r.toString()).join(", then ")
+        const numRounds = roundNames.value.length
+        const relevantRaceTos = settings.value.raceToPerRound.slice(0, numRounds)
+
+        // MEDIUM: distinguish these by round name. Use roundNames.value from above
+        return "Races to " + relevantRaceTos.map(r => r.toString()).join(", then ")
     })
 
     const winsRequiredSummary = computed(() => {
