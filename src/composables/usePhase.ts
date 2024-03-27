@@ -46,14 +46,9 @@ export const usePhase = (p: Phase | null) => {
         return startedRounds[0] || rounds.value[0]
     })
 
-    const nextRound = computed(() => {
-        const currentRoundIdx = rounds.value.findIndex(r => r.index === currentRound.value.index)
-        return rounds.value[currentRoundIdx + 1]
-    })
+    const nextRoundToGenerate = computed(() => rounds.value.find(r => !r.isGenerated))
 
-    const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
-
-    const readyForNextRound = computed(() => {
+    const readyToGenerateNextRound = computed(() => {
         if (!settings.value.randomlyDrawAllRounds) {
             return false
         }
@@ -65,8 +60,11 @@ export const usePhase = (p: Phase | null) => {
             return false
         }
 
-        return currentRound.value.fixtures.every(f => f.startTime && f.finishTime)
+        const lastGeneratedRound = generatedRounds.at(-1)
+        return lastGeneratedRound && lastGeneratedRound.fixtures.every(f => f.startTime && f.finishTime)
     })
+
+    const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
     const durationMinutes = computed(() => {
         if (!phase.value?.startTime || !phase.value.finishTime) {
@@ -209,9 +207,9 @@ export const usePhase = (p: Phase | null) => {
         isComplete,
         remainingCount,
         currentRound,
-        nextRound,
+        nextRoundToGenerate,
         generationIsComplete,
-        readyForNextRound,
+        readyToGenerateNextRound,
         durationMinutes,
         durationSeconds,
         clockDisplay,

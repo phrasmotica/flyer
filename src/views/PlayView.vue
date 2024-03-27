@@ -48,9 +48,9 @@ const {
     isInProgress,
     remainingCount,
     currentRound,
-    nextRound,
+    nextRoundToGenerate,
+    readyToGenerateNextRound,
     generationIsComplete,
-    readyForNextRound,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
@@ -108,8 +108,8 @@ const header = computed(() => {
 })
 
 const generateNextRoundLabel = computed(() => {
-    if (nextRound.value) {
-        return "Generate " + nextRound.value.name
+    if (nextRoundToGenerate.value) {
+        return "Generate " + nextRoundToGenerate.value.name
     }
 
     return "Generate next round"
@@ -124,13 +124,13 @@ const finishButtonText = computed(() => {
 })
 
 const generateNextRound = () => {
-    if (!currentPhase.value || !nextRound.value || winners.value.length <= 0) {
+    if (!currentPhase.value || !nextRoundToGenerate.value || winners.value.length <= 0) {
         return
     }
 
     flyerStore.generateRound(
         currentPhase.value.id,
-        nextRound.value.index,
+        nextRoundToGenerate.value.index,
         winners.value)
 }
 
@@ -234,7 +234,7 @@ onUnmounted(() => {
                 v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
                 class="mb-2"
                 :label="generateNextRoundLabel"
-                :disabled="!readyForNextRound"
+                :disabled="!readyToGenerateNextRound"
                 @click="generateNextRound" />
 
             <Button
