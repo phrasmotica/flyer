@@ -16,35 +16,40 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     estimateDuration(settings: FlyerSettings) {
-        const numFixtures = settings.playerCount - 1
-
         // here a "group" is a set of fixtures that can be played in parallel
-        let numFixturesPerGroup = [numFixtures]
-
-        const maxFrames = 2 * settings.raceTo - 1
-        const meanFrames = (settings.raceTo + maxFrames) / 2
-
-        if (settings.randomlyDrawAllRounds && numFixtures > 1) {
-            numFixturesPerGroup = this.computeFixturesPerRound(settings.playerCount)
-        }
+        let numFixturesPerGroup = this.computeFixturesPerRound(settings)
 
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
+        const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
+            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
+                ? settings.raceToPerRound[i]
+                : settings.raceTo
+
+            return {
+                count: x,
+                meanFrames: (raceTo + (2 * raceTo - 1)) / 2,
+            }
+        })
+
+        // MEDIUM: don't segregate fixtures of different race-tos into different
+        // groups. In a fixed draw flyer, they can be played in parallel
 
         // round number of fixtures UP to the next multiple of the number of
         // tables being used, to account for the fact that a fixture can only be
         // played on one table
-        const meanFramesPerGroup = numFixturesPerGroup.map(n => meanFrames * Math.ceil(n / settings.tableCount) * settings.tableCount)
+        const meanFramesPerGroup = fixturesPerGroup.map(o => o.meanFrames * Math.ceil(o.count / settings.tableCount) * settings.tableCount)
         const expectedTimePerGroup = meanFramesPerGroup.map(m => this.frameTimeEstimateMins * m)
 
         const expectedTime = Math.ceil(expectedTimePerGroup.reduce((x, y) => x + y) / settings.tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
     }
 
-    computeFixturesPerRound(playerCount: number) {
-        const numFixtures = playerCount - 1
+    computeFixturesPerRound(settings: FlyerSettings) {
+        const numFixtures = settings.playerCount - 1
+        const isVariableRaces = settings.matchLengthModel === MatchLengthModel.Variable
 
-        if (numFixtures === 1 || !this.settings.randomlyDrawAllRounds) {
+        if (!isVariableRaces && (numFixtures === 1 || !this.settings.randomlyDrawAllRounds)) {
             return [numFixtures]
         }
 
