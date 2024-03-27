@@ -16,6 +16,7 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
+import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -58,6 +59,10 @@ const {
 const {
     winners,
 } = useRound(currentRound.value, settings.value)
+
+const {
+    estimatedDuration,
+} = useSettings(settings.value)
 
 const {
     queryParams,
@@ -196,7 +201,7 @@ onUnmounted(() => {
 
                 <div class="cursor-pointer" @click="() => toggleShowPrice()">
                     <Price v-if="showPrice" :amount="totalCost" />
-                    <Clock v-else :elapsedSeconds="clockDisplay" />
+                    <Clock v-else :elapsedSeconds="clockDisplay" :warnAfterSeconds="estimatedDuration" />
                 </div>
             </div>
 
