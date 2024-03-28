@@ -150,7 +150,7 @@ export const useSettings = (s: FlyerSettings) => {
         throw `Invalid flyer format ${settings.value.format}!`
     })
 
-    const estimatedDuration = computed(() => {
+    const estimatedDurationMinutes = computed(() => {
         if (isKnockout.value) {
             return new KnockoutScheduler(settings.value).estimateDuration(settings.value)
         }
@@ -180,7 +180,7 @@ export const useSettings = (s: FlyerSettings) => {
         return meanCostPerHour * settings.value.tableCount
     })
 
-    const estimatedCost = computed(() => costPerHour.value * estimatedDuration.value / 60)
+    const estimatedCost = computed(() => costPerHour.value * estimatedDurationMinutes.value / 60)
 
     const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
 
@@ -277,7 +277,7 @@ export const useSettings = (s: FlyerSettings) => {
         usesPlayOff,
 
         durationPerFrame,
-        estimatedDuration,
+        estimatedDurationMinutes,
         roundNames,
         costPerHour,
         estimatedCost,

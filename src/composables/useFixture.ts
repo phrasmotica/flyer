@@ -80,7 +80,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         return true
     })
 
-    const estimatedDuration = computed(() => {
+    const estimatedDurationSeconds = computed(() => {
         const actualRaceTo = isVariableMatchLength.value ? raceTo.value : settings.value.raceTo
         const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
 
@@ -178,7 +178,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         hasFinished,
         isInProgress,
         canBeFinished,
-        estimatedDuration,
+        estimatedDurationSeconds,
         durationSeconds,
         winner,
         getOpponent,

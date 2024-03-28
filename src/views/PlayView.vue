@@ -61,7 +61,7 @@ const {
 } = useRound(currentRound.value, settings.value)
 
 const {
-    estimatedDuration,
+    estimatedDurationMinutes,
 } = useSettings(settings.value)
 
 const {
@@ -201,7 +201,7 @@ onUnmounted(() => {
 
                 <div class="cursor-pointer" @click="() => toggleShowPrice()">
                     <Price v-if="showPrice" :amount="totalCost" />
-                    <Clock v-else :elapsedSeconds="clockDisplay" :warnAfterSeconds="estimatedDuration" />
+                    <Clock v-else :elapsedSeconds="clockDisplay" :warnAfterSeconds="estimatedDurationMinutes * 60" />
                 </div>
             </div>
 

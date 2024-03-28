@@ -38,7 +38,7 @@ const { selectOnFocus } = useTweaks()
 const {
     settings,
     durationPerFrame,
-    estimatedDuration,
+    estimatedDurationMinutes,
     isInvalid,
 } = useSettings(settingsStore.settings)
 
@@ -152,7 +152,7 @@ const hideModal = () => {
                         </div>
 
                         <div class="ml-2">
-                            <Clock :elapsedSeconds="estimatedDuration * 60" />
+                            <Clock :elapsedSeconds="estimatedDurationMinutes * 60" />
                         </div>
                     </div>
                 </div>

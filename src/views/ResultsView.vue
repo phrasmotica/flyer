@@ -39,7 +39,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-    estimatedDuration,
+    estimatedDurationMinutes,
 } = useSettings(settings.value)
 
 const {
@@ -171,7 +171,7 @@ const goToPastFlyers = () => {
                 <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                     <h1>{{ settings.name }}</h1>
 
-                    <Clock :elapsedSeconds="durationSeconds || 0" :warnAfterSeconds="estimatedDuration" />
+                    <Clock :elapsedSeconds="durationSeconds || 0" :warnAfterSeconds="estimatedDurationMinutes * 60" />
                 </div>
 
                 <ResultsTable v-if="isRoundRobin || isWinnerStaysOn" />
