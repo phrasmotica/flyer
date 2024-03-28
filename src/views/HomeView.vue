@@ -16,11 +16,6 @@ import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
-import { Format } from "../data/FlyerSettings"
-import { KnockoutScheduler } from "../data/KnockoutScheduler"
-import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
-import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
-
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
 
@@ -50,22 +45,7 @@ useFocus(nameInput, { initialValue: true })
 
 const start = () => {
     try {
-        switch (settings.value.format) {
-            case Format.Knockout:
-                flyerStore.start(settings.value, new KnockoutScheduler(settings.value), [])
-                break
-
-            case Format.RoundRobin:
-                flyerStore.start(settings.value, new RoundRobinScheduler(settings.value), [])
-                break
-
-            case Format.WinnerStaysOn:
-                flyerStore.start(settings.value, new WinnerStaysOnScheduler(settings.value), [])
-                break
-
-            default:
-                throw `Invalid flyer format ${settings.value.format}!`
-        }
+        flyerStore.start(settings.value)
     }
     catch (e) {
         console.error(e)

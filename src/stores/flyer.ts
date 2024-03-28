@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { useRankings } from "../composables/useRankings"
 
-import type { Fixture, Score } from "../data/Fixture"
+import type { Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
 import { createPlayOffSettings, Format, type FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
@@ -13,7 +13,9 @@ import type { Phase } from "../data/Phase"
 import type { Player } from "../data/Player"
 import type { PlayOff } from "../data/PlayOff"
 import type { Round } from "../data/Round"
+import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
 import type { Table } from "../data/Table"
+import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 
 export const useFlyerStore = defineStore("flyer", () => {
     const flyer = useStorage<Flyer | null>("flyer", null, localStorage, {
@@ -33,14 +35,31 @@ export const useFlyerStore = defineStore("flyer", () => {
         flyer.value = f
     }
 
-    const start = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]) => {
-        flyer.value = createFlyer(settings, scheduler, players)
-    }
+    const start = (settings: FlyerSettings) => {
+        let scheduler: IScheduler | null = null
 
-    const createFlyer = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]): Flyer => ({
-        id: uuidv4(),
-        phases: [createPhase(settings, scheduler, players)],
-    })
+        switch (settings.format) {
+            case Format.Knockout:
+                scheduler = new KnockoutScheduler(settings)
+                break
+
+            case Format.RoundRobin:
+                scheduler = new RoundRobinScheduler(settings)
+                break
+
+            case Format.WinnerStaysOn:
+                scheduler = new WinnerStaysOnScheduler(settings)
+                break
+
+            default:
+                throw `Invalid flyer format ${settings.format}!`
+        }
+
+        flyer.value = {
+            id: uuidv4(),
+            phases: [createPhase(settings, scheduler, [])],
+        }
+    }
 
     const createPhase = (settings: FlyerSettings, scheduler: IScheduler, players: Player[]): Phase => {
         if (players.length <= 0) {
