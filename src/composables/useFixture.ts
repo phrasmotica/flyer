@@ -82,19 +82,19 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const estimatedDuration = computed(() => {
         const actualRaceTo = isVariableMatchLength.value ? raceTo.value : settings.value.raceTo
-        const meanFrames = actualRaceTo + (2 * actualRaceTo - 1) / 2
+        const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
 
         // TODO: move this logic into a method on the Scheduler classes
         if (isKnockout.value) {
-            return new KnockoutScheduler(settings.value).frameTimeEstimateMins * meanFrames
+            return new KnockoutScheduler(settings.value).frameTimeEstimateMins * 60 * meanFrames
         }
 
         if (isRoundRobin.value) {
-            return new RoundRobinScheduler(settings.value.stageCount).frameTimeEstimateMins * meanFrames
+            return new RoundRobinScheduler(settings.value.stageCount).frameTimeEstimateMins * 60 * meanFrames
         }
 
         if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler(settings.value.winsRequired).frameTimeEstimateMins * meanFrames
+            return new WinnerStaysOnScheduler(settings.value.winsRequired).frameTimeEstimateMins * 60 * meanFrames
         }
 
         throw `Invalid flyer format ${settings.value.format}!`
