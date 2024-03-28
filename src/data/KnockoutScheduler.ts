@@ -15,16 +15,16 @@ export class KnockoutScheduler implements IScheduler {
 
     }
 
-    estimateDuration(settings: FlyerSettings) {
+    estimateDuration() {
         // here a "group" is a set of fixtures that can be played in parallel
-        let numFixturesPerGroup = this.computeFixturesPerRound(settings)
+        let numFixturesPerGroup = this.computeFixturesPerRound(this.settings)
 
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
-            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
-                ? settings.raceToPerRound[i]
-                : settings.raceTo
+            const raceTo = this.settings.matchLengthModel === MatchLengthModel.Variable
+                ? this.settings.raceToPerRound[i]
+                : this.settings.raceTo
 
             return {
                 count: x,
@@ -38,10 +38,11 @@ export class KnockoutScheduler implements IScheduler {
         // round number of fixtures UP to the next multiple of the number of
         // tables being used, to account for the fact that a fixture can only be
         // played on one table
-        const meanFramesPerGroup = fixturesPerGroup.map(o => o.meanFrames * Math.ceil(o.count / settings.tableCount) * settings.tableCount)
+        const tableCount = this.settings.tableCount
+        const meanFramesPerGroup = fixturesPerGroup.map(o => o.meanFrames * Math.ceil(o.count / tableCount) * tableCount)
         const expectedTimePerGroup = meanFramesPerGroup.map(m => this.frameTimeEstimateMins * m)
 
-        const expectedTime = Math.ceil(expectedTimePerGroup.reduce((x, y) => x + y) / settings.tableCount)
+        const expectedTime = Math.ceil(expectedTimePerGroup.reduce((x, y) => x + y) / tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
     }
 

@@ -152,15 +152,15 @@ export const useSettings = (s: FlyerSettings) => {
 
     const estimatedDurationMinutes = computed(() => {
         if (isKnockout.value) {
-            return new KnockoutScheduler(settings.value).estimateDuration(settings.value)
+            return new KnockoutScheduler(settings.value).estimateDuration()
         }
 
         if (isRoundRobin.value) {
-            return new RoundRobinScheduler(settings.value).estimateDuration(settings.value)
+            return new RoundRobinScheduler(settings.value).estimateDuration()
         }
 
         if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler(settings.value).estimateDuration(settings.value)
+            return new WinnerStaysOnScheduler(settings.value).estimateDuration()
         }
 
         throw `Invalid flyer format ${settings.value.format}!`

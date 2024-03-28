@@ -16,14 +16,14 @@ export class RoundRobinScheduler implements IScheduler {
 
     }
 
-    estimateDuration(settings: FlyerSettings) {
+    estimateDuration() {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
-        const numFixtures = settings.stageCount * settings.playerCount * (settings.playerCount - 1) / 2
-        const maxFrames = 2 * settings.raceTo - 1
-        const meanFrames = (settings.raceTo + maxFrames) / 2
+        const numFixtures = this.settings.stageCount * this.settings.playerCount * (this.settings.playerCount - 1) / 2
+        const maxFrames = 2 * this.settings.raceTo - 1
+        const meanFrames = (this.settings.raceTo + maxFrames) / 2
         const expectedFramesTotal = numFixtures * meanFrames
-        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
+        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / this.settings.tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
     }
 

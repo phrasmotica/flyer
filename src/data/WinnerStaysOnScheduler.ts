@@ -15,9 +15,9 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
     }
 
-    estimateDuration(settings: FlyerSettings) {
+    estimateDuration() {
         // always one frame per fixture, and one table
-        const maxFrameCount = settings.playerCount * (this.settings.winsRequired - 1) + 1
+        const maxFrameCount = this.settings.playerCount * (this.settings.winsRequired - 1) + 1
         const minFrameCount = this.settings.winsRequired
         const expectedFramesTotal = (minFrameCount + maxFrameCount) / 2
         const expectedTime = this.frameTimeEstimateMins * expectedFramesTotal
