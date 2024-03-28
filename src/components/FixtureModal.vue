@@ -52,6 +52,7 @@ const {
     fixture,
     round,
     breakerId,
+    raceTo,
     scores,
     runouts,
     comment,
@@ -67,10 +68,6 @@ const {
     setRanOut,
     resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), settings.value)
-
-const {
-    raceTo,
-} = useRound(round.value, settings.value)
 
 const {
     isWinnerStaysOn,
