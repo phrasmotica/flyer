@@ -5,5 +5,6 @@ import type { Round } from "./Round"
 export interface IScheduler {
     frameTimeEstimateMins: number
     estimateDuration(settings: FlyerSettings): number
+    estimateFixtureDuration(raceTo: number): number
     generateFixtures(players: Player[]): Round[]
 }

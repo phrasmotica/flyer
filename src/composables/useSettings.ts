@@ -140,11 +140,11 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (isRoundRobin.value) {
-            return new RoundRobinScheduler(settings.value.stageCount).frameTimeEstimateMins
+            return new RoundRobinScheduler(settings.value).frameTimeEstimateMins
         }
 
         if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler(settings.value.winsRequired).frameTimeEstimateMins
+            return new WinnerStaysOnScheduler(settings.value).frameTimeEstimateMins
         }
 
         throw `Invalid flyer format ${settings.value.format}!`
@@ -156,11 +156,11 @@ export const useSettings = (s: FlyerSettings) => {
         }
 
         if (isRoundRobin.value) {
-            return new RoundRobinScheduler(settings.value.stageCount).estimateDuration(settings.value)
+            return new RoundRobinScheduler(settings.value).estimateDuration(settings.value)
         }
 
         if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler(settings.value.winsRequired).estimateDuration(settings.value)
+            return new WinnerStaysOnScheduler(settings.value).estimateDuration(settings.value)
         }
 
         throw `Invalid flyer format ${settings.value.format}!`

@@ -56,11 +56,11 @@ const start = () => {
                 break
 
             case Format.RoundRobin:
-                flyerStore.start(settings.value, new RoundRobinScheduler(settings.value.stageCount), [])
+                flyerStore.start(settings.value, new RoundRobinScheduler(settings.value), [])
                 break
 
             case Format.WinnerStaysOn:
-                flyerStore.start(settings.value, new WinnerStaysOnScheduler(settings.value.winsRequired), [])
+                flyerStore.start(settings.value, new WinnerStaysOnScheduler(settings.value), [])
                 break
 
             default:

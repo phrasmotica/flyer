@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 
 import type { ParentFixture, Fixture } from "./Fixture"
-import type { FlyerSettings } from "./FlyerSettings"
+import { MatchLengthModel, type FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
@@ -11,17 +11,24 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private winsRequired: number) {
+    constructor(private settings: FlyerSettings) {
 
     }
 
     estimateDuration(settings: FlyerSettings) {
         // always one frame per fixture, and one table
-        const maxFrameCount = settings.playerCount * (this.winsRequired - 1) + 1
-        const minFrameCount = this.winsRequired
+        const maxFrameCount = settings.playerCount * (this.settings.winsRequired - 1) + 1
+        const minFrameCount = this.settings.winsRequired
         const expectedFramesTotal = (minFrameCount + maxFrameCount) / 2
         const expectedTime = this.frameTimeEstimateMins * expectedFramesTotal
         return Math.max(this.frameTimeEstimateMins, expectedTime)
+    }
+
+    estimateFixtureDuration(raceTo: number) {
+        const isVariableMatchLength = this.settings.matchLengthModel === MatchLengthModel.Variable
+        const actualRaceTo = isVariableMatchLength ? raceTo : this.settings.raceTo
+        const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
+        return this.frameTimeEstimateMins * 60 * meanFrames
     }
 
     generateFixtures(players: Player[]) {
@@ -41,7 +48,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
 
         const playerOrder = this.shuffle([...players])
 
-        const maxFixtureCount = players.length * (this.winsRequired - 1) + 1
+        const maxFixtureCount = players.length * (this.settings.winsRequired - 1) + 1
         let fixtureCount = 0
 
         let roundIndex = 1

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 
 import type { Fixture } from "./Fixture"
-import type { FlyerSettings } from "./FlyerSettings"
+import { MatchLengthModel, type FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
@@ -12,7 +12,7 @@ export class RoundRobinScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private stageCount: number) {
+    constructor(private settings: FlyerSettings) {
 
     }
 
@@ -25,6 +25,13 @@ export class RoundRobinScheduler implements IScheduler {
         const expectedFramesTotal = numFixtures * meanFrames
         const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
+    }
+
+    estimateFixtureDuration(raceTo: number) {
+        const isVariableMatchLength = this.settings.matchLengthModel === MatchLengthModel.Variable
+        const actualRaceTo = isVariableMatchLength ? raceTo : this.settings.raceTo
+        const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
+        return this.frameTimeEstimateMins * 60 * meanFrames
     }
 
     generateFixtures(players: Player[]) {
@@ -58,8 +65,8 @@ export class RoundRobinScheduler implements IScheduler {
             throw `Failed to generate rounds after ${this.generationAttempts} attempt(s)!`
         }
 
-        if (this.stageCount > 1) {
-            for (let a = 0; a < this.stageCount - 1; a++) {
+        if (this.settings.stageCount > 1) {
+            for (let a = 0; a < this.settings.stageCount - 1; a++) {
                 // copy the last N rounds
                 const roundsToCopy = this.generatedRounds.slice(-numRounds)
 
