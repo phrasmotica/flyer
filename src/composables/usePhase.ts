@@ -1,7 +1,7 @@
 import { computed, ref, watch } from "vue"
-import { useIntervalFn } from "@vueuse/core"
 import { differenceInMinutes, differenceInSeconds } from "date-fns"
 
+import { useClock } from "./useClock"
 import { RoundStatus } from "./useRound"
 import { useSettings } from "./useSettings"
 
@@ -20,6 +20,13 @@ export const usePhase = (p: Phase | null) => {
 
     // LOW: do something better here than casting an empty object to FlyerSettings
     const settings = computed(() => phase.value?.settings || <FlyerSettings>{})
+
+    const {
+        clockable,
+        elapsedSeconds,
+        pauseClock,
+        resumeClock,
+    } = useClock("PhaseClock " + settings.value.name, phase.value)
 
     const rounds = computed(() => phase.value?.rounds || [])
 
@@ -159,30 +166,9 @@ export const usePhase = (p: Phase | null) => {
         return `${getRound(fixture?.id || "")?.name || "???"} - ${getFixtureDescription(fixture)}`
     }
 
-    const computeDifference = () => differenceInSeconds(Date.now(), phase.value?.startTime || Date.now())
-
-    const elapsedSeconds = ref(computeDifference())
-
-    const updateClock = () => {
-        const newValue = computeDifference()
-        console.debug("PhaseClock " + settings.value.name + ": " + phase.value?.startTime + " + " + newValue)
-        elapsedSeconds.value = newValue
-    }
-
     watch(phase, () => {
-        updateClock()
-
-        if (phase.value?.startTime) {
-            resumeClock()
-        }
+        clockable.value = phase.value
     })
-
-    const clock = useIntervalFn(updateClock, 1000, {
-        immediate: false,
-    })
-
-    const pauseClock = clock.pause
-    const resumeClock = clock.resume
 
     const takeWhile = <T>(arr: T[], pred: (x: T) => boolean): T[] => {
         if (arr.length <= 0) {

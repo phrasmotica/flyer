@@ -1,8 +1,9 @@
 import { ref, computed, watch } from "vue"
-import { useArrayUnique, useIntervalFn } from "@vueuse/core"
+import { useArrayUnique } from "@vueuse/core"
 import { differenceInSeconds } from "date-fns"
 
 import { useArray } from "./useArray"
+import { useClock } from "./useClock"
 import { useRound } from "./useRound"
 import { useSettings } from "./useSettings"
 
@@ -17,6 +18,13 @@ import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 // where the argument can currently be undefined (see FixtureModal.vue)
 export const useFixture = (name: string, f: Fixture | undefined, r: Round | undefined, s: FlyerSettings) => {
     const fixture = ref(f)
+
+    const {
+        clockable,
+        elapsedSeconds,
+        pauseClock,
+        resumeClock,
+    } = useClock("FixtureClock " + name, fixture.value || null)
 
     const {
         round,
@@ -47,7 +55,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const comment = ref(fixture.value?.comment || "")
 
-    const startTime = computed(() => fixture.value?.startTime)
     const players = computed(() => fixture.value?.scores.map(s => s.playerId) || [])
     const isWalkover = computed(() => fixture.value?.scores.some(s => s.isBye) || false)
 
@@ -130,30 +137,12 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         return opponentScore?.playerId || ""
     }
 
-    const computeDifference = () => differenceInSeconds(Date.now(), startTime.value || Date.now())
-
-    const elapsedSeconds = ref(computeDifference())
-
-    const updateClock = () => {
-        const newValue = computeDifference()
-        console.debug("FixtureClock " + name + ": " + startTime.value + " + " + newValue)
-        elapsedSeconds.value = newValue
-    }
-
     watch(fixture, () => {
-        updateClock()
+        clockable.value = fixture.value || null
 
         scores.value = fixture.value?.scores.map(s => s.score) || []
         runouts.value = fixture.value?.scores.map(s => s.runouts) || []
         comment.value = fixture.value?.comment || ""
-
-        if (fixture.value?.startTime) {
-            clock.resume()
-        }
-    })
-
-    const clock = useIntervalFn(updateClock, 1000, {
-        immediate: false,
     })
 
     const setWinner = (index: number, clearRunouts: boolean) => {
@@ -173,9 +162,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
         setWinner(index, false)
     }
-
-    const pauseClock = clock.pause
-    const resumeClock = clock.resume
 
     return {
         fixture,
