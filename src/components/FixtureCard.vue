@@ -32,7 +32,6 @@ const {
     settings,
     getRound,
     getPlayerName,
-    getTableName,
 } = usePhase(currentPhase.value)
 
 const {
@@ -52,15 +51,22 @@ const isHighlighted = (slot: 0 | 1) => {
 }
 
 const playerNameClass = (playerId: string, slot: 0 | 1) => {
-    if (winner.value) {
-        if (winner.value === playerId) {
-            return "font-bold"
-        }
+    let c = ""
 
-        return isHighlighted(slot) ? "" : "text-color-secondary"
+    if (fixture.value?.breakerId === playerId) {
+        c += " underline"
     }
 
-    return ""
+    if (winner.value) {
+        if (winner.value === playerId) {
+            c += " font-bold"
+        }
+        else if (!isHighlighted(slot)){
+            c += " text-color-secondary"
+        }
+    }
+
+    return c.trim()
 }
 
 const handleClick = () => {

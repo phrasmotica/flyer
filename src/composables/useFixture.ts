@@ -36,7 +36,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         isKnockout,
         isRoundRobin,
         isWinnerStaysOn,
-        isVariableMatchLength,
     } = useSettings(s)
 
     const breakerId = ref("")
