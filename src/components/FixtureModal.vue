@@ -284,30 +284,37 @@ const resetPlayerScores = () => {
 
         <div class="p-fluid">
             <Button v-if="!hasStarted"
-                class="mb-2"
                 type="button"
                 :label="startButtonText"
                 :disabled="!canStart"
                 @click="startFixture" />
 
-            <div v-if="isInProgress" class="flex gap-2 mb-2">
-                <Button
-                    type="button"
-                    label="Close"
-                    severity="secondary"
-                    @click="hide" />
+            <div v-if="isInProgress" class="grid m-0">
+                <div class="col-6 p-0 pr-1">
+                    <Button
+                        type="button"
+                        label="Close"
+                        severity="secondary"
+                        @click="hide" />
+                </div>
 
-                <SplitButton
-                    label="Update"
-                    :model="[
-                        {
-                            label: 'Finish',
-                            command: () => updateScores(true),
-                            disabled: !canBeFinished,
-                        },
-                    ]"
-                    @click="() => updateScores(false)"
-                    severity="info" />
+                <div class="col-6 p-0 pl-1">
+                    <SplitButton v-if="canBeFinished"
+                        label="Finish"
+                        :model="[
+                            {
+                                label: 'Update',
+                                command: () => updateScores(false),
+                            },
+                        ]"
+                        @click="() => updateScores(true)" />
+
+                    <Button v-else
+                        type="button"
+                        label="Update"
+                        severity="info"
+                        @click="() => updateScores(false)" />
+                </div>
             </div>
         </div>
     </Dialog>
