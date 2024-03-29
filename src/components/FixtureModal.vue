@@ -222,15 +222,15 @@ const resetPlayerScores = () => {
         <div v-if="hasStarted" id="score-inputs" class="mb-2">
             <!-- MEDIUM: this is getting crowded. Design a better layout -->
             <div class="mb-2">
-                <p v-if="fixture.tableId" class="m-0 text-center text-sm">
-                    {{ getTableName(fixture.tableId) }}
-                </p>
+                <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" :warnAfterSeconds="estimatedDurationSeconds" />
 
-                <div class="p-fluid flex justify-content-center">
+                <div class="p-fluid flex justify-content-center gap-2">
+                    <Badge v-if="fixture.tableId">
+                        {{ getTableName(fixture.tableId) }}
+                    </Badge>
+
                     <RaceToBadge singular :value="raceTo" />
                 </div>
-
-                <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" :warnAfterSeconds="estimatedDurationSeconds" />
             </div>
 
             <div class="grid m-0">
