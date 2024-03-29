@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUpdated } from "vue"
+import { onUpdated } from "vue"
 import { v4 as uuidv4 } from "uuid"
 
 import ScoreCell from "./ScoreCell.vue"
@@ -39,14 +39,6 @@ const {
     raceTo,
 } = useFixture("scoreInput", props.fixture, getRound(props.fixture.id), settings.value)
 
-const breakerLabel = computed(() => {
-    if (raceTo.value === 1) {
-        return props.fixture.breakerId === props.playerId ? "Broke" : "Did not break"
-    }
-
-    return props.fixture.breakerId === props.playerId ? "Broke first" : "Broke second"
-})
-
 const { blurNumberInputs } = useTweaks()
 
 const scoreInputId = "player-score-input-" + uuidv4()
@@ -60,14 +52,8 @@ onUpdated(() => {
 
 <template>
     <div class="flex flex-column align-items-center">
-        <div class="font-bold">
+        <div class="font-bold" :class="[props.fixture.breakerId === props.playerId && 'underline']">
             {{ getPlayerName(props.playerId) }}
-        </div>
-
-        <div class="mb-2">
-            <Badge
-                :value="breakerLabel"
-                severity="secondary" />
         </div>
 
         <div v-if="props.finished">
