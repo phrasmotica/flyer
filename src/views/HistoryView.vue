@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
-import { useClipboard } from "@vueuse/core"
+import { useClipboard, useToggle } from "@vueuse/core"
 
+import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerHistory from "../components/FlyerHistory.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
@@ -10,11 +11,16 @@ import type { Flyer } from "../data/Flyer"
 
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
-const { copy, text: clipboardText } = useClipboard()
+const {
+    copy,
+} = useClipboard()
 
 const flyerHistory = useFlyerHistoryStore()
 
 const router = useRouter()
+
+const importText = ref("")
+const [showImportModal, setShowImportModal] = useToggle(false)
 
 const isImported = ref(false)
 const failedToImport = ref(false)
@@ -33,10 +39,12 @@ const exportButtonLabel = computed(() => isExported.value ? "Data copied to clip
 
 const importPastFlyers = () => {
     try {
-        const data = <Flyer[]>JSON.parse(clipboardText.value)
+        const data = <Flyer[]>JSON.parse(importText.value)
         flyerHistory.importFlyers(data)
 
         isImported.value = true
+        importText.value = ""
+        setShowImportModal(false)
 
         setTimeout(() => {
             isImported.value = false
@@ -81,6 +89,20 @@ const newFlyer = () => {
             </div>
 
             <FlyerHistory />
+
+            <ConfirmModal
+                :visible="showImportModal"
+                header="Import data"
+                message="Please paste flyer data here:"
+                confirmLabel="Import"
+                :confirmDisabled="false"
+                cancelLabel="Cancel"
+                @confirm="importPastFlyers"
+                @hide="() => setShowImportModal(false)">
+                <div class="p-fluid">
+                    <Textarea v-model="importText" />
+                </div>
+            </ConfirmModal>
         </template>
 
         <template #buttons>
@@ -89,7 +111,7 @@ const newFlyer = () => {
                 :label="importButtonLabel"
                 :disabled="failedToImport || isImported"
                 severity="primary"
-                @click="importPastFlyers" />
+                @click="() => setShowImportModal(true)" />
 
             <Button
                 :label="exportButtonLabel"
