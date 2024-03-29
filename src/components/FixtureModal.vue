@@ -291,6 +291,7 @@ const resetPlayerScores = () => {
                 @click="startFixture" />
 
             <div v-if="isInProgress" class="flex gap-2 mb-2">
+                <!-- MEDIUM: use a split button, where Update is the primary and "Update and finish" is the secondary -->
                 <Button
                     type="button"
                     label="Update"
