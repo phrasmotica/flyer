@@ -13,9 +13,6 @@ watch(props, () => {
     elapsedSeconds.value = props.elapsedSeconds
 })
 
-// MEDIUM: encapsulate this inside a Clock object, which should be exported
-// by a useClock() hook, which should take an object with startTime and
-// finishTime properties
 const shouldWarn = computed(() => !!props.warnAfterSeconds && elapsedSeconds.value > props.warnAfterSeconds)
 
 const pad = (n: number) => n.toString().padStart(2, "0")
