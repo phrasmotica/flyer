@@ -70,7 +70,7 @@ const getPlayOffIndex = (playerId: string) => {
         <Column field="name" header="Name">
             <template #body="slotData">
                 {{ slotData.data.name }}
-                <span v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0">
+                <span v-if="!props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0">
                     <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId) + 1 }}</sup>
                 </span>
             </template>
