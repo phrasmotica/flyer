@@ -291,25 +291,24 @@ const resetPlayerScores = () => {
                 @click="startFixture" />
 
             <div v-if="isInProgress" class="flex gap-2 mb-2">
-                <!-- MEDIUM: use a split button, where Update is the primary and "Update and finish" is the secondary -->
                 <Button
                     type="button"
+                    label="Close"
+                    severity="secondary"
+                    @click="hide" />
+
+                <SplitButton
                     label="Update"
-                    severity="info"
-                    @click="() => updateScores(false)" />
-
-                <Button
-                    type="button"
-                    label="Finish"
-                    :disabled="!canBeFinished"
-                    @click="() => updateScores(true)" />
+                    :model="[
+                        {
+                            label: 'Finish',
+                            command: () => updateScores(true),
+                            disabled: !canBeFinished,
+                        },
+                    ]"
+                    @click="() => updateScores(false)"
+                    severity="info" />
             </div>
-
-            <Button
-                type="button"
-                label="Close"
-                severity="secondary"
-                @click="hide" />
         </div>
     </Dialog>
 </template>

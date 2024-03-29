@@ -23,6 +23,7 @@ import InputText from "primevue/inputtext"
 import MeterGroup from 'primevue/metergroup'
 import RadioButton from 'primevue/radiobutton'
 import SelectButton from "primevue/selectbutton"
+import SplitButton from 'primevue/splitbutton'
 import Slider from "primevue/slider"
 import TabMenu from 'primevue/tabmenu'
 import Textarea from 'primevue/textarea'
@@ -81,6 +82,7 @@ app.component("MeterGroup", MeterGroup)
 app.component("RadioButton", RadioButton)
 app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
+app.component("SplitButton", SplitButton)
 app.component("TabMenu", TabMenu)
 app.component("Textarea", Textarea)
 app.component("Toast", Toast)

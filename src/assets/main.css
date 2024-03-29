@@ -30,6 +30,10 @@ a,
   }
 }
 
+.p-tieredmenu .p-menuitem > .p-menuitem-content a.p-menuitem-link {
+    color: #334155;
+}
+
 .p-button.p-button-secondary, .p-button-group.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button {
   transition: color 0.5s, background-color 0.5s;
 }
