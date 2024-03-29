@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 const props = defineProps<{
     elapsedSeconds: number
     warnAfterSeconds?: number
     large?: boolean
 }>()
+
+const { d } = useI18n()
 
 const elapsedSeconds = ref(props.elapsedSeconds)
 
@@ -15,16 +18,9 @@ watch(props, () => {
 
 const shouldWarn = computed(() => !!props.warnAfterSeconds && elapsedSeconds.value > props.warnAfterSeconds)
 
-const pad = (n: number) => n.toString().padStart(2, "0")
-
 const clockText = computed(() => {
-    // MEDIUM: use vue-i18n for this time formatting
-    const hours = Math.floor(elapsedSeconds.value / 3600)
-    const r = elapsedSeconds.value % 3600
-    const minutes = Math.floor(r / 60)
-    const seconds = r % 60
-
-    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+    // multiply by 1000 since d() requires milliseconds
+    return d(elapsedSeconds.value * 1000, "clock")
 })
 </script>
 

@@ -43,7 +43,11 @@ app.use(createI18n({
             long: {
                 year: 'numeric', month: '2-digit', day: '2-digit',
                 hour: '2-digit', minute: '2-digit', hour12: false,
-            }
+            },
+            clock: {
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false, timeZone: 'UTC',
+            },
         }
     },
     numberFormats: {
