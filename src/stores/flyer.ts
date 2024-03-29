@@ -78,7 +78,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             order: 1,
             players,
             tables: actualTables.map<Table>(t => ({ ...t, id: uuidv4() })),
-            settings,
+            settings: {...settings}, // MEDIUM: reduce the amount of data added here
             startTime: Date.now(),
             finishTime: null,
             rounds: scheduler.generateFixtures(players),
