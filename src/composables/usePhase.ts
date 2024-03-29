@@ -120,6 +120,10 @@ export const usePhase = (p: Phase | null) => {
             return FixtureStatus.Unknown
         }
 
+        if (fixture.finishTime) {
+            return FixtureStatus.Finished
+        }
+
         if (fixture.scores.some(s => !s.playerId)) {
             if (settings.value.randomlyDrawAllRounds) {
                 return FixtureStatus.WaitingForRoundGeneration
@@ -219,4 +223,5 @@ export enum FixtureStatus {
     WaitingForRound,
     WaitingForTable,
     ReadyToStart,
+    Finished,
 }

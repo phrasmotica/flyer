@@ -5,6 +5,7 @@ import TableBadge from "./TableBadge.vue"
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { useRound } from "../composables/useRound"
 import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
@@ -30,9 +31,15 @@ const {
 
 const {
     settings,
+    currentRound,
+    canStartFixture,
     getRound,
     getPlayerName,
 } = usePhase(currentPhase.value)
+
+const {
+    status,
+} = useRound(currentRound.value, settings.value)
 
 const {
     fixture,
@@ -97,7 +104,8 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
         v-if="fixture"
         class="border-round-md border-1"
         :class="[
-            props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent'
+            props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent',
+            canStartFixture(props.fixture, status) && 'border border-yellow-500',
         ]">
         <div v-if="fixture.tableId && !fixture.finishTime" class="text-center">
             <TableBadge :tableId="fixture.tableId" />
