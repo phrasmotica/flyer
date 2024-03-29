@@ -2,6 +2,7 @@
 import { computed, ref, watch } from "vue"
 
 import Clock from "./Clock.vue"
+import LabelledDropdown from "./LabelledDropdown.vue"
 import PlayerBreakInput from "./PlayerBreakInput.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
@@ -37,8 +38,8 @@ const {
 const {
     settings,
     currentRound,
+    freeTables,
     canStartFixture,
-    nextFreeTable,
     getRound,
     getFixtureStatus,
     getFixtureHeader,
@@ -52,6 +53,7 @@ const {
     fixture,
     round,
     breakerId,
+    tableId,
     raceTo,
     scores,
     runouts,
@@ -78,6 +80,7 @@ const { blurActive } = useTweaks()
 const visible = ref(props.visible)
 
 const initialBreakerId = ref(breakerId.value)
+const initialTableId = ref(tableId.value)
 const initialScores = ref(scores.value)
 const initialRunouts = ref(runouts.value)
 const initialComment = ref(comment.value)
@@ -88,6 +91,8 @@ watch(props, () => {
 
     // LOW: recompute this entirely inside useFixture()
     round.value = getRound(props.fixture?.id || "")
+
+    tableId.value = freeTables.value[0]?.id || ""
 
     setInitialPlayerScores(props.fixture)
 
@@ -103,11 +108,11 @@ watch([scores, runouts], () => {
 })
 
 const startFixture = () => {
-    if (!fixture.value || !nextFreeTable.value) {
+    if (!fixture.value || freeTables.value.length <= 0 || !tableId.value) {
         return
     }
 
-    flyerStore.startFixture(fixture.value.id, nextFreeTable.value.id, breakerId.value)
+    flyerStore.startFixture(fixture.value.id, tableId.value, breakerId.value)
 
     resumeClock()
 }
@@ -153,6 +158,11 @@ const ranOut = computed(() => {
     return ""
 })
 
+const freeTablesOptions = computed(() => freeTables.value.map(t => ({
+    name: t.name,
+    value: t.id,
+})))
+
 const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.value, currentRoundStatus.value))
 
 const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
@@ -182,7 +192,7 @@ const startButtonText = computed(() => {
         return "Waiting for a free table"
     }
 
-    return "Start on " + nextFreeTable.value!.name
+    return "Start"
 })
 
 const hide = () => {
@@ -193,6 +203,7 @@ const hide = () => {
 
 const setInitialPlayerScores = (fixture: Fixture | undefined) => {
     initialBreakerId.value = fixture?.breakerId || ""
+    initialTableId.value = fixture?.tableId || ""
     initialScores.value = fixture?.scores.map(f => f.score) || []
     initialRunouts.value = fixture?.scores.map(f => f.runouts) || []
     initialComment.value = fixture?.comment || ""
@@ -201,9 +212,11 @@ const setInitialPlayerScores = (fixture: Fixture | undefined) => {
 const resetPlayerScores = () => {
     if (hasFinished.value) {
         breakerId.value = ""
+        tableId.value = ""
     }
     else {
         breakerId.value = initialBreakerId.value
+        tableId.value = initialTableId.value
         scores.value = initialScores.value
         runouts.value = initialRunouts.value
         comment.value = initialComment.value
@@ -283,6 +296,11 @@ const resetPlayerScores = () => {
         </div>
 
         <div class="p-fluid">
+            <LabelledDropdown v-if="!hasStarted"
+                label="Table"
+                :options="freeTablesOptions"
+                v-model="tableId" />
+
             <Button v-if="!hasStarted"
                 type="button"
                 :label="startButtonText"

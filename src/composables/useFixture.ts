@@ -39,6 +39,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     } = useSettings(s)
 
     const breakerId = ref("")
+    const tableId = ref("")
 
     const {
         arr: scores,
@@ -162,6 +163,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         fixture,
         round,
         breakerId,
+        tableId,
         raceTo,
         scores,
         runouts,

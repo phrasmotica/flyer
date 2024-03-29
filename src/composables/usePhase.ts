@@ -96,10 +96,7 @@ export const usePhase = (p: Phase | null) => {
         return costPerHour.value * durationHours
     })
 
-    const nextFreeTable = computed(() => {
-        const freeTables = tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime))
-        return freeTables.at(0)
-    })
+    const freeTables = computed(() => tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime)))
 
     const canStartFixture = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
         return getFixtureStatus(fixture, currentRoundStatus) === FixtureStatus.ReadyToStart
@@ -141,7 +138,7 @@ export const usePhase = (p: Phase | null) => {
             return FixtureStatus.WaitingForRound
         }
 
-        if (!nextFreeTable.value) {
+        if (freeTables.value.length <= 0) {
             return FixtureStatus.WaitingForTable
         }
 
@@ -200,7 +197,7 @@ export const usePhase = (p: Phase | null) => {
         durationSeconds,
         clockDisplay,
         totalCost,
-        nextFreeTable,
+        freeTables,
 
         canStartFixture,
         isBusy,
