@@ -6,6 +6,7 @@ import PlayerBreakInput from "./PlayerBreakInput.vue"
 import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 import RaceToBadge from "./RaceToBadge.vue"
+import TableBadge from "./TableBadge.vue"
 
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
@@ -39,7 +40,6 @@ const {
     canStartFixture,
     nextFreeTable,
     getRound,
-    getTableName,
     getFixtureStatus,
     getFixtureHeader,
 } = usePhase(currentPhase.value)
@@ -225,9 +225,7 @@ const resetPlayerScores = () => {
                 <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" :warnAfterSeconds="estimatedDurationSeconds" />
 
                 <div class="p-fluid flex justify-content-center gap-2">
-                    <Badge v-if="fixture.tableId">
-                        {{ getTableName(fixture.tableId) }}
-                    </Badge>
+                    <TableBadge v-if="fixture.tableId" :tableId="fixture.tableId" />
 
                     <RaceToBadge singular :value="raceTo" />
                 </div>

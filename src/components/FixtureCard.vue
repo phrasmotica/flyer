@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ScoreCell from "./ScoreCell.vue"
+import TableBadge from "./TableBadge.vue"
 
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
@@ -93,9 +94,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
             props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent'
         ]">
         <div v-if="fixture.tableId && !fixture.finishTime" class="text-center">
-            <Badge>
-                {{ getTableName(fixture.tableId) }}
-            </Badge>
+            <TableBadge :tableId="fixture.tableId" />
         </div>
 
         <div class="grid m-0 py-1">
