@@ -93,9 +93,9 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
             props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent'
         ]">
         <div v-if="fixture.tableId && !fixture.finishTime" class="text-center">
-            <p class="m-0 text-xs">
+            <Badge>
                 {{ getTableName(fixture.tableId) }}
-            </p>
+            </Badge>
         </div>
 
         <div class="grid m-0 py-1">
