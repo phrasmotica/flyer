@@ -11,6 +11,8 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useSettings } from "../composables/useSettings"
 
+import type { Table } from "../data/Table"
+
 import { useFlyerStore } from "../stores/flyer"
 
 const { n } = useI18n()
@@ -28,13 +30,20 @@ const {
 
 const {
     settings,
+    fixtures,
     tables,
     isInProgress,
+    getFixtureHeader,
 } = usePhase(currentPhase.value)
 
 const {
     maxTableCount,
 } = useSettings(settings.value)
+
+const getFixtureDescription = (t: Table) => {
+    const fixture = fixtures.value.find(f => !f.finishTime && f.tableId === t.id)
+    return fixture ? getFixtureHeader(fixture) : null
+}
 
 const maxTablesReached = computed(() => tables.value.length >= maxTableCount.value)
 
@@ -54,14 +63,22 @@ const addNewTable = () => {
 <template>
     <div v-if="currentPhase">
         <div class="p-fluid">
-            <div v-for="_, i in currentPhase.tables">
+            <div v-for="t, i in currentPhase.tables">
                 <div class="flex" :class="i > 0 && 'mt-1 pt-1 border-none border-top-1 border-dashed border-gray-200'">
                     <div class="flex-grow-1">
-                        <TableBadge :table="currentPhase.tables[i]" showBusy />
+                        <TableBadge showBusy :table="t" />
 
-                        <p class="m-0">
-                            {{ n(currentPhase.tables[i].costPerHour, "currency") }} per hour
-                        </p>
+                        <div>
+                            <Badge severity="secondary">
+                                {{ n(t.costPerHour, "currency") }} per hour
+                            </Badge>
+                        </div>
+
+                        <div v-if="getFixtureDescription(t)">
+                            <Badge severity="secondary">
+                                {{ getFixtureDescription(t) }}
+                            </Badge>
+                        </div>
 
                         <!-- MEDIUM: indicate which fixture is being played on the table,
                         and allow opening the fixture modal -->
