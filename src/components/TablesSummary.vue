@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
+import { useToggle } from "@vueuse/core"
 
+import ConfirmModal from "./ConfirmModal.vue"
+import CurrencyStepper from "./CurrencyStepper.vue"
+import NameInput from "./NameInput.vue"
 import TableBadge from "./TableBadge.vue"
 
 import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
+import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -15,9 +22,37 @@ const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
+const newTableName = ref("")
+const newTableCost = ref(9)
+
+const [showAddTableModal, setShowAddTableModal] = useToggle(false)
+
 const {
     currentPhase,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    settings,
+    tables,
+} = usePhase(currentPhase.value)
+
+const {
+    maxTableCount,
+} = useSettings(settings.value)
+
+const maxTablesReached = computed(() => tables.value.length >= maxTableCount.value)
+
+const canAdd = computed(() => !!newTableName.value)
+
+const addNewTable = () => {
+    if (!canAdd.value) {
+        return
+    }
+
+    flyerStore.addTable(newTableName.value, newTableCost.value)
+
+    setShowAddTableModal(false)
+}
 </script>
 
 <template>
@@ -46,5 +81,40 @@ const {
                 </div>
             </div>
         </div>
+
+        <div class="p-fluid mt-1 pt-1 border-none border-top-1 border-gray-200">
+            <Button v-if="props.isInProgress"
+                class="fluid-icon-button"
+                icon="pi pi-plus"
+                :disabled="maxTablesReached"
+                @click="() => setShowAddTableModal(true)" />
+        </div>
     </div>
+
+    <ConfirmModal
+        :visible="showAddTableModal"
+        header="Add new table"
+        message=""
+        confirmLabel="Add"
+        :confirmDisabled="!canAdd"
+        cancelLabel="Cancel"
+        @confirm="addNewTable"
+        @hide="() => setShowAddTableModal(false)">
+        <NameInput
+            class="mb-2"
+            v-model="newTableName"
+            placeholder="Table name" />
+
+        <CurrencyStepper
+            class="mb-2"
+            inputId="newTableCostPerHourStepper"
+            v-model="newTableCost"
+            suffix=" per hour" />
+    </ConfirmModal>
 </template>
+
+<style scoped>
+.p-fluid .p-button.fluid-icon-button {
+    width: 100%;
+}
+</style>

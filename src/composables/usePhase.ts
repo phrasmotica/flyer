@@ -184,6 +184,7 @@ export const usePhase = (p: Phase | null) => {
 
         fixtures,
         players,
+        tables,
         settings,
         rounds,
 

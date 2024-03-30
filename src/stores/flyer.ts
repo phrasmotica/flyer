@@ -177,6 +177,19 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
+    const addTable = (name: string, costPerHour: number) => {
+        if (flyer.value?.phases[0]) {
+            flyer.value.phases[0].tables = [
+                ...flyer.value.phases[0].tables,
+                {
+                    id: uuidv4(),
+                    name,
+                    costPerHour,
+                },
+            ]
+        }
+    }
+
     const winsRequiredReached = (phase: Phase) => {
         if (phase.settings.format !== Format.WinnerStaysOn) {
             return false
@@ -293,6 +306,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         startFixture,
         updateComment,
         updateScores,
+        addTable,
         generateRound,
         finish,
         cancelRemaining,
