@@ -25,9 +25,10 @@ const id = "labelled-dropdown-" + uuidv4()
             :inputId="id"
             v-model="value"
             :options="props.options"
+            placeholder="-"
             optionLabel="name"
             optionValue="value"
             optionDisabled="disabled"
-            :disabled="props.disabled" />
+            :disabled="props.disabled || props.options.length <= 0" />
     </div>
 </template>
