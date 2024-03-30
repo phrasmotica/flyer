@@ -13,10 +13,6 @@ import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
-const props = defineProps<{
-    isInProgress?: boolean
-}>()
-
 const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
@@ -33,6 +29,7 @@ const {
 const {
     settings,
     tables,
+    isInProgress,
 } = usePhase(currentPhase.value)
 
 const {
@@ -71,7 +68,7 @@ const addNewTable = () => {
                     </div>
 
                     <!-- MEDIUM: allow pausing (deactivating) the table if it is not being used -->
-                    <Button v-if="props.isInProgress"
+                    <Button v-if="isInProgress"
                         class="ml-2"
                         icon="pi pi-pause-circle"
                         severity="warning"
@@ -82,7 +79,7 @@ const addNewTable = () => {
         </div>
 
         <div class="p-fluid mt-1 pt-1 border-none border-top-1 border-gray-200">
-            <Button v-if="props.isInProgress"
+            <Button v-if="isInProgress"
                 class="fluid-icon-button"
                 icon="pi pi-plus"
                 :disabled="maxTablesReached"

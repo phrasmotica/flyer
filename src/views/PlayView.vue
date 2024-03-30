@@ -217,7 +217,7 @@ onUnmounted(() => {
 
             <ResultsTable v-if="display === Display.Standings" isInProgress />
 
-            <TablesSummary v-if="display === Display.Tables" isInProgress />
+            <TablesSummary v-if="display === Display.Tables" />
 
             <InfoList v-if="display === Display.Info" :settings="settings" />
 
