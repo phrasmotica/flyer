@@ -17,11 +17,12 @@ import TablesSummary from "../components/TablesSummary.vue"
 import { useEnv } from "../composables/useEnv"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
-import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
+import type { FlyerSettings } from "../data/FlyerSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -69,11 +70,11 @@ const {
 
 const {
     winners,
-} = useRound(currentRound.value, settings.value)
+} = useRound(currentRound.value, currentPhase.value)
 
 const {
     estimatedDurationMinutes,
-} = useSettings(settings.value)
+} = usePhaseSettings(currentPhase.value)
 
 const {
     queryParams,
@@ -247,7 +248,7 @@ onUnmounted(() => {
 
             <TablesSummary v-if="display === Display.Tables" @showFixtureModal="selectForRecording" />
 
-            <InfoList v-if="display === Display.Info" :settings="settings" />
+            <InfoList v-if="display === Display.Info" :settings="<FlyerSettings>settings" />
 
             <ConfirmModal
                 :visible="showFinishModal"

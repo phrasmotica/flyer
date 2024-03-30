@@ -22,7 +22,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
     getRound,
     getPlayerName,
 } = usePhase(mainPhase.value)
@@ -36,7 +35,7 @@ const {
     scores,
     isWalkover,
     getOpponent,
-} = useFixture("victoryText", props.fixture, getRound(props.fixture.id), settings.value)
+} = useFixture("victoryText", props.fixture, getRound(props.fixture.id), mainPhase.value)
 
 watch(props, () => {
     fixture.value = props.fixture

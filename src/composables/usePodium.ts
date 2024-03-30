@@ -1,8 +1,8 @@
 import { computed } from "vue"
 
 import { usePhase } from "./usePhase"
+import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
-import { useSettings } from "./useSettings"
 
 import type { Phase } from "../data/Phase"
 
@@ -13,7 +13,6 @@ export const usePodium = (p: Phase | null) => {
         phase,
         fixtures,
         players,
-        settings,
         rounds,
     } = usePhase(p)
 
@@ -26,7 +25,7 @@ export const usePodium = (p: Phase | null) => {
         isWinnerStaysOn,
         prizeMonies,
         prizeColours,
-    } = useSettings(settings.value)
+    } = usePhaseSettings(phase.value)
 
     const finalists = computed<[string, string]>(() => {
         if (!phase.value) {

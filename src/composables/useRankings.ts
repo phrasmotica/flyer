@@ -1,5 +1,5 @@
 import type { Fixture } from "../data/Fixture"
-import { type FlyerSettings, TieBreaker, Format } from "../data/FlyerSettings"
+import { TieBreaker, Format, type PhaseSettings } from "../data/PhaseSettings"
 import type { Player } from "../data/Player"
 import type { PlayerRecord } from "../data/PlayerRecord"
 import type { PlayOff } from "../data/PlayOff"
@@ -104,7 +104,7 @@ export const useRankings = () => {
         return 0
     }
 
-    const computeStandings = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
+    const computeStandings = (fixtures: Fixture[], players: Player[], settings: PhaseSettings) => {
         const records = players.map<PlayerRecord>(p => ({
             playerId: p.id,
             name: p.name,
@@ -149,7 +149,7 @@ export const useRankings = () => {
         return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
     }
 
-    const computePlayOffs = (fixtures: Fixture[], players: Player[], settings: FlyerSettings) => {
+    const computePlayOffs = (fixtures: Fixture[], players: Player[], settings: PhaseSettings) => {
         if (settings.format === Format.Knockout) {
             return []
         }

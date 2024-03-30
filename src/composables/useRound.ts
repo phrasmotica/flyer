@@ -1,13 +1,13 @@
 import { computed, ref } from "vue"
 
+import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
-import { useSettings } from "./useSettings"
 
 import type { Fixture } from "../data/Fixture"
-import type { FlyerSettings } from "../data/FlyerSettings"
+import type { Phase } from "../data/Phase"
 import type { Round } from "../data/Round"
 
-export const useRound = (r: Round | undefined, s: FlyerSettings) => {
+export const useRound = (r: Round | undefined, p: Phase | null) => {
     const round = ref(r)
 
     const {
@@ -15,12 +15,13 @@ export const useRound = (r: Round | undefined, s: FlyerSettings) => {
     } = useRankings()
 
     const {
+        settings,
         isWinnerStaysOn,
-    } = useSettings(s)
+    } = usePhaseSettings(p)
 
     const name = computed(() => round.value?.name || "")
     const fixtures = computed(() => round.value?.fixtures || [])
-    const raceTo = computed(() => round.value?.raceTo || s.raceTo)
+    const raceTo = computed(() => round.value?.raceTo || settings.value.raceTo)
 
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {

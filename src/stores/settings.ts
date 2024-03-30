@@ -5,7 +5,8 @@ import { defineStore } from "pinia"
 import { useListFallback } from "../composables/useListFallback"
 import { useSettings } from "../composables/useSettings"
 
-import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/FlyerSettings"
+import type { FlyerSettings } from "../data/FlyerSettings"
+import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/PhaseSettings"
 import type { Table } from "../data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS

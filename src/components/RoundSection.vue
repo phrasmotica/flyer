@@ -6,10 +6,9 @@ import FixtureCard from "./FixtureCard.vue"
 import RaceToBadge from "./RaceToBadge.vue"
 
 import { useFlyer } from "../composables/useFlyer"
-import { usePhase } from "../composables/usePhase"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { RoundStatus, useRound } from "../composables/useRound"
-import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
 import type { Round } from "../data/Round"
@@ -33,19 +32,15 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
-} = usePhase(currentPhase.value)
-
-const {
     isVariableMatchLength,
-} = useSettings(settings.value)
+} = usePhaseSettings(currentPhase.value)
 
 const {
     name,
     fixtures,
     status,
     raceTo,
-} = useRound(props.round, settings.value)
+} = useRound(props.round, currentPhase.value)
 
 const {
     isHistoric,

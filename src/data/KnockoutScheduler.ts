@@ -1,8 +1,10 @@
 import { v4 as uuidv4 } from "uuid"
 
 import type { Fixture } from "./Fixture"
-import { MatchLengthModel, type FlyerSettings } from "./FlyerSettings"
+import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
+import type { Phase } from "./Phase"
+import { MatchLengthModel } from "./PhaseSettings"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
 
@@ -11,20 +13,19 @@ export class KnockoutScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private settings: FlyerSettings) {
-
-    }
-
-    estimateDuration() {
+    estimateDuration(settings: FlyerSettings) {
         // here a "group" is a set of fixtures that can be played in parallel
-        let numFixturesPerGroup = this.computeFixturesPerRound(this.settings)
+        let numFixturesPerGroup = this.computeFixturesPerRound(
+            settings.playerCount,
+            settings.matchLengthModel,
+            settings.randomlyDrawAllRounds)
 
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
-            const raceTo = this.settings.matchLengthModel === MatchLengthModel.Variable
-                ? this.settings.raceToPerRound[i]
-                : this.settings.raceTo
+            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
+                ? settings.raceToPerRound[i]
+                : settings.raceTo
 
             return {
                 count: x,
@@ -38,7 +39,43 @@ export class KnockoutScheduler implements IScheduler {
         // round number of fixtures UP to the next multiple of the number of
         // tables being used, to account for the fact that a fixture can only be
         // played on one table
-        const tableCount = this.settings.tableCount
+        const tableCount = settings.tableCount
+        const meanFramesPerGroup = fixturesPerGroup.map(o => o.meanFrames * Math.ceil(o.count / tableCount) * tableCount)
+        const expectedTimePerGroup = meanFramesPerGroup.map(m => this.frameTimeEstimateMins * m)
+
+        const expectedTime = Math.ceil(expectedTimePerGroup.reduce((x, y) => x + y) / tableCount)
+        return Math.max(this.frameTimeEstimateMins, expectedTime)
+    }
+
+    estimateDurationForPhase(phase: Phase) {
+        const settings = phase.settings
+
+        // here a "group" is a set of fixtures that can be played in parallel
+        let numFixturesPerGroup = this.computeFixturesPerRound(
+            phase.players.length,
+            settings.matchLengthModel,
+            settings.randomlyDrawAllRounds)
+
+        // assumes perfect parallelisation across tables, i.e. does not account
+        // for a player making their next opponent wait for their slow match
+        const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
+            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
+                ? phase.rounds[i].raceTo!
+                : settings.raceTo
+
+            return {
+                count: x,
+                meanFrames: (raceTo + (2 * raceTo - 1)) / 2,
+            }
+        })
+
+        // LOW: don't segregate fixtures of different race-tos into different
+        // groups. In a fixed draw flyer, they can be played in parallel
+
+        // round number of fixtures UP to the next multiple of the number of
+        // tables being used, to account for the fact that a fixture can only be
+        // played on one table
+        const tableCount = phase.tables.length
         const meanFramesPerGroup = fixturesPerGroup.map(o => o.meanFrames * Math.ceil(o.count / tableCount) * tableCount)
         const expectedTimePerGroup = meanFramesPerGroup.map(m => this.frameTimeEstimateMins * m)
 
@@ -47,17 +84,15 @@ export class KnockoutScheduler implements IScheduler {
     }
 
     estimateFixtureDuration(raceTo: number) {
-        const isVariableMatchLength = this.settings.matchLengthModel === MatchLengthModel.Variable
-        const actualRaceTo = isVariableMatchLength ? raceTo : this.settings.raceTo
-        const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
+        const meanFrames = (raceTo + (2 * raceTo - 1)) / 2
         return this.frameTimeEstimateMins * 60000 * meanFrames
     }
 
-    computeFixturesPerRound(settings: FlyerSettings) {
-        const numFixtures = settings.playerCount - 1
-        const isVariableRaces = settings.matchLengthModel === MatchLengthModel.Variable
+    computeFixturesPerRound(playerCount: number, matchLengthModel: MatchLengthModel, randomlyDrawAllRounds: boolean) {
+        const numFixtures = playerCount - 1
+        const isVariableRaces = matchLengthModel === MatchLengthModel.Variable
 
-        if (!isVariableRaces && (numFixtures === 1 || !this.settings.randomlyDrawAllRounds)) {
+        if (!isVariableRaces && (numFixtures === 1 || !randomlyDrawAllRounds)) {
             return [numFixtures]
         }
 
@@ -91,7 +126,7 @@ export class KnockoutScheduler implements IScheduler {
         return [this.getRoundName(numSpaces), ...this.computeRoundNames(numSpaces / 2)]
     }
 
-    generateFixtures(players: Player[]) {
+    generateFixtures(settings: FlyerSettings, players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
         }
@@ -111,9 +146,49 @@ export class KnockoutScheduler implements IScheduler {
         let r = 0
         while (r < numRounds) {
             // ensure the final round (match) always draws from the two semi-finals
-            const takeFromParents = !this.settings.randomlyDrawAllRounds || r === numRounds - 1
+            const takeFromParents = !settings.randomlyDrawAllRounds || r === numRounds - 1
 
-            const round = this.generateRound(r, overallPool, numSpaces, takeFromParents)
+            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
+                ? settings.raceToPerRound.at(r)!
+                : settings.raceTo
+
+            const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
+            this.generatedRounds.push(round)
+
+            numSpaces /= 2
+            r++
+        }
+
+        return this.generatedRounds
+    }
+
+    generateFixturesForPhase(phase: Phase, players: Player[]) {
+        if (this.generatedRounds !== undefined) {
+            throw "Fixtures have already been generated!"
+        }
+
+        const numRounds = Math.ceil(Math.log2(players.length))
+
+        const overallPool = this.shuffle([...players])
+
+        let numSpaces = 2 ** numRounds
+
+        this.generatedRounds = <Round[]>[]
+
+        // generate rounds of fixtures. For the first round:
+        // 1. create an overall pool of all players
+        // 2. create N fixtures, where N is enough to house all players, plus any byes
+        // 3.
+        let r = 0
+        while (r < numRounds) {
+            // ensure the final round (match) always draws from the two semi-finals
+            const takeFromParents = !phase.settings.randomlyDrawAllRounds || r === numRounds - 1
+
+            const raceTo = phase.settings.matchLengthModel === MatchLengthModel.Variable
+                ? phase.rounds[r].raceTo!
+                : phase.settings.raceTo
+
+            const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
 
             numSpaces /= 2
@@ -139,11 +214,7 @@ export class KnockoutScheduler implements IScheduler {
         }
     }
 
-    generateRound(r: number, overallPool: Player[], numSpaces: number, takeFromParents: boolean) {
-        const raceTo = this.settings.matchLengthModel === MatchLengthModel.Variable
-            ? this.settings.raceToPerRound.at(r) || null
-            : null
-
+    generateRound(r: number, overallPool: Player[], raceTo: number, numSpaces: number, takeFromParents: boolean) {
         const round: Round = {
             index: r + 1,
             name: this.getRoundName(numSpaces),

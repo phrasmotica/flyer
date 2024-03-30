@@ -1,20 +1,26 @@
 import { computed, ref } from "vue"
 import type { MeterItem } from "primevue/metergroup"
 
-import { useScheduler } from "./useScheduler"
+import { useSchedulerForPhase } from "./useScheduler"
 
-import type { FlyerSettings } from "../data/FlyerSettings"
-import { MoneySplit, Format, TieBreaker, MatchLengthModel } from "../data/PhaseSettings"
-import { KnockoutScheduler } from "../data/KnockoutScheduler"
+import type { Phase } from "../data/Phase"
+import { MoneySplit, Format, TieBreaker, MatchLengthModel, type PhaseSettings } from "../data/PhaseSettings"
 
 import { formatList, matchLengthModelList, ruleSetList, tieBreakerList } from "../stores/settings"
 
-export const useSettings = (s: FlyerSettings) => {
-    const settings = ref(s)
+export const usePhaseSettings = (p: Phase | null) => {
+    const phase = ref(p)
+
+    const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
 
     const {
         scheduler,
-    } = useScheduler(s)
+    } = useSchedulerForPhase(settings.value)
+
+    const rounds = computed(() => phase.value?.rounds || [])
+    const tables = computed(() => phase.value?.tables || [])
+
+    const playerCount = computed(() => phase.value?.players.length || 0)
 
     const matchLengthModelName = computed(() => {
         const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
@@ -82,9 +88,8 @@ export const useSettings = (s: FlyerSettings) => {
             return ""
         }
 
-        return "Races to " + settings.value.raceToPerRound
-            .slice(0, roundNames.value.length)
-            .map((r, i) => `${r} (${roundNames.value[i]})`)
+        return "Races to " + rounds.value
+            .map(r => `${r.raceTo} (${r.name})`)
             .join(", then ")
     })
 
@@ -134,33 +139,22 @@ export const useSettings = (s: FlyerSettings) => {
             return 1
         }
 
-        return Math.floor(settings.value.playerCount / 2)
+        return Math.floor(playerCount.value / 2)
     })
 
     const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
 
     const durationPerFrame = computed(() => scheduler.value.frameTimeEstimateMins)
 
-    const estimatedDurationMinutes = computed(() => scheduler.value.estimateDuration(settings.value))
-
-    const roundNames = computed(() => {
-        // MEDIUM: generalise this
-        if (isKnockout.value) {
-            return new KnockoutScheduler().computeRoundNames(settings.value.playerCount)
-        }
-
-        return []
+    const estimatedDurationMinutes = computed(() => {
+        return phase.value ? scheduler.value.estimateDurationForPhase(phase.value) : 0
     })
 
-    const costPerHour = computed(() => {
-        const tablesToUse = settings.value.tables.slice(0, settings.value.tableCount)
-        const meanCostPerHour = tablesToUse.map(t => t.costPerHour).reduce((a, b) => a + b, 0) / tablesToUse.length
-        return meanCostPerHour * settings.value.tableCount
-    })
+    const costPerHour = computed(() => tables.value.map(t => t.costPerHour).reduce((a, b) => a + b, 0))
 
     const estimatedCost = computed(() => costPerHour.value * estimatedDurationMinutes.value / 60)
 
-    const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
+    const prizePot = computed(() => playerCount.value * settings.value.entryFee)
 
     const prizeMonies = computed(() => {
         if (!settings.value.entryFeeRequired) {
@@ -218,11 +212,6 @@ export const useSettings = (s: FlyerSettings) => {
         value: x,
     })))
 
-    const isInvalid = computed(() => {
-        const actualPlayerNames = settings.value.playerNames.slice(0, settings.value.playerCount)
-        return actualPlayerNames.some(p => !p)
-    })
-
     return {
         settings,
 
@@ -256,7 +245,6 @@ export const useSettings = (s: FlyerSettings) => {
 
         durationPerFrame,
         estimatedDurationMinutes,
-        roundNames,
         costPerHour,
         estimatedCost,
 
@@ -264,7 +252,5 @@ export const useSettings = (s: FlyerSettings) => {
         prizeMonies,
         prizeColours,
         prizeMoniesMeterItems,
-
-        isInvalid,
     }
 }

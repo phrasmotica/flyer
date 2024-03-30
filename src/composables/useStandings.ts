@@ -6,6 +6,7 @@ import { useSettings } from "./useSettings"
 
 import type { Phase } from "../data/Phase"
 import { usePhase } from "./usePhase"
+import { usePhaseSettings } from "./usePhaseSettings"
 
 export const useStandings = (p: Phase | null) => {
     const {
@@ -20,7 +21,7 @@ export const useStandings = (p: Phase | null) => {
         usesPlayOff,
         prizeMonies,
         prizeColours,
-    } = useSettings(settings.value)
+    } = usePhaseSettings(p)
 
     const {
         computeStandings,

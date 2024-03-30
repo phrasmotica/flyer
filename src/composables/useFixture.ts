@@ -4,19 +4,17 @@ import { differenceInMilliseconds } from "date-fns"
 
 import { useArray } from "./useArray"
 import { useClock } from "./useClock"
+import { usePhaseSettings } from "./usePhaseSettings"
 import { useRound } from "./useRound"
-import { useSettings } from "./useSettings"
+import { useSchedulerForPhase } from "./useScheduler"
 
 import type { Fixture } from "../data/Fixture"
-import type { FlyerSettings } from "../data/FlyerSettings"
-import { KnockoutScheduler } from "../data/KnockoutScheduler"
+import type { Phase } from "../data/Phase"
 import type { Round } from "../data/Round"
-import { RoundRobinScheduler } from "../data/RoundRobinScheduler"
-import { WinnerStaysOnScheduler } from "../data/WinnerStaysOnScheduler"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see FixtureModal.vue)
-export const useFixture = (name: string, f: Fixture | undefined, r: Round | undefined, s: FlyerSettings) => {
+export const useFixture = (name: string, f: Fixture | undefined, r: Round | undefined, p: Phase | null) => {
     const fixture = ref(f)
 
     const {
@@ -29,14 +27,16 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const {
         round,
         raceTo,
-    } = useRound(r, s)
+    } = useRound(r, p)
 
     const {
         settings,
-        isKnockout,
-        isRoundRobin,
-        isWinnerStaysOn,
-    } = useSettings(s)
+        isVariableMatchLength,
+    } = usePhaseSettings(p)
+
+    const {
+        scheduler,
+    } = useSchedulerForPhase(settings.value)
 
     const breakerId = ref("")
     const tableId = ref("")
@@ -81,19 +81,8 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     })
 
     const estimatedDurationMilliseconds = computed(() => {
-        if (isKnockout.value) {
-            return new KnockoutScheduler(settings.value).estimateFixtureDuration(raceTo.value)
-        }
-
-        if (isRoundRobin.value) {
-            return new RoundRobinScheduler(settings.value).estimateFixtureDuration(raceTo.value)
-        }
-
-        if (isWinnerStaysOn.value) {
-            return new WinnerStaysOnScheduler(settings.value).estimateFixtureDuration(raceTo.value)
-        }
-
-        throw `Invalid flyer format ${settings.value.format}!`
+        const actualRaceTo = isVariableMatchLength.value ? raceTo.value : settings.value.raceTo
+        return scheduler.value.estimateFixtureDuration(actualRaceTo)
     })
 
     const durationMilliseconds = computed(() => {
