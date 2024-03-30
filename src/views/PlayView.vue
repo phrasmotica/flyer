@@ -13,6 +13,7 @@ import Price from "../components/Price.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import TablesSummary from "../components/TablesSummary.vue"
 
+import { useEnv } from "../composables/useEnv"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
@@ -33,6 +34,10 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 
 const {
+    isDebug,
+} = useEnv()
+
+const {
     mainPhase,
     currentPhase,
     currentPlayOffPhase,
@@ -44,6 +49,7 @@ const {
 
 const {
     settings,
+    tables,
     clockDisplay,
     totalCost,
     hasStarted,
@@ -194,6 +200,13 @@ const goToPastFlyers = () => {
     })
 }
 
+const autoComplete = () => {
+    // LOW: compute the correct race-to for the next fixture
+    const raceTo = settings.value.raceTo
+
+    flyerStore.autoCompleteNextFixture(tables.value[0].id, raceTo)
+}
+
 onUnmounted(() => {
     pauseClock()
 })
@@ -243,6 +256,13 @@ onUnmounted(() => {
         </template>
 
         <template #buttons>
+            <Button
+                v-if="isDebug"
+                class="mb-2"
+                label="Auto-complete"
+                severity="help"
+                @click="autoComplete" />
+
             <Button
                 v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
                 class="mb-2"

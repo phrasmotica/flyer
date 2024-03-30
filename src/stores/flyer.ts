@@ -298,6 +298,34 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
+    const autoCompleteNextFixture = (tableId: string, raceTo: number) => {
+        const phases = flyer.value?.phases || []
+        const currentPhase = phases.find(p => p.rounds.some(r => r.fixtures.some(f => !f.startTime)))
+
+        const fixtures = currentPhase?.rounds.flatMap(r => r.fixtures) || []
+        const nextFixture = fixtures.find(f => !f.startTime)
+
+        if (!nextFixture) {
+            return
+        }
+
+        console.debug("Auto-completing fixture " + nextFixture.id)
+
+        const breakerId = getRandom(nextFixture.scores).playerId
+        const winnerId = getRandom(nextFixture.scores).playerId
+
+        startFixture(nextFixture.id, tableId, breakerId)
+        updateComment(currentPhase!, nextFixture.id, "AUTO-COMPLETED")
+        updateScores(currentPhase!, nextFixture.id, nextFixture.scores.map(s => ({
+            ...s,
+            score: s.playerId === winnerId ? raceTo : 0,
+        })), true)
+    }
+
+    const getRandom = <T>(arr: T[]) => {
+        return arr[Math.floor(Math.random() * arr.length)]
+    }
+
     return {
         flyer,
         setFlyer,
@@ -312,5 +340,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         cancelRemaining,
         addPlayOff,
         clear,
+        autoCompleteNextFixture,
     }
 })
