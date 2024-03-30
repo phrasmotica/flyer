@@ -96,7 +96,7 @@ watch(props, () => {
 
     setInitialPlayerScores(props.fixture)
 
-    if (props.visible) {
+    if (props.visible && isInProgress.value) {
         resumeClock()
     }
 })
