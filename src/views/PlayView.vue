@@ -257,7 +257,7 @@ onUnmounted(() => {
 
         <template #buttons>
             <Button
-                v-if="isDebug"
+                v-if="isDebug && display === Display.Fixtures"
                 class="mb-2"
                 label="Auto-complete"
                 severity="help"
