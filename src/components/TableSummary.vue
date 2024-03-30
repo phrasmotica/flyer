@@ -9,11 +9,16 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 
 import type { Table } from "../data/Table"
+import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     table: Table
+}>()
+
+const emit = defineEmits<{
+    showFixtureModal: [fixture: Fixture]
 }>()
 
 const { d, n } = useI18n()
@@ -66,14 +71,11 @@ onUnmounted(() => {
                 </Badge>
             </div>
 
-            <div v-if="fixture">
+            <div v-if="fixture" class="cursor-pointer" @click="() => emit('showFixtureModal', fixture!)">
                 <Badge severity="secondary">
                     {{ fixtureDescription }} - {{ fixtureClock }}
                 </Badge>
             </div>
-
-            <!-- MEDIUM: indicate which fixture is being played on the table,
-            and allow opening the fixture modal -->
         </div>
 
         <!-- MEDIUM: allow pausing (deactivating) the table if it is not being used -->

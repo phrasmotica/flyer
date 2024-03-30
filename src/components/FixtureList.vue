@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue"
-
-import FixtureModal from "./FixtureModal.vue"
 import RoundSection from "./RoundSection.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -11,6 +8,10 @@ import { useStringToggle } from "../composables/useStringToggle"
 import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
+
+const emit = defineEmits<{
+    showFixtureModal: [fixture: Fixture]
+}>()
 
 const flyerStore = useFlyerStore()
 
@@ -22,18 +23,7 @@ const {
     rounds,
 } = usePhase(currentPhase.value)
 
-const selectedFixture = ref<Fixture>()
 const [highlightedFixtureId, highlight] = useStringToggle("")
-const showModal = ref(false)
-
-const selectForRecording = (f: Fixture) => {
-    selectedFixture.value = f
-    showModal.value = true
-}
-
-const hideModal = () => {
-    showModal.value = false
-}
 </script>
 
 <template>
@@ -41,12 +31,7 @@ const hideModal = () => {
         <RoundSection
             :round="r"
             :highlightedFixtureId="highlightedFixtureId"
-            @showModal="selectForRecording"
+            @showModal="f => emit('showFixtureModal', f)"
             @highlight="highlight" />
     </div>
-
-    <FixtureModal
-        :visible="showModal"
-        :fixture="selectedFixture"
-        @hide="hideModal" />
 </template>

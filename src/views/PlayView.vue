@@ -7,6 +7,7 @@ import type { MenuItem } from "primevue/menuitem"
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureList from "../components/FixtureList.vue"
+import FixtureModal from "../components/FixtureModal.vue"
 import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Price from "../components/Price.vue"
@@ -19,6 +20,8 @@ import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
 import { useSettings } from "../composables/useSettings"
+
+import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -82,6 +85,9 @@ const display = ref(Display.Fixtures)
 const [showPrice, toggleShowPrice] = useToggle()
 const showFinishModal = ref(false)
 const showAbandonModal = ref(false)
+
+const selectedFixture = ref<Fixture>()
+const showFixtureModal = ref(false)
 
 const items = computed(() => {
     const defaultItems = <MenuItem[]>[
@@ -207,6 +213,15 @@ const autoComplete = () => {
     flyerStore.autoCompleteNextFixture(tables.value[0].id, raceTo)
 }
 
+const selectForRecording = (f: Fixture) => {
+    selectedFixture.value = f
+    showFixtureModal.value = true
+}
+
+const hideFixtureModal = () => {
+    showFixtureModal.value = false
+}
+
 onUnmounted(() => {
     pauseClock()
 })
@@ -226,11 +241,11 @@ onUnmounted(() => {
 
             <TabMenu class="mb-2" :model="items" />
 
-            <FixtureList v-if="display === Display.Fixtures" />
+            <FixtureList v-if="display === Display.Fixtures" @showFixtureModal="selectForRecording" />
 
             <ResultsTable v-if="display === Display.Standings" isInProgress />
 
-            <TablesSummary v-if="display === Display.Tables" />
+            <TablesSummary v-if="display === Display.Tables" @showFixtureModal="selectForRecording" />
 
             <InfoList v-if="display === Display.Info" :settings="settings" />
 
@@ -290,6 +305,11 @@ onUnmounted(() => {
                 label="Back to past flyers"
                 severity="info"
                 @click="goToPastFlyers" />
+
+            <FixtureModal
+                :visible="showFixtureModal"
+                :fixture="selectedFixture"
+                @hide="hideFixtureModal" />
         </template>
     </PageTemplate>
 </template>

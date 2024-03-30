@@ -10,7 +10,13 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useSettings } from "../composables/useSettings"
 
+import type { Fixture } from "../data/Fixture"
+
 import { useFlyerStore } from "../stores/flyer"
+
+const emit = defineEmits<{
+    showFixtureModal: [fixture: Fixture]
+}>()
 
 const flyerStore = useFlyerStore()
 
@@ -53,7 +59,7 @@ const addNewTable = () => {
         <div class="p-fluid">
             <div v-for="t, i in currentPhase.tables">
                 <div :class="i > 0 && 'mt-1 pt-1 border-none border-top-1 border-dashed border-gray-200'">
-                    <TableSummary :table="t" />
+                    <TableSummary :table="t" @showFixtureModal="f => emit('showFixtureModal', f)" />
                 </div>
             </div>
         </div>
