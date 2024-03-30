@@ -235,7 +235,7 @@ onUnmounted(() => {
 
                 <div class="cursor-pointer" @click="() => toggleShowPrice()">
                     <Price v-if="showPrice" :amount="totalCost" />
-                    <Clock v-else :elapsedMilliseconds="clockDisplay" :warnAfterMilliseconds="estimatedDurationMinutes * 60" />
+                    <Clock v-else :elapsedMilliseconds="clockDisplay" :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
                 </div>
             </div>
 
