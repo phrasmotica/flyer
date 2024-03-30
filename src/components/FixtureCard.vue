@@ -11,6 +11,7 @@ import { useSettings } from "../composables/useSettings"
 import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
+import { computed } from "vue"
 
 const props = defineProps<{
     fixture: Fixture
@@ -34,6 +35,7 @@ const {
     currentRound,
     canStartFixture,
     getRound,
+    getTable,
     getPlayerName,
 } = usePhase(currentPhase.value)
 
@@ -51,6 +53,8 @@ const {
     isWinnerStaysOn,
     isRandomDraw,
 } = useSettings(settings.value)
+
+const table = computed(() => getTable(fixture.value?.tableId || ""))
 
 const isHighlighted = (slot: 0 | 1) => {
     const parentFixture = props.fixture.parentFixtures[slot]
@@ -107,8 +111,8 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
             props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent',
             canStartFixture(props.fixture, status) && 'border border-yellow-500',
         ]">
-        <div v-if="fixture.tableId && !fixture.finishTime" class="text-center">
-            <TableBadge :tableId="fixture.tableId" />
+        <div v-if="table && !fixture.finishTime" class="text-center">
+            <TableBadge :table="table" />
         </div>
 
         <div class="grid m-0 py-1">

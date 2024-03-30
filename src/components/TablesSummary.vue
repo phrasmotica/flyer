@@ -57,7 +57,7 @@ const addNewTable = () => {
             <div v-for="_, i in currentPhase.tables">
                 <div class="flex" :class="i > 0 && 'mt-1 pt-1 border-none border-top-1 border-dashed border-gray-200'">
                     <div class="flex-grow-1">
-                        <TableBadge :tableId="currentPhase.tables[i].id" />
+                        <TableBadge :table="currentPhase.tables[i]" showBusy />
 
                         <p class="m-0">
                             {{ n(currentPhase.tables[i].costPerHour, "currency") }} per hour

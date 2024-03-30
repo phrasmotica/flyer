@@ -41,6 +41,7 @@ const {
     freeTables,
     canStartFixture,
     getRound,
+    getTable,
     getFixtureStatus,
     getFixtureHeader,
 } = usePhase(currentPhase.value)
@@ -135,6 +136,8 @@ const updateScores = (finish: boolean) => {
 
     hide()
 }
+
+const table = computed(() => getTable(fixture.value?.tableId || ""))
 
 const winner = computed(() => {
     const maxScore = scores.value.reduce((a, b) => Math.max(a, b), -1)
@@ -238,7 +241,7 @@ const resetPlayerScores = () => {
                 <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" :warnAfterSeconds="estimatedDurationSeconds" />
 
                 <div class="p-fluid flex justify-content-center gap-2">
-                    <TableBadge v-if="fixture.tableId" :tableId="fixture.tableId" />
+                    <TableBadge v-if="table" :table="table" />
 
                     <RaceToBadge singular :value="raceTo" />
                 </div>
