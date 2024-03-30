@@ -11,6 +11,7 @@ import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Price from "../components/Price.vue"
 import ResultsTable from "../components/ResultsTable.vue"
+import TablesSummary from "../components/TablesSummary.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -22,6 +23,7 @@ import { useFlyerStore } from "../stores/flyer"
 
 enum Display {
     Fixtures,
+    Tables,
     Standings,
     Info,
 }
@@ -84,6 +86,10 @@ const items = computed(() => {
         {
             icon: 'pi pi-chart-bar',
             command: _ => display.value = Display.Standings,
+        },
+        {
+            icon: 'pi pi-building',
+            command: _ => display.value = Display.Tables,
         },
         {
             icon: 'pi pi-info-circle',
@@ -210,6 +216,8 @@ onUnmounted(() => {
             <FixtureList v-if="display === Display.Fixtures" />
 
             <ResultsTable v-if="display === Display.Standings" isInProgress />
+
+            <TablesSummary v-if="display === Display.Tables" isInProgress />
 
             <InfoList v-if="display === Display.Info" :settings="settings" />
 
