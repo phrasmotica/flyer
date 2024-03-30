@@ -10,6 +10,7 @@ type Clockable = {
 export const useClock = (name: string, c: Clockable | null) => {
     const clockable = ref(c)
 
+    // MEDIUM: make this have millisecond precision
     const computeDifference = () => differenceInSeconds(Date.now(), clockable.value?.startTime || Date.now())
 
     const elapsedSeconds = ref(computeDifference())

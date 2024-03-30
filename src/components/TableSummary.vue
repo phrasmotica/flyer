@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, onUnmounted, onMounted } from "vue"
 import { useI18n } from "vue-i18n"
 
 import TableBadge from "./TableBadge.vue"
 
+import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 
@@ -15,7 +16,7 @@ const props = defineProps<{
     table: Table
 }>()
 
-const { n } = useI18n()
+const { d, n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
@@ -24,14 +25,33 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    settings,
     fixtures,
+    getRound,
     isInProgress,
     getFixtureHeader,
 } = usePhase(currentPhase.value)
 
-const fixtureDescription = computed(() => {
-    const fixture = fixtures.value.find(f => !f.finishTime && f.tableId === props.table.id)
-    return fixture ? getFixtureHeader(fixture) : null
+const fixture = computed(() => fixtures.value.find(f => !f.finishTime && f.tableId === props.table.id))
+
+const {
+    elapsedSeconds,
+    resumeClock,
+    pauseClock,
+} = useFixture("tableSummary", fixture.value, getRound(fixture.value?.id || ""), settings.value)
+
+const fixtureDescription = computed(() => fixture.value ? getFixtureHeader(fixture.value) : null)
+
+const fixtureClock = computed(() => d(elapsedSeconds.value * 1000, "clock"))
+
+onMounted(() => {
+    if (fixture?.value?.startTime && !fixture.value.finishTime) {
+        resumeClock()
+    }
+})
+
+onUnmounted(() => {
+    pauseClock()
 })
 </script>
 
@@ -46,9 +66,9 @@ const fixtureDescription = computed(() => {
                 </Badge>
             </div>
 
-            <div v-if="fixtureDescription">
+            <div v-if="fixture">
                 <Badge severity="secondary">
-                    {{ fixtureDescription }}
+                    {{ fixtureDescription }} - {{ fixtureClock }}
                 </Badge>
             </div>
 
