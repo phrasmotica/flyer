@@ -38,7 +38,8 @@ export const useClock = (name: string, c: Clockable | null) => {
         }
     })
 
-    const clock = useIntervalFn(updateClock, 1000, {
+    // 100ms precision
+    const clock = useIntervalFn(updateClock, 100, {
         immediate: false,
     })
 
