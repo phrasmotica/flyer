@@ -4,9 +4,8 @@ import { useI18n } from "vue-i18n"
 import { useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./ConfirmModal.vue"
-import CurrencyStepper from "./CurrencyStepper.vue"
-import NameInput from "./NameInput.vue"
 import TableBadge from "./TableBadge.vue"
+import TableInput from "./TableInput.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -22,7 +21,7 @@ const { n } = useI18n()
 
 const flyerStore = useFlyerStore()
 
-const newTableName = ref("")
+const newTableName = ref("Table X")
 const newTableCost = ref(9)
 
 const [showAddTableModal, setShowAddTableModal] = useToggle(false)
@@ -100,16 +99,9 @@ const addNewTable = () => {
         cancelLabel="Cancel"
         @confirm="addNewTable"
         @hide="() => setShowAddTableModal(false)">
-        <NameInput
-            class="mb-2"
-            v-model="newTableName"
-            placeholder="Table name" />
-
-        <CurrencyStepper
-            class="mb-2"
-            inputId="newTableCostPerHourStepper"
-            v-model="newTableCost"
-            suffix=" per hour" />
+        <TableInput
+            v-model:name="newTableName"
+            v-model:cost="newTableCost" />
     </ConfirmModal>
 </template>
 
