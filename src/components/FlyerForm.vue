@@ -10,6 +10,7 @@ import LabelledSlider from "./LabelledSlider.vue"
 import NameInput from "./NameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
+import TableInput from "./TableInput.vue"
 
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
@@ -274,18 +275,14 @@ onUpdated(() => {
                 <div v-for="_, i in settingsStore.settings.tables.slice(0, settingsStore.settings.tableCount)">
                     <div class="flex" :class="i > 0 && 'mt-1 pt-1 border-none border-top-1 border-dashed border-gray-200'">
                         <div class="flex-grow-1">
-                            <NameInput
-                                v-model="settingsStore.settings.tables[i].name"
-                                :placeholder="'Table ' + (i + 1)" />
-
-                            <CurrencyStepper
-                                class="mt-1"
-                                :inputId="'tableCostPerHourStepper-' + (i + 1)"
-                                v-model="settingsStore.settings.tables[i].costPerHour"
-                                suffix=" per hour" />
+                            <TableInput
+                                compact
+                                v-model:name="settingsStore.settings.tables[i].name"
+                                v-model:cost="settingsStore.settings.tables[i].costPerHour" />
                         </div>
 
                         <Button
+                            tabindex="-1"
                             class="ml-2"
                             icon="pi pi-trash"
                             severity="danger"
