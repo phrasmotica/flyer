@@ -40,14 +40,14 @@ const {
 const fixture = computed(() => fixtures.value.find(f => !f.finishTime && f.tableId === props.table.id))
 
 const {
-    elapsedSeconds,
+    elapsedMilliseconds,
     resumeClock,
     pauseClock,
 } = useFixture("tableSummary", fixture.value, getRound(fixture.value?.id || ""), settings.value)
 
 const fixtureDescription = computed(() => fixture.value ? getFixtureHeader(fixture.value) : null)
 
-const fixtureClock = computed(() => d(elapsedSeconds.value * 1000, "clock"))
+const fixtureClock = computed(() => d(elapsedMilliseconds.value, "clock"))
 
 onMounted(() => {
     if (fixture?.value?.startTime && !fixture.value.finishTime) {

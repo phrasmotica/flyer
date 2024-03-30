@@ -50,7 +50,7 @@ export class KnockoutScheduler implements IScheduler {
         const isVariableMatchLength = this.settings.matchLengthModel === MatchLengthModel.Variable
         const actualRaceTo = isVariableMatchLength ? raceTo : this.settings.raceTo
         const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
-        return this.frameTimeEstimateMins * 60 * meanFrames
+        return this.frameTimeEstimateMins * 60000 * meanFrames
     }
 
     computeFixturesPerRound(settings: FlyerSettings) {

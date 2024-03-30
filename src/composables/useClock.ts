@@ -1,6 +1,8 @@
 import { ref, watch } from "vue"
 import { useIntervalFn } from "@vueuse/core"
-import { differenceInSeconds } from "date-fns"
+import { differenceInMilliseconds } from "date-fns"
+
+import { useEnv } from "./useEnv"
 
 type Clockable = {
     startTime: number | null,
@@ -10,15 +12,22 @@ type Clockable = {
 export const useClock = (name: string, c: Clockable | null) => {
     const clockable = ref(c)
 
-    // HIGH: make this have millisecond precision
-    const computeDifference = () => differenceInSeconds(Date.now(), clockable.value?.startTime || Date.now())
+    const {
+        isDebug,
+    } = useEnv()
 
-    const elapsedSeconds = ref(computeDifference())
+    const computeDifference = () => differenceInMilliseconds(Date.now(), clockable.value?.startTime || Date.now())
+
+    const elapsedMilliseconds = ref(computeDifference())
 
     const updateClock = () => {
         const newValue = computeDifference()
-        console.debug(name + ": " + clockable.value?.startTime + " + " + newValue)
-        elapsedSeconds.value = newValue
+
+        if (isDebug) {
+            console.debug(name + ": " + clockable.value?.startTime + " + " + newValue)
+        }
+
+        elapsedMilliseconds.value = newValue
     }
 
     watch(clockable, () => {
@@ -38,7 +47,7 @@ export const useClock = (name: string, c: Clockable | null) => {
 
     return {
         clockable,
-        elapsedSeconds,
+        elapsedMilliseconds,
         pauseClock,
         resumeClock,
     }

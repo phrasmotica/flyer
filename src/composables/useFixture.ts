@@ -1,6 +1,6 @@
 import { ref, computed, watch } from "vue"
 import { useArrayUnique } from "@vueuse/core"
-import { differenceInSeconds } from "date-fns"
+import { differenceInMilliseconds } from "date-fns"
 
 import { useArray } from "./useArray"
 import { useClock } from "./useClock"
@@ -21,7 +21,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const {
         clockable,
-        elapsedSeconds,
+        elapsedMilliseconds,
         pauseClock,
         resumeClock,
     } = useClock("FixtureClock " + name, fixture.value || null)
@@ -80,7 +80,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         return true
     })
 
-    const estimatedDurationSeconds = computed(() => {
+    const estimatedDurationMilliseconds = computed(() => {
         if (isKnockout.value) {
             return new KnockoutScheduler(settings.value).estimateFixtureDuration(raceTo.value)
         }
@@ -96,12 +96,12 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         throw `Invalid flyer format ${settings.value.format}!`
     })
 
-    const durationSeconds = computed(() => {
+    const durationMilliseconds = computed(() => {
         if (!fixture.value?.startTime || !fixture.value.finishTime) {
             return null
         }
 
-        return differenceInSeconds(fixture.value.finishTime, fixture.value.startTime)
+        return differenceInMilliseconds(fixture.value.finishTime, fixture.value.startTime)
     })
 
     const winner = computed(() => {
@@ -170,13 +170,13 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         comment,
         players,
         isWalkover,
-        elapsedSeconds,
+        elapsedMilliseconds,
         hasStarted,
         hasFinished,
         isInProgress,
         canBeFinished,
-        estimatedDurationSeconds,
-        durationSeconds,
+        estimatedDurationMilliseconds,
+        durationMilliseconds,
         winner,
         getOpponent,
         setWinner,

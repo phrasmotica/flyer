@@ -132,7 +132,7 @@ const hideModal = () => {
                         </div>
 
                         <div class="ml-2">
-                            <Clock :elapsedSeconds="estimatedDurationMinutes * 60" />
+                            <Clock :elapsedMilliseconds="estimatedDurationMinutes * 60" />
                         </div>
                     </div>
                 </div>

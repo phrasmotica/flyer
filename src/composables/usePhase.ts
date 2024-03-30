@@ -1,5 +1,5 @@
 import { computed, ref, watch } from "vue"
-import { differenceInMinutes, differenceInSeconds } from "date-fns"
+import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 
 import { useClock } from "./useClock"
 import { RoundStatus } from "./useRound"
@@ -23,7 +23,7 @@ export const usePhase = (p: Phase | null) => {
 
     const {
         clockable,
-        elapsedSeconds,
+        elapsedMilliseconds,
         pauseClock,
         resumeClock,
     } = useClock("PhaseClock " + settings.value.name, phase.value)
@@ -81,18 +81,18 @@ export const usePhase = (p: Phase | null) => {
         return differenceInMinutes(phase.value.finishTime, phase.value.startTime)
     })
 
-    const durationSeconds = computed(() => {
+    const durationMilliseconds = computed(() => {
         if (!phase.value?.startTime || !phase.value.finishTime) {
             return null
         }
 
-        return differenceInSeconds(phase.value.finishTime, phase.value.startTime)
+        return differenceInMilliseconds(phase.value.finishTime, phase.value.startTime)
     })
 
-    const clockDisplay = computed(() => durationSeconds.value || elapsedSeconds.value)
+    const clockDisplay = computed(() => durationMilliseconds.value || elapsedMilliseconds.value)
 
     const totalCost = computed(() => {
-        const durationHours = (durationSeconds.value || elapsedSeconds.value) / 3600
+        const durationHours = (durationMilliseconds.value || elapsedMilliseconds.value) / 3600000
         return costPerHour.value * durationHours
     })
 
@@ -188,7 +188,7 @@ export const usePhase = (p: Phase | null) => {
         settings,
         rounds,
 
-        elapsedSeconds,
+        elapsedMilliseconds,
         hasStarted,
         hasFinished,
         isInProgress,
@@ -199,7 +199,7 @@ export const usePhase = (p: Phase | null) => {
         generationIsComplete,
         readyToGenerateNextRound,
         durationMinutes,
-        durationSeconds,
+        durationMilliseconds,
         clockDisplay,
         totalCost,
         freeTables,

@@ -60,13 +60,13 @@ const {
     runouts,
     comment,
     players,
-    elapsedSeconds,
+    elapsedMilliseconds,
     hasStarted,
     hasFinished,
     isInProgress,
     canBeFinished,
-    estimatedDurationSeconds,
-    durationSeconds,
+    estimatedDurationMilliseconds,
+    durationMilliseconds,
     setWinner,
     setRanOut,
     resumeClock,
@@ -238,7 +238,9 @@ const resetPlayerScores = () => {
         <div v-if="hasStarted" id="score-inputs" class="mb-2">
             <!-- MEDIUM: this is getting crowded. Design a better layout -->
             <div class="mb-2">
-                <Clock :elapsedSeconds="durationSeconds || elapsedSeconds" :warnAfterSeconds="estimatedDurationSeconds" />
+                <Clock
+                    :elapsedMilliseconds="durationMilliseconds || elapsedMilliseconds"
+                    :warnAfterMilliseconds="estimatedDurationMilliseconds" />
 
                 <div class="p-fluid flex justify-content-center gap-2">
                     <TableBadge v-if="table" :table="table" />

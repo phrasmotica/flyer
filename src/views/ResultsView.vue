@@ -32,7 +32,7 @@ const {
 
 const {
     settings,
-    durationSeconds,
+    durationMilliseconds,
 } = usePhase(mainPhase.value)
 
 const {
@@ -171,7 +171,9 @@ const goToPastFlyers = () => {
                 <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                     <h1>{{ settings.name }}</h1>
 
-                    <Clock :elapsedSeconds="durationSeconds || 0" :warnAfterSeconds="estimatedDurationMinutes * 60" />
+                    <Clock
+                        :elapsedMilliseconds="durationMilliseconds || 0"
+                        :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
                 </div>
 
                 <ResultsTable v-if="isRoundRobin || isWinnerStaysOn" />

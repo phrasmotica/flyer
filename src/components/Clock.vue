@@ -3,25 +3,22 @@ import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 const props = defineProps<{
-    elapsedSeconds: number
-    warnAfterSeconds?: number
+    elapsedMilliseconds: number
+    warnAfterMilliseconds?: number
     large?: boolean
 }>()
 
 const { d } = useI18n()
 
-const elapsedSeconds = ref(props.elapsedSeconds)
+const elapsedSeconds = ref(props.elapsedMilliseconds)
 
 watch(props, () => {
-    elapsedSeconds.value = props.elapsedSeconds
+    elapsedSeconds.value = props.elapsedMilliseconds
 })
 
-const shouldWarn = computed(() => !!props.warnAfterSeconds && elapsedSeconds.value > props.warnAfterSeconds)
+const shouldWarn = computed(() => !!props.warnAfterMilliseconds && elapsedSeconds.value > props.warnAfterMilliseconds)
 
-const clockText = computed(() => {
-    // multiply by 1000 since d() requires milliseconds
-    return d(elapsedSeconds.value * 1000, "clock")
-})
+const clockText = computed(() => d(elapsedSeconds.value, "clock"))
 </script>
 
 <template>
