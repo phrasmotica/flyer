@@ -272,7 +272,7 @@ onUnmounted(() => {
 
         <template #buttons>
             <Button
-                v-if="isDebug && display === Display.Fixtures"
+                v-if="isDebug && !isHistoric && display === Display.Fixtures && remainingCount > 0"
                 class="mb-2"
                 label="Auto-complete"
                 severity="help"
