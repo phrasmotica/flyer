@@ -34,8 +34,6 @@ export class RoundRobinScheduler implements IScheduler {
         return this.frameTimeEstimateMins * 60 * meanFrames
     }
 
-    // HIGH: only generate the first round of fixtures, then generate the next ones as those fixtures finish.
-    // That way it'll ensure players are free for each fixture
     generateFixtures(players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"

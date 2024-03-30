@@ -86,7 +86,7 @@ export const useRankings = () => {
             return q.diff - p.diff
         }
 
-        // MEDIUM: give 3 points for a win, 1 for a draw, etc?
+        // LOW: give 3 points for a win, 1 for a draw, etc?
 
         return 0
     }

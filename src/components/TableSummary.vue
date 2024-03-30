@@ -78,7 +78,7 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <!-- MEDIUM: allow pausing (deactivating) the table if it is not being used -->
+        <!-- LOW: allow pausing (deactivating) the table if it is not being used -->
         <Button v-if="isInProgress"
             class="ml-2"
             icon="pi pi-pause-circle"

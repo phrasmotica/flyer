@@ -172,6 +172,11 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                     tryPropagate(phase, fixtureId, winnerId, false)
                     tryPropagate(phase, fixtureId, loserId, true)
+
+                    // MEDIUM: in a round-robin phase, if necessary, swap the
+                    // next fixture in the current round (or the first fixture
+                    // in the next round) with the first upcoming fixture where
+                    // all players are free
                 }
             }
         }

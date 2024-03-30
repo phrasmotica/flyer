@@ -64,7 +64,7 @@ const getPlayOffIndex = (playerId: string) => {
 </script>
 
 <template>
-    <!-- MEDIUM: ensure table does not need to scroll sideways on narrow screens -->
+    <!-- LOW: ensure table does not need to scroll sideways on narrow screens -->
     <DataTable size="small" :value="overallStandings" :rowClass="rowClass">
         <Column header="#" field="rank"></Column>
         <Column field="name" header="Name">

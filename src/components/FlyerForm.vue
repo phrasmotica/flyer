@@ -74,7 +74,7 @@ onUpdated(() => {
 <template>
     <TabMenu class="mb-2" :model="items" />
 
-    <!-- MEDIUM: only make the form content overflow with a scroll bar, not the tab menu also -->
+    <!-- LOW: only make the form content overflow with a scroll bar, not the tab menu also -->
     <div id="form-content">
         <div v-if="section === Section.Players">
             <div class="p-fluid mb-2 md:hidden">
