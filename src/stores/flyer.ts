@@ -98,16 +98,18 @@ export const useFlyerStore = defineStore("flyer", () => {
         return phase
     }
 
-    const createPhaseFromPhase = (phase: Phase, settings: PhaseSettings, playOffId: string, players: Player[]): Phase => {
+    const createPlayOffPhase = (forPhase: Phase, playOff: PlayOff) => {
+        const settings = createPlayOffSettings(forPhase, playOff)
+
         const newPhase: Phase = {
-            id: playOffId,
+            id: playOff.id,
             order: 1,
-            players,
-            tables: phase.tables,
+            players: playOff.players,
+            tables: forPhase.tables,
             settings: {...settings},
             startTime: Date.now(),
             finishTime: null,
-            rounds: new KnockoutScheduler().generateFixturesForPhase(phase, players),
+            rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
         }
 
         for (const r of newPhase.rounds) {
@@ -314,16 +316,9 @@ export const useFlyerStore = defineStore("flyer", () => {
     }
 
     const addPlayOff = (playOff: PlayOff, forPhase: Phase) => {
-        const settings = createPlayOffSettings(forPhase, playOff)
-
-        const playOffPhase = createPhaseFromPhase(
-            forPhase,
-            settings,
-            playOff.id,
-            playOff.players
-        )
-
         if (flyer.value) {
+            const playOffPhase = createPlayOffPhase(forPhase, playOff)
+
             flyer.value.phases = [...flyer.value.phases, playOffPhase]
         }
     }
