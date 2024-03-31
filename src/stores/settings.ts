@@ -107,7 +107,6 @@ const defaultSettings: FlyerSettings = {
     raceToPerRound: [],
     tableCount: defaultTableCount,
     tables: defaultTables,
-    playOffId: "",
     specification: {
         matchLengthModel: MatchLengthModel.Fixed,
         raceTo: 1,

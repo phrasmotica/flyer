@@ -75,7 +75,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         const actualTables = settings.tables.slice(0, settings.tableCount)
 
         const phase: Phase = {
-            id: settings.playOffId || uuidv4(),
+            id: uuidv4(),
             order: 1,
             players,
             tables: actualTables.map<Table>(t => ({ ...t, id: uuidv4() })),

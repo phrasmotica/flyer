@@ -7,6 +7,5 @@ export type FlyerSettings = {
     raceToPerRound: number[]
     tableCount: number
     tables: Table[]
-    playOffId: string
     specification: PhaseSettings
 }
