@@ -131,7 +131,6 @@ const hideModal = () => {
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
                 <div class="summary-info" :class="[isSmallScreen && 'maxh-30 overflow-y-auto']">
-                    <!-- HIGH: rounds need to be passed in here, or some other information about variable race-to values -->
                     <InfoList :settings="settings.specification" :raceTos="raceTos" />
 
                     <div
