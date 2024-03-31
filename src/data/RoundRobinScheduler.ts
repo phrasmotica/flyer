@@ -44,6 +44,11 @@ export class RoundRobinScheduler implements IScheduler {
         return this.frameTimeEstimateMins * 60000 * meanFrames
     }
 
+    computeRoundNames(settings: FlyerSettings): string[] {
+        const numRounds = settings.playerCount % 2 !== 0 ? settings.playerCount : settings.playerCount - 1
+        return new Array(numRounds).fill(0).map((_, i) => `Round ${i + 1}`)
+    }
+
     generateFixtures(settings: FlyerSettings, players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useFocus } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
@@ -19,7 +19,6 @@ import { useTweaks } from "../composables/useTweaks"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
-import { computed } from "vue"
 
 const router = useRouter()
 
@@ -46,9 +45,9 @@ const entryFeesPaid = ref(false)
 
 useFocus(nameInput, { initialValue: true })
 
-const raceTos = computed(() => settings.value.raceToPerRound.map((r, i) => ({
-    name: roundNames.value[i],
-    raceTo: r,
+const raceTos = computed(() => roundNames.value.map((n, i) => ({
+    name: n,
+    raceTo: settings.value.raceToPerRound[i],
 })))
 
 const start = () => {

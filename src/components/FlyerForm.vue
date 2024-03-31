@@ -31,13 +31,13 @@ const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 const settingsStore = useSettingsStore()
 
 const {
-    formatSummary,
     estimatedCost,
     roundNames,
     maxTableCount,
 } = useSettings(settingsStore.settings)
 
 const {
+    formatSummary,
     isFixedMatchLength,
     isVariableMatchLength,
     isKnockout,

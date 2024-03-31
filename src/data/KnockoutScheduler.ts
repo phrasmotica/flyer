@@ -115,15 +115,18 @@ export class KnockoutScheduler implements IScheduler {
         return numFixturesPerGroup
     }
 
-    computeRoundNames(playerCount: number): string[] {
-        const numRounds = Math.ceil(Math.log2(playerCount))
-        const numSpaces = 2 ** numRounds
+    computeRoundNames(settings: FlyerSettings) {
+        const numRounds = Math.ceil(Math.log2(settings.playerCount))
+        let numSpaces = 2 ** numRounds
 
-        if (numSpaces < 2) {
-            return []
+        const names = []
+
+        while (numSpaces >= 2) {
+            names.push(this.getRoundName(numSpaces))
+            numSpaces /= 2
         }
 
-        return [this.getRoundName(numSpaces), ...this.computeRoundNames(numSpaces / 2)]
+        return names
     }
 
     generateFixtures(settings: FlyerSettings, players: Player[]) {

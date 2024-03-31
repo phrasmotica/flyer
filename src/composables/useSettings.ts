@@ -3,7 +3,6 @@ import { computed, ref } from "vue"
 import { useScheduler } from "./useScheduler"
 
 import type { FlyerSettings } from "../data/FlyerSettings"
-import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { usePhaseSettings } from "./usePhaseSettings"
 
@@ -11,8 +10,6 @@ export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
     const {
-        formatSummary,
-        isKnockout,
         isWinnerStaysOn,
     } = usePhaseSettings(settings.value.specification)
 
@@ -32,14 +29,7 @@ export const useSettings = (s: FlyerSettings) => {
 
     const estimatedDurationMinutes = computed(() => scheduler.value.estimateDuration(settings.value))
 
-    const roundNames = computed(() => {
-        // MEDIUM: generalise this
-        if (isKnockout.value) {
-            return new KnockoutScheduler().computeRoundNames(settings.value.playerCount)
-        }
-
-        return []
-    })
+    const roundNames = computed(() => scheduler.value.computeRoundNames(settings.value))
 
     const costPerHour = computed(() => {
         const tablesToUse = settings.value.tables.slice(0, settings.value.tableCount)
@@ -56,8 +46,6 @@ export const useSettings = (s: FlyerSettings) => {
 
     return {
         settings,
-
-        formatSummary,
 
         maxTableCount,
 

@@ -38,6 +38,15 @@ export class WinnerStaysOnScheduler implements IScheduler {
         return this.frameTimeEstimateMins * 60000 * meanFrames
     }
 
+    computeRoundNames(settings: FlyerSettings): string[] {
+        const maxFixtureCount = settings.playerCount * (settings.specification.winsRequired - 1) + 1
+
+        // maximum of (playerCount - 1) fixtures per round
+        const numRounds = maxFixtureCount / settings.playerCount - 1
+
+        return new Array(numRounds).fill(0).map((_, i) => `Round ${i + 1}`)
+    }
+
     generateFixtures(settings: FlyerSettings, players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
