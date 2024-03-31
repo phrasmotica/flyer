@@ -16,6 +16,7 @@ import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
 import { useSettingsStore } from "../stores/settings"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 
 enum Section {
     Players,
@@ -33,13 +34,16 @@ const {
     formatSummary,
     estimatedCost,
     roundNames,
+    maxTableCount,
+} = useSettings(settingsStore.settings)
+
+const {
     isFixedMatchLength,
     isVariableMatchLength,
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-    maxTableCount,
-} = useSettings(settingsStore.settings)
+} = usePhaseSettings(settingsStore.settings.specification)
 
 const { n } = useI18n()
 

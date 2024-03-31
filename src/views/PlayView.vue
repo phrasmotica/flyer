@@ -115,6 +115,11 @@ const items = computed(() => {
     return defaultItems
 })
 
+const raceTos = computed(() => rounds.value.map((r, i) => ({
+    name: r.name,
+    raceTo: r.raceTo,
+})))
+
 onMounted(() => {
     if (isInProgress.value) {
         resumeClock()
@@ -247,7 +252,7 @@ onUnmounted(() => {
             <TablesSummary v-if="display === Display.Tables" @showFixtureModal="selectForRecording" />
 
             <div v-if="display === Display.Info">
-                <InfoList :settings="settings" :rounds="rounds" />
+                <InfoList :settings="settings" :raceTos="raceTos" />
 
                 <div
                     v-if="settings.entryFeeRequired"

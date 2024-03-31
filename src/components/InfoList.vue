@@ -4,11 +4,13 @@ import { computed } from "vue"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 
 import type { PhaseSettings } from "../data/PhaseSettings"
-import type { Round } from "../data/Round"
 
 const props = defineProps<{
     settings: PhaseSettings
-    rounds: Round[]
+    raceTos: {
+        name: string
+        raceTo: number | null
+    }[]
 }>()
 
 const {
@@ -31,8 +33,8 @@ const variableRacesSummary = computed(() => {
         return ""
     }
 
-    return "Races to " + props.rounds
-        .map(r => `${r.raceTo} (${r.name})`)
+    return "Races to " + props.raceTos
+        .map(r => `${r.raceTo!} (${r.name})`)
         .join(", then ")
 })
 </script>

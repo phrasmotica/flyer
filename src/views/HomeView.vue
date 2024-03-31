@@ -19,6 +19,7 @@ import { useTweaks } from "../composables/useTweaks"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
+import { computed } from "vue"
 
 const router = useRouter()
 
@@ -33,6 +34,7 @@ const { selectOnFocus } = useTweaks()
 
 const {
     settings,
+    roundNames,
     durationPerFrame,
     estimatedDurationMinutes,
     isInvalid,
@@ -43,6 +45,11 @@ const showModal = ref(false)
 const entryFeesPaid = ref(false)
 
 useFocus(nameInput, { initialValue: true })
+
+const raceTos = computed(() => settings.value.raceToPerRound.map((r, i) => ({
+    name: roundNames.value[i],
+    raceTo: r,
+})))
 
 const start = () => {
     try {
@@ -125,7 +132,8 @@ const hideModal = () => {
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
                 <div class="summary-info" :class="[isSmallScreen && 'maxh-30 overflow-y-auto']">
-                    <InfoList :settings="settings.specification" :rounds="[]" />
+                    <!-- HIGH: rounds need to be passed in here, or some other information about variable race-to values -->
+                    <InfoList :settings="settings.specification" :raceTos="raceTos" />
 
                     <div
                         v-if="settings.specification.entryFeeRequired"

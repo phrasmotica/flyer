@@ -6,55 +6,19 @@ import type { FlyerSettings } from "../data/FlyerSettings"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 
 import { usePhaseSettings } from "./usePhaseSettings"
-import { usePrizes } from "./usePrizes"
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
     const {
-        drawSummary,
-        formatDetails,
-        formatName,
         formatSummary,
-        isFixedMatchLength,
         isKnockout,
-        isRandomDraw,
-        isRoundRobin,
-        isVariableMatchLength,
         isWinnerStaysOn,
-        matchLengthModelName,
-        matchLengthModelSummary,
-        raceSummary,
-        rulesDetails,
-        rulesSummary,
-        tieBreakerDetails,
-        tieBreakerName,
-        tieBreakerSummary,
-        usesPlayOff,
-        winsRequiredSummary,
     } = usePhaseSettings(settings.value.specification)
-
-    const {
-        prizeColours,
-        prizeMonies,
-        prizeMoniesMeterItems,
-        prizePot,
-    } = usePrizes(settings.value.specification, settings.value.playerCount)
 
     const {
         scheduler,
     } = useScheduler(s)
-
-    const variableRacesSummary = computed(() => {
-        if (isFixedMatchLength.value) {
-            return ""
-        }
-
-        return "Races to " + settings.value.raceToPerRound
-            .slice(0, roundNames.value.length)
-            .map((r, i) => `${r} (${roundNames.value[i]})`)
-            .join(", then ")
-    })
 
     const maxTableCount = computed(() => {
         if (isWinnerStaysOn.value) {
@@ -93,44 +57,14 @@ export const useSettings = (s: FlyerSettings) => {
     return {
         settings,
 
-        matchLengthModelName,
-        matchLengthModelSummary,
-
-        formatName,
         formatSummary,
-        formatDetails,
 
-        drawSummary,
-        raceSummary,
-        variableRacesSummary,
-        winsRequiredSummary,
-
-        rulesSummary,
-        rulesDetails,
-
-        tieBreakerName,
-        tieBreakerSummary,
-        tieBreakerDetails,
-
-        isFixedMatchLength,
-        isVariableMatchLength,
-        isKnockout,
-        isRoundRobin,
-        isWinnerStaysOn,
-        isRandomDraw,
         maxTableCount,
-        usesPlayOff,
 
         durationPerFrame,
         estimatedDurationMinutes,
         roundNames,
-        costPerHour,
         estimatedCost,
-
-        prizePot,
-        prizeMonies,
-        prizeColours,
-        prizeMoniesMeterItems,
 
         isInvalid,
     }
