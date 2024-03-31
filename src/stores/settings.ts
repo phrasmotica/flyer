@@ -3,7 +3,7 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
 import { useListFallback } from "../composables/useListFallback"
-import { useSettings } from "../composables/useSettings"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 
 import type { FlyerSettings } from "../data/FlyerSettings"
 import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/PhaseSettings"
@@ -138,7 +138,7 @@ export const useSettingsStore = defineStore("settings", () => {
         isKnockout,
         isRoundRobin,
         isWinnerStaysOn,
-    } = useSettings(settings.value)
+    } = usePhaseSettings(settings.value.specification)
 
     const {
         getFallback,
