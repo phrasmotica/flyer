@@ -4,26 +4,12 @@ import { useScheduler } from "./useScheduler"
 
 import type { FlyerSettings } from "../data/FlyerSettings"
 
-import { usePhaseSettings } from "./usePhaseSettings"
-
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
     const {
-        isWinnerStaysOn,
-    } = usePhaseSettings(settings.value.specification)
-
-    const {
         scheduler,
-    } = useScheduler(s)
-
-    const maxTableCount = computed(() => {
-        if (isWinnerStaysOn.value) {
-            return 1
-        }
-
-        return Math.floor(settings.value.playerCount / 2)
-    })
+    } = useScheduler(s.specification)
 
     const durationPerFrame = computed(() => scheduler.value.frameTimeEstimateMins)
 
@@ -46,8 +32,6 @@ export const useSettings = (s: FlyerSettings) => {
 
     return {
         settings,
-
-        maxTableCount,
 
         durationPerFrame,
         estimatedDurationMinutes,

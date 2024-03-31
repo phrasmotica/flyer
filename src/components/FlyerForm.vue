@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onUpdated, ref } from "vue"
+import { computed, onUpdated, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import type { MenuItem } from "primevue/menuitem"
 
@@ -33,7 +33,6 @@ const settingsStore = useSettingsStore()
 const {
     estimatedCost,
     roundNames,
-    maxTableCount,
 } = useSettings(settingsStore.settings)
 
 const {
@@ -69,6 +68,14 @@ const items = ref<MenuItem[]>([
         command: _ => section.value = Section.Prizes,
     },
 ])
+
+const maxTableCount = computed(() => {
+    if (isWinnerStaysOn.value) {
+        return 1
+    }
+
+    return Math.floor(settingsStore.settings.playerCount / 2)
+})
 
 onUpdated(() => {
     blurNumberInputs("form-content")
