@@ -30,14 +30,13 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
     getPlayerName,
     getRound,
 } = usePhase(currentPhase.value)
 
 const {
     raceTo,
-} = useFixture("scoreInput", props.fixture, getRound(props.fixture.id), settings.value)
+} = useFixture("scoreInput", props.fixture, getRound(props.fixture.id), currentPhase.value)
 
 const { blurNumberInputs } = useTweaks()
 

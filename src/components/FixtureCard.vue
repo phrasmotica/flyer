@@ -5,8 +5,8 @@ import TableBadge from "./TableBadge.vue"
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useRound } from "../composables/useRound"
-import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
 
@@ -41,18 +41,18 @@ const {
 
 const {
     status,
-} = useRound(currentRound.value, settings.value)
+} = useRound(currentRound.value, currentPhase.value)
 
 const {
     fixture,
     winner,
     isWalkover,
-} = useFixture("card", props.fixture, getRound(props.fixture.id), settings.value)
+} = useFixture("card", props.fixture, getRound(props.fixture.id), currentPhase.value)
 
 const {
     isWinnerStaysOn,
     isRandomDraw,
-} = useSettings(settings.value)
+} = usePhaseSettings(settings.value)
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 

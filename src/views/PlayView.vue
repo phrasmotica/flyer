@@ -11,6 +11,7 @@ import FixtureModal from "../components/FixtureModal.vue"
 import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Price from "../components/Price.vue"
+import PrizePotSummary from "../components/PrizePotSummary.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import TablesSummary from "../components/TablesSummary.vue"
 
@@ -19,7 +20,6 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
-import { useSettings } from "../composables/useSettings"
 
 import type { Fixture } from "../data/Fixture"
 
@@ -52,6 +52,8 @@ const {
 
 const {
     settings,
+    players,
+    rounds,
     tables,
     clockDisplay,
     totalCost,
@@ -63,17 +65,14 @@ const {
     nextRoundToGenerate,
     readyToGenerateNextRound,
     generationIsComplete,
+    estimatedDurationMinutes,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
 
 const {
     winners,
-} = useRound(currentRound.value, settings.value)
-
-const {
-    estimatedDurationMinutes,
-} = useSettings(settings.value)
+} = useRound(currentRound.value, currentPhase.value)
 
 const {
     queryParams,
@@ -115,6 +114,11 @@ const items = computed(() => {
 
     return defaultItems
 })
+
+const raceTos = computed(() => rounds.value.map((r, i) => ({
+    name: r.name,
+    raceTo: r.raceTo,
+})))
 
 onMounted(() => {
     if (isInProgress.value) {
@@ -247,7 +251,15 @@ onUnmounted(() => {
 
             <TablesSummary v-if="display === Display.Tables" @showFixtureModal="selectForRecording" />
 
-            <InfoList v-if="display === Display.Info" :settings="settings" />
+            <div v-if="display === Display.Info">
+                <InfoList :settings="settings" :raceTos="raceTos" />
+
+                <div
+                    v-if="settings.entryFeeRequired"
+                    class="pt-2 border-top-1 border-gray-200 mb-2">
+                    <PrizePotSummary :settings="settings" :playerCount="players.length" />
+                </div>
+            </div>
 
             <ConfirmModal
                 :visible="showFinishModal"

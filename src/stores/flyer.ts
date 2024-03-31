@@ -6,10 +6,11 @@ import { useRankings } from "../composables/useRankings"
 
 import type { Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
-import { createPlayOffSettings, Format, type FlyerSettings } from "../data/FlyerSettings"
+import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import type { Phase } from "../data/Phase"
+import { createPlayOffSettings, Format, type PhaseSettings } from "../data/PhaseSettings"
 import type { Player } from "../data/Player"
 import type { PlayOff } from "../data/PlayOff"
 import type { Round } from "../data/Round"
@@ -38,21 +39,21 @@ export const useFlyerStore = defineStore("flyer", () => {
     const start = (settings: FlyerSettings) => {
         let scheduler: IScheduler | null = null
 
-        switch (settings.format) {
+        switch (settings.specification.format) {
             case Format.Knockout:
-                scheduler = new KnockoutScheduler(settings)
+                scheduler = new KnockoutScheduler()
                 break
 
             case Format.RoundRobin:
-                scheduler = new RoundRobinScheduler(settings)
+                scheduler = new RoundRobinScheduler()
                 break
 
             case Format.WinnerStaysOn:
-                scheduler = new WinnerStaysOnScheduler(settings)
+                scheduler = new WinnerStaysOnScheduler()
                 break
 
             default:
-                throw `Invalid flyer format ${settings.format}!`
+                throw `Invalid flyer format ${settings.specification.format}!`
         }
 
         flyer.value = {
@@ -78,14 +79,14 @@ export const useFlyerStore = defineStore("flyer", () => {
             order: 1,
             players,
             tables: actualTables.map<Table>(t => ({ ...t, id: uuidv4() })),
-            settings: {...settings},
+            settings: {...settings.specification},
             startTime: Date.now(),
             finishTime: null,
-            rounds: scheduler.generateFixtures(players),
+            rounds: scheduler.generateFixtures(settings, players),
         }
 
         for (const r of phase.rounds) {
-            const walkovers = completeWalkovers(r, settings)
+            const walkovers = completeWalkovers(r, settings.specification.raceTo)
 
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
@@ -97,7 +98,34 @@ export const useFlyerStore = defineStore("flyer", () => {
         return phase
     }
 
-    const completeWalkovers = (round: Round, settings: FlyerSettings) => {
+    const createPlayOffPhase = (forPhase: Phase, playOff: PlayOff) => {
+        const settings = createPlayOffSettings(forPhase, playOff)
+
+        const newPhase: Phase = {
+            id: playOff.id,
+            order: 1,
+            players: playOff.players,
+            tables: forPhase.tables,
+            settings: {...settings},
+            startTime: Date.now(),
+            finishTime: null,
+            rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
+        }
+
+        for (const r of newPhase.rounds) {
+            const walkovers = completeWalkovers(r, settings.raceTo)
+
+            for (const [fixtureId, winnerId] of walkovers) {
+                // doing this just once is sufficient because we're not creating any fixtures
+                // with a bye in both slots
+                tryPropagate(newPhase, fixtureId, winnerId, false)
+            }
+        }
+
+        return newPhase
+    }
+
+    const completeWalkovers = (round: Round, raceTo: number) => {
         const ids: [string, string][] = []
 
         for (let f of round.fixtures) {
@@ -114,7 +142,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                     throw "No winner of walkover " + f.id + "!"
                 }
 
-                winner.score = settings.raceTo
+                winner.score = raceTo
 
                 ids.push([f.id, winner.playerId])
             }
@@ -288,15 +316,9 @@ export const useFlyerStore = defineStore("flyer", () => {
     }
 
     const addPlayOff = (playOff: PlayOff, forPhase: Phase) => {
-        const settings = createPlayOffSettings(forPhase, playOff)
-
-        const playOffPhase = createPhase(
-            settings,
-            new KnockoutScheduler(settings),
-            playOff.players
-        )
-
         if (flyer.value) {
+            const playOffPhase = createPlayOffPhase(forPhase, playOff)
+
             flyer.value.phases = [...flyer.value.phases, playOffPhase]
         }
     }

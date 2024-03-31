@@ -6,8 +6,8 @@ import WinningsList from "./WinningsList.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useScreenSizes } from "../composables/useScreenSizes"
-import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -39,7 +39,7 @@ const {
 const {
     tieBreakerName,
     isWinnerStaysOn,
-} = useSettings(settings.value)
+} = usePhaseSettings(settings.value)
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {

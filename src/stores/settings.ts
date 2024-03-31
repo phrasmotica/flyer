@@ -3,9 +3,10 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
 import { useListFallback } from "../composables/useListFallback"
-import { useSettings } from "../composables/useSettings"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 
-import { Format, type FlyerSettings, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/FlyerSettings"
+import type { FlyerSettings } from "../data/FlyerSettings"
+import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/PhaseSettings"
 import type { Table } from "../data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
@@ -103,30 +104,32 @@ const defaultTables = new Array(maxTableCount).fill(0).map<Table>((_, i) => ({
 const defaultSettings: FlyerSettings = {
     playerCount: defaultPlayerCount,
     playerNames: defaultPlayers,
-    matchLengthModel: MatchLengthModel.Fixed,
-    raceTo: 1,
     raceToPerRound: [],
-    winsRequired: 1,
     tableCount: defaultTableCount,
     tables: defaultTables,
-    format: Format.Knockout,
-    ruleSet: RuleSet.Blackball,
-    randomlyDrawAllRounds: false,
-    requireCompletedRounds: true,
-    allowDraws: false,
-    allowEarlyFinish: false,
-    stageCount: 1,
-    entryFeeRequired: false,
-    entryFee: 5,
-    moneySplit: MoneySplit.WinnerTakesAll,
-    tieBreaker: TieBreaker.HeadToHead,
-    name: "",
     playOffId: "",
+    specification: {
+        matchLengthModel: MatchLengthModel.Fixed,
+        raceTo: 1,
+        winsRequired: 1,
+        format: Format.Knockout,
+        ruleSet: RuleSet.Blackball,
+        randomlyDrawAllRounds: false,
+        requireCompletedRounds: true,
+        allowDraws: false,
+        allowEarlyFinish: false,
+        stageCount: 1,
+        entryFeeRequired: false,
+        entryFee: 5,
+        moneySplit: MoneySplit.WinnerTakesAll,
+        tieBreaker: TieBreaker.HeadToHead,
+        name: "",
+    }
     // HIGH: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
 }
 
 const expectedKnockoutRoundsCount = Math.ceil(Math.log2(maxPlayersEnv))
-defaultSettings.raceToPerRound = new Array(expectedKnockoutRoundsCount).fill(defaultSettings.raceTo)
+defaultSettings.raceToPerRound = new Array(expectedKnockoutRoundsCount).fill(defaultSettings.specification.raceTo)
 
 export const useSettingsStore = defineStore("settings", () => {
     const settings = useStorage("settings", defaultSettings)
@@ -135,7 +138,7 @@ export const useSettingsStore = defineStore("settings", () => {
         isKnockout,
         isRoundRobin,
         isWinnerStaysOn,
-    } = useSettings(settings.value)
+    } = usePhaseSettings(settings.value.specification)
 
     const {
         getFallback,
@@ -146,34 +149,34 @@ export const useSettingsStore = defineStore("settings", () => {
             settings.value.tableCount = Math.floor(settings.value.playerCount / 2)
         }
 
-        if (settings.value.winsRequired < settings.value.playerCount - 1) {
+        if (settings.value.specification.winsRequired < settings.value.playerCount - 1) {
             // ensure everyone gets at least one game
-            settings.value.winsRequired = settings.value.playerCount - 1
+            settings.value.specification.winsRequired = settings.value.playerCount - 1
         }
     })
 
-    watch(() => settings.value.format, () => {
+    watch(() => settings.value.specification.format, () => {
         if (isKnockout.value) {
-            settings.value.requireCompletedRounds = true
-            settings.value.allowEarlyFinish = false
-            settings.value.allowDraws = false
+            settings.value.specification.requireCompletedRounds = true
+            settings.value.specification.allowEarlyFinish = false
+            settings.value.specification.allowDraws = false
         }
 
         if (isRoundRobin.value) {
-            settings.value.matchLengthModel = MatchLengthModel.Fixed
+            settings.value.specification.matchLengthModel = MatchLengthModel.Fixed
 
-            settings.value.randomlyDrawAllRounds = false
-            settings.value.requireCompletedRounds = false
+            settings.value.specification.randomlyDrawAllRounds = false
+            settings.value.specification.requireCompletedRounds = false
         }
 
         if (isWinnerStaysOn.value) {
-            settings.value.matchLengthModel = MatchLengthModel.Fixed
+            settings.value.specification.matchLengthModel = MatchLengthModel.Fixed
             settings.value.tableCount = 1
 
-            settings.value.randomlyDrawAllRounds = false
-            settings.value.requireCompletedRounds = false
-            settings.value.allowDraws = false
-            settings.value.allowEarlyFinish = true
+            settings.value.specification.randomlyDrawAllRounds = false
+            settings.value.specification.requireCompletedRounds = false
+            settings.value.specification.allowDraws = false
+            settings.value.specification.allowEarlyFinish = true
         }
     })
 
@@ -201,8 +204,8 @@ export const useSettingsStore = defineStore("settings", () => {
     ])
 
     watch(moneySplitOptions, () => {
-        const index = moneySplitOptions.value.findIndex(o => o.value === settings.value.moneySplit)
-        settings.value.moneySplit = getFallback(moneySplitOptions.value, index, MoneySplit.WinnerTakesAll)
+        const index = moneySplitOptions.value.findIndex(o => o.value === settings.value.specification.moneySplit)
+        settings.value.specification.moneySplit = getFallback(moneySplitOptions.value, index, MoneySplit.WinnerTakesAll)
     })
 
     const deletePlayer = (index: number) => {

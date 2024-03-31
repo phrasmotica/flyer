@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 
-import { useSettings } from "../composables/useSettings"
+import { usePrizes } from "../composables/usePrizes"
 
-import type { FlyerSettings } from "../data/FlyerSettings"
+import type { PhaseSettings } from "../data/PhaseSettings"
 
 const props = defineProps<{
-    settings: FlyerSettings
+    settings: PhaseSettings
+    playerCount: number
 }>()
 
 const { n } = useI18n()
@@ -14,7 +15,7 @@ const { n } = useI18n()
 const {
     prizePot,
     prizeMoniesMeterItems,
-} = useSettings(props.settings)
+} = usePrizes(props.settings, props.playerCount)
 </script>
 
 <template>

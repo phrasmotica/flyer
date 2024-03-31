@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePodium } from "../composables/usePodium"
-import { useSettings } from "../composables/useSettings"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useStandings } from "../composables/useStandings"
 
 import type { Flyer } from "../data/Flyer"
@@ -42,7 +42,7 @@ const {
 
 const {
     formatName,
-} = useSettings(settings.value)
+} = usePhaseSettings(settings.value)
 
 const {
     firstPlace,

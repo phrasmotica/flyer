@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid"
 
 import type { Fixture } from "./Fixture"
-import { MatchLengthModel, type FlyerSettings } from "./FlyerSettings"
+import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
+import type { Phase } from "./Phase"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
 
@@ -12,29 +13,43 @@ export class RoundRobinScheduler implements IScheduler {
 
     private generatedRounds?: Round[]
 
-    constructor(private settings: FlyerSettings) {
-
-    }
-
-    estimateDuration() {
+    estimateDuration(settings: FlyerSettings) {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
-        const numFixtures = this.settings.stageCount * this.settings.playerCount * (this.settings.playerCount - 1) / 2
-        const maxFrames = 2 * this.settings.raceTo - 1
-        const meanFrames = (this.settings.raceTo + maxFrames) / 2
+        const numFixtures = settings.specification.stageCount * settings.playerCount * (settings.playerCount - 1) / 2
+        const maxFrames = 2 * settings.specification.raceTo - 1
+        const meanFrames = (settings.specification.raceTo + maxFrames) / 2
         const expectedFramesTotal = numFixtures * meanFrames
-        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / this.settings.tableCount)
+        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
+        return Math.max(this.frameTimeEstimateMins, expectedTime)
+    }
+
+    estimateDurationForPhase(phase: Phase) {
+        const playerCount = phase.players.length
+        const tableCount = phase.tables.length
+        const settings = phase.settings
+
+        // assumes perfect parallelisation across tables, i.e. does not account
+        // for a player making their next opponent wait for their slow match
+        const numFixtures = settings.stageCount * playerCount * (playerCount - 1) / 2
+        const maxFrames = 2 * settings.raceTo - 1
+        const meanFrames = (settings.raceTo + maxFrames) / 2
+        const expectedFramesTotal = numFixtures * meanFrames
+        const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
     }
 
     estimateFixtureDuration(raceTo: number) {
-        const isVariableMatchLength = this.settings.matchLengthModel === MatchLengthModel.Variable
-        const actualRaceTo = isVariableMatchLength ? raceTo : this.settings.raceTo
-        const meanFrames = (actualRaceTo + (2 * actualRaceTo - 1)) / 2
+        const meanFrames = (raceTo + (2 * raceTo - 1)) / 2
         return this.frameTimeEstimateMins * 60000 * meanFrames
     }
 
-    generateFixtures(players: Player[]) {
+    computeRoundNames(settings: FlyerSettings): string[] {
+        const numRounds = settings.playerCount % 2 !== 0 ? settings.playerCount : settings.playerCount - 1
+        return new Array(numRounds).fill(0).map((_, i) => `Round ${i + 1}`)
+    }
+
+    generateFixtures(settings: FlyerSettings, players: Player[]) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
         }
@@ -65,8 +80,8 @@ export class RoundRobinScheduler implements IScheduler {
             throw `Failed to generate rounds after ${this.generationAttempts} attempt(s)!`
         }
 
-        if (this.settings.stageCount > 1) {
-            for (let a = 0; a < this.settings.stageCount - 1; a++) {
+        if (settings.specification.stageCount > 1) {
+            for (let a = 0; a < settings.specification.stageCount - 1; a++) {
                 // copy the last N rounds
                 const roundsToCopy = this.generatedRounds.slice(-numRounds)
 
@@ -78,6 +93,10 @@ export class RoundRobinScheduler implements IScheduler {
         }
 
         return this.generatedRounds
+    }
+
+    generateFixturesForPhase(phase: Phase, players: Player[]): Round[] {
+        throw new Error("Method not implemented.")
     }
 
     private createRound(index: number, players: Player[], omissionIndex: number): [boolean, Round] {

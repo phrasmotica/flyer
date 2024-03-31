@@ -12,9 +12,9 @@ import ResultsTable from "../components/ResultsTable.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useStandings } from "../composables/useStandings"
-import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
@@ -32,6 +32,7 @@ const {
 
 const {
     settings,
+    estimatedDurationMinutes,
     durationMilliseconds,
 } = usePhase(mainPhase.value)
 
@@ -39,8 +40,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-    estimatedDurationMinutes,
-} = useSettings(settings.value)
+} = usePhaseSettings(settings.value)
 
 const {
     requiresPlayOff,

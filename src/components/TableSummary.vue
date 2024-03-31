@@ -30,7 +30,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
     fixtures,
     getRound,
     isInProgress,
@@ -43,7 +42,7 @@ const {
     elapsedMilliseconds,
     resumeClock,
     pauseClock,
-} = useFixture("tableSummary", fixture.value, getRound(fixture.value?.id || ""), settings.value)
+} = useFixture("tableSummary", fixture.value, getRound(fixture.value?.id || ""), currentPhase.value)
 
 const fixtureDescription = computed(() => fixture.value ? getFixtureHeader(fixture.value) : null)
 

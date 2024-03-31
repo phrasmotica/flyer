@@ -12,8 +12,8 @@ import TableBadge from "./TableBadge.vue"
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { FixtureStatus, usePhase } from "../composables/usePhase"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useRound } from "../composables/useRound"
-import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
 import type { Fixture, Score } from "../data/Fixture"
@@ -48,7 +48,7 @@ const {
 
 const {
     status: currentRoundStatus,
-} = useRound(currentRound.value, settings.value)
+} = useRound(currentRound.value, currentPhase.value)
 
 const {
     fixture,
@@ -70,11 +70,11 @@ const {
     setWinner,
     setRanOut,
     resumeClock,
-} = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), settings.value)
+} = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
 
 const {
     isWinnerStaysOn,
-} = useSettings(settings.value)
+} = usePhaseSettings(settings.value)
 
 const { blurActive } = useTweaks()
 

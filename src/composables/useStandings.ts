@@ -1,11 +1,12 @@
 import { computed } from "vue"
 import { useSorted } from "@vueuse/core"
 
+import { usePhase } from "./usePhase"
+import { usePhaseSettings } from "./usePhaseSettings"
+import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
-import { useSettings } from "./useSettings"
 
 import type { Phase } from "../data/Phase"
-import { usePhase } from "./usePhase"
 
 export const useStandings = (p: Phase | null) => {
     const {
@@ -18,9 +19,12 @@ export const useStandings = (p: Phase | null) => {
         isKnockout,
         isRoundRobin,
         usesPlayOff,
+    } = usePhaseSettings(settings.value)
+
+    const {
         prizeMonies,
         prizeColours,
-    } = useSettings(settings.value)
+    } = usePrizes(settings.value, players.value.length)
 
     const {
         computeStandings,
