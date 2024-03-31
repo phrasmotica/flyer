@@ -35,17 +35,7 @@ export const useFlyer = (f: Flyer | null) => {
         return newestPhases.find(p => p.startTime) || null
     })
 
-    const {
-        standings: currentPlayOffStandings,
-    } = useStandings(currentPlayOffPhase.value)
-
-    const overallStandings = computed(() => {
-        if (currentPlayOffPhase.value) {
-            return currentPlayOffStandings.value
-        }
-
-        return processStandings(standings.value)
-    })
+    const overallStandings = computed(() => processStandings(standings.value))
 
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
