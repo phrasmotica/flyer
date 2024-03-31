@@ -2,6 +2,8 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
+import { useFlyer } from "../composables/useFlyer"
+import { usePhase } from "../composables/usePhase"
 import { useRankings } from "../composables/useRankings"
 
 import type { Score } from "../data/Fixture"
@@ -10,7 +12,7 @@ import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import type { Phase } from "../data/Phase"
-import { createPlayOffSettings, Format, type PhaseSettings } from "../data/PhaseSettings"
+import { createPlayOffSettings, Format } from "../data/PhaseSettings"
 import type { Player } from "../data/Player"
 import type { PlayOff } from "../data/PlayOff"
 import type { Round } from "../data/Round"
@@ -31,6 +33,14 @@ export const useFlyerStore = defineStore("flyer", () => {
         getWinner,
         getLoser,
     } = useRankings()
+
+    const {
+        currentPhase,
+    } = useFlyer(flyer.value)
+
+    const {
+        nextFixture,
+    } = usePhase(currentPhase.value)
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -326,27 +336,31 @@ export const useFlyerStore = defineStore("flyer", () => {
     const clear = () => flyer.value = null
 
     const autoCompleteNextFixture = (tableId: string, raceTo: number) => {
-        const phases = flyer.value?.phases || []
-        const currentPhase = phases.find(p => p.rounds.some(r => r.fixtures.some(f => !f.startTime)))
-
-        const fixtures = currentPhase?.rounds.flatMap(r => r.fixtures) || []
-        const nextFixture = fixtures.find(f => !f.startTime)
-
-        if (!nextFixture) {
+        if (!nextFixture.value) {
             return
         }
 
-        console.debug("Auto-completing fixture " + nextFixture.id)
+        // do all computations involving nextFixture.value before we start it,
+        // otherwise it will unintentionally point to the fixture after!
+        const nextFixtureId = nextFixture.value.id
 
-        const breakerId = getRandom(nextFixture.scores).playerId
-        const winnerId = getRandom(nextFixture.scores).playerId
+        console.debug("Auto-completing fixture " + nextFixtureId)
 
-        startFixture(nextFixture.id, tableId, breakerId)
-        updateComment(currentPhase!, nextFixture.id, "AUTO-COMPLETED")
-        updateScores(currentPhase!, nextFixture.id, nextFixture.scores.map(s => ({
+        const breakerId = getRandom(nextFixture.value.scores).playerId
+        const winnerId = getRandom(nextFixture.value.scores).playerId
+
+        const newScores = nextFixture.value.scores.map(s => ({
             ...s,
             score: s.playerId === winnerId ? raceTo : 0,
-        })), true)
+        }))
+
+        startFixture(nextFixtureId, tableId, breakerId)
+
+        const phases = flyer.value?.phases || []
+        const currentPhase = phases.find(p => p.rounds.some(r => r.fixtures.some(f => f.id === nextFixtureId)))
+
+        updateComment(currentPhase!, nextFixtureId, "AUTO-COMPLETED")
+        updateScores(currentPhase!, nextFixtureId, newScores, true)
     }
 
     const getRandom = <T>(arr: T[]) => {

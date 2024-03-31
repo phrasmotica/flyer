@@ -121,6 +121,8 @@ export const usePhase = (p: Phase | null) => {
         return Math.floor(players.value.length / 2)
     })
 
+    const nextFixture = computed(() => fixtures.value.find(f => !f.startTime))
+
     const canStartFixture = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
         return getFixtureStatus(fixture, currentRoundStatus) === FixtureStatus.ReadyToStart
     }
@@ -228,6 +230,7 @@ export const usePhase = (p: Phase | null) => {
         totalCost,
         freeTables,
         maxTableCount,
+        nextFixture,
 
         canStartFixture,
         isBusy,
