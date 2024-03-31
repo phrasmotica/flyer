@@ -11,19 +11,19 @@ export const useScheduler = (s: FlyerSettings) => {
     const settings = ref(s)
 
     const scheduler = computed<IScheduler>(() => {
-        if (settings.value.format === Format.Knockout) {
+        if (settings.value.specification.format === Format.Knockout) {
             return new KnockoutScheduler()
         }
 
-        if (settings.value.format === Format.RoundRobin) {
+        if (settings.value.specification.format === Format.RoundRobin) {
             return new RoundRobinScheduler()
         }
 
-        if (settings.value.format === Format.WinnerStaysOn) {
+        if (settings.value.specification.format === Format.WinnerStaysOn) {
             return new WinnerStaysOnScheduler()
         }
 
-        throw `Invalid flyer format ${settings.value.format}!`
+        throw `Invalid flyer format ${settings.value.specification.format}!`
     })
 
     return {

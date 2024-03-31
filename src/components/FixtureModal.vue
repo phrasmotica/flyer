@@ -36,6 +36,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    settings,
     currentRound,
     freeTables,
     canStartFixture,
@@ -73,7 +74,7 @@ const {
 
 const {
     isWinnerStaysOn,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSettings(settings.value)
 
 const { blurActive } = useTweaks()
 

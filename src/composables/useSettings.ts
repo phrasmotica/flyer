@@ -12,50 +12,52 @@ import { formatList, matchLengthModelList, ruleSetList, tieBreakerList } from ".
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)
 
+    const specification = computed(() => settings.value.specification)
+
     const {
         scheduler,
     } = useScheduler(s)
 
     const matchLengthModelName = computed(() => {
-        const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
+        const matchLengthModel = matchLengthModelList.find(s => s.value === specification.value.matchLengthModel)
         if (!matchLengthModel) {
-            throw `Invalid match length model ${settings.value.matchLengthModel}!`
+            throw `Invalid match length model ${specification.value.matchLengthModel}!`
         }
 
         return matchLengthModel.name
     })
 
     const matchLengthModelSummary = computed(() => {
-        const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
+        const matchLengthModel = matchLengthModelList.find(s => s.value === specification.value.matchLengthModel)
         if (!matchLengthModel) {
-            throw `Invalid match length model ${settings.value.matchLengthModel}!`
+            throw `Invalid match length model ${specification.value.matchLengthModel}!`
         }
 
         return matchLengthModel.summary
     })
 
     const formatName = computed(() => {
-        const format = formatList.find(s => s.value === settings.value.format)
+        const format = formatList.find(s => s.value === specification.value.format)
         if (!format) {
-            throw `Invalid format ${settings.value.format}!`
+            throw `Invalid format ${specification.value.format}!`
         }
 
         return format.name
     })
 
     const formatSummary = computed(() => {
-        const format = formatList.find(s => s.value === settings.value.format)
+        const format = formatList.find(s => s.value === specification.value.format)
         if (!format) {
-            throw `Invalid format ${settings.value.format}!`
+            throw `Invalid format ${specification.value.format}!`
         }
 
         return format.summary
     })
 
     const formatDetails = computed(() => {
-        const format = formatList.find(s => s.value === settings.value.format)
+        const format = formatList.find(s => s.value === specification.value.format)
         if (!format) {
-            throw `Invalid format ${settings.value.format}!`
+            throw `Invalid format ${specification.value.format}!`
         }
 
         return format.details
@@ -63,7 +65,7 @@ export const useSettings = (s: FlyerSettings) => {
 
     const drawSummary = computed(() => {
         if (isKnockout.value) {
-            return settings.value.randomlyDrawAllRounds ? "random draw" : "fixed draw"
+            return specification.value.randomlyDrawAllRounds ? "random draw" : "fixed draw"
         }
 
         return ""
@@ -74,7 +76,7 @@ export const useSettings = (s: FlyerSettings) => {
             return ""
         }
 
-        return `Races to ${settings.value.raceTo}`
+        return `Races to ${specification.value.raceTo}`
     })
 
     const variableRacesSummary = computed(() => {
@@ -89,45 +91,45 @@ export const useSettings = (s: FlyerSettings) => {
     })
 
     const winsRequiredSummary = computed(() => {
-        if (settings.value.winsRequired === 1) {
-            return `First to ${settings.value.winsRequired} win`
+        if (specification.value.winsRequired === 1) {
+            return `First to ${specification.value.winsRequired} win`
         }
 
-        return `First to ${settings.value.winsRequired} wins`
+        return `First to ${specification.value.winsRequired} wins`
     })
 
     const rulesSummary = computed(() => {
-        const ruleSet = ruleSetList.find(s => s.value === settings.value.ruleSet)
+        const ruleSet = ruleSetList.find(s => s.value === specification.value.ruleSet)
         if (!ruleSet) {
-            throw `Invalid rule set ${settings.value.ruleSet}!`
+            throw `Invalid rule set ${specification.value.ruleSet}!`
         }
 
         return ruleSet.summary
     })
 
     const rulesDetails = computed(() => {
-        const ruleSet = ruleSetList.find(s => s.value === settings.value.ruleSet)
+        const ruleSet = ruleSetList.find(s => s.value === specification.value.ruleSet)
         if (!ruleSet) {
-            throw `Invalid rule set ${settings.value.ruleSet}!`
+            throw `Invalid rule set ${specification.value.ruleSet}!`
         }
 
         return ruleSet.details
     })
 
-    const tieBreakerName = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.name || "???")
+    const tieBreakerName = computed(() => tieBreakerList.find(s => s.value === specification.value.tieBreaker)?.name || "???")
 
-    const tieBreakerSummary = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.summary || "???")
+    const tieBreakerSummary = computed(() => tieBreakerList.find(s => s.value === specification.value.tieBreaker)?.summary || "???")
 
-    const tieBreakerDetails = computed(() => tieBreakerList.find(s => s.value === settings.value.tieBreaker)?.details || "???")
+    const tieBreakerDetails = computed(() => tieBreakerList.find(s => s.value === specification.value.tieBreaker)?.details || "???")
 
-    const isFixedMatchLength = computed(() => settings.value.matchLengthModel === MatchLengthModel.Fixed)
-    const isVariableMatchLength = computed(() => settings.value.matchLengthModel === MatchLengthModel.Variable)
+    const isFixedMatchLength = computed(() => specification.value.matchLengthModel === MatchLengthModel.Fixed)
+    const isVariableMatchLength = computed(() => specification.value.matchLengthModel === MatchLengthModel.Variable)
 
-    const isKnockout = computed(() => settings.value.format === Format.Knockout)
-    const isRoundRobin = computed(() => settings.value.format === Format.RoundRobin)
-    const isWinnerStaysOn = computed(() => settings.value.format === Format.WinnerStaysOn)
+    const isKnockout = computed(() => specification.value.format === Format.Knockout)
+    const isRoundRobin = computed(() => specification.value.format === Format.RoundRobin)
+    const isWinnerStaysOn = computed(() => specification.value.format === Format.WinnerStaysOn)
 
-    const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
+    const isRandomDraw = computed(() => isKnockout.value && specification.value.randomlyDrawAllRounds)
 
     const maxTableCount = computed(() => {
         if (isWinnerStaysOn.value) {
@@ -137,7 +139,7 @@ export const useSettings = (s: FlyerSettings) => {
         return Math.floor(settings.value.playerCount / 2)
     })
 
-    const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
+    const usesPlayOff = computed(() => specification.value.tieBreaker === TieBreaker.PlayOff)
 
     const durationPerFrame = computed(() => scheduler.value.frameTimeEstimateMins)
 
@@ -160,25 +162,25 @@ export const useSettings = (s: FlyerSettings) => {
 
     const estimatedCost = computed(() => costPerHour.value * estimatedDurationMinutes.value / 60)
 
-    const prizePot = computed(() => settings.value.playerCount * settings.value.entryFee)
+    const prizePot = computed(() => settings.value.playerCount * specification.value.entryFee)
 
     const prizeMonies = computed(() => {
-        if (!settings.value.entryFeeRequired) {
+        if (!specification.value.entryFeeRequired) {
             return []
         }
 
-        if (settings.value.moneySplit === MoneySplit.SeventyThirty) {
+        if (specification.value.moneySplit === MoneySplit.SeventyThirty) {
             const winnerPrize = roundX(prizePot.value * 0.7, 5)
             return [winnerPrize, prizePot.value - winnerPrize]
         }
 
-        if (settings.value.moneySplit === MoneySplit.SixtyTwentyFiveFifteen) {
+        if (specification.value.moneySplit === MoneySplit.SixtyTwentyFiveFifteen) {
             const winnerPrize = roundX(prizePot.value * 0.6, 5)
             const runnerUpPrize = roundX(prizePot.value * 0.25, 5)
             return [winnerPrize, runnerUpPrize, prizePot.value - winnerPrize - runnerUpPrize]
         }
 
-        if (settings.value.moneySplit === MoneySplit.SemiFinalists) {
+        if (specification.value.moneySplit === MoneySplit.SemiFinalists) {
             const winnerPrize = roundX(prizePot.value * 0.55, 5)
             const runnerUpPrize = roundX(prizePot.value * 0.25, 5)
             const semiFinalistPrize = (prizePot.value - winnerPrize - runnerUpPrize) / 2

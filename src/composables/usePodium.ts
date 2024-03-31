@@ -5,12 +5,14 @@ import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
 
 import type { Phase } from "../data/Phase"
+import { usePrizes } from "./usePrizes"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
 // accepts null (see ResultsTable.vue)
 export const usePodium = (p: Phase | null) => {
     const {
         phase,
+        settings,
         fixtures,
         players,
         rounds,
@@ -23,9 +25,12 @@ export const usePodium = (p: Phase | null) => {
     const {
         isRoundRobin,
         isWinnerStaysOn,
+    } = usePhaseSettings(settings.value)
+
+    const {
         prizeMonies,
         prizeColours,
-    } = usePhaseSettings(phase.value)
+    } = usePrizes(settings.value, players.value.length)
 
     const finalists = computed<[string, string]>(() => {
         if (!phase.value) {

@@ -39,7 +39,7 @@ const {
 const {
     tieBreakerName,
     isWinnerStaysOn,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSettings(settings.value)
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {

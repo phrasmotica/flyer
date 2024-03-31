@@ -32,6 +32,7 @@ const {
 
 const {
     settings,
+    estimatedDurationMinutes,
     durationMilliseconds,
 } = usePhase(mainPhase.value)
 
@@ -39,8 +40,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-    estimatedDurationMinutes,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSettings(settings.value)
 
 const {
     requiresPlayOff,

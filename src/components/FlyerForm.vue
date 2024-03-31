@@ -112,7 +112,7 @@ onUpdated(() => {
             <div class="p-fluid mb-1">
                 <SelectButton
                     id="matchLengthModelSelect"
-                    v-model="settingsStore.settings.matchLengthModel"
+                    v-model="settingsStore.settings.specification.matchLengthModel"
                     :disabled="!isKnockout"
                     :options="settingsStore.matchLengthModelList"
                     optionLabel="summary"
@@ -128,7 +128,7 @@ onUpdated(() => {
 
                     <Stepper
                         inputId="raceToStepper"
-                        v-model="settingsStore.settings.raceTo"
+                        v-model="settingsStore.settings.specification.raceTo"
                         :min="1" :max="maxRaceEnv"
                         prefix="Races to " />
                 </div>
@@ -154,9 +154,9 @@ onUpdated(() => {
 
                     <Stepper
                         inputId="winsRequiredStepper"
-                        v-model="settingsStore.settings.winsRequired"
+                        v-model="settingsStore.settings.specification.winsRequired"
                         :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
-                        :suffix="settingsStore.settings.winsRequired > 1 ? ' wins' : ' win'" />
+                        :suffix="settingsStore.settings.specification.winsRequired > 1 ? ' wins' : ' win'" />
 
                     <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
                         Must be at least one fewer than the player count ({{ settingsStore.settings.playerCount - 1 }}).
@@ -169,7 +169,7 @@ onUpdated(() => {
                     <div class="md:mr-1">
                         <LabelledDropdown
                             label="Format"
-                            v-model="settingsStore.settings.format"
+                            v-model="settingsStore.settings.specification.format"
                             :options="settingsStore.formatList" />
                     </div>
                 </div>
@@ -178,7 +178,7 @@ onUpdated(() => {
                     <div class="md:ml-1">
                         <LabelledDropdown
                             label="Rules"
-                            v-model="settingsStore.settings.ruleSet"
+                            v-model="settingsStore.settings.specification.ruleSet"
                             :options="settingsStore.ruleSetList" />
                     </div>
                 </div>
@@ -188,7 +188,7 @@ onUpdated(() => {
                     <div class="md:mr-1">
                         <LabelledDropdown
                             label="Tie Breaker"
-                            v-model="settingsStore.settings.tieBreaker"
+                            v-model="settingsStore.settings.specification.tieBreaker"
                             :options="settingsStore.tieBreakerList" />
                     </div>
                 </div>
@@ -202,9 +202,9 @@ onUpdated(() => {
 
                         <Stepper
                             inputId="stageCountStepper"
-                            v-model="settingsStore.settings.stageCount"
+                            v-model="settingsStore.settings.specification.stageCount"
                             :min="1" :max="4"
-                            :suffix="settingsStore.settings.stageCount > 1 ? ' stages' : ' stage'" />
+                            :suffix="settingsStore.settings.specification.stageCount > 1 ? ' stages' : ' stage'" />
 
                         <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
                             This is the number of times each player will play the others.
@@ -221,22 +221,22 @@ onUpdated(() => {
                 <LabelledCheckbox
                     v-if="isKnockout"
                     label="Randomly draw all rounds"
-                    v-model="settingsStore.settings.randomlyDrawAllRounds" />
+                    v-model="settingsStore.settings.specification.randomlyDrawAllRounds" />
 
                 <LabelledCheckbox
                     v-if="isRoundRobin"
                     label="Require completed rounds"
-                    v-model="settingsStore.settings.requireCompletedRounds" />
+                    v-model="settingsStore.settings.specification.requireCompletedRounds" />
 
                 <LabelledCheckbox
                     v-if="isRoundRobin"
                     label="Allow early finish"
-                    v-model="settingsStore.settings.allowEarlyFinish" />
+                    v-model="settingsStore.settings.specification.allowEarlyFinish" />
 
                 <LabelledCheckbox
                     v-if="isRoundRobin"
                     label="Allow draws"
-                    v-model="settingsStore.settings.allowDraws" />
+                    v-model="settingsStore.settings.specification.allowDraws" />
             </div>
         </div>
 
@@ -312,9 +312,9 @@ onUpdated(() => {
         <div v-if="section === Section.Prizes">
             <LabelledCheckbox
                 label="Require entry fee"
-                v-model="settingsStore.settings.entryFeeRequired" />
+                v-model="settingsStore.settings.specification.entryFeeRequired" />
 
-            <div v-if="settingsStore.settings.entryFeeRequired">
+            <div v-if="settingsStore.settings.specification.entryFeeRequired">
                 <div class="p-fluid mb-2">
                     <label for="entryFeeStepper" class="font-bold">
                         Entry fee
@@ -322,19 +322,21 @@ onUpdated(() => {
 
                     <CurrencyStepper
                         inputId="entryFeeStepper"
-                        v-model="settingsStore.settings.entryFee"
+                        v-model="settingsStore.settings.specification.entryFee"
                         :min="5" :max="20" :step="5"
                         suffix=" entry fee" />
                 </div>
 
                 <LabelledDropdown
                     label="Money split"
-                    v-model="settingsStore.settings.moneySplit"
+                    v-model="settingsStore.settings.specification.moneySplit"
                     :options="settingsStore.moneySplitOptions"
-                    :disabled="!settingsStore.settings.entryFeeRequired" />
+                    :disabled="!settingsStore.settings.specification.entryFeeRequired" />
 
                 <div class="mt-2 border-top-1 border-gray-200">
-                    <PrizePotSummary :settings="settingsStore.settings" />
+                    <PrizePotSummary
+                        :settings="settingsStore.settings.specification"
+                        :playerCount="settingsStore.settings.playerCount" />
                 </div>
             </div>
         </div>

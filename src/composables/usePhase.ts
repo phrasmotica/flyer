@@ -8,6 +8,7 @@ import { RoundStatus } from "./useRound"
 import type { Fixture } from "../data/Fixture"
 import type { Phase } from "../data/Phase"
 import type { PhaseSettings } from "../data/PhaseSettings"
+import { useSchedulerForPhase } from "./useScheduler"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
@@ -31,8 +32,12 @@ export const usePhase = (p: Phase | null) => {
     const rounds = computed(() => phase.value?.rounds || [])
 
     const {
-        costPerHour,
-    } = usePhaseSettings(phase.value)
+        isWinnerStaysOn,
+    } = usePhaseSettings(settings.value)
+
+    const {
+        scheduler,
+    } = useSchedulerForPhase(settings.value)
 
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
@@ -73,6 +78,14 @@ export const usePhase = (p: Phase | null) => {
 
     const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
+    const estimatedDurationMinutes = computed(() => {
+        if (!phase.value) {
+            return 0
+        }
+
+        return scheduler.value.estimateDurationForPhase(phase.value)
+    })
+
     const durationMinutes = computed(() => {
         if (!phase.value?.startTime || !phase.value.finishTime) {
             return null
@@ -91,12 +104,22 @@ export const usePhase = (p: Phase | null) => {
 
     const clockDisplay = computed(() => durationMilliseconds.value || elapsedMilliseconds.value)
 
+    const costPerHour = computed(() => tables.value.map(t => t.costPerHour).reduce((a, b) => a + b, 0))
+
     const totalCost = computed(() => {
         const durationHours = (durationMilliseconds.value || elapsedMilliseconds.value) / 3600000
         return costPerHour.value * durationHours
     })
 
     const freeTables = computed(() => tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime)))
+
+    const maxTableCount = computed(() => {
+        if (isWinnerStaysOn.value) {
+            return 1
+        }
+
+        return Math.floor(players.value.length / 2)
+    })
 
     const canStartFixture = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
         return getFixtureStatus(fixture, currentRoundStatus) === FixtureStatus.ReadyToStart
@@ -198,11 +221,13 @@ export const usePhase = (p: Phase | null) => {
         nextRoundToGenerate,
         generationIsComplete,
         readyToGenerateNextRound,
+        estimatedDurationMinutes,
         durationMinutes,
         durationMilliseconds,
         clockDisplay,
         totalCost,
         freeTables,
+        maxTableCount,
 
         canStartFixture,
         isBusy,

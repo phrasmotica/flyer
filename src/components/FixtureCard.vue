@@ -31,6 +31,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    settings,
     currentRound,
     canStartFixture,
     getRound,
@@ -51,7 +52,7 @@ const {
 const {
     isWinnerStaysOn,
     isRandomDraw,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSettings(settings.value)
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 

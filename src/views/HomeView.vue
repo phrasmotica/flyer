@@ -11,6 +11,7 @@ import FlyerFormSection from "../components/FlyerFormSection.vue"
 import InfoList from "../components/InfoList.vue"
 import LabelledCheckbox from "../components/LabelledCheckbox.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import PrizePotSummary from "../components/PrizePotSummary.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
@@ -100,7 +101,7 @@ const hideModal = () => {
                 header="Start Flyer"
                 message="Please enter a name for the flyer:"
                 confirmLabel="Start"
-                :confirmDisabled="settings.name.length <= 0 || (settings.entryFeeRequired && !entryFeesPaid)"
+                :confirmDisabled="settings.specification.name.length <= 0 || (settings.specification.entryFeeRequired && !entryFeesPaid)"
                 cancelLabel="Go back"
                 @confirm="start"
                 @hide="hideModal">
@@ -108,13 +109,13 @@ const hideModal = () => {
                     <InputText
                         ref="nameInput"
                         placeholder="Flyer name"
-                        v-model="settings.name"
+                        v-model="settings.specification.name"
                         @focus="selectOnFocus" />
                 </div>
 
                 <div class="p-fluid mb-2">
                     <LabelledCheckbox
-                        v-if="settings.entryFeeRequired"
+                        v-if="settings.specification.entryFeeRequired"
                         v-model="entryFeesPaid"
                         label="Entry fees paid?" />
                 </div>
@@ -124,7 +125,13 @@ const hideModal = () => {
         <template #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
                 <div class="summary-info" :class="[isSmallScreen && 'maxh-30 overflow-y-auto']">
-                    <InfoList :settings="settings" />
+                    <InfoList :settings="settings.specification" :rounds="[]" />
+
+                    <div
+                        v-if="settings.specification.entryFeeRequired"
+                        class="pt-2 border-top-1 border-gray-200 mb-2">
+                        <PrizePotSummary :settings="settings.specification" :playerCount="settings.playerCount" />
+                    </div>
 
                     <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
                         <div>

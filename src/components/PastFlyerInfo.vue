@@ -42,7 +42,7 @@ const {
 
 const {
     formatName,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSettings(settings.value)
 
 const {
     firstPlace,

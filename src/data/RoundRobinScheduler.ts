@@ -16,9 +16,9 @@ export class RoundRobinScheduler implements IScheduler {
     estimateDuration(settings: FlyerSettings) {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
-        const numFixtures = settings.stageCount * settings.playerCount * (settings.playerCount - 1) / 2
-        const maxFrames = 2 * settings.raceTo - 1
-        const meanFrames = (settings.raceTo + maxFrames) / 2
+        const numFixtures = settings.specification.stageCount * settings.playerCount * (settings.playerCount - 1) / 2
+        const maxFrames = 2 * settings.specification.raceTo - 1
+        const meanFrames = (settings.specification.raceTo + maxFrames) / 2
         const expectedFramesTotal = numFixtures * meanFrames
         const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
@@ -75,8 +75,8 @@ export class RoundRobinScheduler implements IScheduler {
             throw `Failed to generate rounds after ${this.generationAttempts} attempt(s)!`
         }
 
-        if (settings.stageCount > 1) {
-            for (let a = 0; a < settings.stageCount - 1; a++) {
+        if (settings.specification.stageCount > 1) {
+            for (let a = 0; a < settings.specification.stageCount - 1; a++) {
                 // copy the last N rounds
                 const roundsToCopy = this.generatedRounds.slice(-numRounds)
 

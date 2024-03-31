@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import PrizePotSummary from "./PrizePotSummary.vue"
+import { computed } from "vue"
 
-import { useSettings } from "../composables/useSettings"
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 
-import { type FlyerSettings } from "../data/FlyerSettings"
+import type { PhaseSettings } from "../data/PhaseSettings"
+import type { Round } from "../data/Round"
 
 const props = defineProps<{
-    settings: FlyerSettings
+    settings: PhaseSettings
+    rounds: Round[]
 }>()
 
 const {
-    settings,
     formatSummary,
     formatDetails,
     drawSummary,
     raceSummary,
-    variableRacesSummary,
     winsRequiredSummary,
     rulesSummary,
     rulesDetails,
@@ -23,7 +23,18 @@ const {
     tieBreakerDetails,
     isRoundRobin,
     isWinnerStaysOn,
-} = useSettings(props.settings)
+    isFixedMatchLength,
+} = usePhaseSettings(props.settings)
+
+const variableRacesSummary = computed(() => {
+    if (isFixedMatchLength.value) {
+        return ""
+    }
+
+    return "Races to " + props.rounds
+        .map(r => `${r.raceTo} (${r.name})`)
+        .join(", then ")
+})
 </script>
 
 <template>
@@ -50,9 +61,5 @@ const {
 
     <div v-if="isRoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
         <strong>{{ tieBreakerSummary }}</strong>&nbsp;<em>({{ tieBreakerDetails }})</em>
-    </div>
-
-    <div v-if="settings.entryFeeRequired" class="pt-2 border-top-1 border-gray-200 mb-2">
-        <PrizePotSummary :settings="settings" />
     </div>
 </template>

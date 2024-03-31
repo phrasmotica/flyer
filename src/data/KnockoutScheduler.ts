@@ -17,15 +17,15 @@ export class KnockoutScheduler implements IScheduler {
         // here a "group" is a set of fixtures that can be played in parallel
         let numFixturesPerGroup = this.computeFixturesPerRound(
             settings.playerCount,
-            settings.matchLengthModel,
-            settings.randomlyDrawAllRounds)
+            settings.specification.matchLengthModel,
+            settings.specification.randomlyDrawAllRounds)
 
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
-            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
+            const raceTo = settings.specification.matchLengthModel === MatchLengthModel.Variable
                 ? settings.raceToPerRound[i]
-                : settings.raceTo
+                : settings.specification.raceTo
 
             return {
                 count: x,
@@ -146,11 +146,11 @@ export class KnockoutScheduler implements IScheduler {
         let r = 0
         while (r < numRounds) {
             // ensure the final round (match) always draws from the two semi-finals
-            const takeFromParents = !settings.randomlyDrawAllRounds || r === numRounds - 1
+            const takeFromParents = !settings.specification.randomlyDrawAllRounds || r === numRounds - 1
 
-            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
+            const raceTo = settings.specification.matchLengthModel === MatchLengthModel.Variable
                 ? settings.raceToPerRound.at(r)!
-                : settings.raceTo
+                : settings.specification.raceTo
 
             const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
             this.generatedRounds.push(round)

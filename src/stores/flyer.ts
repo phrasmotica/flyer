@@ -39,7 +39,7 @@ export const useFlyerStore = defineStore("flyer", () => {
     const start = (settings: FlyerSettings) => {
         let scheduler: IScheduler | null = null
 
-        switch (settings.format) {
+        switch (settings.specification.format) {
             case Format.Knockout:
                 scheduler = new KnockoutScheduler()
                 break
@@ -53,7 +53,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                 break
 
             default:
-                throw `Invalid flyer format ${settings.format}!`
+                throw `Invalid flyer format ${settings.specification.format}!`
         }
 
         flyer.value = {
@@ -79,14 +79,14 @@ export const useFlyerStore = defineStore("flyer", () => {
             order: 1,
             players,
             tables: actualTables.map<Table>(t => ({ ...t, id: uuidv4() })),
-            settings: {...settings},
+            settings: {...settings.specification},
             startTime: Date.now(),
             finishTime: null,
             rounds: scheduler.generateFixtures(settings, players),
         }
 
         for (const r of phase.rounds) {
-            const walkovers = completeWalkovers(r, settings.raceTo)
+            const walkovers = completeWalkovers(r, settings.specification.raceTo)
 
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures

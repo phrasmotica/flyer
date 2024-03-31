@@ -8,7 +8,6 @@ import TableSummary from "./TableSummary.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
-import { usePhaseSettings } from "../composables/usePhaseSettings"
 
 import type { Fixture } from "../data/Fixture"
 
@@ -32,11 +31,8 @@ const {
 const {
     tables,
     isInProgress,
-} = usePhase(currentPhase.value)
-
-const {
     maxTableCount,
-} = usePhaseSettings(currentPhase.value)
+} = usePhase(currentPhase.value)
 
 const maxTablesReached = computed(() => tables.value.length >= maxTableCount.value)
 
