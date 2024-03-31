@@ -7,7 +7,7 @@ import { useClock } from "./useClock"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { useRound } from "./useRound"
-import { useSchedulerForPhase } from "./useScheduler"
+import { useScheduler } from "./useScheduler"
 
 import type { Fixture } from "../data/Fixture"
 import type { Phase } from "../data/Phase"
@@ -40,7 +40,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const {
         scheduler,
-    } = useSchedulerForPhase(settings.value)
+    } = useScheduler(settings.value)
 
     const breakerId = ref("")
     const tableId = ref("")

@@ -4,11 +4,11 @@ import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 import { useClock } from "./useClock"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { RoundStatus } from "./useRound"
+import { useScheduler } from "./useScheduler"
 
 import type { Fixture } from "../data/Fixture"
 import type { Phase } from "../data/Phase"
 import type { PhaseSettings } from "../data/PhaseSettings"
-import { useSchedulerForPhase } from "./useScheduler"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
@@ -37,7 +37,7 @@ export const usePhase = (p: Phase | null) => {
 
     const {
         scheduler,
-    } = useSchedulerForPhase(settings.value)
+    } = useScheduler(settings.value)
 
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
