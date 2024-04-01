@@ -39,8 +39,11 @@ const {
     settings,
     currentRound,
     freeTables,
+    nextFixture,
+    nextFreeFixture,
     canStartFixture,
     getRound,
+    getRoundWithIndex,
     getTable,
     getFixtureStatus,
     getFixtureHeader,
@@ -73,6 +76,7 @@ const {
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
 
 const {
+    isRoundRobin,
     isWinnerStaysOn,
 } = usePhaseSettings(settings.value)
 
@@ -133,6 +137,18 @@ const updateScores = (finish: boolean) => {
     }))
 
     flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
+
+    if (finish && isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
+        const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)
+        const [roundB, indexB] = getRoundWithIndex(nextFreeFixture.value.id)
+
+        if (roundA && roundB) {
+            // if necessary, swap the next fixture in the current round (or
+            // the first fixture in the next round) with the first upcoming fixture
+            // where all players are free
+            flyerStore.swapFixtures(roundA, indexA, roundB, indexB)
+        }
+    }
 
     hide()
 }

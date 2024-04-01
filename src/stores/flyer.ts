@@ -2,8 +2,6 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 
-import { useFlyer } from "../composables/useFlyer"
-import { usePhase } from "../composables/usePhase"
 import { useRankings } from "../composables/useRankings"
 
 import type { Fixture, Score } from "../data/Fixture"
@@ -33,15 +31,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         getWinner,
         getLoser,
     } = useRankings()
-
-    const {
-        currentPhase,
-    } = useFlyer(flyer.value)
-
-    const {
-        nextFreeFixture, // MEDIUM: compute this entirely in this store instead of using the composable
-        getRound,
-    } = usePhase(currentPhase.value)
 
     const setFlyer = (f: Flyer) => {
         flyer.value = f
@@ -211,45 +200,9 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                     tryPropagate(phase, fixtureId, winnerId, false)
                     tryPropagate(phase, fixtureId, loserId, true)
-
-                    if (phase.settings.format === Format.RoundRobin) {
-                        prioritiseFreeFixture(phase)
-                    }
                 }
             }
         }
-    }
-
-    const prioritiseFreeFixture = (phase: Phase) => {
-        // if necessary, swap the next fixture in the current round (or
-        // the first fixture in the next round) with the first upcoming fixture
-        // where all players are free
-        const [nextFixturePhase, nextFixture] = getNextFixture()
-
-        if (
-            !nextFixturePhase ||
-            !nextFixture ||
-            !nextFreeFixture.value ||
-            nextFixture.id === nextFreeFixture.value.id) {
-            return
-        }
-
-        const nextFreeFixtureId = nextFreeFixture.value.id
-
-        const roundIndexA = getRound(nextFixture.id)!.index
-        const roundIndexB = getRound(nextFreeFixtureId)!.index
-
-        const roundA = phase.rounds.find(r => r.index === roundIndexA)!
-        const fixtureIndexA = roundA.fixtures.findIndex(f => f.id === nextFixture.id)
-
-        const roundB = phase.rounds.find(r => r.index === roundIndexB)!
-        const fixtureIndexB = roundB.fixtures.findIndex(f => f.id === nextFreeFixtureId)
-
-        console.debug(`Swapping round ${roundIndexA} fixture ${fixtureIndexA} and round ${roundIndexB} fixture ${fixtureIndexB}`)
-
-        const temp = roundA.fixtures[fixtureIndexA]
-        roundA.fixtures[fixtureIndexA] = roundB.fixtures[fixtureIndexB]
-        roundB.fixtures[fixtureIndexB] = temp
     }
 
     const addTable = (name: string, costPerHour: number) => {
@@ -384,6 +337,14 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateScores(phase, fixture.id, newScores, true)
     }
 
+    const swapFixtures = (roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
+        console.debug(`Swapping round ${roundA.index} fixture ${fixtureIndexA} and round ${roundB.index} fixture ${fixtureIndexB}`)
+
+        const temp = roundA.fixtures[fixtureIndexA]
+        roundA.fixtures[fixtureIndexA] = roundB.fixtures[fixtureIndexB]
+        roundB.fixtures[fixtureIndexB] = temp
+    }
+
     const getRandom = <T>(arr: T[]) => {
         return arr[Math.floor(Math.random() * arr.length)]
     }
@@ -404,5 +365,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         clear,
 
         autoCompleteFixture,
+        swapFixtures,
     }
 })

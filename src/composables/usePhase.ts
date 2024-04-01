@@ -9,6 +9,7 @@ import { useScheduler } from "./useScheduler"
 import type { Fixture } from "../data/Fixture"
 import type { Phase } from "../data/Phase"
 import type { PhaseSettings } from "../data/PhaseSettings"
+import type { Round } from "../data/Round"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
@@ -155,6 +156,11 @@ export const usePhase = (p: Phase | null) => {
 
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
+    const getRoundWithIndex = (fixtureId: string): [Round | undefined, number] => {
+        const round = getRound(fixtureId)
+        return [round, round?.fixtures.findIndex(f => f.id === fixtureId) || -1]
+    }
+
     const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus?: RoundStatus) => {
         if (!fixture) {
             return FixtureStatus.Unknown
@@ -260,6 +266,7 @@ export const usePhase = (p: Phase | null) => {
         getPlayerName,
         getTable,
         getRound,
+        getRoundWithIndex,
         getFixtureStatus,
         getFixtureHeader,
         pauseClock,
