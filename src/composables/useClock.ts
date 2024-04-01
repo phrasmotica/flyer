@@ -13,7 +13,7 @@ export const useClock = (name: string, c: Clockable | null) => {
     const clockable = ref(c)
 
     const {
-        isDebug,
+        clockLoggingEnabled,
     } = useEnv()
 
     const computeDifference = () => differenceInMilliseconds(Date.now(), clockable.value?.startTime || Date.now())
@@ -23,7 +23,7 @@ export const useClock = (name: string, c: Clockable | null) => {
     const updateClock = () => {
         const newValue = computeDifference()
 
-        if (isDebug) {
+        if (clockLoggingEnabled) {
             console.debug(name + ": " + clockable.value?.startTime + " + " + newValue)
         }
 
