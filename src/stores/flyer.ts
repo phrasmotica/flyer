@@ -40,6 +40,8 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const {
         nextFixture,
+        nextFreeFixture,
+        getRound,
     } = usePhase(currentPhase.value)
 
     const setFlyer = (f: Flyer) => {
@@ -211,13 +213,40 @@ export const useFlyerStore = defineStore("flyer", () => {
                     tryPropagate(phase, fixtureId, winnerId, false)
                     tryPropagate(phase, fixtureId, loserId, true)
 
-                    // MEDIUM: in a round-robin phase, if necessary, swap the
-                    // next fixture in the current round (or the first fixture
-                    // in the next round) with the first upcoming fixture where
-                    // all players are free
+                    if (phase.settings.format === Format.RoundRobin) {
+                        prioritiseFreeFixture(phase)
+                    }
                 }
             }
         }
+    }
+
+    const prioritiseFreeFixture = (phase: Phase) => {
+        // if necessary, swap the next fixture in the current round (or
+        // the first fixture in the next round) with the first upcoming fixture
+        // where all players are free
+
+        if (!nextFixture.value || !nextFreeFixture.value || nextFixture.value.id === nextFreeFixture.value.id) {
+            return
+        }
+
+        const nextFixtureId = nextFixture.value.id
+        const nextFreeFixtureId = nextFreeFixture.value.id
+
+        const roundIndexA = getRound(nextFixtureId)!.index
+        const roundIndexB = getRound(nextFreeFixtureId)!.index
+
+        const roundA = phase.rounds.find(r => r.index === roundIndexA)!
+        const fixtureIndexA = roundA.fixtures.findIndex(f => f.id === nextFixtureId)
+
+        const roundB = phase.rounds.find(r => r.index === roundIndexB)!
+        const fixtureIndexB = roundB.fixtures.findIndex(f => f.id === nextFreeFixtureId)
+
+        console.log(`Swapping round ${roundIndexA} fixture ${fixtureIndexA} and round ${roundIndexB} fixture ${fixtureIndexB}`)
+
+        const temp = roundA.fixtures[fixtureIndexA]
+        roundA.fixtures[fixtureIndexA] = roundB.fixtures[fixtureIndexB]
+        roundB.fixtures[fixtureIndexB] = temp
     }
 
     const addTable = (name: string, costPerHour: number) => {

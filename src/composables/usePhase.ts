@@ -123,8 +123,23 @@ export const usePhase = (p: Phase | null) => {
 
     const nextFixture = computed(() => fixtures.value.find(f => !f.startTime))
 
+    const nextFreeFixture = computed(() => fixtures.value.find(canPrioritiseFixture))
+
     const canStartFixture = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
         return getFixtureStatus(fixture, currentRoundStatus) === FixtureStatus.ReadyToStart
+    }
+
+    const canPrioritiseFixture = (fixture: Fixture | undefined) => {
+        const status = getFixtureStatus(fixture)
+
+        if (settings.value.requireCompletedRounds) {
+            return status === FixtureStatus.ReadyToStart
+        }
+
+        return [
+            FixtureStatus.ReadyToStart,
+            FixtureStatus.WaitingForRound,
+        ].includes(status)
     }
 
     const isBusy = (playerId: string) => {
@@ -140,7 +155,7 @@ export const usePhase = (p: Phase | null) => {
 
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
-    const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus: RoundStatus) => {
+    const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus?: RoundStatus) => {
         if (!fixture) {
             return FixtureStatus.Unknown
         }
@@ -165,10 +180,12 @@ export const usePhase = (p: Phase | null) => {
             return FixtureStatus.WaitingForPlayers
         }
 
-        const round = getRound(fixture.id)
-        const currentRoundNotFinished = currentRoundStatus !== RoundStatus.Finished
-        if (settings.value.requireCompletedRounds && currentRoundNotFinished && (round?.index || -1) > currentRound.value.index) {
-            return FixtureStatus.WaitingForRound
+        if (currentRoundStatus) {
+            const round = getRound(fixture.id)
+            const currentRoundNotFinished = currentRoundStatus !== RoundStatus.Finished
+            if (settings.value.requireCompletedRounds && currentRoundNotFinished && (round?.index || -1) > currentRound.value.index) {
+                return FixtureStatus.WaitingForRound
+            }
         }
 
         if (freeTables.value.length <= 0) {
@@ -235,8 +252,10 @@ export const usePhase = (p: Phase | null) => {
         freeTables,
         maxTableCount,
         nextFixture,
+        nextFreeFixture,
 
         canStartFixture,
+        canPrioritiseFixture,
         isBusy,
         getPlayerName,
         getTable,
