@@ -10,6 +10,12 @@ export interface Fixture {
     comment: string
 }
 
+export interface FixtureSwap {
+    fixtureAId: string
+    fixtureBId: string
+    timestamp: number
+}
+
 export interface ParentFixture {
     fixtureId: string
     takeLoser: boolean

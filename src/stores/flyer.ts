@@ -83,6 +83,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             startTime: Date.now(),
             finishTime: null,
             rounds: scheduler.generateFixtures(settings, players),
+            fixtureSwaps: [],
         }
 
         for (const r of phase.rounds) {
@@ -110,6 +111,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             startTime: Date.now(),
             finishTime: null,
             rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
+            fixtureSwaps: [],
         }
 
         for (const r of newPhase.rounds) {
@@ -337,12 +339,25 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateScores(phase, fixture.id, newScores, true)
     }
 
-    const swapFixtures = (roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
+    const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
+        if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
+            return
+        }
+
         console.debug(`Swapping round ${roundA.index} fixture ${fixtureIndexA} and round ${roundB.index} fixture ${fixtureIndexB}`)
+
+        const fixtureAId = roundA.fixtures[fixtureIndexA].id
+        const fixtureBId = roundB.fixtures[fixtureIndexB].id
 
         const temp = roundA.fixtures[fixtureIndexA]
         roundA.fixtures[fixtureIndexA] = roundB.fixtures[fixtureIndexB]
         roundB.fixtures[fixtureIndexB] = temp
+
+        phase.fixtureSwaps.push({
+            fixtureAId,
+            fixtureBId,
+            timestamp: Date.now(),
+        })
     }
 
     const getRandom = <T>(arr: T[]) => {

@@ -1,3 +1,4 @@
+import type { FixtureSwap } from "./Fixture"
 import type { PhaseSettings } from "./PhaseSettings"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
@@ -12,4 +13,5 @@ export interface Phase {
     startTime: number | null
     finishTime: number | null
     rounds: Round[]
+    fixtureSwaps: FixtureSwap[]
 }

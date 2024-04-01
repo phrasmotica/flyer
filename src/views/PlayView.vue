@@ -240,7 +240,7 @@ const autoComplete = () => {
             // if necessary, swap the next fixture in the current round (or
             // the first fixture in the next round) with the first upcoming fixture
             // where all players are free
-            flyerStore.swapFixtures(roundA, indexA, roundB, indexB)
+            flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
         }
     }
 }
