@@ -158,7 +158,7 @@ export const usePhase = (p: Phase | null) => {
 
     const getRoundWithIndex = (fixtureId: string): [Round | undefined, number] => {
         const round = getRound(fixtureId)
-        return [round, round?.fixtures.findIndex(f => f.id === fixtureId) || -1]
+        return [round, round?.fixtures.findIndex(f => f.id === fixtureId) ?? -1]
     }
 
     const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus?: RoundStatus) => {
