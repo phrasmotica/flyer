@@ -4,6 +4,7 @@ import { watch } from "vue"
 import ScoreCell from "./ScoreCell.vue"
 import TableBadge from "./TableBadge.vue"
 
+import { useEnv } from "../composables/useEnv"
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -25,6 +26,10 @@ const emit = defineEmits<{
     showModal: []
     highlight: [fixtureId: string]
 }>()
+
+const {
+    isDebug,
+} = useEnv()
 
 const flyerStore = useFlyerStore()
 
@@ -101,6 +106,14 @@ const handleNameClick = (id: string) => {
     }
 }
 
+const fixtureCardClass = (fixture: Fixture) => {
+    return [
+        fixture.id === props.highlightedFixtureId ? 'border-dashed' : 'border-transparent',
+        isDebug && canStartFixture(fixture, status.value) && 'border border-yellow-500',
+        isDebug && fixture.id === nextFreeFixture.value?.id && 'border border-red-500',
+    ]
+}
+
 const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
     const parentFixture = fixture.parentFixtures[slot]
 
@@ -116,11 +129,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
     <div
         v-if="fixture"
         class="border-round-md border-1"
-        :class="[
-            props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent',
-            canStartFixture(fixture, status) && 'border border-yellow-500',
-            fixture.id === nextFreeFixture?.id && 'border border-red-500',
-        ]">
+        :class="fixtureCardClass(fixture)">
         <div v-if="table && !fixture.finishTime" class="text-center">
             <TableBadge :table="table" />
         </div>
