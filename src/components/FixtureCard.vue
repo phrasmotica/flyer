@@ -66,6 +66,8 @@ const {
 watch(props, () => {
     fixture.value = props.fixture
     round.value = getRound(props.fixture.id)
+
+    // TODO: show an up arrow icon for two seconds if the new fixture has been prioritised
 })
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
