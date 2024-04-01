@@ -57,6 +57,7 @@ const start = () => {
     catch (e) {
         console.error(e)
 
+        // BUG: figure out why this doesn't appear
         toast.add({
             group: "errors",
             severity: 'error',
