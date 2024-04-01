@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { watch } from "vue"
+
 import ScoreCell from "./ScoreCell.vue"
 import TableBadge from "./TableBadge.vue"
 
@@ -33,6 +35,7 @@ const {
 const {
     settings,
     currentRound,
+    nextFreeFixture,
     canStartFixture,
     getRound,
     getTable,
@@ -45,6 +48,7 @@ const {
 
 const {
     fixture,
+    round,
     winner,
     isWalkover,
 } = useFixture("card", props.fixture, getRound(props.fixture.id), currentPhase.value)
@@ -54,10 +58,15 @@ const {
     isRandomDraw,
 } = usePhaseSettings(settings.value)
 
+watch(props, () => {
+    fixture.value = props.fixture
+    round.value = getRound(props.fixture.id)
+})
+
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 
 const isHighlighted = (slot: 0 | 1) => {
-    const parentFixture = props.fixture.parentFixtures[slot]
+    const parentFixture = fixture.value?.parentFixtures[slot]
     return !!props.highlightedFixtureId && props.highlightedFixtureId === parentFixture?.fixtureId
 }
 
@@ -109,7 +118,8 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
         class="border-round-md border-1"
         :class="[
             props.highlightedFixtureId === fixture.id ? 'border-dashed' : 'border-transparent',
-            canStartFixture(props.fixture, status) && 'border border-yellow-500',
+            canStartFixture(fixture, status) && 'border border-yellow-500',
+            fixture.id === nextFreeFixture?.id && 'border border-red-500',
         ]">
         <div v-if="table && !fixture.finishTime" class="text-center">
             <TableBadge :table="table" />
