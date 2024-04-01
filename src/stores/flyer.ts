@@ -242,7 +242,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         const roundB = phase.rounds.find(r => r.index === roundIndexB)!
         const fixtureIndexB = roundB.fixtures.findIndex(f => f.id === nextFreeFixtureId)
 
-        console.log(`Swapping round ${roundIndexA} fixture ${fixtureIndexA} and round ${roundIndexB} fixture ${fixtureIndexB}`)
+        console.debug(`Swapping round ${roundIndexA} fixture ${fixtureIndexA} and round ${roundIndexB} fixture ${fixtureIndexB}`)
 
         const temp = roundA.fixtures[fixtureIndexA]
         roundA.fixtures[fixtureIndexA] = roundB.fixtures[fixtureIndexB]
