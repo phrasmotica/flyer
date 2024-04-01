@@ -66,6 +66,7 @@ const {
     readyToGenerateNextRound,
     generationIsComplete,
     estimatedDurationMinutes,
+    nextFixture,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
@@ -211,10 +212,18 @@ const goToPastFlyers = () => {
 }
 
 const autoComplete = () => {
+    if (!currentPhase.value || !nextFixture.value) {
+        return
+    }
+
     // LOW: compute the correct race-to for the next fixture
     const raceTo = settings.value.raceTo
 
-    flyerStore.autoCompleteNextFixture(tables.value[0].id, raceTo)
+    flyerStore.autoCompleteFixture(
+        currentPhase.value,
+        nextFixture.value,
+        tables.value[0].id,
+        raceTo)
 }
 
 const selectForRecording = (f: Fixture) => {

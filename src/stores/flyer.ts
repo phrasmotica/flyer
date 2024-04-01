@@ -367,33 +367,21 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
-    const getNextFixture = () => {
-        const phases = flyer.value?.phases || []
-        const currentPhase = phases.find(p => p.startTime)
-        const nextFixture = currentPhase?.rounds.flatMap(r => r.fixtures).find(f => !f.startTime)
-        return <[Phase | undefined, Fixture | undefined]>[currentPhase, nextFixture]
-    }
+    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number) => {
+        console.debug("Auto-completing fixture " + fixture.id)
 
-    const autoCompleteNextFixture = (tableId: string, raceTo: number) => {
-        const [phase, nextFixture] = getNextFixture()
-        if (!phase || !nextFixture) {
-            return
-        }
+        const breakerId = getRandom(fixture.scores).playerId
+        const winnerId = getRandom(fixture.scores).playerId
 
-        console.debug("Auto-completing fixture " + nextFixture.id)
-
-        const breakerId = getRandom(nextFixture.scores).playerId
-        const winnerId = getRandom(nextFixture.scores).playerId
-
-        const newScores = nextFixture.scores.map(s => ({
+        const newScores = fixture.scores.map(s => ({
             ...s,
             score: s.playerId === winnerId ? raceTo : 0,
         }))
 
-        startFixture(nextFixture.id, tableId, breakerId)
+        startFixture(fixture.id, tableId, breakerId)
 
-        updateComment(phase, nextFixture.id, "AUTO-COMPLETED")
-        updateScores(phase, nextFixture.id, newScores, true)
+        updateComment(phase, fixture.id, "AUTO-COMPLETED")
+        updateScores(phase, fixture.id, newScores, true)
     }
 
     const getRandom = <T>(arr: T[]) => {
@@ -414,6 +402,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         cancelRemaining,
         addPlayOff,
         clear,
-        autoCompleteNextFixture,
+
+        autoCompleteFixture,
     }
 })
