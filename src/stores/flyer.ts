@@ -6,7 +6,7 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { useRankings } from "../composables/useRankings"
 
-import type { Score } from "../data/Fixture"
+import type { Fixture, Score } from "../data/Fixture"
 import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
@@ -39,8 +39,7 @@ export const useFlyerStore = defineStore("flyer", () => {
     } = useFlyer(flyer.value)
 
     const {
-        nextFixture,
-        nextFreeFixture,
+        nextFreeFixture, // MEDIUM: compute this entirely in this store instead of using the composable
         getRound,
     } = usePhase(currentPhase.value)
 
@@ -225,19 +224,23 @@ export const useFlyerStore = defineStore("flyer", () => {
         // if necessary, swap the next fixture in the current round (or
         // the first fixture in the next round) with the first upcoming fixture
         // where all players are free
+        const [nextFixturePhase, nextFixture] = getNextFixture()
 
-        if (!nextFixture.value || !nextFreeFixture.value || nextFixture.value.id === nextFreeFixture.value.id) {
+        if (
+            !nextFixturePhase ||
+            !nextFixture ||
+            !nextFreeFixture.value ||
+            nextFixture.id === nextFreeFixture.value.id) {
             return
         }
 
-        const nextFixtureId = nextFixture.value.id
         const nextFreeFixtureId = nextFreeFixture.value.id
 
-        const roundIndexA = getRound(nextFixtureId)!.index
+        const roundIndexA = getRound(nextFixture.id)!.index
         const roundIndexB = getRound(nextFreeFixtureId)!.index
 
         const roundA = phase.rounds.find(r => r.index === roundIndexA)!
-        const fixtureIndexA = roundA.fixtures.findIndex(f => f.id === nextFixtureId)
+        const fixtureIndexA = roundA.fixtures.findIndex(f => f.id === nextFixture.id)
 
         const roundB = phase.rounds.find(r => r.index === roundIndexB)!
         const fixtureIndexB = roundB.fixtures.findIndex(f => f.id === nextFreeFixtureId)
@@ -364,32 +367,33 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
+    const getNextFixture = () => {
+        const phases = flyer.value?.phases || []
+        const currentPhase = phases.find(p => p.startTime)
+        const nextFixture = currentPhase?.rounds.flatMap(r => r.fixtures).find(f => !f.startTime)
+        return <[Phase | undefined, Fixture | undefined]>[currentPhase, nextFixture]
+    }
+
     const autoCompleteNextFixture = (tableId: string, raceTo: number) => {
-        if (!nextFixture.value) {
+        const [phase, nextFixture] = getNextFixture()
+        if (!phase || !nextFixture) {
             return
         }
 
-        // do all computations involving nextFixture.value before we start it,
-        // otherwise it will unintentionally point to the fixture after!
-        const nextFixtureId = nextFixture.value.id
+        console.debug("Auto-completing fixture " + nextFixture.id)
 
-        console.debug("Auto-completing fixture " + nextFixtureId)
+        const breakerId = getRandom(nextFixture.scores).playerId
+        const winnerId = getRandom(nextFixture.scores).playerId
 
-        const breakerId = getRandom(nextFixture.value.scores).playerId
-        const winnerId = getRandom(nextFixture.value.scores).playerId
-
-        const newScores = nextFixture.value.scores.map(s => ({
+        const newScores = nextFixture.scores.map(s => ({
             ...s,
             score: s.playerId === winnerId ? raceTo : 0,
         }))
 
-        startFixture(nextFixtureId, tableId, breakerId)
+        startFixture(nextFixture.id, tableId, breakerId)
 
-        const phases = flyer.value?.phases || []
-        const currentPhase = phases.find(p => p.rounds.some(r => r.fixtures.some(f => f.id === nextFixtureId)))
-
-        updateComment(currentPhase!, nextFixtureId, "AUTO-COMPLETED")
-        updateScores(currentPhase!, nextFixtureId, newScores, true)
+        updateComment(phase, nextFixture.id, "AUTO-COMPLETED")
+        updateScores(phase, nextFixture.id, newScores, true)
     }
 
     const getRandom = <T>(arr: T[]) => {
