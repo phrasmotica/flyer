@@ -11,6 +11,8 @@ export const useArray = <T>(initial?: T[]) => {
         arr.value = arr.value.map((v, i) => i === index ? value : v)
     }
 
+    const includes = (value: T) => arr.value.includes(value)
+
     const clear = () => {
         arr.value = []
     }
@@ -19,6 +21,7 @@ export const useArray = <T>(initial?: T[]) => {
         arr,
         push,
         set,
+        includes,
         clear,
     }
 }

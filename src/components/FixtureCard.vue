@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from "vue"
+import { ref, watch } from "vue"
 
 import ScoreCell from "./ScoreCell.vue"
 import TableBadge from "./TableBadge.vue"
@@ -10,8 +10,9 @@ import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useRound } from "../composables/useRound"
+import { useTimedRef } from "../composables/useTimedRef"
 
-import type { Fixture } from "../data/Fixture"
+import { Prioritisation, type Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 import { computed } from "vue"
@@ -39,12 +40,14 @@ const {
 
 const {
     settings,
+    unacknowledgedSwap,
     currentRound,
     nextFreeFixture,
     canStartFixture,
     getRound,
     getTable,
     getPlayerName,
+    acknowledgeSwap,
 } = usePhase(currentPhase.value)
 
 const {
@@ -67,8 +70,33 @@ watch(props, () => {
     fixture.value = props.fixture
     round.value = getRound(props.fixture.id)
 
-    // TODO: show an up arrow icon for two seconds if the new fixture has been prioritised
+    if (!unacknowledgedSwap.value) {
+        return
+    }
+
+    let status = Prioritisation.None
+
+    if (unacknowledgedSwap.value.fixtureBId === props.fixture.id) {
+        status = Prioritisation.Up
+    }
+
+    if (unacknowledgedSwap.value.fixtureAId === props.fixture.id) {
+        status = Prioritisation.Down
+    }
+
+    prioritisationStatus.value = status
+
+    if (status !== Prioritisation.None) {
+        acknowledgeSwap(unacknowledgedSwap.value.id)
+    }
 })
+
+const {
+    value: prioritisationStatus,
+} = useTimedRef(2000, Prioritisation.None)
+
+const isUp = computed(() => prioritisationStatus.value === Prioritisation.Up)
+const isDown = computed(() => prioritisationStatus.value === Prioritisation.Down)
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 
@@ -161,7 +189,9 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
                     severity="contrast"
                     @click="handleClick" />
 
-                <ScoreCell
+                <i v-if="isUp" class="pi pi-arrow-up font-bold mr-2" style="color: green" />
+                <i v-else-if="isDown" class="pi pi-arrow-down font-bold mr-2" style="color: red" />
+                <ScoreCell v-else
                     :fixture="fixture"
                     :score="fixture.scores[0].score"
                     :runouts="fixture.scores[0].runouts"
@@ -171,7 +201,9 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
             </div>
 
             <div class="flex align-items-center justify-content-between col-6 p-0 pl-1">
-                <ScoreCell
+                <i v-if="isUp" class="pi pi-arrow-up font-bold ml-2" style="color: green" />
+                <i v-else-if="isDown" class="pi pi-arrow-down font-bold ml-2" style="color: red" />
+                <ScoreCell v-else
                     :fixture="fixture"
                     :score="fixture.scores[1].score"
                     :runouts="fixture.scores[1].runouts"

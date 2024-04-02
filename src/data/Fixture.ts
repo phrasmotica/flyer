@@ -28,3 +28,9 @@ export interface Score {
     runouts: number
     isBye: boolean
 }
+
+export enum Prioritisation {
+    None,
+    Up,
+    Down,
+}

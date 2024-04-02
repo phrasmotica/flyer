@@ -1,6 +1,7 @@
 import { computed, ref, watch } from "vue"
 import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 
+import { useArray } from "./useArray"
 import { useClock } from "./useClock"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { RoundStatus } from "./useRound"
@@ -16,7 +17,13 @@ import type { Round } from "../data/Round"
 export const usePhase = (p: Phase | null) => {
     const phase = ref(p)
 
+    const {
+        push: acknowledgeSwap,
+        includes: alreadyAcknowledgedSwap,
+    } = useArray<string>()
+
     const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
+    const fixtureSwaps = computed(() => phase.value?.fixtureSwaps || [])
     const players = computed(() => phase.value?.players || [])
     const tables = computed(() => phase.value?.tables || [])
 
@@ -39,6 +46,15 @@ export const usePhase = (p: Phase | null) => {
     const {
         scheduler,
     } = useScheduler(settings.value)
+
+    const unacknowledgedSwap = computed(() => {
+        const lastSwap = fixtureSwaps.value.at(-1)
+        if (!lastSwap || alreadyAcknowledgedSwap(lastSwap.id)) {
+            return null
+        }
+
+        return lastSwap
+    })
 
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
@@ -235,6 +251,8 @@ export const usePhase = (p: Phase | null) => {
         phase,
 
         fixtures,
+        fixtureSwaps,
+        unacknowledgedSwap,
         players,
         tables,
         settings,
@@ -271,6 +289,7 @@ export const usePhase = (p: Phase | null) => {
         getFixtureHeader,
         pauseClock,
         resumeClock,
+        acknowledgeSwap,
     }
 }
 
