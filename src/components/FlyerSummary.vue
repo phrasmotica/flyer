@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import Clock from "../components/Clock.vue"
-import InfoList from "../components/InfoList.vue"
-import PrizePotSummary from "../components/PrizePotSummary.vue"
+import Clock from "./Clock.vue"
+import InfoList from "./InfoList.vue"
+import PrizePotSummary from "./PrizePotSummary.vue"
 
 import { useSettings } from "../composables/useSettings"
 

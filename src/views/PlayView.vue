@@ -2,25 +2,21 @@
 import { computed, onMounted, onUnmounted, ref } from "vue"
 import { useToggle } from "@vueuse/core"
 import { useRouter } from "vue-router"
-import type { MenuItem } from "primevue/menuitem"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
-import FixtureList from "../components/FixtureList.vue"
 import FixtureModal from "../components/FixtureModal.vue"
-import InfoList from "../components/InfoList.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import PlayButtons from "../components/PlayButtons.vue"
+import PlaySections from "../components/PlaySections.vue"
 import Price from "../components/Price.vue"
-import PrizePotSummary from "../components/PrizePotSummary.vue"
-import ResultsTable from "../components/ResultsTable.vue"
-import TablesSummary from "../components/TablesSummary.vue"
 
-import { useEnv } from "../composables/useEnv"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
+import { useScreenSizes } from "../composables/useScreenSizes"
 
 import type { Fixture } from "../data/Fixture"
 
@@ -38,10 +34,6 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 
 const {
-    isDebug,
-} = useEnv()
-
-const {
     mainPhase,
     currentPhase,
     currentPlayOffPhase,
@@ -53,19 +45,13 @@ const {
 
 const {
     settings,
-    players,
-    rounds,
     tables,
     clockDisplay,
     totalCost,
-    hasStarted,
     hasFinished,
     isInProgress,
-    remainingCount,
     currentRound,
     nextRoundToGenerate,
-    readyToGenerateNextRound,
-    generationIsComplete,
     estimatedDurationMinutes,
     nextFixture,
     nextFreeFixture,
@@ -84,8 +70,11 @@ const {
 
 const {
     queryParams,
-    isHistoric,
 } = useQueryParams()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const display = ref(Display.Fixtures)
 
@@ -95,38 +84,6 @@ const showAbandonModal = ref(false)
 
 const selectedFixture = ref<Fixture>()
 const showFixtureModal = ref(false)
-
-const items = computed(() => {
-    const defaultItems = <MenuItem[]>[
-        {
-            icon: 'pi pi-calendar',
-            command: _ => display.value = Display.Fixtures,
-        },
-        {
-            icon: 'pi pi-chart-bar',
-            command: _ => display.value = Display.Standings,
-        },
-        {
-            icon: 'pi pi-building',
-            command: _ => display.value = Display.Tables,
-        },
-        {
-            icon: 'pi pi-info-circle',
-            command: _ => display.value = Display.Info,
-        },
-    ]
-
-    if (isHistoric.value) {
-        defaultItems.splice(1, 1)
-    }
-
-    return defaultItems
-})
-
-const raceTos = computed(() => rounds.value.map((r, i) => ({
-    name: r.name,
-    raceTo: r.raceTo,
-})))
 
 onMounted(() => {
     if (isInProgress.value) {
@@ -140,22 +97,6 @@ const header = computed(() => {
     }
 
     return settings.value.name
-})
-
-const generateNextRoundLabel = computed(() => {
-    if (nextRoundToGenerate.value) {
-        return "Generate " + nextRoundToGenerate.value.name
-    }
-
-    return "Generate next round"
-})
-
-const finishButtonText = computed(() => {
-    if (hasStarted.value && hasFinished.value) {
-        return "View results"
-    }
-
-    return "Finish"
 })
 
 const generateNextRound = () => {
@@ -271,23 +212,33 @@ onUnmounted(() => {
                 </div>
             </div>
 
-            <TabMenu class="mb-2" :model="items" />
+            <!-- MEDIUM: make this layout into a slot/template in PageTemplate.vue -->
+            <div v-if="!isSmallScreen" class="grid m-0">
+                <div class="col-8 p-0 pr-2">
+                    <PlaySections
+                        overflow
+                        @selectFixture="selectForRecording" />
+                </div>
 
-            <FixtureList v-if="display === Display.Fixtures" @showFixtureModal="selectForRecording" />
-
-            <ResultsTable v-if="display === Display.Standings" isInProgress />
-
-            <TablesSummary v-if="display === Display.Tables" @showFixtureModal="selectForRecording" />
-
-            <div v-if="display === Display.Info">
-                <InfoList :settings="settings" :raceTos="raceTos" />
-
-                <div
-                    v-if="settings.entryFeeRequired"
-                    class="pt-2 border-top-1 border-gray-200 mb-2">
-                    <PrizePotSummary :settings="settings" :playerCount="players.length" />
+                <div class="col-4 p-0 pl-2 border-left-1">
+                    <PlayButtons
+                        :isFixtures="display === Display.Fixtures"
+                        @autoComplete="autoComplete"
+                        @confirmFinish="confirmFinish"
+                        @generateNextRound="generateNextRound"
+                        @goToPastFlyers="goToPastFlyers"
+                        @showAbandonModal="() => showAbandonModal = true" />
                 </div>
             </div>
+            <div v-else>
+                <PlaySections
+                    @selectFixture="selectForRecording" />
+            </div>
+
+            <FixtureModal
+                :visible="showFixtureModal"
+                :fixture="selectedFixture"
+                @hide="hideFixtureModal" />
 
             <ConfirmModal
                 :visible="showFinishModal"
@@ -310,46 +261,14 @@ onUnmounted(() => {
                 @hide="hideAbandonModal" />
         </template>
 
-        <template #buttons>
-            <Button
-                v-if="isDebug && !isHistoric && display === Display.Fixtures && remainingCount > 0"
-                class="mb-2"
-                label="Auto-complete"
-                severity="help"
-                @click="autoComplete" />
-
-            <Button
-                v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
-                class="mb-2"
-                :label="generateNextRoundLabel"
-                :disabled="!readyToGenerateNextRound"
-                @click="generateNextRound" />
-
-            <Button
-                v-else
-                class="mb-2"
-                :label="finishButtonText"
-                :disabled="!settings.allowEarlyFinish && remainingCount > 0"
-                @click="confirmFinish" />
-
-            <Button
-                v-if="!hasFinished"
-                class="mb-2"
-                label="Abandon"
-                severity="danger"
-                @click="() => showAbandonModal = true" />
-
-            <Button
-                v-if="isHistoric"
-                class="mb-2"
-                label="Back to past flyers"
-                severity="info"
-                @click="goToPastFlyers" />
-
-            <FixtureModal
-                :visible="showFixtureModal"
-                :fixture="selectedFixture"
-                @hide="hideFixtureModal" />
+        <template v-if="isSmallScreen" #buttons>
+            <PlayButtons
+                :isFixtures="display === Display.Fixtures"
+                @autoComplete="autoComplete"
+                @confirmFinish="confirmFinish"
+                @generateNextRound="generateNextRound"
+                @goToPastFlyers="goToPastFlyers"
+                @showAbandonModal="() => showAbandonModal = true" />
         </template>
     </PageTemplate>
 </template>
