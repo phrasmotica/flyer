@@ -7,6 +7,7 @@ import WinningsList from "./WinningsList.vue"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
+import { useQueryParams } from "../composables/useQueryParams"
 import { useScreenSizes } from "../composables/useScreenSizes"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -40,6 +41,10 @@ const {
     tieBreakerName,
     isWinnerStaysOn,
 } = usePhaseSettings(settings.value)
+
+const {
+    isHistoric,
+} = useQueryParams()
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {
@@ -108,8 +113,9 @@ const getPlayOffIndex = (playerId: string) => {
     <div v-if="!props.isInProgress && !requiresPlayOff && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
         <p v-for="_, i in playOffs" class="m-0">
             <em>
-                <sup class="text-xs">{{ i + 1 }}</sup>
-                these players have been tie-broken via {{ tieBreakerName }}
+                <sup class="text-xs">{{ i + 1 }}&nbsp;</sup>
+                <span v-if="isHistoric">these players were tie-broken via {{ tieBreakerName }}</span>
+                <span v-else>these players have been tie-broken via {{ tieBreakerName }}</span>
             </em>
         </p>
     </div>
@@ -117,14 +123,17 @@ const getPlayOffIndex = (playerId: string) => {
     <!-- if the flyer has finished -->
     <div v-if="!props.isInProgress && (!requiresPlayOff || allPlayOffsComplete)" class="mt-1">
         <p v-if="overallStandings[0]" class="m-0 text-center text-xl">
-            {{ overallStandings[0].name }} wins
+            <span v-if="isHistoric">{{ overallStandings[0].name }} won&nbsp;</span>
+            <span v-else>{{ overallStandings[0].name }} wins&nbsp;</span>
             <span v-if="moneyRecipients.length > 0" class="font-bold" :style="{color: moneyRecipients[0].colour,}">
                 {{ n(moneyRecipients[0].winnings, "currency") }}
             </span>
         </p>
 
         <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
-            <WinningsList header="Other prize money:" :winnings="moneyRecipients.slice(1)" />
+            <WinningsList
+                header="Other prize money:"
+                :winnings="moneyRecipients.slice(1)" />
         </div>
     </div>
 </template>

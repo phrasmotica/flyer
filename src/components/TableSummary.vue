@@ -7,6 +7,7 @@ import TableBadge from "./TableBadge.vue"
 import { useFixture } from "../composables/useFixture"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { useQueryParams } from "../composables/useQueryParams"
 
 import type { Table } from "../data/Table"
 import type { Fixture } from "../data/Fixture"
@@ -36,6 +37,10 @@ const {
     getFixtureHeader,
 } = usePhase(currentPhase.value)
 
+const {
+    isHistoric,
+} = useQueryParams()
+
 const fixture = computed(() => fixtures.value.find(f => !f.finishTime && f.tableId === props.table.id))
 
 const {
@@ -62,7 +67,7 @@ onUnmounted(() => {
 <template>
     <div class="flex">
         <div class="flex-grow-1">
-            <TableBadge showBusy :table="props.table" />
+            <TableBadge :showBusy="!isHistoric" :table="props.table" />
 
             <div>
                 <Badge severity="secondary">
