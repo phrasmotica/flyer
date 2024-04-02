@@ -4,14 +4,12 @@ import { useRouter } from "vue-router"
 import { useFocus } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
-import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
-import InfoList from "../components/InfoList.vue"
+import FlyerSummary from "../components/FlyerSummary.vue"
 import LabelledCheckbox from "../components/LabelledCheckbox.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import PrizePotSummary from "../components/PrizePotSummary.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
@@ -25,7 +23,10 @@ const router = useRouter()
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
 
-const { isSmallScreen } = useScreenSizes()
+const {
+    isSmallScreen,
+    isLargeScreen,
+} = useScreenSizes()
 
 const toast = useToast()
 
@@ -101,7 +102,18 @@ const hideModal = () => {
                 <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
             </div>
 
-            <FlyerForm />
+            <div v-if="!isSmallScreen" class="grid m-0">
+                <div class="col-8 p-0 pr-2">
+                    <FlyerForm />
+                </div>
+
+                <div class="col-4 p-0 pl-2 border-left-1">
+                    <FlyerSummary @confirmStart="confirmStart" />
+                </div>
+            </div>
+            <div v-else>
+                <FlyerForm />
+            </div>
 
             <ConfirmModal
                 :visible="showModal"
@@ -129,36 +141,10 @@ const hideModal = () => {
             </ConfirmModal>
         </template>
 
-        <template #buttons>
+        <template v-if="isSmallScreen" #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <div class="summary-info" :class="[isSmallScreen && 'maxh-30 overflow-y-auto']">
-                    <InfoList :settings="settings.specification" :raceTos="raceTos" />
-
-                    <div
-                        v-if="settings.specification.entryFeeRequired"
-                        class="pt-2 border-top-1 border-gray-200 mb-2">
-                        <PrizePotSummary :settings="settings.specification" :playerCount="settings.playerCount" />
-                    </div>
-
-                    <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
-                        <div>
-                            Estimated duration <em>({{ durationPerFrame }} min(s) per frame)</em>
-                        </div>
-
-                        <div class="ml-2">
-                            <Clock :elapsedMilliseconds="estimatedDurationMinutes * 60000" />
-                        </div>
-                    </div>
-                </div>
-
-                <Button label="Start" :disabled="isInvalid" @click="confirmStart" />
+                <FlyerSummary overflow @confirmStart="confirmStart" />
             </FlyerFormSection>
         </template>
     </PageTemplate>
 </template>
-
-<style scoped>
-.maxh-30 {
-    max-height: 30vh;
-}
-</style>

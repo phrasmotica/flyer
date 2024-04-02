@@ -11,8 +11,11 @@ export const useScreenSizes = () => {
 
     const isNotSmallScreen = computed(() => greaterOrEqual("md").value)
 
+    const isLargeScreen = computed(() => greaterOrEqual("lg").value)
+
     return {
         isSmallScreen,
         isNotSmallScreen,
+        isLargeScreen,
     }
 }

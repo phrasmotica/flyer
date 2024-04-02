@@ -48,7 +48,7 @@ main {
 
 @media screen and (min-width: 768px) {
     main {
-        width: 600px;
+        width: 768px;
     }
 }
 </style>
