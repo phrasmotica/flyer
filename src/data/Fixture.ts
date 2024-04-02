@@ -11,6 +11,7 @@ export interface Fixture {
 }
 
 export interface FixtureSwap {
+    id: string
     fixtureAId: string
     fixtureBId: string
     timestamp: number

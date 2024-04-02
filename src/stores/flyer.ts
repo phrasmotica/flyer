@@ -354,6 +354,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         roundB.fixtures[fixtureIndexB] = temp
 
         phase.fixtureSwaps.push({
+            id: uuidv4(),
             fixtureAId,
             fixtureBId,
             timestamp: Date.now(),
