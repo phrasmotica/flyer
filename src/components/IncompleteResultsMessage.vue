@@ -10,9 +10,3 @@ const props = defineProps<{
         <em>{{ props.count }} player(s) have incomplete results!</em>
     </Message>
 </template>
-
-<style>
-.p-message .p-message-text {
-    font-size: 14px;
-}
-</style>

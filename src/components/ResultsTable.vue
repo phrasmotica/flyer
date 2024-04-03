@@ -83,17 +83,6 @@ const getPlayOffIndex = (playerId: string) => {
         </Column>
     </DataTable>
 
-    <!-- if a play-off needs to happen -->
-    <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
-        <p v-for="p, i in playOffs.filter(x => !phaseIsComplete(x.id))" class="m-0">
-            <em>
-                <sup class="text-xs">{{ i + 1 }}</sup>
-                these players must take part in the
-                {{ p.name }}
-            </em>
-        </p>
-    </div>
-
     <!-- if some players have been tie-broken -->
     <div v-if="!props.isInProgress && !requiresPlayOff && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
         <p v-for="_, i in playOffs" class="m-0">

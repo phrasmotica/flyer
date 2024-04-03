@@ -8,6 +8,7 @@ import ConfirmModal from "../components/ConfirmModal.vue"
 import IncompleteResultsMessage from "../components/IncompleteResultsMessage.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import PlayOffsRequiredMessage from "../components/PlayOffsRequiredMessage.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import WinningsSummary from "../components/WinningsSummary.vue"
@@ -29,6 +30,7 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const {
     flyer,
     mainPhase,
+    playOffs,
     allPlayOffsComplete,
     incompleteCount,
     phaseIsComplete,
@@ -187,6 +189,10 @@ const goToPastFlyers = () => {
 
                     <div v-if="incompleteCount > 0 && !isWinnerStaysOn">
                         <IncompleteResultsMessage :count="incompleteCount" />
+                    </div>
+
+                    <div v-if="requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
+                        <PlayOffsRequiredMessage />
                     </div>
 
                     <div v-if="!requiresPlayOff || allPlayOffsComplete" class="mt-1">
