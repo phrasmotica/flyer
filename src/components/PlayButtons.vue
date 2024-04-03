@@ -15,6 +15,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     autoComplete: []
+    autoCompleteRemaining: []
     generateNextRound: []
     confirmFinish: []
     showAbandonModal: []
@@ -82,6 +83,14 @@ const finishButtonText = computed(() => {
             severity="help"
             :disabled="!isFixtures || remainingCount <= 0"
             @click="emit('autoComplete')" />
+
+        <Button
+            v-if="showAutoCompleteButton"
+            class="mb-2"
+            label="Auto-complete remaining"
+            severity="help"
+            :disabled="!isFixtures || remainingCount <= 0"
+            @click="emit('autoCompleteRemaining')" />
 
         <Button
             v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"

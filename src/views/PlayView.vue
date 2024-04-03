@@ -170,8 +170,7 @@ const autoComplete = () => {
         currentPhase.value,
         nextFixture.value,
         tables.value[0].id,
-        raceTo,
-        false)
+        raceTo)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 
@@ -192,6 +191,22 @@ const autoComplete = () => {
             }
         }
     }
+}
+
+const autoCompleteRemaining = () => {
+    if (!currentPhase.value || !nextFixture.value) {
+        return
+    }
+
+    const raceTo = settings.value.raceTo
+
+    flyerStore.autoCompletePhase(
+        currentPhase.value,
+        tables.value[0].id,
+        raceTo)
+
+    const message = phaseEvents.phaseAutoCompleted()
+    flyerStore.addPhaseEvent(currentPhase.value, message)
 }
 
 const selectForRecording = (f: Fixture) => {
@@ -233,6 +248,7 @@ onUnmounted(() => {
                 <PlayButtons
                     sidebar
                     @autoComplete="autoComplete"
+                    @autoCompleteRemaining="autoCompleteRemaining"
                     @confirmFinish="confirmFinish"
                     @generateNextRound="generateNextRound"
                     @goToPastFlyers="goToPastFlyers"

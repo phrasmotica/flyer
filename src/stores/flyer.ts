@@ -348,7 +348,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
-    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number, addEvent: boolean) => {
+    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
         const breakerId = getRandom(fixture.scores).playerId
@@ -365,6 +365,17 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateScores(phase, fixture.id, newScores, true, false)
 
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
+    }
+
+    const autoCompletePhase = (phase: Phase, tableId: string, raceTo: number) => {
+        const fixtures = phase.rounds.flatMap(r => r.fixtures)
+
+        for (const f of fixtures.filter(f => !f.startTime)) {
+            // LOW: compute the correct race-to for each fixture
+            autoCompleteFixture(phase, f, tableId, raceTo)
+        }
+
+        addPhaseEvent(phase, `${phase.settings.name} was auto-completed.`, PhaseEventLevel.Internal)
     }
 
     const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
@@ -414,6 +425,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         clear,
 
         autoCompleteFixture,
+        autoCompletePhase,
         swapFixtures,
     }
 })
