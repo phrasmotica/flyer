@@ -3,18 +3,13 @@ import { computed, ref } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
 import FixtureList from "./FixtureList.vue"
-import InfoList from "./InfoList.vue"
-import PrizePotSummary from "./PrizePotSummary.vue"
+import PhaseInfoSection from "./PhaseInfoSection.vue"
 import ResultsTable from "./ResultsTable.vue"
 import TablesSummary from "./TablesSummary.vue"
 
-import { useFlyer } from "../composables/useFlyer"
-import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 
 import type { Fixture } from "../data/Fixture"
-
-import { useFlyerStore } from "../stores/flyer"
 
 enum Display {
     Fixtures,
@@ -30,18 +25,6 @@ const props = defineProps<{
 const emit = defineEmits<{
     selectFixture: [fixture: Fixture]
 }>()
-
-const flyerStore = useFlyerStore()
-
-const {
-    currentPhase,
-} = useFlyer(flyerStore.flyer)
-
-const {
-    settings,
-    players,
-    rounds,
-} = usePhase(currentPhase.value)
 
 const {
     isHistoric,
@@ -77,11 +60,6 @@ const items = computed(() => {
 
     return defaultItems
 })
-
-const raceTos = computed(() => rounds.value.map(r => ({
-    name: r.name,
-    raceTo: r.raceTo,
-})))
 </script>
 
 <template>
@@ -98,15 +76,7 @@ const raceTos = computed(() => rounds.value.map(r => ({
             <TablesSummary v-if="display === Display.Tables"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <div v-if="display === Display.Info">
-                <InfoList :settings="settings" :raceTos="raceTos" />
-
-                <div
-                    v-if="settings.entryFeeRequired"
-                    class="pt-2 border-top-1 border-gray-200 mb-2">
-                    <PrizePotSummary :settings="settings" :playerCount="players.length" />
-                </div>
-            </div>
+            <PhaseInfoSection v-if="display === Display.Info" />
         </div>
     </div>
 </template>

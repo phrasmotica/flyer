@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue"
-
 import Clock from "./Clock.vue"
 import InfoList from "./InfoList.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
@@ -21,16 +19,11 @@ const settingsStore = useSettingsStore()
 
 const {
     settings,
-    roundNames,
+    raceTos,
     durationPerFrame,
     estimatedDurationMinutes,
     isInvalid,
 } = useSettings(settingsStore.settings)
-
-const raceTos = computed(() => roundNames.value.map((n, i) => ({
-    name: n,
-    raceTo: settings.value.raceToPerRound[i],
-})))
 </script>
 
 <template>

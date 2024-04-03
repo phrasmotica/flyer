@@ -56,6 +56,11 @@ export const usePhase = (p: Phase | null) => {
         return lastSwap
     })
 
+    const raceTos = computed(() => rounds.value.map(r => ({
+        name: r.name,
+        raceTo: r.raceTo,
+    })))
+
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
@@ -257,6 +262,7 @@ export const usePhase = (p: Phase | null) => {
         tables,
         settings,
         rounds,
+        raceTos,
 
         elapsedMilliseconds,
         hasStarted,

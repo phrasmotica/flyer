@@ -17,6 +17,11 @@ export const useSettings = (s: FlyerSettings) => {
 
     const roundNames = computed(() => scheduler.value.computeRoundNames(settings.value))
 
+    const raceTos = computed(() => roundNames.value.map((n, i) => ({
+        name: n,
+        raceTo: settings.value.raceToPerRound[i],
+    })))
+
     const estimatedCost = computed(() => {
         const tablesToUse = settings.value.tables.slice(0, settings.value.tableCount)
         const costPerHour = tablesToUse.map(t => t.costPerHour).reduce((a, b) => a + b, 0)
@@ -34,6 +39,7 @@ export const useSettings = (s: FlyerSettings) => {
         durationPerFrame,
         estimatedDurationMinutes,
         roundNames,
+        raceTos,
         estimatedCost,
 
         isInvalid,

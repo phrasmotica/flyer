@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useFocus } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
@@ -25,7 +25,6 @@ const settingsStore = useSettingsStore()
 
 const {
     isSmallScreen,
-    isLargeScreen,
 } = useScreenSizes()
 
 const toast = useToast()
@@ -34,10 +33,6 @@ const { selectOnFocus } = useTweaks()
 
 const {
     settings,
-    roundNames,
-    durationPerFrame,
-    estimatedDurationMinutes,
-    isInvalid,
 } = useSettings(settingsStore.settings)
 
 const nameInput = ref()
@@ -45,11 +40,6 @@ const showModal = ref(false)
 const entryFeesPaid = ref(false)
 
 useFocus(nameInput, { initialValue: true })
-
-const raceTos = computed(() => roundNames.value.map((n, i) => ({
-    name: n,
-    raceTo: settings.value.raceToPerRound[i],
-})))
 
 const start = () => {
     try {
