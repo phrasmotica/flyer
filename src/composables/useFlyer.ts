@@ -35,6 +35,8 @@ export const useFlyer = (f: Flyer | null) => {
         return newestPhases.find(p => p.startTime) || null
     })
 
+    const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
+
     const overallStandings = computed(() => processStandings(standings.value))
 
     const phaseIsComplete = (id: string) => {
@@ -49,6 +51,7 @@ export const useFlyer = (f: Flyer | null) => {
         mainPhase,
         currentPhase,
         currentPlayOffPhase,
+        allPlayOffsComplete,
 
         playOffs,
         requiresPlayOff,

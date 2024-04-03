@@ -9,6 +9,7 @@ import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
+import WinningsSummary from "../components/WinningsSummary.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -27,6 +28,7 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const {
     flyer,
     mainPhase,
+    allPlayOffsComplete,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -178,7 +180,13 @@ const goToPastFlyers = () => {
                         :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
                 </div>
 
-                <ResultsTable v-if="isRoundRobin || isWinnerStaysOn" />
+                <div v-if="isRoundRobin || isWinnerStaysOn">
+                    <ResultsTable />
+
+                    <div v-if="!requiresPlayOff || allPlayOffsComplete" class="mt-1">
+                        <WinningsSummary />
+                    </div>
+                </div>
 
                 <Podium v-if="isKnockout" />
             </div>

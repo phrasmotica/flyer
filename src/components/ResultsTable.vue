@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import WinningsSummary from "../components/WinningsSummary.vue"
-
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
@@ -26,6 +24,7 @@ const {
     playOffs,
     requiresPlayOff,
     completedPlayOffs,
+    allPlayOffsComplete,
     getPlayOffRank,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
@@ -55,8 +54,6 @@ const rowClass = (data: any) => {
         },
     ]
 }
-
-const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
 
 const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
@@ -115,10 +112,6 @@ const getPlayOffIndex = (playerId: string) => {
                 <span v-else>these players have been tie-broken via {{ tieBreakerName }}</span>
             </em>
         </p>
-    </div>
-
-    <div v-if="!requiresPlayOff || allPlayOffsComplete" class="mt-1">
-        <WinningsSummary />
     </div>
 </template>
 
