@@ -66,6 +66,14 @@ const pinButtonLabel = computed(() => {
 
 const canPin = computed(() => uiStore.currentSection !== PlayViewSection.Fixtures)
 
+const showCurrentSection = computed(() => {
+    if (uiStore.pinnedSection === uiStore.currentSection) {
+        return isHistoric.value || props.pinnedOnly || !props.pinnable
+    }
+
+    return true
+})
+
 const pinSection = () => {
     uiStore.togglePinnedSection(uiStore.currentSection)
 }
@@ -100,7 +108,7 @@ const showSection = (section: PlayViewSection) => {
             </p>
         </div>
 
-        <div v-else :class="props.overflow && 'overflow'">
+        <div v-if="showCurrentSection" :class="props.overflow && 'overflow'">
             <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
