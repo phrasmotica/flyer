@@ -11,6 +11,7 @@ import PageTemplate from "../components/PageTemplate.vue"
 import PlayOffsRequiredMessage from "../components/PlayOffsRequiredMessage.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
+import TiesBrokenMessage from "../components/TiesBrokenMessage.vue"
 import WinningsSummary from "../components/WinningsSummary.vue"
 
 import { useFlyer } from "../composables/useFlyer"
@@ -193,6 +194,10 @@ const goToPastFlyers = () => {
 
                     <div v-if="requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
                         <PlayOffsRequiredMessage />
+                    </div>
+
+                    <div v-if="!requiresPlayOff && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
+                        <TiesBrokenMessage />
                     </div>
 
                     <div v-if="!requiresPlayOff || allPlayOffsComplete" class="mt-1">

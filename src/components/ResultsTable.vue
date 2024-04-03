@@ -2,7 +2,6 @@
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
-import { useQueryParams } from "../composables/useQueryParams"
 import { useScreenSizes } from "../composables/useScreenSizes"
 
 import { useFlyerStore } from "../stores/flyer"
@@ -20,7 +19,6 @@ const {
     mainPhase,
     overallStandings,
     playOffs,
-    requiresPlayOff,
     completedPlayOffs,
     allPlayOffsComplete,
     getPlayOffRank,
@@ -32,13 +30,8 @@ const {
 } = usePhase(mainPhase.value)
 
 const {
-    tieBreakerName,
     isWinnerStaysOn,
 } = usePhaseSettings(settings.value)
-
-const {
-    isHistoric,
-} = useQueryParams()
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {
@@ -82,17 +75,6 @@ const getPlayOffIndex = (playerId: string) => {
             </template>
         </Column>
     </DataTable>
-
-    <!-- if some players have been tie-broken -->
-    <div v-if="!props.isInProgress && !requiresPlayOff && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
-        <p v-for="_, i in playOffs" class="m-0">
-            <em>
-                <sup class="text-xs">{{ i + 1 }}&nbsp;</sup>
-                <span v-if="isHistoric">these players were tie-broken via {{ tieBreakerName }}</span>
-                <span v-else>these players have been tie-broken via {{ tieBreakerName }}</span>
-            </em>
-        </p>
-    </div>
 </template>
 
 <style>
