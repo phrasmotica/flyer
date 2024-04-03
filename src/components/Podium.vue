@@ -2,7 +2,6 @@
 import { useI18n } from "vue-i18n"
 
 import VictoryText from "./VictoryText.vue"
-import WinningsList from "./WinningsList.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePodium } from "../composables/usePodium"
@@ -43,10 +42,6 @@ const {
                 <VictoryText :fixture="f" />
             </li>
         </ul>
-
-        <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
-            <WinningsList header="Other prize money:" :winnings="moneyRecipients.slice(1)" />
-        </div>
     </div>
 
     <div v-else>

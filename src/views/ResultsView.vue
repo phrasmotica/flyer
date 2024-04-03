@@ -12,11 +12,13 @@ import PlayOffsRequiredMessage from "../components/PlayOffsRequiredMessage.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import TiesBrokenMessage from "../components/TiesBrokenMessage.vue"
+import WinningsList from "../components/WinningsList.vue"
 import WinningsSummary from "../components/WinningsSummary.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
+import { usePodium } from "../composables/usePodium"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useStandings } from "../composables/useStandings"
 
@@ -48,6 +50,10 @@ const {
     isRoundRobin,
     isWinnerStaysOn,
 } = usePhaseSettings(settings.value)
+
+const {
+    moneyRecipients,
+} = usePodium(mainPhase.value)
 
 const {
     requiresPlayOff,
@@ -225,7 +231,13 @@ const goToPastFlyers = () => {
                     </div>
                 </div>
 
-                <Podium v-if="isKnockout" />
+                <div v-if="isKnockout">
+                    <Podium />
+
+                    <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
+                        <WinningsList header="Other prize money:" :winnings="moneyRecipients.slice(1)" />
+                    </div>
+                </div>
             </div>
 
             <div v-if="!requiresPlayOff && !isHistoric" class="border-top-1 mt-1 pt-1">
