@@ -45,7 +45,7 @@ const { n } = useI18n()
 
 const { blurNumberInputs } = useTweaks()
 
-const items = ref<MenuItem[]>([
+const items = computed(() => <MenuItem[]>[
     {
         icon: 'pi pi-user',
         command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Players,

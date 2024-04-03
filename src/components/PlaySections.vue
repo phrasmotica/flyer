@@ -31,36 +31,30 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const items = computed(() => {
-    const defaultItems = <MenuItem[]>[
-        {
-            icon: 'pi pi-calendar',
-            command: _ => uiStore.settings.currentSection = PlayViewSection.Fixtures,
-        },
-        {
-            icon: 'pi pi-chart-bar',
-            command: _ => uiStore.settings.currentSection = PlayViewSection.Standings,
-        },
-        {
-            icon: 'pi pi-building',
-            command: _ => uiStore.settings.currentSection = PlayViewSection.Tables,
-        },
-        {
-            icon: 'pi pi-info-circle',
-            command: _ => uiStore.settings.currentSection = PlayViewSection.Info,
-        },
-        {
-            icon: 'pi pi-receipt',
-            command: _ => uiStore.settings.currentSection = PlayViewSection.EventLog,
-        },
-    ]
-
-    if (isHistoric.value) {
-        defaultItems.splice(1, 1)
-    }
-
-    return defaultItems
-})
+const items = computed(() => <MenuItem[]>[
+    // MEDIUM: reinstate logic for hiding certain sections, once we've removed
+    // the dependency on the underlying enum values for tracking the active index
+    {
+        icon: 'pi pi-calendar',
+        command: _ => uiStore.settings.currentSection = PlayViewSection.Fixtures,
+    },
+    {
+        icon: 'pi pi-chart-bar',
+        command: _ => uiStore.settings.currentSection = PlayViewSection.Standings,
+    },
+    {
+        icon: 'pi pi-building',
+        command: _ => uiStore.settings.currentSection = PlayViewSection.Tables,
+    },
+    {
+        icon: 'pi pi-info-circle',
+        command: _ => uiStore.settings.currentSection = PlayViewSection.Info,
+    },
+    {
+        icon: 'pi pi-receipt',
+        command: _ => uiStore.settings.currentSection = PlayViewSection.EventLog,
+    },
+])
 
 const pinButtonLabel = computed(() => {
     if (uiStore.pinnedSection === uiStore.currentSection) {
@@ -92,14 +86,14 @@ const showSection = (section: PlayViewSection) => {
             :model="items"
             :activeIndex="uiStore.currentSection" />
 
-        <div v-if="props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
+        <div v-if="!isHistoric && props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
             <Button
                 :label="pinButtonLabel"
                 severity="info"
                 @click="pinSection" />
         </div>
 
-        <p v-if="!props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
+        <p v-if="!isHistoric && !props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
             class="m-0 text-center text-sm font-italic text-color-secondary">
             This section is pinned
         </p>
