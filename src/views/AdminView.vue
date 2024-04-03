@@ -4,9 +4,13 @@ import { useRouter } from "vue-router"
 
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useTimedRef } from "../composables/useTimedRef"
+
 const router = useRouter()
 
-const isCleared = ref(false)
+const {
+    value: isCleared,
+} = useTimedRef(2000, false)
 
 const backToSetup = () => {
     router.push({
@@ -18,11 +22,8 @@ const clearButtonLabel = computed(() => isCleared.value ? "Done!" : "Clear local
 
 const clearLocalStorage = () => {
     localStorage.clear()
-    isCleared.value = true
 
-    setTimeout(() => {
-        isCleared.value = false
-    }, 2000)
+    isCleared.value = true
 }
 </script>
 

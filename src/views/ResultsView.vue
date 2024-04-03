@@ -21,6 +21,7 @@ import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { usePodium } from "../composables/usePodium"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useStandings } from "../composables/useStandings"
+import { useTimedRef } from "../composables/useTimedRef"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
@@ -71,7 +72,9 @@ const {
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
 
-const imageSaved = ref(false)
+const {
+    value: imageSaved,
+} = useTimedRef(2000, false)
 
 const confirmGoToSetup = () => {
     if (alreadySaved.value) {
@@ -159,10 +162,6 @@ const saveResults = () => {
         },
         success() {
             imageSaved.value = true
-
-            setTimeout(() => {
-                imageSaved.value = false
-            }, 2000)
         }
     })
 }

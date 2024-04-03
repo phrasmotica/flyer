@@ -7,6 +7,8 @@ import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerHistory from "../components/FlyerHistory.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useTimedRef } from "../composables/useTimedRef"
+
 import type { Flyer } from "../data/Flyer"
 
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
@@ -22,10 +24,17 @@ const router = useRouter()
 const importText = ref("")
 const [showImportModal, setShowImportModal] = useToggle(false)
 
-const isImported = ref(false)
-const failedToImport = ref(false)
+const {
+    value: isImported,
+} = useTimedRef(2000, false)
 
-const isExported = ref(false)
+const {
+    value: failedToImport,
+} = useTimedRef(2000, false)
+
+const {
+    value: isExported,
+} = useTimedRef(2000, false)
 
 const importButtonLabel = computed(() => {
     if (failedToImport.value) {
@@ -45,19 +54,11 @@ const importPastFlyers = () => {
         isImported.value = true
         importText.value = ""
         setShowImportModal(false)
-
-        setTimeout(() => {
-            isImported.value = false
-        }, 2000)
     }
     catch (e) {
         console.error(e)
 
         failedToImport.value = true
-
-        setTimeout(() => {
-            failedToImport.value = false
-        }, 2000)
     }
 }
 
@@ -66,10 +67,6 @@ const exportPastFlyers = () => {
     copy(data)
 
     isExported.value = true
-
-    setTimeout(() => {
-        isExported.value = false
-    }, 2000)
 }
 
 const newFlyer = () => {
