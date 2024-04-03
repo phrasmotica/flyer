@@ -1,7 +1,8 @@
 import { computed, ref } from "vue"
 import { useArrayFilter, useSorted } from "@vueuse/core"
 
-import { PhaseEventLevel, type Phase, type PhaseEvent } from "../data/Phase"
+import type { Phase } from "../data/Phase"
+import { PhaseEventLevel, type PhaseEvent } from "../data/PhaseEvent"
 
 export const useEventLog = (p: Phase | null) => {
     const phase = ref(p)
