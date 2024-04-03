@@ -21,7 +21,7 @@ const {
 
 <template>
     <div>
-        <div v-for="e of eventLog">
+        <div v-for="e, i of eventLog" :class="i > 0 && 'mt-1 border-top-1 pt-1'">
             {{ d(e.timestamp, "long") }}: {{ e.message }}
         </div>
     </div>

@@ -113,11 +113,11 @@ watch([scores, runouts], () => {
 })
 
 const startFixture = () => {
-    if (!fixture.value || freeTables.value.length <= 0 || !tableId.value) {
+    if (!currentPhase.value || !fixture.value || freeTables.value.length <= 0 || !tableId.value) {
         return
     }
 
-    flyerStore.startFixture(fixture.value.id, tableId.value, breakerId.value)
+    flyerStore.startFixture(currentPhase.value, fixture.value.id, tableId.value, breakerId.value, true)
 
     resumeClock()
 }
@@ -136,7 +136,7 @@ const updateScores = (finish: boolean) => {
         isBye: false,
     }))
 
-    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
+    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish, true)
 
     if (finish && isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
         const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)

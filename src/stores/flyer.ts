@@ -138,6 +138,13 @@ export const useFlyerStore = defineStore("flyer", () => {
         ]
     }
 
+    const addPhaseEvent = (phase: Phase, message: string) => {
+        phase.eventLog.push({
+            message,
+            timestamp: Date.now(),
+        })
+    }
+
     const completeWalkovers = (round: Round, raceTo: number) => {
         const ids: [string, string][] = []
 
@@ -164,13 +171,18 @@ export const useFlyerStore = defineStore("flyer", () => {
         return ids
     }
 
-    const startFixture = (id: string, tableId: string, breakerId: string) => {
-        for (const r of flyer.value!.phases.flatMap(p => p.rounds)) {
+    const startFixture = (phase: Phase, id: string, tableId: string, breakerId: string, addEvent: boolean) => {
+        for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === id)
             if (idx >= 0) {
                 r.fixtures[idx].startTime = Date.now()
                 r.fixtures[idx].tableId = tableId
                 r.fixtures[idx].breakerId = breakerId
+
+                if (addEvent) {
+                    // HIGH: change message to "Player A v Player B was started."
+                    addPhaseEvent(phase, `Fixture ${id} was started.`)
+                }
             }
         }
     }
@@ -189,7 +201,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean) => {
+    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean, addEvent: boolean) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
@@ -197,6 +209,11 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                 if (finishFixture) {
                     r.fixtures[idx].finishTime = Date.now()
+
+                    if (addEvent) {
+                        // HIGH: change message to "Player A v Player B finished 1-0."
+                        addPhaseEvent(phase, `Fixture ${fixtureId} was finished.`)
+                    }
 
                     if (winsRequiredReached(phase)) {
                         cancelRemaining()
@@ -344,10 +361,12 @@ export const useFlyerStore = defineStore("flyer", () => {
             score: s.playerId === winnerId ? raceTo : 0,
         }))
 
-        startFixture(fixture.id, tableId, breakerId)
+        startFixture(phase, fixture.id, tableId, breakerId, false)
 
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
-        updateScores(phase, fixture.id, newScores, true)
+        updateScores(phase, fixture.id, newScores, true, false)
+
+        addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`)
     }
 
     const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
