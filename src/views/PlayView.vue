@@ -7,6 +7,7 @@ import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureModal from "../components/FixtureModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import PhaseInfoSection from "../components/PhaseInfoSection.vue"
 import PlayButtons from "../components/PlayButtons.vue"
 import PlaySections from "../components/PlaySections.vue"
 import Price from "../components/Price.vue"
@@ -221,13 +222,20 @@ onUnmounted(() => {
                 </div>
 
                 <div class="col-4 p-0 pl-2 border-left-1">
-                    <PlayButtons
-                        :isFixtures="display === Display.Fixtures"
-                        @autoComplete="autoComplete"
-                        @confirmFinish="confirmFinish"
-                        @generateNextRound="generateNextRound"
-                        @goToPastFlyers="goToPastFlyers"
-                        @showAbandonModal="() => showAbandonModal = true" />
+                    <div class="mt-1">
+                        <PlayButtons
+                            :isFixtures="display === Display.Fixtures"
+                            @autoComplete="autoComplete"
+                            @confirmFinish="confirmFinish"
+                            @generateNextRound="generateNextRound"
+                            @goToPastFlyers="goToPastFlyers"
+                            @showAbandonModal="() => showAbandonModal = true" />
+                    </div>
+
+                    <div class="border-top-1 pt-2">
+                        <!-- HIGH: allow pinning a different play section here -->
+                        <PhaseInfoSection />
+                    </div>
                 </div>
             </div>
             <div v-else>
