@@ -90,7 +90,7 @@ const showSection = (section: PlayViewSection) => {
         <TabMenu v-if="!props.pinnedOnly"
             class="mb-2"
             :model="items"
-            v-model:activeIndex="uiStore.currentSection" />
+            :activeIndex="uiStore.currentSection" />
 
         <div v-if="props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
             <Button

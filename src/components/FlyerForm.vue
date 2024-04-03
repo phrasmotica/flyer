@@ -82,7 +82,7 @@ onUpdated(() => {
         <TabMenu
             class="mb-2"
             :model="items"
-            v-model:activeIndex="uiStore.flyerFormSection" />
+            :activeIndex="uiStore.flyerFormSection" />
 
         <!-- LOW: only make the form content overflow with a scroll bar, not the tab menu also -->
         <div id="form-content">
