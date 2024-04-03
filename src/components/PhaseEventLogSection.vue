@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 
+import { useEventLog } from "../composables/useEventLog"
 import { useFlyer } from "../composables/useFlyer"
-import { usePhase } from "../composables/usePhase"
 
 import { useFlyerStore } from "../stores/flyer"
 
@@ -15,13 +15,13 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    eventLog,
-} = usePhase(currentPhase.value)
+    sortedEventLog,
+} = useEventLog(currentPhase.value)
 </script>
 
 <template>
     <div>
-        <div v-for="e, i of eventLog" :class="i > 0 && 'mt-1 border-top-1 pt-1'">
+        <div v-for="e, i of sortedEventLog" :class="i > 0 && 'mt-1 border-top-1 pt-1'">
             <span class="text-sm">
                 {{ d(e.timestamp, "long") }}: {{ e.message }}
             </span>
