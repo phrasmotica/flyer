@@ -1,7 +1,13 @@
 export interface UiSettings {
+    sidebarPosition: SidebarPosition
     flyerFormSection: FlyerFormSection
     currentSection: PlayViewSection
     pinnedSection: PlayViewSection | null
+}
+
+export enum SidebarPosition {
+    Right,
+    Left,
 }
 
 export enum FlyerFormSection {

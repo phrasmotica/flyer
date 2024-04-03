@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useSlots } from "vue"
 
+import { useUiStore } from "../stores/ui"
+
+const uiStore = useUiStore()
+
 const slots = useSlots()
 </script>
 
