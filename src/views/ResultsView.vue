@@ -5,6 +5,7 @@ import html2canvas from "html2canvas"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
+import IncompleteResultsMessage from "../components/IncompleteResultsMessage.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
@@ -29,6 +30,7 @@ const {
     flyer,
     mainPhase,
     allPlayOffsComplete,
+    incompleteCount,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -182,6 +184,10 @@ const goToPastFlyers = () => {
 
                 <div v-if="isRoundRobin || isWinnerStaysOn">
                     <ResultsTable />
+
+                    <div v-if="incompleteCount > 0 && !isWinnerStaysOn">
+                        <IncompleteResultsMessage :count="incompleteCount" />
+                    </div>
 
                     <div v-if="!requiresPlayOff || allPlayOffsComplete" class="mt-1">
                         <WinningsSummary />

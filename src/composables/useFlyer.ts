@@ -39,6 +39,8 @@ export const useFlyer = (f: Flyer | null) => {
 
     const overallStandings = computed(() => processStandings(standings.value))
 
+    const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
+
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
         return !!phase?.startTime && !!phase.finishTime
@@ -59,6 +61,7 @@ export const useFlyer = (f: Flyer | null) => {
         moneyRecipients,
 
         overallStandings,
+        incompleteCount,
 
         getPlayOffRank,
         phaseIsComplete,
