@@ -186,7 +186,9 @@ const goToPastFlyers = () => {
             <div v-if="!requiresPlayOff && !isHistoric" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />
             </div>
+        </template>
 
+        <template #modals>
             <ConfirmModal
                 :visible="showGoToSetupModal"
                 header="New flyer"

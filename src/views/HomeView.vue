@@ -93,20 +93,19 @@ const hideModal = () => {
             </div>
         </template>
 
+        <template v-if="!isSmallScreen" #mainColumn>
+            <FlyerForm />
+        </template>
+
+        <template v-if="!isSmallScreen" #sidebar>
+            <FlyerSummary @confirmStart="confirmStart" />
+        </template>
+
         <template #content>
-            <div v-if="!isSmallScreen" class="grid m-0">
-                <div class="col-8 p-0 pr-2">
-                    <FlyerForm />
-                </div>
+            <FlyerForm />
+        </template>
 
-                <div class="col-4 p-0 pl-2 border-left-1">
-                    <FlyerSummary @confirmStart="confirmStart" />
-                </div>
-            </div>
-            <div v-else>
-                <FlyerForm />
-            </div>
-
+        <template #modals>
             <ConfirmModal
                 :visible="showModal"
                 header="Start Flyer"

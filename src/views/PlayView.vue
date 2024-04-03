@@ -221,43 +221,41 @@ onUnmounted(() => {
             </div>
         </template>
 
+        <template v-if="!isSmallScreen" #mainColumn>
+            <PlaySections
+                overflow
+                pinButton
+                @selectFixture="selectForRecording" />
+        </template>
+
+        <template v-if="!isSmallScreen" #sidebar>
+            <div class="mt-1">
+                <PlayButtons
+                    sidebar
+                    @autoComplete="autoComplete"
+                    @confirmFinish="confirmFinish"
+                    @generateNextRound="generateNextRound"
+                    @goToPastFlyers="goToPastFlyers"
+                    @showAbandonModal="() => showAbandonModal = true" />
+            </div>
+
+            <div class="border-top-1 pt-2">
+                <PlaySections v-if="uiStore.pinnedSection"
+                    overflow
+                    pinnedOnly />
+
+                <p v-else class="m-0 text-center text-sm font-italic text-color-secondary">
+                    No section pinned
+                </p>
+            </div>
+        </template>
+
         <template #content>
-            <!-- MEDIUM: make this layout into a slot/template in PageTemplate.vue -->
-            <div v-if="!isSmallScreen" class="grid m-0">
-                <div class="col-8 p-0 pr-2">
-                    <PlaySections
-                        overflow
-                        pinButton
-                        @selectFixture="selectForRecording" />
-                </div>
+            <PlaySections
+                @selectFixture="selectForRecording" />
+        </template>
 
-                <div class="col-4 p-0 pl-2 border-left-1">
-                    <div class="mt-1">
-                        <PlayButtons
-                            sidebar
-                            @autoComplete="autoComplete"
-                            @confirmFinish="confirmFinish"
-                            @generateNextRound="generateNextRound"
-                            @goToPastFlyers="goToPastFlyers"
-                            @showAbandonModal="() => showAbandonModal = true" />
-                    </div>
-
-                    <div class="border-top-1 pt-2">
-                        <PlaySections v-if="uiStore.pinnedSection"
-                            overflow
-                            pinnedOnly />
-
-                        <p v-else class="m-0 text-center text-sm font-italic text-color-secondary">
-                            No section pinned
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div v-else>
-                <PlaySections
-                    @selectFixture="selectForRecording" />
-            </div>
-
+        <template #modals>
             <FixtureModal
                 :visible="showFixtureModal"
                 :fixture="selectedFixture"

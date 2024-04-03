@@ -91,7 +91,9 @@ const newFlyer = () => {
 
         <template #content>
             <FlyerHistory />
+        </template>
 
+        <template #modals>
             <ConfirmModal
                 :visible="showImportModal"
                 header="Import data"
