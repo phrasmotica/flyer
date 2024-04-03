@@ -217,6 +217,7 @@ onUnmounted(() => {
                 <div class="col-4 p-0 pl-2 border-left-1">
                     <div class="mt-1">
                         <PlayButtons
+                            sidebar
                             @autoComplete="autoComplete"
                             @confirmFinish="confirmFinish"
                             @generateNextRound="generateNextRound"
