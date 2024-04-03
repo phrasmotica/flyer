@@ -14,4 +14,10 @@ export interface Phase {
     finishTime: number | null
     rounds: Round[]
     fixtureSwaps: FixtureSwap[]
+    eventLog: PhaseEvent[]
+}
+
+export interface PhaseEvent {
+    timestamp: number
+    message: string
 }

@@ -84,6 +84,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             finishTime: null,
             rounds: scheduler.generateFixtures(settings, players),
             fixtureSwaps: [],
+            eventLog: [],
         }
 
         for (const r of phase.rounds) {
@@ -112,6 +113,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             finishTime: null,
             rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
             fixtureSwaps: [],
+            eventLog: [],
         }
 
         for (const r of newPhase.rounds) {
