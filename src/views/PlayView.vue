@@ -235,7 +235,10 @@ onUnmounted(() => {
                     </div>
 
                     <div class="border-top-1 pt-2">
-                        <PlaySections v-if="uiStore.pinnedSection" pinnedOnly />
+                        <PlaySections v-if="uiStore.pinnedSection"
+                            overflow
+                            pinnedOnly />
+
                         <p v-else class="m-0 text-center text-sm font-italic text-color-secondary">
                             No section pinned
                         </p>
