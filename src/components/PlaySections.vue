@@ -12,6 +12,8 @@ import { useQueryParams } from "../composables/useQueryParams"
 
 import type { Fixture } from "../data/Fixture"
 
+import { useUiStore } from "../stores/ui"
+
 enum Display {
     Fixtures,
     Tables,
@@ -22,7 +24,10 @@ enum Display {
 
 const props = defineProps<{
     overflow?: boolean
+    pinButton?: boolean
 }>()
+
+const uiStore = useUiStore()
 
 const emit = defineEmits<{
     selectFixture: [fixture: Fixture]
@@ -64,11 +69,33 @@ const items = computed(() => {
 
     return defaultItems
 })
+
+const pinButtonLabel = computed(() => {
+    if (uiStore.pinnedSection === display.value) {
+        return "Unpin this section"
+    }
+
+    return "Pin this section"
+})
+
+const canPin = computed(() => display.value === Display.Fixtures)
+
+const pinSection = () => {
+    uiStore.setPinnedSection(display.value)
+}
 </script>
 
 <template>
     <div>
         <TabMenu class="mb-2" :model="items" />
+
+        <div v-if="props.pinButton" class="p-fluid mb-1">
+            <Button
+                :label="pinButtonLabel"
+                :disabled="canPin"
+                severity="info"
+                @click="pinSection" />
+        </div>
 
         <div :class="props.overflow && 'overflow'">
             <FixtureList v-if="display === Display.Fixtures"

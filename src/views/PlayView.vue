@@ -218,6 +218,7 @@ onUnmounted(() => {
                 <div class="col-8 p-0 pr-2">
                     <PlaySections
                         overflow
+                        pinButton
                         @selectFixture="selectForRecording" />
                 </div>
 
