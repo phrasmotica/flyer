@@ -1,12 +1,18 @@
 <script setup lang="ts">
-const props = defineProps<{
-    count: number
-}>()
+import { useFlyer } from "../composables/useFlyer"
+
+import { useFlyerStore } from "../stores/flyer"
+
+const flyerStore = useFlyerStore()
+
+const {
+    incompleteCount,
+} = useFlyer(flyerStore.flyer)
 </script>
 
 <template>
     <!-- MEDIUM: restore dark mode to this message -->
     <Message severity="warn" :closable="false">
-        <em>{{ props.count }} player(s) have incomplete results!</em>
+        <em>{{ incompleteCount }} player(s) have incomplete results!</em>
     </Message>
 </template>

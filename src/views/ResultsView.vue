@@ -209,7 +209,7 @@ const goToPastFlyers = () => {
                     <ResultsTable />
 
                     <div v-if="showIncompleteMessage">
-                        <IncompleteResultsMessage :count="incompleteCount" />
+                        <IncompleteResultsMessage />
                     </div>
 
                     <div v-if="showPlayOffsRequiredMessage" class="mt-1">
