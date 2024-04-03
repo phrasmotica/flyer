@@ -25,6 +25,7 @@ enum Display {
 const props = defineProps<{
     overflow?: boolean
     pinButton?: boolean
+    pinnedOnly?: boolean
 }>()
 
 const uiStore = useUiStore()
@@ -78,38 +79,45 @@ const pinButtonLabel = computed(() => {
     return "Pin this section"
 })
 
-const canPin = computed(() => display.value === Display.Fixtures)
+const canPin = computed(() => display.value !== Display.Fixtures)
 
 const pinSection = () => {
     uiStore.setPinnedSection(display.value)
+}
+
+const showSection = (section: Display) => {
+    if (props.pinnedOnly) {
+        return uiStore.pinnedSection === section
+    }
+
+    return display.value === section
 }
 </script>
 
 <template>
     <div>
-        <TabMenu class="mb-2" :model="items" />
+        <TabMenu v-if="!props.pinnedOnly" class="mb-2" :model="items" />
 
-        <div v-if="props.pinButton" class="p-fluid mb-1">
+        <div v-if="props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
             <Button
                 :label="pinButtonLabel"
-                :disabled="canPin"
                 severity="info"
                 @click="pinSection" />
         </div>
 
         <div :class="props.overflow && 'overflow'">
-            <FixtureList v-if="display === Display.Fixtures"
+            <FixtureList v-if="showSection(Display.Fixtures)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <ResultsTable v-if="display === Display.Standings"
+            <ResultsTable v-if="showSection(Display.Standings)"
                 isInProgress />
 
-            <TablesSummary v-if="display === Display.Tables"
+            <TablesSummary v-if="showSection(Display.Tables)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <PhaseInfoSection v-if="display === Display.Info" />
+            <PhaseInfoSection v-if="showSection(Display.Info)" />
 
-            <PhaseEventLogSection v-if="display === Display.EventLog" />
+            <PhaseEventLogSection v-if="showSection(Display.EventLog)" />
         </div>
     </div>
 </template>

@@ -234,8 +234,7 @@ onUnmounted(() => {
                     </div>
 
                     <div class="border-top-1 pt-2">
-                        <!-- HIGH: allow pinning a different play section here -->
-                        <PhaseInfoSection />
+                        <PlaySections pinnedOnly />
                     </div>
                 </div>
             </div>
