@@ -42,7 +42,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
         const maxFixtureCount = settings.playerCount * (settings.specification.winsRequired - 1) + 1
 
         // maximum of (playerCount - 1) fixtures per round
-        const numRounds = maxFixtureCount / settings.playerCount - 1
+        const numRounds = Math.ceil(maxFixtureCount / (settings.playerCount - 1))
 
         return new Array(numRounds).fill(0).map((_, i) => `Round ${i + 1}`)
     }

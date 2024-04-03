@@ -67,6 +67,8 @@ const items = computed(() => {
             icon: 'pi pi-info-circle',
             command: _ => display.value = Display.Info,
         },
+        // TODO: add event log section. A log of timestamped messages: player A
+        // beat player B 2-0, Round 1 was finished, etc
     ]
 
     if (isHistoric.value) {
