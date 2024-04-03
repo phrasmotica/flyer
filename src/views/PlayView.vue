@@ -224,7 +224,7 @@ onUnmounted(() => {
         <template v-if="!isSmallScreen" #mainColumn>
             <PlaySections
                 overflow
-                pinButton
+                pinnable
                 @selectFixture="selectForRecording" />
         </template>
 

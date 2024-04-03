@@ -17,7 +17,7 @@ import { useUiStore } from "../stores/ui"
 
 const props = defineProps<{
     overflow?: boolean
-    pinButton?: boolean
+    pinnable?: boolean
     pinnedOnly?: boolean
 }>()
 
@@ -86,17 +86,19 @@ const showSection = (section: PlayViewSection) => {
             :model="items"
             :activeIndex="uiStore.currentSection" />
 
-        <div v-if="!isHistoric && props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
-            <Button
-                :label="pinButtonLabel"
-                severity="info"
-                @click="pinSection" />
-        </div>
+        <div v-if="!isHistoric && props.pinnable">
+            <div v-if="canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
+                <Button
+                    :label="pinButtonLabel"
+                    severity="info"
+                    @click="pinSection" />
+            </div>
 
-        <p v-if="!isHistoric && !props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
-            class="m-0 text-center text-sm font-italic text-color-secondary">
-            This section is pinned
-        </p>
+            <p v-if="!props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
+                class="m-0 text-center text-sm font-italic text-color-secondary">
+                This section is pinned
+            </p>
+        </div>
 
         <div v-else :class="props.overflow && 'overflow'">
             <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
