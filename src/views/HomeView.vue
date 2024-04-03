@@ -93,16 +93,12 @@ const hideModal = () => {
             </div>
         </template>
 
-        <template v-if="!isSmallScreen" #mainColumn>
+        <template #content>
             <FlyerForm />
         </template>
 
         <template v-if="!isSmallScreen" #sidebar>
             <FlyerSummary @confirmStart="confirmStart" />
-        </template>
-
-        <template #content>
-            <FlyerForm />
         </template>
 
         <template #modals>

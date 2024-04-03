@@ -13,9 +13,9 @@ const slots = useSlots()
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <slot name="header" />
 
-            <div v-if="slots.mainColumn || slots.sidebar" class="grid m-0">
+            <div v-if="slots.sidebar" class="grid m-0">
                 <div class="col-8 p-0 pr-2">
-                    <slot name="mainColumn" />
+                    <slot name="content" />
                 </div>
 
                 <div class="col-4 p-0 pl-2 border-left-1">

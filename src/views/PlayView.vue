@@ -221,10 +221,10 @@ onUnmounted(() => {
             </div>
         </template>
 
-        <template v-if="!isSmallScreen" #mainColumn>
+        <template #content>
             <PlaySections
-                overflow
-                pinnable
+                :overflow="!isSmallScreen"
+                :pinnable="!isSmallScreen"
                 @selectFixture="selectForRecording" />
         </template>
 
@@ -248,11 +248,6 @@ onUnmounted(() => {
                     No section pinned
                 </p>
             </div>
-        </template>
-
-        <template #content>
-            <PlaySections
-                @selectFixture="selectForRecording" />
         </template>
 
         <template #modals>
