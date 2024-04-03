@@ -9,7 +9,7 @@ import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
-import type { Phase } from "../data/Phase"
+import type { Phase, PhaseEvent } from "../data/Phase"
 import { createPlayOffSettings, Format } from "../data/PhaseSettings"
 import type { Player } from "../data/Player"
 import type { PlayOff } from "../data/PlayOff"
@@ -84,7 +84,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             finishTime: null,
             rounds: scheduler.generateFixtures(settings, players),
             fixtureSwaps: [],
-            eventLog: [],
+            eventLog: createEventLog(settings.specification.name),
         }
 
         for (const r of phase.rounds) {
@@ -113,7 +113,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             finishTime: null,
             rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
             fixtureSwaps: [],
-            eventLog: [],
+            eventLog: createEventLog(settings.name),
         }
 
         for (const r of newPhase.rounds) {
@@ -127,6 +127,15 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
 
         return newPhase
+    }
+
+    const createEventLog = (phaseName: string): PhaseEvent[] => {
+        return [
+            {
+                message: `${phaseName} has started.`,
+                timestamp: Date.now(),
+            },
+        ]
     }
 
     const completeWalkovers = (round: Round, raceTo: number) => {
