@@ -82,7 +82,7 @@ const pinButtonLabel = computed(() => {
 const canPin = computed(() => display.value !== Display.Fixtures)
 
 const pinSection = () => {
-    uiStore.setPinnedSection(display.value)
+    uiStore.togglePinnedSection(display.value)
 }
 
 const showSection = (section: Display) => {
@@ -105,7 +105,12 @@ const showSection = (section: Display) => {
                 @click="pinSection" />
         </div>
 
-        <div :class="props.overflow && 'overflow'">
+        <p v-if="uiStore.pinnedSection === display"
+            class="m-0 text-center text-sm font-italic text-color-secondary">
+            This section is pinned
+        </p>
+
+        <div v-else :class="props.overflow && 'overflow'">
             <FixtureList v-if="showSection(Display.Fixtures)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 

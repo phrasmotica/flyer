@@ -7,7 +7,6 @@ import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureModal from "../components/FixtureModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import PhaseInfoSection from "../components/PhaseInfoSection.vue"
 import PlayButtons from "../components/PlayButtons.vue"
 import PlaySections from "../components/PlaySections.vue"
 import Price from "../components/Price.vue"
@@ -22,6 +21,7 @@ import { useScreenSizes } from "../composables/useScreenSizes"
 import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
+import { useUiStore } from "../stores/ui"
 
 enum Display {
     Fixtures,
@@ -33,6 +33,7 @@ enum Display {
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
+const uiStore = useUiStore()
 
 const {
     mainPhase,
@@ -234,7 +235,10 @@ onUnmounted(() => {
                     </div>
 
                     <div class="border-top-1 pt-2">
-                        <PlaySections pinnedOnly />
+                        <PlaySections v-if="uiStore.pinnedSection" pinnedOnly />
+                        <p v-else class="m-0 text-center text-sm font-italic text-color-secondary">
+                            No section pinned
+                        </p>
                     </div>
                 </div>
             </div>

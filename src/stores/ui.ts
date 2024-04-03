@@ -13,13 +13,18 @@ export const useUiStore = defineStore("ui", () => {
 
     const pinnedSection = computed(() => settings.value.pinnedSection)
 
-    const setPinnedSection = (section: number) => {
-        settings.value.pinnedSection = section
+    const togglePinnedSection = (section: number) => {
+        if (pinnedSection.value !== section) {
+            settings.value.pinnedSection = section
+        }
+        else {
+            settings.value.pinnedSection = null
+        }
     }
 
     return {
         pinnedSection,
 
-        setPinnedSection,
+        togglePinnedSection,
     }
 })
