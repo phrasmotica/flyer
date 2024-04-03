@@ -4,16 +4,13 @@ import { useRouter } from "vue-router"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
-import IncompleteResultsMessage from "../components/IncompleteResultsMessage.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import PlayOffsRequiredMessage from "../components/PlayOffsRequiredMessage.vue"
 import Podium from "../components/Podium.vue"
 import ResultsButtons from "../components/ResultsButtons.vue"
+import ResultsMessages from "@/components/ResultsMessages.vue"
 import ResultsTable from "../components/ResultsTable.vue"
-import TiesBrokenMessage from "../components/TiesBrokenMessage.vue"
 import WinningsList from "../components/WinningsList.vue"
-import WinningsSummary from "../components/WinningsSummary.vue"
 
 import { useDownloadImage } from "../composables/useDownloadImage"
 import { useFlyer } from "../composables/useFlyer"
@@ -39,9 +36,6 @@ const {
 const {
     flyer,
     mainPhase,
-    playOffs,
-    allPlayOffsComplete,
-    incompleteCount,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -99,26 +93,6 @@ const goToSetup = () => {
 const confirmStartPlayOff = () => {
     showStartPlayOffModal.value = true
 }
-
-const showIncompleteMessage = computed(() => incompleteCount.value > 0 && !isWinnerStaysOn.value)
-
-const showPlayOffsRequiredMessage = computed(() => {
-    if (!requiresPlayOff.value) {
-        return false
-    }
-
-    return !allPlayOffsComplete.value && playOffs.value.length > 0
-})
-
-const showTiesBrokenMessage = computed(() => {
-    if (requiresPlayOff.value) {
-        return false
-    }
-
-    return playOffs.value.length > 0 && !isWinnerStaysOn.value
-})
-
-const showWinningsSummary = computed(() => !requiresPlayOff.value || allPlayOffsComplete.value)
 
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
@@ -197,21 +171,7 @@ const goToPastFlyers = () => {
                 <div v-if="isRoundRobin || isWinnerStaysOn">
                     <ResultsTable />
 
-                    <div v-if="showIncompleteMessage">
-                        <IncompleteResultsMessage />
-                    </div>
-
-                    <div v-if="showPlayOffsRequiredMessage" class="mt-1">
-                        <PlayOffsRequiredMessage />
-                    </div>
-
-                    <div v-if="showTiesBrokenMessage" class="mt-1">
-                        <TiesBrokenMessage />
-                    </div>
-
-                    <div v-if="showWinningsSummary" class="mt-1">
-                        <WinningsSummary />
-                    </div>
+                    <ResultsMessages />
                 </div>
 
                 <div v-if="isKnockout">
