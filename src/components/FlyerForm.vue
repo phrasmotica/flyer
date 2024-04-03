@@ -12,23 +12,20 @@ import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
 import TableInput from "./TableInput.vue"
 
+import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useSettings } from "../composables/useSettings"
 import { useTweaks } from "../composables/useTweaks"
 
-import { useSettingsStore } from "../stores/settings"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { FlyerFormSection } from "../data/UiSettings"
 
-enum Section {
-    Players,
-    Settings,
-    Tables,
-    Prizes,
-}
+import { useSettingsStore } from "../stores/settings"
+import { useUiStore } from "../stores/ui"
 
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const settingsStore = useSettingsStore()
+const uiStore = useUiStore()
 
 const {
     estimatedCost,
@@ -48,24 +45,22 @@ const { n } = useI18n()
 
 const { blurNumberInputs } = useTweaks()
 
-const section = ref(Section.Players)
-
 const items = ref<MenuItem[]>([
     {
         icon: 'pi pi-user',
-        command: _ => section.value = Section.Players,
+        command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Players,
     },
     {
         icon: 'pi pi-book',
-        command: _ => section.value = Section.Settings,
+        command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Settings,
     },
     {
         icon: 'pi pi-building',
-        command: _ => section.value = Section.Tables,
+        command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Tables,
     },
     {
         icon: 'pi pi-pound',
-        command: _ => section.value = Section.Prizes,
+        command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Prizes,
     },
 ])
 
@@ -84,11 +79,14 @@ onUpdated(() => {
 
 <template>
     <div>
-        <TabMenu class="mb-2" :model="items" />
+        <TabMenu
+            class="mb-2"
+            :model="items"
+            v-model:activeIndex="uiStore.flyerFormSection" />
 
         <!-- LOW: only make the form content overflow with a scroll bar, not the tab menu also -->
         <div id="form-content">
-            <div v-if="section === Section.Players">
+            <div v-if="uiStore.flyerFormSection === FlyerFormSection.Players">
                 <div class="p-fluid mb-2 md:hidden">
                     <Stepper
                         v-model="settingsStore.settings.playerCount"
@@ -120,7 +118,7 @@ onUpdated(() => {
                 </div>
             </div>
 
-            <div v-if="section === Section.Settings">
+            <div v-if="uiStore.flyerFormSection === FlyerFormSection.Settings">
                 <div class="p-fluid mb-1">
                     <SelectButton
                         id="matchLengthModelSelect"
@@ -252,7 +250,7 @@ onUpdated(() => {
                 </div>
             </div>
 
-            <div v-if="section === Section.Tables">
+            <div v-if="uiStore.flyerFormSection === FlyerFormSection.Tables">
                 <div class="p-fluid mb-2">
                     <label for="tablesStepper" class="font-bold">
                         Tables
@@ -321,7 +319,7 @@ onUpdated(() => {
                 </div>
             </div>
 
-            <div v-if="section === Section.Prizes">
+            <div v-if="uiStore.flyerFormSection === FlyerFormSection.Prizes">
                 <LabelledCheckbox
                     label="Require entry fee"
                     v-model="settingsStore.settings.specification.entryFeeRequired" />

@@ -2,9 +2,10 @@ import { computed } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
-import { PlayViewSection, type UiSettings } from "../data/UiSettings"
+import { FlyerFormSection, PlayViewSection, type UiSettings } from "../data/UiSettings"
 
 const defaultSettings: UiSettings = {
+    flyerFormSection: FlyerFormSection.Players,
     currentSection: PlayViewSection.Fixtures,
     pinnedSection: null,
 }
@@ -12,6 +13,7 @@ const defaultSettings: UiSettings = {
 export const useUiStore = defineStore("ui", () => {
     const settings = useStorage("ui", defaultSettings)
 
+    const flyerFormSection = computed(() => settings.value.flyerFormSection)
     const currentSection = computed(() => settings.value.currentSection)
     const pinnedSection = computed(() => settings.value.pinnedSection)
 
@@ -29,6 +31,7 @@ export const useUiStore = defineStore("ui", () => {
     return {
         settings,
 
+        flyerFormSection,
         currentSection,
         pinnedSection,
         isFixtures,
