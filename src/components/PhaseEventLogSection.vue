@@ -22,7 +22,9 @@ const {
 <template>
     <div>
         <div v-for="e, i of eventLog" :class="i > 0 && 'mt-1 border-top-1 pt-1'">
-            {{ d(e.timestamp, "long") }}: {{ e.message }}
+            <span class="text-sm">
+                {{ d(e.timestamp, "long") }}: {{ e.message }}
+            </span>
         </div>
     </div>
 </template>
