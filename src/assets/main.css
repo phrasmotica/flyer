@@ -30,6 +30,10 @@ a,
   }
 }
 
+.p-message .p-message-text {
+    font-size: 14px;
+}
+
 .p-tieredmenu .p-menuitem > .p-menuitem-content a.p-menuitem-link {
     color: #334155;
 }

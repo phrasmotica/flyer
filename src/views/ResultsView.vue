@@ -5,10 +5,14 @@ import html2canvas from "html2canvas"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
+import IncompleteResultsMessage from "../components/IncompleteResultsMessage.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import PlayOffsRequiredMessage from "../components/PlayOffsRequiredMessage.vue"
 import Podium from "../components/Podium.vue"
 import ResultsTable from "../components/ResultsTable.vue"
+import TiesBrokenMessage from "../components/TiesBrokenMessage.vue"
+import WinningsSummary from "../components/WinningsSummary.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -27,6 +31,9 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const {
     flyer,
     mainPhase,
+    playOffs,
+    allPlayOffsComplete,
+    incompleteCount,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -78,6 +85,26 @@ const goToSetup = () => {
 const confirmStartPlayOff = () => {
     showStartPlayOffModal.value = true
 }
+
+const showIncompleteMessage = computed(() => incompleteCount.value > 0 && !isWinnerStaysOn.value)
+
+const showPlayOffsRequiredMessage = computed(() => {
+    if (!requiresPlayOff.value) {
+        return false
+    }
+
+    return !allPlayOffsComplete.value && playOffs.value.length > 0
+})
+
+const showTiesBrokenMessage = computed(() => {
+    if (requiresPlayOff.value) {
+        return false
+    }
+
+    return playOffs.value.length > 0 && !isWinnerStaysOn.value
+})
+
+const showWinningsSummary = computed(() => !requiresPlayOff.value || allPlayOffsComplete.value)
 
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
@@ -167,6 +194,8 @@ const goToPastFlyers = () => {
 <template>
     <PageTemplate>
         <template #content>
+            <!-- LOW: put this into the header template. Currently not possible because
+            the results-container div needs to contain the content as well... -->
             <div id="results-container">
                 <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                     <h1>{{ settings.name }}</h1>
@@ -176,7 +205,25 @@ const goToPastFlyers = () => {
                         :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
                 </div>
 
-                <ResultsTable v-if="isRoundRobin || isWinnerStaysOn" />
+                <div v-if="isRoundRobin || isWinnerStaysOn">
+                    <ResultsTable />
+
+                    <div v-if="showIncompleteMessage">
+                        <IncompleteResultsMessage :count="incompleteCount" />
+                    </div>
+
+                    <div v-if="showPlayOffsRequiredMessage" class="mt-1">
+                        <PlayOffsRequiredMessage />
+                    </div>
+
+                    <div v-if="showTiesBrokenMessage" class="mt-1">
+                        <TiesBrokenMessage />
+                    </div>
+
+                    <div v-if="showWinningsSummary" class="mt-1">
+                        <WinningsSummary />
+                    </div>
+                </div>
 
                 <Podium v-if="isKnockout" />
             </div>
@@ -184,7 +231,9 @@ const goToPastFlyers = () => {
             <div v-if="!requiresPlayOff && !isHistoric" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />
             </div>
+        </template>
 
+        <template #modals>
             <ConfirmModal
                 :visible="showGoToSetupModal"
                 header="New flyer"

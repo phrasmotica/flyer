@@ -3,6 +3,7 @@ import { computed, ref } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
 import FixtureList from "./FixtureList.vue"
+import PhaseEventLogSection from "./PhaseEventLogSection.vue"
 import PhaseInfoSection from "./PhaseInfoSection.vue"
 import ResultsTable from "./ResultsTable.vue"
 import TablesSummary from "./TablesSummary.vue"
@@ -10,17 +11,17 @@ import TablesSummary from "./TablesSummary.vue"
 import { useQueryParams } from "../composables/useQueryParams"
 
 import type { Fixture } from "../data/Fixture"
+import { PlayViewSection } from "../data/UiSettings"
 
-enum Display {
-    Fixtures,
-    Tables,
-    Standings,
-    Info,
-}
+import { useUiStore } from "../stores/ui"
 
 const props = defineProps<{
     overflow?: boolean
+    pinButton?: boolean
+    pinnedOnly?: boolean
 }>()
+
+const uiStore = useUiStore()
 
 const emit = defineEmits<{
     selectFixture: [fixture: Fixture]
@@ -30,28 +31,28 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const display = ref(Display.Fixtures)
-
 const items = computed(() => {
     const defaultItems = <MenuItem[]>[
         {
             icon: 'pi pi-calendar',
-            command: _ => display.value = Display.Fixtures,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Fixtures,
         },
         {
             icon: 'pi pi-chart-bar',
-            command: _ => display.value = Display.Standings,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Standings,
         },
         {
             icon: 'pi pi-building',
-            command: _ => display.value = Display.Tables,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Tables,
         },
         {
             icon: 'pi pi-info-circle',
-            command: _ => display.value = Display.Info,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Info,
         },
-        // TODO: add event log section. A log of timestamped messages: player A
-        // beat player B 2-0, Round 1 was finished, etc
+        {
+            icon: 'pi pi-receipt',
+            command: _ => uiStore.settings.currentSection = PlayViewSection.EventLog,
+        },
     ]
 
     if (isHistoric.value) {
@@ -60,23 +61,63 @@ const items = computed(() => {
 
     return defaultItems
 })
+
+const pinButtonLabel = computed(() => {
+    if (uiStore.pinnedSection === uiStore.currentSection) {
+        return "Unpin this section"
+    }
+
+    return "Pin this section"
+})
+
+const canPin = computed(() => uiStore.currentSection !== PlayViewSection.Fixtures)
+
+const pinSection = () => {
+    uiStore.togglePinnedSection(uiStore.currentSection)
+}
+
+const showSection = (section: PlayViewSection) => {
+    if (props.pinnedOnly) {
+        return uiStore.pinnedSection === section
+    }
+
+    return uiStore.currentSection === section
+}
 </script>
 
 <template>
     <div>
-        <TabMenu class="mb-2" :model="items" />
+        <TabMenu v-if="!props.pinnedOnly"
+            class="mb-2"
+            :model="items"
+            :activeIndex="uiStore.currentSection" />
 
-        <div :class="props.overflow && 'overflow'">
-            <FixtureList v-if="display === Display.Fixtures"
+        <div v-if="props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
+            <Button
+                :label="pinButtonLabel"
+                severity="info"
+                @click="pinSection" />
+        </div>
+
+        <p v-if="!props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
+            class="m-0 text-center text-sm font-italic text-color-secondary">
+            This section is pinned
+        </p>
+
+        <div v-else :class="props.overflow && 'overflow'">
+            <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <ResultsTable v-if="display === Display.Standings"
-                isInProgress />
+            <ResultsTable v-if="showSection(PlayViewSection.Standings)"
+                isInProgress
+                :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
 
-            <TablesSummary v-if="display === Display.Tables"
+            <TablesSummary v-if="showSection(PlayViewSection.Tables)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <PhaseInfoSection v-if="display === Display.Info" />
+            <PhaseInfoSection v-if="showSection(PlayViewSection.Info)" />
+
+            <PhaseEventLogSection v-if="showSection(PlayViewSection.EventLog)" />
         </div>
     </div>
 </template>

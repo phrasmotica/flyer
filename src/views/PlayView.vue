@@ -7,13 +7,13 @@ import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FixtureModal from "../components/FixtureModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import PhaseInfoSection from "../components/PhaseInfoSection.vue"
 import PlayButtons from "../components/PlayButtons.vue"
 import PlaySections from "../components/PlaySections.vue"
 import Price from "../components/Price.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { usePhaseEvents } from "../composables/usePhaseEvents"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
@@ -22,17 +22,12 @@ import { useScreenSizes } from "../composables/useScreenSizes"
 import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
-
-enum Display {
-    Fixtures,
-    Tables,
-    Standings,
-    Info,
-}
+import { useUiStore } from "../stores/ui"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
+const uiStore = useUiStore()
 
 const {
     mainPhase,
@@ -57,9 +52,12 @@ const {
     nextFixture,
     nextFreeFixture,
     getRoundWithIndex,
+    getFixtureDescription,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
+
+const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
     isRoundRobin,
@@ -76,8 +74,6 @@ const {
 const {
     isSmallScreen,
 } = useScreenSizes()
-
-const display = ref(Display.Fixtures)
 
 const [showPrice, toggleShowPrice] = useToggle()
 const showFinishModal = ref(false)
@@ -168,21 +164,32 @@ const autoComplete = () => {
     // LOW: compute the correct race-to for the next fixture
     const raceTo = settings.value.raceTo
 
+    const message = phaseEvents.fixtureAutoCompleted(nextFixture.value)
+
     flyerStore.autoCompleteFixture(
         currentPhase.value,
         nextFixture.value,
         tables.value[0].id,
-        raceTo)
+        raceTo,
+        false)
+
+    flyerStore.addPhaseEvent(currentPhase.value, message)
 
     if (isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
         const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)
         const [roundB, indexB] = getRoundWithIndex(nextFreeFixture.value.id)
 
         if (roundA && roundB) {
+            // generate this now - the computed properties update after the swap...
+            const message = phaseEvents.fixturesSwapped(nextFixture.value, nextFreeFixture.value)
+
             // if necessary, swap the next fixture in the current round (or
             // the first fixture in the next round) with the first upcoming fixture
             // where all players are free
-            flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
+            const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
+            if (didSwap) {
+                flyerStore.addPhaseEvent(currentPhase.value, message)
+            }
         }
     }
 }
@@ -203,7 +210,7 @@ onUnmounted(() => {
 
 <template>
     <PageTemplate>
-        <template #content>
+        <template #header>
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                 <h1>{{ header }}</h1>
 
@@ -212,37 +219,43 @@ onUnmounted(() => {
                     <Clock v-else :elapsedMilliseconds="clockDisplay" :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
                 </div>
             </div>
+        </template>
 
-            <!-- MEDIUM: make this layout into a slot/template in PageTemplate.vue -->
-            <div v-if="!isSmallScreen" class="grid m-0">
-                <div class="col-8 p-0 pr-2">
-                    <PlaySections
-                        overflow
-                        @selectFixture="selectForRecording" />
-                </div>
+        <template v-if="!isSmallScreen" #mainColumn>
+            <PlaySections
+                overflow
+                pinButton
+                @selectFixture="selectForRecording" />
+        </template>
 
-                <div class="col-4 p-0 pl-2 border-left-1">
-                    <div class="mt-1">
-                        <PlayButtons
-                            :isFixtures="display === Display.Fixtures"
-                            @autoComplete="autoComplete"
-                            @confirmFinish="confirmFinish"
-                            @generateNextRound="generateNextRound"
-                            @goToPastFlyers="goToPastFlyers"
-                            @showAbandonModal="() => showAbandonModal = true" />
-                    </div>
-
-                    <div class="border-top-1 pt-2">
-                        <!-- HIGH: allow pinning a different play section here -->
-                        <PhaseInfoSection />
-                    </div>
-                </div>
-            </div>
-            <div v-else>
-                <PlaySections
-                    @selectFixture="selectForRecording" />
+        <template v-if="!isSmallScreen" #sidebar>
+            <div class="mt-1">
+                <PlayButtons
+                    sidebar
+                    @autoComplete="autoComplete"
+                    @confirmFinish="confirmFinish"
+                    @generateNextRound="generateNextRound"
+                    @goToPastFlyers="goToPastFlyers"
+                    @showAbandonModal="() => showAbandonModal = true" />
             </div>
 
+            <div class="border-top-1 pt-2">
+                <PlaySections v-if="uiStore.pinnedSection"
+                    overflow
+                    pinnedOnly />
+
+                <p v-else class="m-0 text-center text-sm font-italic text-color-secondary">
+                    No section pinned
+                </p>
+            </div>
+        </template>
+
+        <template #content>
+            <PlaySections
+                @selectFixture="selectForRecording" />
+        </template>
+
+        <template #modals>
             <FixtureModal
                 :visible="showFixtureModal"
                 :fixture="selectedFixture"
@@ -271,7 +284,6 @@ onUnmounted(() => {
 
         <template v-if="isSmallScreen" #buttons>
             <PlayButtons
-                :isFixtures="display === Display.Fixtures"
                 @autoComplete="autoComplete"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"

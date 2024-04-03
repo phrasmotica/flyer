@@ -26,6 +26,7 @@ export const usePhase = (p: Phase | null) => {
     const fixtureSwaps = computed(() => phase.value?.fixtureSwaps || [])
     const players = computed(() => phase.value?.players || [])
     const tables = computed(() => phase.value?.tables || [])
+    const eventLog = computed(() => phase.value?.eventLog || [])
 
     // LOW: do something better here than casting an empty object to PhaseSettings
     const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
@@ -240,6 +241,14 @@ export const usePhase = (p: Phase | null) => {
         return `${getRound(fixture?.id || "")?.name || "???"} - ${getFixtureDescription(fixture)}`
     }
 
+    const getScoreDescription = (fixture: Fixture) => {
+        if (fixture.scores.some(s => s.isBye)) {
+            return "W/O"
+        }
+
+        return fixture.scores.map(s => s.score).join("-")
+    }
+
     watch(phase, () => {
         clockable.value = phase.value
     })
@@ -263,6 +272,7 @@ export const usePhase = (p: Phase | null) => {
         settings,
         rounds,
         raceTos,
+        eventLog,
 
         elapsedMilliseconds,
         hasStarted,
@@ -292,7 +302,9 @@ export const usePhase = (p: Phase | null) => {
         getRound,
         getRoundWithIndex,
         getFixtureStatus,
+        getFixtureDescription,
         getFixtureHeader,
+        getScoreDescription,
         pauseClock,
         resumeClock,
         acknowledgeSwap,

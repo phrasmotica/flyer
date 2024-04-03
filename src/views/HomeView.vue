@@ -85,26 +85,27 @@ const hideModal = () => {
 
 <template>
     <PageTemplate>
-        <template #content>
+        <template #header>
             <div class="flex align-items-center justify-content-between border-bottom-1 mb-2">
                 <h1>New Flyer</h1>
 
                 <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
             </div>
+        </template>
 
-            <div v-if="!isSmallScreen" class="grid m-0">
-                <div class="col-8 p-0 pr-2">
-                    <FlyerForm />
-                </div>
+        <template v-if="!isSmallScreen" #mainColumn>
+            <FlyerForm />
+        </template>
 
-                <div class="col-4 p-0 pl-2 border-left-1">
-                    <FlyerSummary @confirmStart="confirmStart" />
-                </div>
-            </div>
-            <div v-else>
-                <FlyerForm />
-            </div>
+        <template v-if="!isSmallScreen" #sidebar>
+            <FlyerSummary @confirmStart="confirmStart" />
+        </template>
 
+        <template #content>
+            <FlyerForm />
+        </template>
+
+        <template #modals>
             <ConfirmModal
                 :visible="showModal"
                 header="Start Flyer"

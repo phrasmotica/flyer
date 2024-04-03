@@ -44,6 +44,7 @@ watch(props, () => {
 const sortedScores = useSorted(scores, (a, b) => b - a)
 
 const scoreText = computed(() => {
+    // MEDIUM: use usePhase().getScoreDescription()
     if (isWalkover.value) {
         return "W/O"
     }

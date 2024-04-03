@@ -28,9 +28,11 @@ const clearLocalStorage = () => {
 
 <template>
     <PageTemplate>
-        <template #content>
+        <template #header>
             <h1 class="border-bottom-1">Admin</h1>
+        </template>
 
+        <template #content>
             <div class="p-fluid mt-2">
                 <Button
                     :label="clearButtonLabel"

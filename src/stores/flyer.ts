@@ -10,6 +10,7 @@ import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
 import type { Phase } from "../data/Phase"
+import { PhaseEventLevel, type PhaseEvent } from "../data/PhaseEvent"
 import { createPlayOffSettings, Format } from "../data/PhaseSettings"
 import type { Player } from "../data/Player"
 import type { PlayOff } from "../data/PlayOff"
@@ -84,6 +85,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             finishTime: null,
             rounds: scheduler.generateFixtures(settings, players),
             fixtureSwaps: [],
+            eventLog: createEventLog(settings.specification.name),
         }
 
         for (const r of phase.rounds) {
@@ -112,6 +114,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             finishTime: null,
             rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
             fixtureSwaps: [],
+            eventLog: createEventLog(settings.name),
         }
 
         for (const r of newPhase.rounds) {
@@ -125,6 +128,24 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
 
         return newPhase
+    }
+
+    const createEventLog = (phaseName: string): PhaseEvent[] => {
+        return [
+            {
+                level: PhaseEventLevel.Default,
+                message: `${phaseName} has started.`,
+                timestamp: Date.now(),
+            },
+        ]
+    }
+
+    const addPhaseEvent = (phase: Phase, message: string, level = PhaseEventLevel.Default) => {
+        phase.eventLog.push({
+            level,
+            message,
+            timestamp: Date.now(),
+        })
     }
 
     const completeWalkovers = (round: Round, raceTo: number) => {
@@ -153,13 +174,17 @@ export const useFlyerStore = defineStore("flyer", () => {
         return ids
     }
 
-    const startFixture = (id: string, tableId: string, breakerId: string) => {
-        for (const r of flyer.value!.phases.flatMap(p => p.rounds)) {
+    const startFixture = (phase: Phase, id: string, tableId: string, breakerId: string, addEvent = true) => {
+        for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === id)
             if (idx >= 0) {
                 r.fixtures[idx].startTime = Date.now()
                 r.fixtures[idx].tableId = tableId
                 r.fixtures[idx].breakerId = breakerId
+
+                if (addEvent) {
+                    addPhaseEvent(phase, `Fixture ${id} was started.`, PhaseEventLevel.Internal)
+                }
             }
         }
     }
@@ -178,7 +203,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean) => {
+    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean, addEvent = true) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
@@ -186,6 +211,10 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                 if (finishFixture) {
                     r.fixtures[idx].finishTime = Date.now()
+
+                    if (addEvent) {
+                        addPhaseEvent(phase, `Fixture ${fixtureId} was finished.`, PhaseEventLevel.Internal)
+                    }
 
                     if (winsRequiredReached(phase)) {
                         cancelRemaining()
@@ -299,14 +328,11 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const finish = (p: Phase) => {
-        const phase = flyer.value!.phases.find(x => x.id === p.id)
-        if (!phase) {
-            return false
-        }
-
+    const finish = (phase: Phase) => {
         if (!phase.finishTime) {
             phase.finishTime = Date.now()
+
+            addPhaseEvent(phase, `${phase.settings.name} was finished.`)
         }
 
         return true
@@ -322,7 +348,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
-    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number) => {
+    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number, addEvent: boolean) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
         const breakerId = getRandom(fixture.scores).playerId
@@ -333,15 +359,17 @@ export const useFlyerStore = defineStore("flyer", () => {
             score: s.playerId === winnerId ? raceTo : 0,
         }))
 
-        startFixture(fixture.id, tableId, breakerId)
+        startFixture(phase, fixture.id, tableId, breakerId, false)
 
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
-        updateScores(phase, fixture.id, newScores, true)
+        updateScores(phase, fixture.id, newScores, true, false)
+
+        addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
     }
 
     const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
         if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
-            return
+            return false
         }
 
         console.debug(`Swapping round ${roundA.index} fixture ${fixtureIndexA} and round ${roundB.index} fixture ${fixtureIndexB}`)
@@ -359,6 +387,10 @@ export const useFlyerStore = defineStore("flyer", () => {
             fixtureBId,
             timestamp: Date.now(),
         })
+
+        addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`, PhaseEventLevel.Internal)
+
+        return true
     }
 
     const getRandom = <T>(arr: T[]) => {
@@ -371,6 +403,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         start,
         startFixture,
+        addPhaseEvent,
         updateComment,
         updateScores,
         addTable,
