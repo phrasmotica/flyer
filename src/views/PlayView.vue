@@ -186,7 +186,7 @@ const autoComplete = () => {
             // if necessary, swap the next fixture in the current round (or
             // the first fixture in the next round) with the first upcoming fixture
             // where all players are free
-            const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB, false)
+            const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
             if (didSwap) {
                 flyerStore.addPhaseEvent(currentPhase.value, message)
             }
