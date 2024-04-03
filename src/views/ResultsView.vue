@@ -86,6 +86,26 @@ const confirmStartPlayOff = () => {
     showStartPlayOffModal.value = true
 }
 
+const showIncompleteMessage = computed(() => incompleteCount.value > 0 && !isWinnerStaysOn.value)
+
+const showPlayOffsRequiredMessage = computed(() => {
+    if (!requiresPlayOff.value) {
+        return false
+    }
+
+    return !allPlayOffsComplete.value && playOffs.value.length > 0
+})
+
+const showTiesBrokenMessage = computed(() => {
+    if (requiresPlayOff.value) {
+        return false
+    }
+
+    return playOffs.value.length > 0 && !isWinnerStaysOn.value
+})
+
+const showWinningsSummary = computed(() => !requiresPlayOff.value || allPlayOffsComplete.value)
+
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
     return remaining.length > 0 ? remaining[0] : null
@@ -188,19 +208,19 @@ const goToPastFlyers = () => {
                 <div v-if="isRoundRobin || isWinnerStaysOn">
                     <ResultsTable />
 
-                    <div v-if="incompleteCount > 0 && !isWinnerStaysOn">
+                    <div v-if="showIncompleteMessage">
                         <IncompleteResultsMessage :count="incompleteCount" />
                     </div>
 
-                    <div v-if="requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
+                    <div v-if="showPlayOffsRequiredMessage" class="mt-1">
                         <PlayOffsRequiredMessage />
                     </div>
 
-                    <div v-if="!requiresPlayOff && playOffs.length > 0 && !isWinnerStaysOn" class="mt-1">
+                    <div v-if="showTiesBrokenMessage" class="mt-1">
                         <TiesBrokenMessage />
                     </div>
 
-                    <div v-if="!requiresPlayOff || allPlayOffsComplete" class="mt-1">
+                    <div v-if="showWinningsSummary" class="mt-1">
                         <WinningsSummary />
                     </div>
                 </div>
