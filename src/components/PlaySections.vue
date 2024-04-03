@@ -3,6 +3,7 @@ import { computed, ref } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
 import FixtureList from "./FixtureList.vue"
+import PhaseEventLogSection from "./PhaseEventLogSection.vue"
 import PhaseInfoSection from "./PhaseInfoSection.vue"
 import ResultsTable from "./ResultsTable.vue"
 import TablesSummary from "./TablesSummary.vue"
@@ -16,6 +17,7 @@ enum Display {
     Tables,
     Standings,
     Info,
+    EventLog,
 }
 
 const props = defineProps<{
@@ -50,8 +52,10 @@ const items = computed(() => {
             icon: 'pi pi-info-circle',
             command: _ => display.value = Display.Info,
         },
-        // TODO: add event log section. A log of timestamped messages: player A
-        // beat player B 2-0, Round 1 was finished, etc
+        {
+            icon: 'pi pi-receipt',
+            command: _ => display.value = Display.EventLog,
+        },
     ]
 
     if (isHistoric.value) {
@@ -77,6 +81,8 @@ const items = computed(() => {
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
             <PhaseInfoSection v-if="display === Display.Info" />
+
+            <PhaseEventLogSection v-if="display === Display.EventLog" />
         </div>
     </div>
 </template>

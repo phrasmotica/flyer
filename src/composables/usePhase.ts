@@ -26,6 +26,7 @@ export const usePhase = (p: Phase | null) => {
     const fixtureSwaps = computed(() => phase.value?.fixtureSwaps || [])
     const players = computed(() => phase.value?.players || [])
     const tables = computed(() => phase.value?.tables || [])
+    const eventLog = computed(() => phase.value?.eventLog || [])
 
     // LOW: do something better here than casting an empty object to PhaseSettings
     const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
@@ -263,6 +264,7 @@ export const usePhase = (p: Phase | null) => {
         settings,
         rounds,
         raceTos,
+        eventLog,
 
         elapsedMilliseconds,
         hasStarted,
