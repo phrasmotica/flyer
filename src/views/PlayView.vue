@@ -13,6 +13,7 @@ import Price from "../components/Price.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
+import { usePhaseEvents } from "../composables/usePhaseEvents"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
@@ -51,9 +52,12 @@ const {
     nextFixture,
     nextFreeFixture,
     getRoundWithIndex,
+    getFixtureDescription,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
+
+const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
     isRoundRobin,
@@ -160,21 +164,32 @@ const autoComplete = () => {
     // LOW: compute the correct race-to for the next fixture
     const raceTo = settings.value.raceTo
 
+    const message = phaseEvents.fixtureAutoCompleted(nextFixture.value)
+
     flyerStore.autoCompleteFixture(
         currentPhase.value,
         nextFixture.value,
         tables.value[0].id,
-        raceTo)
+        raceTo,
+        false)
+
+    flyerStore.addPhaseEvent(currentPhase.value, message)
 
     if (isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
         const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)
         const [roundB, indexB] = getRoundWithIndex(nextFreeFixture.value.id)
 
         if (roundA && roundB) {
+            // generate this now - the computed properties update after the swap...
+            const message = phaseEvents.fixturesSwapped(nextFixture.value, nextFreeFixture.value)
+
             // if necessary, swap the next fixture in the current round (or
             // the first fixture in the next round) with the first upcoming fixture
             // where all players are free
-            flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
+            const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB, false)
+            if (didSwap) {
+                flyerStore.addPhaseEvent(currentPhase.value, message)
+            }
         }
     }
 }

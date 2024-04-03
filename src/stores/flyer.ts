@@ -180,7 +180,6 @@ export const useFlyerStore = defineStore("flyer", () => {
                 r.fixtures[idx].breakerId = breakerId
 
                 if (addEvent) {
-                    // HIGH: change message to "Player A v Player B was started."
                     addPhaseEvent(phase, `Fixture ${id} was started.`)
                 }
             }
@@ -211,7 +210,6 @@ export const useFlyerStore = defineStore("flyer", () => {
                     r.fixtures[idx].finishTime = Date.now()
 
                     if (addEvent) {
-                        // HIGH: change message to "Player A v Player B finished 1-0."
                         addPhaseEvent(phase, `Fixture ${fixtureId} was finished.`)
                     }
 
@@ -347,7 +345,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
-    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number) => {
+    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number, addEvent: boolean) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
         const breakerId = getRandom(fixture.scores).playerId
@@ -363,12 +361,14 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
         updateScores(phase, fixture.id, newScores, true, false)
 
-        addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`)
+        if (addEvent) {
+            addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`)
+        }
     }
 
-    const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
+    const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number, addEvent: boolean) => {
         if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
-            return
+            return false
         }
 
         console.debug(`Swapping round ${roundA.index} fixture ${fixtureIndexA} and round ${roundB.index} fixture ${fixtureIndexB}`)
@@ -387,8 +387,11 @@ export const useFlyerStore = defineStore("flyer", () => {
             timestamp: Date.now(),
         })
 
-        // HIGH: change message to "Player A v Player B was prioritised in place of Player C v Player D."
-        addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`)
+        if (addEvent) {
+            addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`)
+        }
+
+        return true
     }
 
     const getRandom = <T>(arr: T[]) => {
@@ -401,6 +404,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         start,
         startFixture,
+        addPhaseEvent,
         updateComment,
         updateScores,
         addTable,

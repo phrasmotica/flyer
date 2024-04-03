@@ -241,6 +241,14 @@ export const usePhase = (p: Phase | null) => {
         return `${getRound(fixture?.id || "")?.name || "???"} - ${getFixtureDescription(fixture)}`
     }
 
+    const getScoreDescription = (fixture: Fixture) => {
+        if (fixture.scores.some(s => s.isBye)) {
+            return "W/O"
+        }
+
+        return fixture.scores.map(s => s.score).join("-")
+    }
+
     watch(phase, () => {
         clockable.value = phase.value
     })
@@ -294,7 +302,9 @@ export const usePhase = (p: Phase | null) => {
         getRound,
         getRoundWithIndex,
         getFixtureStatus,
+        getFixtureDescription,
         getFixtureHeader,
+        getScoreDescription,
         pauseClock,
         resumeClock,
         acknowledgeSwap,
