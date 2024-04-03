@@ -9,6 +9,7 @@ import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PlayOffsRequiredMessage from "../components/PlayOffsRequiredMessage.vue"
 import Podium from "../components/Podium.vue"
+import ResultsButtons from "../components/ResultsButtons.vue"
 import ResultsTable from "../components/ResultsTable.vue"
 import TiesBrokenMessage from "../components/TiesBrokenMessage.vue"
 import WinningsList from "../components/WinningsList.vue"
@@ -124,8 +125,6 @@ const nextPlayOff = computed(() => {
     return remaining.length > 0 ? remaining[0] : null
 })
 
-const hasPlayedOff = computed(() => !nextPlayOff.value)
-
 const alreadySaved = computed(() => {
     return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)
 })
@@ -144,12 +143,6 @@ const startPlayOff = () => {
         name: "play",
     })
 }
-
-const saveImageButtonText = computed(() => imageSaved.value ? "Downloading..." : "Download image")
-
-const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
-
-const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
 
 const saveResults = () => {
     const element = document.getElementById("results-container")!
@@ -258,28 +251,13 @@ const goToPastFlyers = () => {
         </template>
 
         <template #buttons>
-            <div v-if="!hasPlayedOff && requiresPlayOff">
-                <Button :label="playOffButtonText" @click="confirmStartPlayOff" />
-            </div>
-
-            <div v-else>
-                <div v-if="!isHistoric">
-                    <div class="p-fluid flex gap-2 mb-2">
-                        <Button :label="saveButtonText" :disabled="alreadySaved" @click="save" />
-
-                        <Button :label="saveImageButtonText" :disabled="imageSaved" @click="saveResults" />
-                    </div>
-
-                    <Button label="New flyer" severity="info" @click="confirmGoToSetup" />
-                </div>
-
-                <div v-else>
-                    <Button
-                        label="Back to past flyers"
-                        severity="info"
-                        @click="goToPastFlyers" />
-                </div>
-            </div>
+            <ResultsButtons
+                :imageSaved="imageSaved"
+                @confirmGoToSetup="confirmGoToSetup"
+                @confirmStartPlayOff="confirmStartPlayOff"
+                @goToPastFlyers="goToPastFlyers"
+                @save="save"
+                @saveResults="saveResults" />
         </template>
     </PageTemplate>
 </template>
