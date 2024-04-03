@@ -14,6 +14,7 @@ import { useFlyerStore } from "../stores/flyer"
 
 const props = defineProps<{
     isInProgress?: boolean
+    isPinned?: boolean
 }>()
 
 const { isNotSmallScreen } = useScreenSizes()
@@ -80,12 +81,12 @@ const getPlayOffIndex = (playerId: string) => {
                 </span>
             </template>
         </Column>
-        <Column v-if="props.isInProgress" field="played" header="P"></Column>
+        <Column v-if="props.isInProgress && !props.isPinned" field="played" header="P"></Column>
         <Column field="wins" header="W"></Column>
-        <Column v-if="settings.allowDraws" field="draws" header="D"></Column>
+        <Column v-if="settings.allowDraws && !props.isPinned" field="draws" header="D"></Column>
         <Column v-if="!isWinnerStaysOn" field="losses" header="L"></Column>
-        <Column v-if="!isWinnerStaysOn" field="diff" header="+/-"></Column>
-        <Column v-if="isNotSmallScreen || isWinnerStaysOn" field="runouts" header="R/O"></Column>
+        <Column v-if="!isWinnerStaysOn && !props.isPinned" field="diff" header="+/-"></Column>
+        <Column v-if="(isNotSmallScreen || isWinnerStaysOn) && !props.isPinned" field="runouts" header="R/O"></Column>
         <Column v-if="completedPlayOffs.length > 0" header="P/O">
             <template #body="slotData">
                 {{ getPlayOffRank(slotData.data.playerId) || "-" }}

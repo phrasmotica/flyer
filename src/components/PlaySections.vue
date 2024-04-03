@@ -115,7 +115,8 @@ const showSection = (section: Display) => {
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
             <ResultsTable v-if="showSection(Display.Standings)"
-                isInProgress />
+                isInProgress
+                :isPinned="uiStore.pinnedSection === Display.Standings" />
 
             <TablesSummary v-if="showSection(Display.Tables)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
