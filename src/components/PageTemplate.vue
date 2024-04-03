@@ -13,6 +13,8 @@ const slots = useSlots()
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <slot name="header" />
 
+            <!-- MEDIUM: allow switching to a layout where the sidebar is on the left -->
+
             <div v-if="slots.sidebar" class="grid m-0">
                 <div class="col-8 p-0 pr-2">
                     <slot name="content" />
