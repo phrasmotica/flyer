@@ -167,6 +167,8 @@ const goToPastFlyers = () => {
 <template>
     <PageTemplate>
         <template #content>
+            <!-- LOW: put this into the header template. Currently not possible because
+            the results-container div needs to contain the content as well... -->
             <div id="results-container">
                 <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                     <h1>{{ settings.name }}</h1>

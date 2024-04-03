@@ -81,13 +81,15 @@ const newFlyer = () => {
 
 <template>
     <PageTemplate>
-        <template #content>
+        <template #header>
             <div class="flex align-items-center justify-content-between border-bottom-1">
                 <h1>Past Flyers</h1>
 
                 <Button icon="pi pi-plus" severity="info" @click="newFlyer" />
             </div>
+        </template>
 
+        <template #content>
             <FlyerHistory />
 
             <ConfirmModal

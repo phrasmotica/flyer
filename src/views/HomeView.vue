@@ -85,13 +85,15 @@ const hideModal = () => {
 
 <template>
     <PageTemplate>
-        <template #content>
+        <template #header>
             <div class="flex align-items-center justify-content-between border-bottom-1 mb-2">
                 <h1>New Flyer</h1>
 
                 <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
             </div>
+        </template>
 
+        <template #content>
             <div v-if="!isSmallScreen" class="grid m-0">
                 <div class="col-8 p-0 pr-2">
                     <FlyerForm />

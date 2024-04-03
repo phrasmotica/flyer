@@ -210,7 +210,7 @@ onUnmounted(() => {
 
 <template>
     <PageTemplate>
-        <template #content>
+        <template #header>
             <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
                 <h1>{{ header }}</h1>
 
@@ -219,7 +219,9 @@ onUnmounted(() => {
                     <Clock v-else :elapsedMilliseconds="clockDisplay" :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
                 </div>
             </div>
+        </template>
 
+        <template #content>
             <!-- MEDIUM: make this layout into a slot/template in PageTemplate.vue -->
             <div v-if="!isSmallScreen" class="grid m-0">
                 <div class="col-8 p-0 pr-2">
