@@ -156,6 +156,8 @@ const goToPastFlyers = () => {
 
 <template>
     <PageTemplate>
+        <!-- MEDIUM: put ResultsButtons.vue into the sidebar -->
+
         <template #content>
             <!-- LOW: put this into the header template. Currently not possible because
             the results-container div needs to contain the content as well... -->
