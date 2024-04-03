@@ -327,14 +327,11 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const finish = (p: Phase) => {
-        const phase = flyer.value!.phases.find(x => x.id === p.id)
-        if (!phase) {
-            return false
-        }
-
+    const finish = (phase: Phase) => {
         if (!phase.finishTime) {
             phase.finishTime = Date.now()
+
+            addPhaseEvent(phase, `${phase.settings.name} was finished.`)
         }
 
         return true
@@ -389,6 +386,9 @@ export const useFlyerStore = defineStore("flyer", () => {
             fixtureBId,
             timestamp: Date.now(),
         })
+
+        // HIGH: change message to "Player A v Player B was prioritised in place of Player C v Player D."
+        addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`)
     }
 
     const getRandom = <T>(arr: T[]) => {
