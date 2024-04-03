@@ -7,10 +7,7 @@ import { usePhase } from "../composables/usePhase"
 import { useQueryParams } from "../composables/useQueryParams"
 
 import { useFlyerStore } from "../stores/flyer"
-
-const props = defineProps<{
-    isFixtures: boolean
-}>()
+import { useUiStore } from "../stores/ui"
 
 const emit = defineEmits<{
     autoComplete: []
@@ -21,6 +18,7 @@ const emit = defineEmits<{
 }>()
 
 const flyerStore = useFlyerStore()
+const uiStore = useUiStore()
 
 const {
     isDebug,
@@ -44,6 +42,8 @@ const {
     isHistoric,
 } = useQueryParams()
 
+const isFixtures = computed(() => uiStore.isFixtures)
+
 const generateNextRoundLabel = computed(() => {
     if (nextRoundToGenerate.value) {
         return "Generate " + nextRoundToGenerate.value.name
@@ -64,7 +64,7 @@ const finishButtonText = computed(() => {
 <template>
     <div class="p-fluid">
         <Button
-            v-if="isDebug && !isHistoric && props.isFixtures && remainingCount > 0"
+            v-if="isDebug && !isHistoric && isFixtures && remainingCount > 0"
             class="mb-2"
             label="Auto-complete"
             severity="help"

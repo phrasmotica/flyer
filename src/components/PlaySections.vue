@@ -11,16 +11,9 @@ import TablesSummary from "./TablesSummary.vue"
 import { useQueryParams } from "../composables/useQueryParams"
 
 import type { Fixture } from "../data/Fixture"
+import { PlayViewSection } from "../data/UiSettings"
 
 import { useUiStore } from "../stores/ui"
-
-enum Display {
-    Fixtures,
-    Tables,
-    Standings,
-    Info,
-    EventLog,
-}
 
 const props = defineProps<{
     overflow?: boolean
@@ -38,29 +31,27 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const display = ref(Display.Fixtures)
-
 const items = computed(() => {
     const defaultItems = <MenuItem[]>[
         {
             icon: 'pi pi-calendar',
-            command: _ => display.value = Display.Fixtures,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Fixtures,
         },
         {
             icon: 'pi pi-chart-bar',
-            command: _ => display.value = Display.Standings,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Standings,
         },
         {
             icon: 'pi pi-building',
-            command: _ => display.value = Display.Tables,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Tables,
         },
         {
             icon: 'pi pi-info-circle',
-            command: _ => display.value = Display.Info,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.Info,
         },
         {
             icon: 'pi pi-receipt',
-            command: _ => display.value = Display.EventLog,
+            command: _ => uiStore.settings.currentSection = PlayViewSection.EventLog,
         },
     ]
 
@@ -72,31 +63,34 @@ const items = computed(() => {
 })
 
 const pinButtonLabel = computed(() => {
-    if (uiStore.pinnedSection === display.value) {
+    if (uiStore.pinnedSection === uiStore.currentSection) {
         return "Unpin this section"
     }
 
     return "Pin this section"
 })
 
-const canPin = computed(() => display.value !== Display.Fixtures)
+const canPin = computed(() => uiStore.currentSection !== PlayViewSection.Fixtures)
 
 const pinSection = () => {
-    uiStore.togglePinnedSection(display.value)
+    uiStore.togglePinnedSection(uiStore.currentSection)
 }
 
-const showSection = (section: Display) => {
+const showSection = (section: PlayViewSection) => {
     if (props.pinnedOnly) {
         return uiStore.pinnedSection === section
     }
 
-    return display.value === section
+    return uiStore.currentSection === section
 }
 </script>
 
 <template>
     <div>
-        <TabMenu v-if="!props.pinnedOnly" class="mb-2" :model="items" />
+        <TabMenu v-if="!props.pinnedOnly"
+            class="mb-2"
+            :model="items"
+            v-model:activeIndex="uiStore.currentSection" />
 
         <div v-if="props.pinButton && canPin" class="p-fluid pb-2 border-bottom-1 mb-1">
             <Button
@@ -105,25 +99,25 @@ const showSection = (section: Display) => {
                 @click="pinSection" />
         </div>
 
-        <p v-if="uiStore.pinnedSection === display"
+        <p v-if="!props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
             class="m-0 text-center text-sm font-italic text-color-secondary">
             This section is pinned
         </p>
 
         <div v-else :class="props.overflow && 'overflow'">
-            <FixtureList v-if="showSection(Display.Fixtures)"
+            <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <ResultsTable v-if="showSection(Display.Standings)"
+            <ResultsTable v-if="showSection(PlayViewSection.Standings)"
                 isInProgress
-                :isPinned="uiStore.pinnedSection === Display.Standings" />
+                :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
 
-            <TablesSummary v-if="showSection(Display.Tables)"
+            <TablesSummary v-if="showSection(PlayViewSection.Tables)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <PhaseInfoSection v-if="showSection(Display.Info)" />
+            <PhaseInfoSection v-if="showSection(PlayViewSection.Info)" />
 
-            <PhaseEventLogSection v-if="showSection(Display.EventLog)" />
+            <PhaseEventLogSection v-if="showSection(PlayViewSection.EventLog)" />
         </div>
     </div>
 </template>

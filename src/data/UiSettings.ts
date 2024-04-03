@@ -1,3 +1,12 @@
 export interface UiSettings {
-    pinnedSection: number | null // TODO: use an enum instead of number
+    currentSection: PlayViewSection
+    pinnedSection: PlayViewSection | null
+}
+
+export enum PlayViewSection {
+    Fixtures,
+    Standings,
+    Tables,
+    Info,
+    EventLog,
 }

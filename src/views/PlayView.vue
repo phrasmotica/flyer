@@ -23,13 +23,6 @@ import type { Fixture } from "../data/Fixture"
 import { useFlyerStore } from "../stores/flyer"
 import { useUiStore } from "../stores/ui"
 
-enum Display {
-    Fixtures,
-    Tables,
-    Standings,
-    Info,
-}
-
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
@@ -77,8 +70,6 @@ const {
 const {
     isSmallScreen,
 } = useScreenSizes()
-
-const display = ref(Display.Fixtures)
 
 const [showPrice, toggleShowPrice] = useToggle()
 const showFinishModal = ref(false)
@@ -226,7 +217,6 @@ onUnmounted(() => {
                 <div class="col-4 p-0 pl-2 border-left-1">
                     <div class="mt-1">
                         <PlayButtons
-                            :isFixtures="display === Display.Fixtures"
                             @autoComplete="autoComplete"
                             @confirmFinish="confirmFinish"
                             @generateNextRound="generateNextRound"
@@ -278,7 +268,6 @@ onUnmounted(() => {
 
         <template v-if="isSmallScreen" #buttons>
             <PlayButtons
-                :isFixtures="display === Display.Fixtures"
                 @autoComplete="autoComplete"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
