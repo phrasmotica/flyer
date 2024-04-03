@@ -18,6 +18,12 @@ export interface Phase {
 }
 
 export interface PhaseEvent {
-    timestamp: number
+    level: PhaseEventLevel
     message: string
+    timestamp: number
+}
+
+export enum PhaseEventLevel {
+    Default = 0,
+    Internal = 100,
 }

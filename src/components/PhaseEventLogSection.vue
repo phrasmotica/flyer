@@ -15,13 +15,13 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    sortedEventLog,
+    sortedDefaultEventLog,
 } = useEventLog(currentPhase.value)
 </script>
 
 <template>
     <div>
-        <div v-for="e, i of sortedEventLog" :class="i > 0 && 'mt-1 border-top-1 pt-1'">
+        <div v-for="e, i of sortedDefaultEventLog" :class="i > 0 && 'mt-1 border-top-1 pt-1'">
             <span class="text-sm">
                 {{ d(e.timestamp, "long") }}: {{ e.message }}
             </span>

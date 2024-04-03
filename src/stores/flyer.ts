@@ -9,7 +9,7 @@ import type { Flyer } from "../data/Flyer"
 import type { FlyerSettings } from "../data/FlyerSettings"
 import type { IScheduler } from "../data/IScheduler"
 import { KnockoutScheduler } from "../data/KnockoutScheduler"
-import type { Phase, PhaseEvent } from "../data/Phase"
+import { type Phase, type PhaseEvent, PhaseEventLevel } from "../data/Phase"
 import { createPlayOffSettings, Format } from "../data/PhaseSettings"
 import type { Player } from "../data/Player"
 import type { PlayOff } from "../data/PlayOff"
@@ -132,14 +132,16 @@ export const useFlyerStore = defineStore("flyer", () => {
     const createEventLog = (phaseName: string): PhaseEvent[] => {
         return [
             {
+                level: PhaseEventLevel.Default,
                 message: `${phaseName} has started.`,
                 timestamp: Date.now(),
             },
         ]
     }
 
-    const addPhaseEvent = (phase: Phase, message: string) => {
+    const addPhaseEvent = (phase: Phase, message: string, level = PhaseEventLevel.Default) => {
         phase.eventLog.push({
+            level,
             message,
             timestamp: Date.now(),
         })
@@ -171,7 +173,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         return ids
     }
 
-    const startFixture = (phase: Phase, id: string, tableId: string, breakerId: string, addEvent: boolean) => {
+    const startFixture = (phase: Phase, id: string, tableId: string, breakerId: string, addEvent = true) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === id)
             if (idx >= 0) {
@@ -180,7 +182,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                 r.fixtures[idx].breakerId = breakerId
 
                 if (addEvent) {
-                    addPhaseEvent(phase, `Fixture ${id} was started.`)
+                    addPhaseEvent(phase, `Fixture ${id} was started.`, PhaseEventLevel.Internal)
                 }
             }
         }
@@ -200,7 +202,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean, addEvent: boolean) => {
+    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean, addEvent = true) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
@@ -210,7 +212,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                     r.fixtures[idx].finishTime = Date.now()
 
                     if (addEvent) {
-                        addPhaseEvent(phase, `Fixture ${fixtureId} was finished.`)
+                        addPhaseEvent(phase, `Fixture ${fixtureId} was finished.`, PhaseEventLevel.Internal)
                     }
 
                     if (winsRequiredReached(phase)) {
@@ -361,12 +363,10 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
         updateScores(phase, fixture.id, newScores, true, false)
 
-        if (addEvent) {
-            addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`)
-        }
+        addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
     }
 
-    const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number, addEvent: boolean) => {
+    const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
         if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
             return false
         }
@@ -387,9 +387,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             timestamp: Date.now(),
         })
 
-        if (addEvent) {
-            addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`)
-        }
+        addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`, PhaseEventLevel.Internal)
 
         return true
     }

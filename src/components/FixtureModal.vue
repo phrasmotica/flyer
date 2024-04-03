@@ -120,7 +120,7 @@ const startFixture = () => {
         return
     }
 
-    flyerStore.startFixture(currentPhase.value, fixture.value.id, tableId.value, breakerId.value, false)
+    flyerStore.startFixture(currentPhase.value, fixture.value.id, tableId.value, breakerId.value)
 
     const message = phaseEvents.fixtureStarted(fixture.value)
     flyerStore.addPhaseEvent(currentPhase.value, message)
@@ -142,7 +142,7 @@ const updateScores = (finish: boolean) => {
         isBye: false,
     }))
 
-    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish, false)
+    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
 
     if (finish) {
         const message = phaseEvents.fixtureFinished(fixture.value)
@@ -159,7 +159,7 @@ const updateScores = (finish: boolean) => {
                 // if necessary, swap the next fixture in the current round (or
                 // the first fixture in the next round) with the first upcoming fixture
                 // where all players are free
-                const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB, false)
+                const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
                 if (didSwap) {
                     flyerStore.addPhaseEvent(currentPhase.value, message)
                 }

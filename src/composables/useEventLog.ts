@@ -1,7 +1,7 @@
 import { computed, ref } from "vue"
-import { useSorted } from "@vueuse/core"
+import { useArrayFilter, useSorted } from "@vueuse/core"
 
-import type { Phase, PhaseEvent } from "../data/Phase"
+import { PhaseEventLevel, type Phase, type PhaseEvent } from "../data/Phase"
 
 export const useEventLog = (p: Phase | null) => {
     const phase = ref(p)
@@ -13,9 +13,11 @@ export const useEventLog = (p: Phase | null) => {
         return f.timestamp - e.timestamp
     }
 
-    const sortedEventLog = useSorted(eventLog, sortPhaseEvents)
+    const defaultEventLog = useArrayFilter(eventLog, e => e.level <= PhaseEventLevel.Default)
+
+    const sortedDefaultEventLog = useSorted(defaultEventLog, sortPhaseEvents)
 
     return {
-        sortedEventLog,
+        sortedDefaultEventLog,
     }
 }
