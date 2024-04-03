@@ -52,7 +52,6 @@ const {
     nextFixture,
     nextFreeFixture,
     getRoundWithIndex,
-    getFixtureDescription,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
@@ -69,6 +68,7 @@ const {
 
 const {
     queryParams,
+    isHistoric,
 } = useQueryParams()
 
 const {
@@ -239,7 +239,7 @@ onUnmounted(() => {
                     @showAbandonModal="() => showAbandonModal = true" />
             </div>
 
-            <div class="border-top-1 pt-2">
+            <div v-if="!isHistoric" class="border-top-1 pt-2">
                 <PlaySections v-if="uiStore.pinnedSection"
                     overflow
                     pinnedOnly />
