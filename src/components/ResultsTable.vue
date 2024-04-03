@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import IncompleteResultsMessage from "./IncompleteResultsMessage.vue"
+
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
@@ -88,9 +90,9 @@ const getPlayOffIndex = (playerId: string) => {
     </DataTable>
 
     <!-- if it was finished early -->
-    <h4 v-if="!props.isInProgress && (incompleteCount > 0 && !isWinnerStaysOn)">
-        <em>{{ incompleteCount }} player(s) have incomplete results!</em>
-    </h4>
+    <div v-if="!props.isInProgress && (incompleteCount > 0 && !isWinnerStaysOn)">
+        <IncompleteResultsMessage :count="incompleteCount" />
+    </div>
 
     <!-- if a play-off needs to happen -->
     <div v-if="!props.isInProgress && requiresPlayOff && !allPlayOffsComplete && playOffs.length > 0" class="mt-1">
