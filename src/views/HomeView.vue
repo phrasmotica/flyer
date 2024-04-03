@@ -17,11 +17,13 @@ import { useTweaks } from "../composables/useTweaks"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
+import { useUiStore } from "../stores/ui"
 
 const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
+const uiStore = useUiStore()
 
 const {
     isSmallScreen,
@@ -89,7 +91,11 @@ const hideModal = () => {
             <div class="flex align-items-center justify-content-between border-bottom-1 mb-2">
                 <h1>New Flyer</h1>
 
-                <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
+                <div class="flex gap-1">
+                    <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
+
+                    <Button icon="pi pi-arrow-right-arrow-left" severity="help" @click="uiStore.toggleSidebarPosition" />
+                </div>
             </div>
         </template>
 

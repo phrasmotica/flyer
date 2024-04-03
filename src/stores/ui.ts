@@ -23,6 +23,16 @@ export const useUiStore = defineStore("ui", () => {
     const isSidebarLeft = computed(() => sidebarPosition.value === SidebarPosition.Left)
     const isFixtures = computed(() => currentSection.value === PlayViewSection.Fixtures)
 
+    const toggleSidebarPosition = () => {
+        // MEDIUM: do this more generally, maybe using useCycleList() from @vueuse?
+        if (sidebarPosition.value === SidebarPosition.Right) {
+            settings.value.sidebarPosition = SidebarPosition.Left
+        }
+        else {
+            settings.value.sidebarPosition = SidebarPosition.Right
+        }
+    }
+
     const togglePinnedSection = (section: PlayViewSection) => {
         if (pinnedSection.value !== section) {
             settings.value.pinnedSection = section
@@ -43,6 +53,7 @@ export const useUiStore = defineStore("ui", () => {
         isSidebarLeft,
         isFixtures,
 
+        toggleSidebarPosition,
         togglePinnedSection,
     }
 })
