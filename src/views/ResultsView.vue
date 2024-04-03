@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
-import html2canvas from "html2canvas"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/ConfirmModal.vue"
@@ -15,6 +14,7 @@ import TiesBrokenMessage from "../components/TiesBrokenMessage.vue"
 import WinningsList from "../components/WinningsList.vue"
 import WinningsSummary from "../components/WinningsSummary.vue"
 
+import { useDownloadImage } from "../composables/useDownloadImage"
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
@@ -29,6 +29,10 @@ const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
+
+const {
+    saveElement,
+} = useDownloadImage()
 
 const {
     flyer,
@@ -144,35 +148,22 @@ const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Sav
 
 const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
 
-const downloadImage = (blob: string, fileName: string) => {
-    const fakeLink = document.createElement("a")
-
-    fakeLink.download = fileName
-    fakeLink.href = blob
-
-    document.body.appendChild(fakeLink)
-    fakeLink.click()
-    document.body.removeChild(fakeLink)
-
-    fakeLink.remove()
-}
-
 const saveResults = () => {
     const element = document.getElementById("results-container")!
 
-    html2canvas(element, {
-        onclone: (_, element) => {
+    saveElement({
+        element,
+        baseName: settings.value.name,
+        onClone(_, element) {
             element.style.padding = "1rem"
-        }
-    })
-    .then(canvas => canvas.toDataURL("image/png", 1.0))
-    .then(blob => downloadImage(blob, settings.value.name + "-" + Date.now()))
-    .then(() => {
-        imageSaved.value = true
+        },
+        success() {
+            imageSaved.value = true
 
-        setTimeout(() => {
-            imageSaved.value = false
-        }, 2000)
+            setTimeout(() => {
+                imageSaved.value = false
+            }, 2000)
+        }
     })
 }
 
