@@ -10,6 +10,7 @@ import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
 const props = defineProps<{
     imageSaved: boolean
+    sidebar?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -64,10 +65,18 @@ const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name 
 
         <div v-else>
             <div v-if="!isHistoric">
-                <div class="p-fluid flex gap-2 mb-2">
-                    <Button :label="saveButtonText" :disabled="alreadySaved" @click="emit('save')" />
+                <div class="p-fluid" :class="!props.sidebar && 'flex gap-2'">
+                    <Button
+                        class="mb-2"
+                        :label="saveButtonText"
+                        :disabled="alreadySaved"
+                        @click="emit('save')" />
 
-                    <Button :label="saveImageButtonText" :disabled="imageSaved" @click="emit('saveResults')" />
+                    <Button
+                        class="mb-2"
+                        :label="saveImageButtonText"
+                        :disabled="imageSaved"
+                        @click="emit('saveResults')" />
                 </div>
 
                 <Button label="New flyer" severity="info" @click="emit('confirmGoToSetup')" />

@@ -18,6 +18,7 @@ import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { usePodium } from "../composables/usePodium"
 import { useQueryParams } from "../composables/useQueryParams"
+import { useScreenSizes } from "../composables/useScreenSizes"
 import { useStandings } from "../composables/useStandings"
 import { useTimedRef } from "../composables/useTimedRef"
 
@@ -63,6 +64,10 @@ const {
 const {
     isHistoric,
 } = useQueryParams()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const showGoToSetupModal = ref(false)
 const showStartPlayOffModal = ref(false)
@@ -156,8 +161,6 @@ const goToPastFlyers = () => {
 
 <template>
     <PageTemplate>
-        <!-- MEDIUM: put ResultsButtons.vue into the sidebar -->
-
         <template #content>
             <!-- LOW: put this into the header template. Currently not possible because
             the results-container div needs to contain the content as well... -->
@@ -190,6 +193,17 @@ const goToPastFlyers = () => {
             </div>
         </template>
 
+        <template v-if="!isSmallScreen" #sidebar>
+            <ResultsButtons
+                sidebar
+                :imageSaved="imageSaved"
+                @confirmGoToSetup="confirmGoToSetup"
+                @confirmStartPlayOff="confirmStartPlayOff"
+                @goToPastFlyers="goToPastFlyers"
+                @save="save"
+                @saveResults="saveResults" />
+        </template>
+
         <template #modals>
             <ConfirmModal
                 :visible="showGoToSetupModal"
@@ -212,7 +226,7 @@ const goToPastFlyers = () => {
                 @hide="hideStartPlayOffModal" />
         </template>
 
-        <template #buttons>
+        <template v-if="isSmallScreen" #buttons>
             <ResultsButtons
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
