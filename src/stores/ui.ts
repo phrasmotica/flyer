@@ -14,10 +14,13 @@ const defaultSettings: UiSettings = {
 export const useUiStore = defineStore("ui", () => {
     const settings = useStorage("ui", defaultSettings)
 
+    const sidebarPosition = computed(() => settings.value.sidebarPosition)
     const flyerFormSection = computed(() => settings.value.flyerFormSection)
     const currentSection = computed(() => settings.value.currentSection)
     const pinnedSection = computed(() => settings.value.pinnedSection)
 
+    const isSidebarRight = computed(() => sidebarPosition.value === SidebarPosition.Right)
+    const isSidebarLeft = computed(() => sidebarPosition.value === SidebarPosition.Left)
     const isFixtures = computed(() => currentSection.value === PlayViewSection.Fixtures)
 
     const togglePinnedSection = (section: PlayViewSection) => {
@@ -35,6 +38,9 @@ export const useUiStore = defineStore("ui", () => {
         flyerFormSection,
         currentSection,
         pinnedSection,
+
+        isSidebarRight,
+        isSidebarLeft,
         isFixtures,
 
         togglePinnedSection,

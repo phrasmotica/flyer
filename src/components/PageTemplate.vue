@@ -19,13 +19,25 @@ const slots = useSlots()
 
             <!-- MEDIUM: allow switching to a layout where the sidebar is on the left -->
 
-            <div v-if="slots.sidebar" class="grid m-0">
-                <div class="col-8 p-0 pr-2">
-                    <slot name="content" />
+            <div v-if="slots.sidebar">
+                <div v-if="uiStore.isSidebarRight" class="grid m-0">
+                    <div class="col-8 p-0 pr-2">
+                        <slot name="content" />
+                    </div>
+
+                    <div class="col-4 p-0 pl-2 border-left-1">
+                        <slot name="sidebar" />
+                    </div>
                 </div>
 
-                <div class="col-4 p-0 pl-2 border-left-1">
-                    <slot name="sidebar" />
+                <div v-if="uiStore.isSidebarLeft" class="grid m-0">
+                    <div class="col-4 p-0 pr-2 border-right-1">
+                        <slot name="sidebar" />
+                    </div>
+
+                    <div class="col-8 p-0 pl-2">
+                        <slot name="content" />
+                    </div>
                 </div>
             </div>
             <div v-else>
