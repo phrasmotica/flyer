@@ -149,7 +149,7 @@ const save = () => {
             the results-container div needs to contain the content as well... -->
             <div id="results-container">
                 <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-2">
-                    <h1>{{ settings.name }}</h1>
+                    <h1>{{ settings.name }} - Results</h1>
 
                     <Clock
                         :elapsedMilliseconds="durationMilliseconds || 0"
