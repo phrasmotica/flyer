@@ -58,7 +58,6 @@ const isSelected = (f: Flyer) => flyer.value?.id === f.id
     </div>
 
     <div v-else>
-        <!-- MEDIUM: use a Message here -->
         <Message severity="info" :closable="false">
             No past flyers!
         </Message>

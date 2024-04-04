@@ -24,7 +24,7 @@ export const useUiStore = defineStore("ui", () => {
     const isFixtures = computed(() => currentSection.value === PlayViewSection.Fixtures)
 
     const toggleSidebarPosition = () => {
-        // MEDIUM: do this more generally, maybe using useCycleList() from @vueuse?
+        // MEDIUM: do this more generally
         if (sidebarPosition.value === SidebarPosition.Right) {
             settings.value.sidebarPosition = SidebarPosition.Left
         }
