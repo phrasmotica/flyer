@@ -73,11 +73,3 @@ a,
     font-size: unset!important;
   }
 }
-
-@media (prefers-color-scheme: dark) {
-  .p-button.p-button-secondary, .p-button-group.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button {
-    color: #f1f5f9;
-    background-color: #475569!important;
-    border-color: #475569!important;
-  }
-}

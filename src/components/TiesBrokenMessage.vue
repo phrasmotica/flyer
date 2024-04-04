@@ -27,7 +27,6 @@ const {
 </script>
 
 <template>
-    <!-- MEDIUM: restore dark mode to this message -->
     <Message severity="info" :closable="false">
         <p v-for="_, i in playOffs" class="m-0">
             <em>

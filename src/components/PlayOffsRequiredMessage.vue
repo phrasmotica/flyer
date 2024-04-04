@@ -11,7 +11,6 @@ const {
 </script>
 
 <template>
-    <!-- MEDIUM: restore dark mode to this message -->
     <Message severity="info" :closable="false">
         <p v-for="p, i in playOffs.filter(x => !phaseIsComplete(x.id))" class="m-0">
             <em>

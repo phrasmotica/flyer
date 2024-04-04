@@ -1,5 +1,24 @@
 <script setup lang="ts">
+import { watch } from "vue"
 import { RouterView } from 'vue-router'
+import { useDark } from "@vueuse/core"
+import { usePrimeVue } from 'primevue/config'
+
+const isDark = useDark()
+
+const primeVue = usePrimeVue()
+
+const lightTheme = "aura-light-green"
+const darkTheme = "aura-dark-green"
+
+watch(isDark, () => {
+    if (isDark.value) {
+        primeVue.changeTheme(lightTheme, darkTheme, 'theme-link', () => {})
+    }
+    else {
+        primeVue.changeTheme(darkTheme, lightTheme, 'theme-link', () => {})
+    }
+})
 </script>
 
 <template>
