@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { useRouter } from "vue-router"
+import { useToggle } from "@vueuse/core"
 
 import Clock from "../components/Clock.vue"
 import ConfirmModal from "../components/modals/ConfirmModal.vue"
@@ -69,8 +70,8 @@ const {
     isSmallScreen,
 } = useScreenSizes()
 
-const showGoToSetupModal = ref(false)
-const showStartPlayOffModal = ref(false)
+const [showGoToSetupModal, setShowGoToSetupModal] = useToggle()
+const [showStartPlayOffModal, setShowStartPlayOffModal] = useToggle()
 
 const {
     value: imageSaved,
@@ -81,22 +82,18 @@ const confirmGoToSetup = () => {
         goToSetup()
     }
     else {
-        showGoToSetupModal.value = true
+        setShowGoToSetupModal(true)
     }
 }
 
 const goToSetup = () => {
     flyerStore.clear()
 
-    hideGoToSetupModal()
+    setShowGoToSetupModal(false)
 
     router.push({
         name: "setup",
     })
-}
-
-const confirmStartPlayOff = () => {
-    showStartPlayOffModal.value = true
 }
 
 const nextPlayOff = computed(() => {
@@ -116,7 +113,7 @@ const startPlayOff = () => {
 
     flyerStore.addPlayOff(nextPlayOff.value, mainPhase.value)
 
-    hideStartPlayOffModal()
+    setShowStartPlayOffModal(false)
 
     router.push({
         name: "play",
@@ -142,14 +139,6 @@ const save = () => {
     if (flyerStore.flyer && !alreadySaved.value) {
         flyerHistoryStore.add(flyerStore.flyer)
     }
-}
-
-const hideGoToSetupModal = () => {
-    showGoToSetupModal.value = false
-}
-
-const hideStartPlayOffModal = () => {
-    showStartPlayOffModal.value = false
 }
 
 const goToPastFlyers = () => {
@@ -198,7 +187,7 @@ const goToPastFlyers = () => {
                 sidebar
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
-                @confirmStartPlayOff="confirmStartPlayOff"
+                @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @goToPastFlyers="goToPastFlyers"
                 @save="save"
                 @saveResults="saveResults" />
@@ -207,32 +196,32 @@ const goToPastFlyers = () => {
         <template #modals>
             <!-- TODO: create a component for this -->
             <ConfirmModal
-                :visible="showGoToSetupModal"
+                v-model:visible="showGoToSetupModal"
                 header="New flyer"
                 message="Are you sure you want to start a new flyer? The current one has not been saved!"
                 confirmLabel="Yes"
                 :confirmDisabled="false"
                 cancelLabel="No"
                 @confirm="goToSetup"
-                @hide="hideGoToSetupModal" />
+                @hide="() => setShowGoToSetupModal(false)" />
 
             <!-- TODO: create a component for this -->
             <ConfirmModal
-                :visible="showStartPlayOffModal"
+                v-model:visible="showStartPlayOffModal"
                 header="Start Play-Off"
                 :message="`Are you sure you want to start the ${nextPlayOff?.name || '(UNKNOWN)'}?`"
                 confirmLabel="Yes"
                 :confirmDisabled="false"
                 cancelLabel="No"
                 @confirm="startPlayOff"
-                @hide="hideStartPlayOffModal" />
+                @hide="() => setShowStartPlayOffModal(false)" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>
             <ResultsButtons
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
-                @confirmStartPlayOff="confirmStartPlayOff"
+                @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @goToPastFlyers="goToPastFlyers"
                 @save="save"
                 @saveResults="saveResults" />

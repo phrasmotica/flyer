@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { useRouter } from "vue-router"
+import { useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./modals/ConfirmModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
@@ -22,7 +23,7 @@ const {
     mainPhase,
 } = useFlyer(null)
 
-const showDeleteModal = ref(false)
+const [showDeleteModal, setShowDeleteModal] = useToggle()
 
 const setSelectedFlyer = (f: Flyer) => {
     if (flyer.value?.id !== f.id) {
@@ -44,10 +45,6 @@ const viewFlyer = (f: Flyer) => {
     })
 }
 
-const confirmDelete = () => {
-    showDeleteModal.value = true
-}
-
 const deleteMessage = computed(() => {
     if (!mainPhase.value) {
         return ""
@@ -60,12 +57,8 @@ const deleteSelectedFlyer = () => {
     if (flyer.value) {
         flyerHistoryStore.deleteFlyer(flyer.value)
 
-        hideDeleteModal()
+        setShowDeleteModal(false)
     }
-}
-
-const hideDeleteModal = () => {
-    showDeleteModal.value = false
 }
 
 const isSelected = (f: Flyer) => flyer.value?.id === f.id
@@ -79,17 +72,17 @@ const isSelected = (f: Flyer) => flyer.value?.id === f.id
             :showDetails="isSelected(f)"
             @setSelected="() => setSelectedFlyer(f)"
             @view="() => viewFlyer(f)"
-            @confirmDelete="confirmDelete" />
+            @confirmDelete="() => setShowDeleteModal(true)" />
 
         <ConfirmModal
-            :visible="showDeleteModal"
+            v-model:visible="showDeleteModal"
             header="Delete flyer"
             :message="deleteMessage"
             confirmLabel="Yes"
             :confirmDisabled="false"
             cancelLabel="No"
             @confirm="deleteSelectedFlyer"
-            @hide="hideDeleteModal" />
+            @hide="() => setShowDeleteModal(false)" />
     </div>
 
     <div v-else>

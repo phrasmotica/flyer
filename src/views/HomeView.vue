@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useRouter } from "vue-router"
-import { useFocus } from "@vueuse/core"
+import { useFocus, useToggle } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
 import FlyerForm from "../components/FlyerForm.vue"
@@ -34,7 +34,7 @@ const {
 } = useSettings(settingsStore.settings)
 
 const nameInput = ref()
-const showModal = ref(false)
+const [showModal, setShowModal] = useToggle()
 
 useFocus(nameInput, { initialValue: true })
 
@@ -57,25 +57,17 @@ const start = () => {
         return
     }
 
-    hideModal()
+    setShowModal(false)
 
     router.push({
         name: "play",
     })
 }
 
-const confirmStart = () => {
-    showModal.value = true
-}
-
 const viewPastFlyers = () => {
     router.push({
         name: "history",
     })
-}
-
-const hideModal = () => {
-    showModal.value = false
 }
 </script>
 
@@ -104,19 +96,22 @@ const hideModal = () => {
         </template>
 
         <template v-if="!isSmallScreen" #sidebar>
-            <FlyerSummary @confirmStart="confirmStart" />
+            <FlyerSummary
+                @confirmStart="() => setShowModal(true)" />
         </template>
 
         <template #modals>
             <StartFlyerModal
                 v-model:visible="showModal"
                 @confirm="start"
-                @hide="hideModal" />
+                @hide="() => setShowModal(false)" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>
             <FlyerFormSection hidden noUnderline header="Summary">
-                <FlyerSummary overflow @confirmStart="confirmStart" />
+                <FlyerSummary
+                    overflow
+                    @confirmStart="() => setShowModal(true)" />
             </FlyerFormSection>
         </template>
     </PageTemplate>

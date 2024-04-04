@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./ConfirmModal.vue"
 import LabelledCheckbox from "../LabelledCheckbox.vue"
@@ -26,12 +26,12 @@ const {
     settings,
 } = useSettings(settingsStore.settings)
 
-const entryFeesPaid = ref(false)
+const [entryFeesPaid, setEntryFeesPaid] = useToggle()
 
 const hide = () => {
     emit("hide")
 
-    entryFeesPaid.value = false
+    setEntryFeesPaid(false)
 }
 </script>
 

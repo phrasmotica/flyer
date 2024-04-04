@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
+import { useToggle } from "@vueuse/core"
 
 import AbandonFlyerModal from "../components/modals/AbandonFlyerModal.vue"
 import FinishFlyerModal from "../components/modals/FinishFlyerModal.vue"
@@ -68,11 +69,12 @@ const {
     isSmallScreen,
 } = useScreenSizes()
 
-const showFinishModal = ref(false)
-const showAbandonModal = ref(false)
+// HIGH: try to put modal visibility state inside ConfirmModal...
+const [showFixtureModal, setShowFixtureModal] = useToggle()
+const [showFinishModal, setShowFinishModal] = useToggle()
+const [showAbandonModal, setShowAbandonModal] = useToggle()
 
 const selectedFixture = ref<Fixture>()
-const showFixtureModal = ref(false)
 
 const header = computed(() => {
     if (currentPlayOffPhase.value) {
@@ -98,7 +100,7 @@ const confirmFinish = () => {
         finish()
     }
     else {
-        showFinishModal.value = true
+        setShowFinishModal(true)
     }
 }
 
@@ -112,7 +114,7 @@ const finish = () => {
         throw "Failed to finish phase!"
     }
 
-    hideFinishModal()
+    setShowFinishModal(false)
 
     router.push({
         name: "results",
@@ -120,21 +122,15 @@ const finish = () => {
     })
 }
 
-const hideFinishModal = () => {
-    showFinishModal.value = false
-}
-
 const abandon = () => {
     flyerStore.clear()
 
-    hideAbandonModal()
+    setShowAbandonModal(false)
 
     router.push({
         name: "setup",
     })
 }
-
-const hideAbandonModal = () => showAbandonModal.value = false
 
 const goToPastFlyers = () => {
     router.push({
@@ -197,11 +193,11 @@ const autoCompleteRemaining = () => {
 
 const selectForRecording = (f: Fixture) => {
     selectedFixture.value = f
-    showFixtureModal.value = true
+    setShowFixtureModal(true)
 }
 
 const hideFixtureModal = () => {
-    showFixtureModal.value = false
+    setShowFixtureModal(false)
 }
 </script>
 
@@ -230,7 +226,7 @@ const hideFixtureModal = () => {
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
                 @goToPastFlyers="goToPastFlyers"
-                @showAbandonModal="() => showAbandonModal = true" />
+                @showAbandonModal="() => setShowAbandonModal(true)" />
 
             <div v-if="!isHistoric" class="border-top-1 pt-2">
                 <PlaySections v-if="uiStore.pinnedSection"
@@ -252,12 +248,12 @@ const hideFixtureModal = () => {
             <FinishFlyerModal
                 v-model:visible="showFinishModal"
                 @confirm="finish"
-                @hide="hideFinishModal" />
+                @hide="() => setShowFinishModal(false)" />
 
             <AbandonFlyerModal
                 v-model:visible="showAbandonModal"
                 @confirm="abandon"
-                @hide="hideAbandonModal" />
+                @hide="() => setShowAbandonModal(false)" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>
@@ -266,7 +262,7 @@ const hideFixtureModal = () => {
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
                 @goToPastFlyers="goToPastFlyers"
-                @showAbandonModal="() => showAbandonModal = true" />
+                @showAbandonModal="() => setShowAbandonModal(true)" />
         </template>
     </PageTemplate>
 </template>
