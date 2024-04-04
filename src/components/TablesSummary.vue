@@ -2,9 +2,8 @@
 import { computed, ref } from "vue"
 import { useToggle } from "@vueuse/core"
 
-import TableInput from "./TableInput.vue"
+import AddTableModal from "./modals/AddTableModal.vue"
 import TableSummary from "./TableSummary.vue"
-import ConfirmModal from "./modals/ConfirmModal.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -36,13 +35,7 @@ const {
 
 const maxTablesReached = computed(() => tables.value.length >= maxTableCount.value)
 
-const canAdd = computed(() => !!newTableName.value)
-
 const addNewTable = () => {
-    if (!canAdd.value) {
-        return
-    }
-
     flyerStore.addTable(newTableName.value, newTableCost.value)
 
     setShowAddTableModal(false)
@@ -68,19 +61,10 @@ const addNewTable = () => {
         </div>
     </div>
 
-    <ConfirmModal
-        :visible="showAddTableModal"
-        header="Add new table"
-        message=""
-        confirmLabel="Add"
-        :confirmDisabled="!canAdd"
-        cancelLabel="Cancel"
+    <AddTableModal
+        v-model:visible="showAddTableModal"
         @confirm="addNewTable"
-        @hide="() => setShowAddTableModal(false)">
-        <TableInput
-            v-model:name="newTableName"
-            v-model:cost="newTableCost" />
-    </ConfirmModal>
+        @hide="() => setShowAddTableModal(false)" />
 </template>
 
 <style scoped>

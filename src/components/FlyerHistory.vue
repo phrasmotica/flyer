@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { ref } from "vue"
 import { useToggle } from "@vueuse/core"
 
-import ConfirmModal from "./modals/ConfirmModal.vue"
+import DeleteFlyerModal from "./modals/DeleteFlyerModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
-
-import { useFlyer } from "../composables/useFlyer"
 
 import type { Flyer } from "../data/Flyer"
 
@@ -17,10 +15,7 @@ const emit = defineEmits<{
 
 const flyerHistoryStore = useFlyerHistoryStore()
 
-const {
-    flyer,
-    mainPhase,
-} = useFlyer(null)
+const flyer = ref<Flyer | null>(null)
 
 const [showDeleteModal, setShowDeleteModal] = useToggle()
 
@@ -32,14 +27,6 @@ const setSelectedFlyer = (f: Flyer) => {
         flyer.value = null
     }
 }
-
-const deleteMessage = computed(() => {
-    if (!mainPhase.value) {
-        return ""
-    }
-
-    return `Are you sure you want to delete ${mainPhase.value.settings.name}? This cannot be undone!`
-})
 
 const deleteSelectedFlyer = () => {
     if (flyer.value) {
@@ -62,18 +49,15 @@ const isSelected = (f: Flyer) => flyer.value?.id === f.id
             @view="emit('viewFlyer', f)"
             @confirmDelete="() => setShowDeleteModal(true)" />
 
-        <ConfirmModal
+        <DeleteFlyerModal
             v-model:visible="showDeleteModal"
-            header="Delete flyer"
-            :message="deleteMessage"
-            confirmLabel="Yes"
-            :confirmDisabled="false"
-            cancelLabel="No"
+            :selectedFlyer="flyer"
             @confirm="deleteSelectedFlyer"
             @hide="() => setShowDeleteModal(false)" />
     </div>
 
     <div v-else>
+        <!-- MEDIUM: use a Message here -->
         <p class="my-2">
             No past flyers!
         </p>
