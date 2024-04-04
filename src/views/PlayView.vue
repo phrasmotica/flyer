@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue"
-import { useToggle } from "@vueuse/core"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import AbandonFlyerModal from "../components/modals/AbandonFlyerModal.vue"
-import Clock from "../components/Clock.vue"
 import FinishFlyerModal from "../components/modals/FinishFlyerModal.vue"
 import FixtureModal from "../components/modals/FixtureModal.vue"
+import FlyerClock from "../components/FlyerClock.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PlayButtons from "../components/PlayButtons.vue"
 import PlaySections from "../components/PlaySections.vue"
-import Price from "../components/Price.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -43,18 +41,12 @@ const {
 const {
     settings,
     tables,
-    clockDisplay,
-    totalCost,
     hasFinished,
-    isInProgress,
     currentRound,
     nextRoundToGenerate,
-    estimatedDurationMinutes,
     nextFixture,
     nextFreeFixture,
     getRoundWithIndex,
-    pauseClock,
-    resumeClock,
 } = usePhase(currentPhase.value)
 
 const phaseEvents = usePhaseEvents(currentPhase.value)
@@ -76,18 +68,11 @@ const {
     isSmallScreen,
 } = useScreenSizes()
 
-const [showPrice, toggleShowPrice] = useToggle()
 const showFinishModal = ref(false)
 const showAbandonModal = ref(false)
 
 const selectedFixture = ref<Fixture>()
 const showFixtureModal = ref(false)
-
-onMounted(() => {
-    if (isInProgress.value) {
-        resumeClock()
-    }
-})
 
 const header = computed(() => {
     if (currentPlayOffPhase.value) {
@@ -218,10 +203,6 @@ const selectForRecording = (f: Fixture) => {
 const hideFixtureModal = () => {
     showFixtureModal.value = false
 }
-
-onUnmounted(() => {
-    pauseClock()
-})
 </script>
 
 <template>
@@ -230,11 +211,7 @@ onUnmounted(() => {
             <div class="flex align-items-baseline justify-content-between">
                 <h1>{{ header }}</h1>
 
-                <!-- TODO: create a component for this -->
-                <div class="cursor-pointer" @click="() => toggleShowPrice()">
-                    <Price v-if="showPrice" :amount="totalCost" />
-                    <Clock v-else :elapsedMilliseconds="clockDisplay" :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
-                </div>
+                <FlyerClock />
             </div>
         </template>
 
