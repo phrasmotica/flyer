@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue"
 import { useToggle } from "@vueuse/core"
 
 import DeleteFlyerModal from "./modals/DeleteFlyerModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
+
+import { useMaybe } from "../composables/useMaybe"
 
 import type { Flyer } from "../data/Flyer"
 
@@ -15,7 +16,7 @@ const emit = defineEmits<{
 
 const flyerHistoryStore = useFlyerHistoryStore()
 
-const flyer = ref<Flyer | null>(null)
+const flyer = useMaybe<Flyer>()
 
 const [showDeleteModal, setShowDeleteModal] = useToggle()
 
