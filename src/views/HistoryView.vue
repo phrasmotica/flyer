@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useClipboard, useToggle } from "@vueuse/core"
 
-import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerHistory from "../components/FlyerHistory.vue"
 import HistoryButtons from "../components/HistoryButtons.vue"
+import ImportPastFlyersModal from "../components/ImportPastFlyersModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
@@ -96,19 +96,11 @@ const newFlyer = () => {
         </template>
 
         <template #modals>
-            <ConfirmModal
-                :visible="showImportModal"
-                header="Import data"
-                message="Please paste flyer data here:"
-                confirmLabel="Import"
-                :confirmDisabled="false"
-                cancelLabel="Cancel"
-                @confirm="importPastFlyers"
-                @hide="() => setShowImportModal(false)">
-                <div class="p-fluid">
-                    <Textarea v-model="importText" />
-                </div>
-            </ConfirmModal>
+            <ImportPastFlyersModal
+                v-model:text="importText"
+                v-model:visible="showImportModal"
+                @hide="() => setShowImportModal(false)"
+                @importPastFlyers="importPastFlyers" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>

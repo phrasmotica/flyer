@@ -13,6 +13,8 @@ const emit = defineEmits<{
 }>()
 
 const importButtonLabel = computed(() => {
+    // MEDIUM: don't show the failed to import message here. Notify the user
+    // elsewhere, e.g. in a toast message
     if (props.failedToImport) {
         return "Failed to import from clipboard!"
     }
