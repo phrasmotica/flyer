@@ -4,13 +4,14 @@ import { useRouter } from "vue-router"
 import { useToggle } from "@vueuse/core"
 
 import Clock from "../components/Clock.vue"
-import ConfirmModal from "../components/modals/ConfirmModal.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
+import NewFlyerModal from "@/components/modals/NewFlyerModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"
 import ResultsButtons from "../components/ResultsButtons.vue"
 import ResultsMessages from "@/components/ResultsMessages.vue"
 import ResultsTable from "../components/ResultsTable.vue"
+import StartPlayOffModal from "../components/modals/StartPlayOffModal.vue"
 import WinningsList from "../components/WinningsList.vue"
 
 import { useDownloadImage } from "../composables/useDownloadImage"
@@ -185,25 +186,13 @@ const save = () => {
         </template>
 
         <template #modals>
-            <!-- TODO: create a component for this -->
-            <ConfirmModal
+            <NewFlyerModal
                 v-model:visible="showGoToSetupModal"
-                header="New flyer"
-                message="Are you sure you want to start a new flyer? The current one has not been saved!"
-                confirmLabel="Yes"
-                :confirmDisabled="false"
-                cancelLabel="No"
                 @confirm="goToSetup"
                 @hide="() => setShowGoToSetupModal(false)" />
 
-            <!-- TODO: create a component for this -->
-            <ConfirmModal
+            <StartPlayOffModal
                 v-model:visible="showStartPlayOffModal"
-                header="Start Play-Off"
-                :message="`Are you sure you want to start the ${nextPlayOff?.name || '(UNKNOWN)'}?`"
-                confirmLabel="Yes"
-                :confirmDisabled="false"
-                cancelLabel="No"
                 @confirm="startPlayOff"
                 @hide="() => setShowStartPlayOffModal(false)" />
         </template>
