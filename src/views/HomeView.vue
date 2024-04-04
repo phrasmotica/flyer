@@ -17,6 +17,7 @@ import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
+import DarkModeToggleButton from "@/components/DarkModeToggleButton.vue"
 
 useTitle("Flyer - New Flyer")
 
@@ -78,6 +79,8 @@ const start = () => {
                         @click="routing.toHistory" />
 
                     <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+
+                    <DarkModeToggleButton v-if="!isSmallScreen" />
                 </div>
             </div>
         </template>
