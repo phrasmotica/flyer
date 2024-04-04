@@ -7,6 +7,7 @@ import type { PhaseSettings } from "../data/PhaseSettings"
 
 const props = defineProps<{
     settings: PhaseSettings
+    playerCount: number
     raceTos: {
         name: string
         raceTo: number | null
@@ -40,16 +41,14 @@ const variableRacesSummary = computed(() => {
 </script>
 
 <template>
-    <div v-if="isWinnerStaysOn" class="mb-2">
-        <strong>{{ winsRequiredSummary }}</strong>
+    <div class="mb-2">
+        <strong>{{ props.playerCount }} players</strong>
     </div>
 
-    <div v-else-if="variableRacesSummary" class="mb-2">
-        <strong>{{ variableRacesSummary }}</strong>
-    </div>
-
-    <div v-else-if="raceSummary" class="mb-2">
-        <strong>{{ raceSummary }}</strong>
+    <div class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong v-if="isWinnerStaysOn">{{ winsRequiredSummary }}</strong>
+        <strong v-else-if="variableRacesSummary">{{ variableRacesSummary }}</strong>
+        <strong v-else-if="raceSummary">{{ raceSummary }}</strong>
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">

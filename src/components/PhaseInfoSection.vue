@@ -22,7 +22,10 @@ const {
 
 <template>
     <div>
-        <InfoList :settings="settings" :raceTos="raceTos" />
+        <InfoList
+            :settings="settings"
+            :playerCount="players.length"
+            :raceTos="raceTos" />
 
         <div
             v-if="settings.entryFeeRequired"

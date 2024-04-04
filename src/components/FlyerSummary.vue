@@ -29,7 +29,10 @@ const {
 <template>
     <div>
         <div :class="[props.overflow && 'maxh-30 overflow-y-auto']">
-            <InfoList :settings="settings.specification" :raceTos="raceTos" />
+            <InfoList
+                :settings="settings.specification"
+                :playerCount="settings.playerCount"
+                :raceTos="raceTos" />
 
             <div
                 v-if="settings.specification.entryFeeRequired"
