@@ -8,6 +8,7 @@ import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
 import FlyerSummary from "../components/FlyerSummary.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 import StartFlyerModal from "../components/modals/StartFlyerModal.vue"
 
 import { useRouting } from "../composables/useRouting"
@@ -16,13 +17,11 @@ import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
-import { useUiStore } from "../stores/ui"
 
 const routing = useRouting(useRouter())
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
-const uiStore = useUiStore()
 
 const {
     isSmallScreen,
@@ -76,10 +75,7 @@ const start = () => {
                         severity="info"
                         @click="routing.toHistory" />
 
-                    <Button v-if="!isSmallScreen"
-                        icon="pi pi-arrow-right-arrow-left"
-                        severity="help"
-                        @click="uiStore.toggleSidebarPosition" />
+                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
                 </div>
             </div>
         </template>
