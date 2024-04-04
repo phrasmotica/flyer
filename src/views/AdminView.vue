@@ -6,11 +6,16 @@ import { useTitle } from "@vueuse/core"
 import PageTemplate from "../components/PageTemplate.vue"
 
 import { useRouting } from "../composables/useRouting"
+import { useScreenSizes } from "../composables/useScreenSizes"
 import { useTimedRef } from "../composables/useTimedRef"
 
 useTitle("Flyer - Admin")
 
 const routing = useRouting(useRouter())
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const {
     value: isCleared,
@@ -41,9 +46,17 @@ const clearLocalStorage = () => {
             </div>
         </template>
 
-        <template #buttons>
+        <template v-if="!isSmallScreen" #sidebar>
+            <div class="p-fluid">
+                <Button
+                    label="Go back"
+                    severity="info"
+                    @click="routing.toSetup" />
+            </div>
+        </template>
+
+        <template v-if="isSmallScreen" #buttons>
             <Button
-                class="mb-2"
                 label="Go back"
                 severity="info"
                 @click="routing.toSetup" />
