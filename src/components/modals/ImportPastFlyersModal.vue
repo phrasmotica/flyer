@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConfirmModal from "../components/ConfirmModal.vue"
+import ConfirmModal from "./ConfirmModal.vue"
 
 const text = defineModel<string>("text", {
     default: "",

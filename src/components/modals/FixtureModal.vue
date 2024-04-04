@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
 
-import Clock from "./Clock.vue"
-import LabelledDropdown from "./LabelledDropdown.vue"
-import PlayerBreakInput from "./PlayerBreakInput.vue"
-import PlayerScoreInput from "./PlayerScoreInput.vue"
-import PlayerWinInput from "./PlayerWinInput.vue"
-import RaceToBadge from "./RaceToBadge.vue"
-import TableBadge from "./TableBadge.vue"
+import Clock from "../Clock.vue"
+import LabelledDropdown from "../LabelledDropdown.vue"
+import PlayerBreakInput from "../PlayerBreakInput.vue"
+import PlayerScoreInput from "../PlayerScoreInput.vue"
+import PlayerWinInput from "../PlayerWinInput.vue"
+import RaceToBadge from "../RaceToBadge.vue"
+import TableBadge from "../TableBadge.vue"
 
-import { useFixture } from "../composables/useFixture"
-import { useFlyer } from "../composables/useFlyer"
-import { FixtureStatus, usePhase } from "../composables/usePhase"
-import { usePhaseEvents } from "../composables/usePhaseEvents"
-import { usePhaseSettings } from "../composables/usePhaseSettings"
-import { useRound } from "../composables/useRound"
-import { useTweaks } from "../composables/useTweaks"
+import { useFixture } from "../../composables/useFixture"
+import { useFlyer } from "../../composables/useFlyer"
+import { FixtureStatus, usePhase } from "../../composables/usePhase"
+import { usePhaseEvents } from "../../composables/usePhaseEvents"
+import { usePhaseSettings } from "../../composables/usePhaseSettings"
+import { useRound } from "../../composables/useRound"
+import { useTweaks } from "../../composables/useTweaks"
 
-import type { Fixture, Score } from "../data/Fixture"
+import type { Fixture, Score } from "../../data/Fixture"
 
-import { useFlyerStore } from "../stores/flyer"
+import { useFlyerStore } from "../../stores/flyer"
 
 const props = defineProps<{
     visible: boolean

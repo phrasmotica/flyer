@@ -3,7 +3,7 @@ import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import Clock from "../components/Clock.vue"
-import ConfirmModal from "../components/ConfirmModal.vue"
+import ConfirmModal from "../components/modals/ConfirmModal.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import Podium from "../components/Podium.vue"

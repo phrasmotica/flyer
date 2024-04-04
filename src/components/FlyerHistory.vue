@@ -2,7 +2,7 @@
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
-import ConfirmModal from "./ConfirmModal.vue"
+import ConfirmModal from "./modals/ConfirmModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
 
 import { useFlyer } from "../composables/useFlyer"

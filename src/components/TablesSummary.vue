@@ -2,9 +2,9 @@
 import { computed, ref } from "vue"
 import { useToggle } from "@vueuse/core"
 
-import ConfirmModal from "./ConfirmModal.vue"
 import TableInput from "./TableInput.vue"
 import TableSummary from "./TableSummary.vue"
+import ConfirmModal from "./modals/ConfirmModal.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"

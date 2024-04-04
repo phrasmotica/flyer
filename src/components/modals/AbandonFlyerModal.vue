@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ConfirmModal from "../components/ConfirmModal.vue"
+import ConfirmModal from "./ConfirmModal.vue"
 
 const visible = defineModel<boolean>("visible", {
     default: false,
@@ -14,8 +14,8 @@ const emit = defineEmits<{
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        header="Finish Flyer"
-        message="Are you ready to finish the flyer?"
+        header="Abandon flyer"
+        message="Are you sure you want to abandon this flyer?"
         confirmLabel="Yes"
         :confirmDisabled="false"
         cancelLabel="No"

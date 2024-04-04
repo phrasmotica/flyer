@@ -8,7 +8,7 @@ import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
 import FlyerSummary from "../components/FlyerSummary.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import StartFlyerModal from "../components/StartFlyerModal.vue"
+import StartFlyerModal from "../components/modals/StartFlyerModal.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"

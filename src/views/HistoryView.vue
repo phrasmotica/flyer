@@ -5,7 +5,7 @@ import { useClipboard, useToggle } from "@vueuse/core"
 
 import FlyerHistory from "../components/FlyerHistory.vue"
 import HistoryButtons from "../components/HistoryButtons.vue"
-import ImportPastFlyersModal from "../components/ImportPastFlyersModal.vue"
+import ImportPastFlyersModal from "../components/modals/ImportPastFlyersModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
