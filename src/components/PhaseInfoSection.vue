@@ -16,6 +16,7 @@ const {
 const {
     settings,
     players,
+    tables,
     raceTos,
 } = usePhase(currentPhase.value)
 </script>
@@ -25,6 +26,7 @@ const {
         <InfoList
             :settings="settings"
             :playerCount="players.length"
+            :tableCount="tables.length"
             :raceTos="raceTos" />
 
         <div

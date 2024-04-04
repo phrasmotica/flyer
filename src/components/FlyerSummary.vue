@@ -32,6 +32,7 @@ const {
             <InfoList
                 :settings="settings.specification"
                 :playerCount="settings.playerCount"
+                :tableCount="settings.tableCount"
                 :raceTos="raceTos" />
 
             <div

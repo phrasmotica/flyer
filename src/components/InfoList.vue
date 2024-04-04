@@ -8,6 +8,7 @@ import type { PhaseSettings } from "../data/PhaseSettings"
 const props = defineProps<{
     settings: PhaseSettings
     playerCount: number
+    tableCount: number
     raceTos: {
         name: string
         raceTo: number | null
@@ -43,6 +44,11 @@ const variableRacesSummary = computed(() => {
 <template>
     <div class="mb-2">
         <strong>{{ props.playerCount }} players</strong>
+    </div>
+
+    <div class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong v-if="props.tableCount > 1">{{ props.tableCount }} tables</strong>
+        <strong v-else>{{ props.tableCount }} table</strong>
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
