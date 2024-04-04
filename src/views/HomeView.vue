@@ -92,9 +92,15 @@ const hideModal = () => {
                 <h1>New Flyer</h1>
 
                 <div class="flex gap-1">
-                    <Button icon="pi pi-history" severity="info" @click="viewPastFlyers" />
+                    <Button
+                        icon="pi pi-history"
+                        severity="info"
+                        @click="viewPastFlyers" />
 
-                    <Button icon="pi pi-arrow-right-arrow-left" severity="help" @click="uiStore.toggleSidebarPosition" />
+                    <Button v-if="!isSmallScreen"
+                        icon="pi pi-arrow-right-arrow-left"
+                        severity="help"
+                        @click="uiStore.toggleSidebarPosition" />
                 </div>
             </div>
         </template>
