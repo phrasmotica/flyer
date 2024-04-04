@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import { useFlyerHistoryStore } from "../stores/flyerHistory"
+
 const props = defineProps<{
     isImported: boolean
     failedToImport: boolean
@@ -11,6 +13,8 @@ const emit = defineEmits<{
     exportPastFlyers: []
     showImportModal: []
 }>()
+
+const flyerHistoryStore = useFlyerHistoryStore()
 
 const importButtonLabel = computed(() => {
     // MEDIUM: don't show the failed to import message here. Notify the user
@@ -36,7 +40,7 @@ const exportButtonLabel = computed(() => props.isExported ? "Data copied to clip
 
         <Button
             :label="exportButtonLabel"
-            :disabled="isExported"
+            :disabled="flyerHistoryStore.noHistory || isExported"
             severity="primary"
             @click="emit('exportPastFlyers')" />
     </div>

@@ -1,3 +1,4 @@
+import { computed } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
@@ -5,6 +6,8 @@ import type { Flyer } from "../data/Flyer"
 
 export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
     const pastFlyers = useStorage("pastFlyers", <Flyer[]>[])
+
+    const noHistory = computed(() => pastFlyers.value.length <= 0)
 
     const add = (flyer: Flyer) => {
         pastFlyers.value = [...pastFlyers.value, flyer]
@@ -25,6 +28,7 @@ export const useFlyerHistoryStore = defineStore("flyerHistory", () => {
 
     return {
         pastFlyers,
+        noHistory,
 
         add,
         importFlyers,
