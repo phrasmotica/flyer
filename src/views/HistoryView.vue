@@ -5,8 +5,10 @@ import { useClipboard, useToggle } from "@vueuse/core"
 
 import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerHistory from "../components/FlyerHistory.vue"
+import HistoryButtons from "../components/HistoryButtons.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useScreenSizes } from "../composables/useScreenSizes"
 import { useTimedRef } from "../composables/useTimedRef"
 
 import type { Flyer } from "../data/Flyer"
@@ -18,6 +20,10 @@ const {
 } = useClipboard()
 
 const flyerHistory = useFlyerHistoryStore()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const router = useRouter()
 
@@ -35,16 +41,6 @@ const {
 const {
     value: isExported,
 } = useTimedRef(2000, false)
-
-const importButtonLabel = computed(() => {
-    if (failedToImport.value) {
-        return "Failed to import from clipboard!"
-    }
-
-    return isImported.value ? "Data imported from clipboard!" : "Import data"
-})
-
-const exportButtonLabel = computed(() => isExported.value ? "Data copied to clipboard!" : "Export data")
 
 const importPastFlyers = () => {
     try {
@@ -90,6 +86,15 @@ const newFlyer = () => {
             <FlyerHistory />
         </template>
 
+        <template v-if="!isSmallScreen" #sidebar>
+            <HistoryButtons
+                :isImported="isImported"
+                :failedToImport="failedToImport"
+                :isExported="isExported"
+                @exportPastFlyers="exportPastFlyers"
+                @showImportModal="() => setShowImportModal(true)" />
+        </template>
+
         <template #modals>
             <ConfirmModal
                 :visible="showImportModal"
@@ -106,19 +111,13 @@ const newFlyer = () => {
             </ConfirmModal>
         </template>
 
-        <template #buttons>
-            <Button
-                class="mb-2"
-                :label="importButtonLabel"
-                :disabled="failedToImport || isImported"
-                severity="primary"
-                @click="() => setShowImportModal(true)" />
-
-            <Button
-                :label="exportButtonLabel"
-                :disabled="isExported"
-                severity="primary"
-                @click="exportPastFlyers" />
+        <template v-if="isSmallScreen" #buttons>
+            <HistoryButtons
+                :isImported="isImported"
+                :failedToImport="failedToImport"
+                :isExported="isExported"
+                @exportPastFlyers="exportPastFlyers"
+                @showImportModal="() => setShowImportModal(true)" />
         </template>
     </PageTemplate>
 </template>
