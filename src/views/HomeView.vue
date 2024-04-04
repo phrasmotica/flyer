@@ -88,7 +88,7 @@ const hideModal = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex align-items-center justify-content-between border-bottom-1 mb-2">
+            <div class="flex align-items-center justify-content-between">
                 <h1>New Flyer</h1>
 
                 <div class="flex gap-1">

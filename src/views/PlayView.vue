@@ -226,7 +226,7 @@ onUnmounted(() => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-1">
+            <div class="flex align-items-baseline justify-content-between">
                 <h1>{{ header }}</h1>
 
                 <div class="cursor-pointer" @click="() => toggleShowPrice()">
@@ -244,16 +244,14 @@ onUnmounted(() => {
         </template>
 
         <template v-if="!isSmallScreen" #sidebar>
-            <div class="mt-1">
-                <PlayButtons
-                    sidebar
-                    @autoComplete="autoComplete"
-                    @autoCompleteRemaining="autoCompleteRemaining"
-                    @confirmFinish="confirmFinish"
-                    @generateNextRound="generateNextRound"
-                    @goToPastFlyers="goToPastFlyers"
-                    @showAbandonModal="() => showAbandonModal = true" />
-            </div>
+            <PlayButtons
+                sidebar
+                @autoComplete="autoComplete"
+                @autoCompleteRemaining="autoCompleteRemaining"
+                @confirmFinish="confirmFinish"
+                @generateNextRound="generateNextRound"
+                @goToPastFlyers="goToPastFlyers"
+                @showAbandonModal="() => showAbandonModal = true" />
 
             <div v-if="!isHistoric" class="border-top-1 pt-2">
                 <PlaySections v-if="uiStore.pinnedSection"

@@ -75,7 +75,7 @@ const newFlyer = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex align-items-center justify-content-between border-bottom-1">
+            <div class="flex align-items-center justify-content-between">
                 <h1>Past Flyers</h1>
 
                 <Button icon="pi pi-plus" severity="info" @click="newFlyer" />

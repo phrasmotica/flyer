@@ -15,7 +15,9 @@ const slots = useSlots()
         <Toast />
 
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
-            <slot name="header" />
+            <div v-if="slots.header" class="border-bottom-1 mb-2">
+                <slot name="header" />
+            </div>
 
             <!-- MEDIUM: allow switching to a layout where the sidebar is on the left -->
 
