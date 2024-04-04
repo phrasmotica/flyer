@@ -10,6 +10,7 @@ import FlyerClock from "../components/FlyerClock.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PlayButtons from "../components/PlayButtons.vue"
 import PlaySections from "../components/PlaySections.vue"
+import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -193,10 +194,14 @@ const hideFixtureModal = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex align-items-baseline justify-content-between">
-                <h1>{{ header }}</h1>
+            <div class="flex gap-2 align-items-center">
+                <div class="flex flex-grow-1 align-items-baseline justify-content-between">
+                    <h1>{{ header }}</h1>
 
-                <FlyerClock />
+                    <FlyerClock />
+                </div>
+
+                <SidebarLayoutToggleButton v-if="!isSmallScreen" />
             </div>
         </template>
 
