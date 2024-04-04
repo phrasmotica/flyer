@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed } from "vue"
+
+const visible = defineModel<boolean>("visible", {
+    default: false,
+})
 
 const props = defineProps<{
     visible: boolean
@@ -14,12 +18,6 @@ const emit = defineEmits<{
     confirm: []
     hide: []
 }>()
-
-const visible = ref(props.visible)
-
-watch(props, () => {
-    visible.value = props.visible
-})
 
 const confirmLabel = computed(() => props.confirmLabel || "Yes")
 const cancelLabel = computed(() => props.cancelLabel || "No")

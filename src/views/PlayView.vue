@@ -3,8 +3,9 @@ import { computed, onMounted, onUnmounted, ref } from "vue"
 import { useToggle } from "@vueuse/core"
 import { useRouter } from "vue-router"
 
+import AbandonFlyerModal from "@/components/AbandonFlyerModal.vue"
 import Clock from "../components/Clock.vue"
-import ConfirmModal from "../components/ConfirmModal.vue"
+import FinishFlyerModal from "@/components/FinishFlyerModal.vue"
 import FixtureModal from "../components/FixtureModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PlayButtons from "../components/PlayButtons.vue"
@@ -271,25 +272,13 @@ onUnmounted(() => {
                 :fixture="selectedFixture"
                 @hide="hideFixtureModal" />
 
-            <!-- TODO: create a component for this -->
-            <ConfirmModal
-                :visible="showFinishModal"
-                header="Finish Flyer"
-                message="Are you ready to finish the flyer?"
-                confirmLabel="Yes"
-                :confirmDisabled="false"
-                cancelLabel="No"
+            <FinishFlyerModal
+                v-model:visible="showFinishModal"
                 @confirm="finish"
                 @hide="hideFinishModal" />
 
-            <!-- TODO: create a component for this -->
-            <ConfirmModal
-                :visible="showAbandonModal"
-                header="Abandon flyer"
-                message="Are you sure you want to abandon this flyer?"
-                confirmLabel="Yes"
-                :confirmDisabled="false"
-                cancelLabel="No"
+            <AbandonFlyerModal
+                v-model:visible="showAbandonModal"
                 @confirm="abandon"
                 @hide="hideAbandonModal" />
         </template>
