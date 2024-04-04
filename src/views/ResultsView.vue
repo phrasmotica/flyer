@@ -19,6 +19,7 @@ import { usePhase } from "../composables/usePhase"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { usePodium } from "../composables/usePodium"
 import { useQueryParams } from "../composables/useQueryParams"
+import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useStandings } from "../composables/useStandings"
 import { useTimedRef } from "../composables/useTimedRef"
@@ -26,7 +27,7 @@ import { useTimedRef } from "../composables/useTimedRef"
 import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
-const router = useRouter()
+const routing = useRouting(useRouter())
 
 const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
@@ -91,9 +92,7 @@ const goToSetup = () => {
 
     setShowGoToSetupModal(false)
 
-    router.push({
-        name: "setup",
-    })
+    routing.toSetup()
 }
 
 const nextPlayOff = computed(() => {
@@ -115,9 +114,7 @@ const startPlayOff = () => {
 
     setShowStartPlayOffModal(false)
 
-    router.push({
-        name: "play",
-    })
+    routing.toPlay()
 }
 
 const saveResults = () => {
@@ -139,12 +136,6 @@ const save = () => {
     if (flyerStore.flyer && !alreadySaved.value) {
         flyerHistoryStore.add(flyerStore.flyer)
     }
-}
-
-const goToPastFlyers = () => {
-    router.push({
-        name: "history",
-    })
 }
 </script>
 
@@ -188,7 +179,7 @@ const goToPastFlyers = () => {
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
-                @goToPastFlyers="goToPastFlyers"
+                @goToPastFlyers="routing.toHistory"
                 @save="save"
                 @saveResults="saveResults" />
         </template>
@@ -222,7 +213,7 @@ const goToPastFlyers = () => {
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
-                @goToPastFlyers="goToPastFlyers"
+                @goToPastFlyers="routing.toHistory"
                 @save="save"
                 @saveResults="saveResults" />
         </template>

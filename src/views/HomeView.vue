@@ -10,6 +10,7 @@ import FlyerSummary from "../components/FlyerSummary.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import StartFlyerModal from "../components/modals/StartFlyerModal.vue"
 
+import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
 
@@ -17,7 +18,7 @@ import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
 import { useUiStore } from "../stores/ui"
 
-const router = useRouter()
+const routing = useRouting(useRouter())
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
@@ -59,15 +60,7 @@ const start = () => {
 
     setShowModal(false)
 
-    router.push({
-        name: "play",
-    })
-}
-
-const viewPastFlyers = () => {
-    router.push({
-        name: "history",
-    })
+    routing.toPlay()
 }
 </script>
 
@@ -81,7 +74,7 @@ const viewPastFlyers = () => {
                     <Button
                         icon="pi pi-history"
                         severity="info"
-                        @click="viewPastFlyers" />
+                        @click="routing.toHistory" />
 
                     <Button v-if="!isSmallScreen"
                         icon="pi pi-arrow-right-arrow-left"

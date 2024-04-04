@@ -17,14 +17,13 @@ import { usePhaseEvents } from "../composables/usePhaseEvents"
 import { usePhaseSettings } from "../composables/usePhaseSettings"
 import { useQueryParams } from "../composables/useQueryParams"
 import { useRound } from "../composables/useRound"
+import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
 
 import type { Fixture } from "../data/Fixture"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useUiStore } from "../stores/ui"
-
-const router = useRouter()
 
 const flyerStore = useFlyerStore()
 const uiStore = useUiStore()
@@ -65,11 +64,12 @@ const {
     isHistoric,
 } = useQueryParams()
 
+const routing = useRouting(useRouter(), queryParams.value)
+
 const {
     isSmallScreen,
 } = useScreenSizes()
 
-// HIGH: try to put modal visibility state inside ConfirmModal...
 const [showFixtureModal, setShowFixtureModal] = useToggle()
 const [showFinishModal, setShowFinishModal] = useToggle()
 const [showAbandonModal, setShowAbandonModal] = useToggle()
@@ -116,10 +116,7 @@ const finish = () => {
 
     setShowFinishModal(false)
 
-    router.push({
-        name: "results",
-        query: queryParams.value,
-    })
+    routing.toResults()
 }
 
 const abandon = () => {
@@ -127,15 +124,7 @@ const abandon = () => {
 
     setShowAbandonModal(false)
 
-    router.push({
-        name: "setup",
-    })
-}
-
-const goToPastFlyers = () => {
-    router.push({
-        name: "history",
-    })
+    routing.toSetup()
 }
 
 const autoComplete = () => {
@@ -225,7 +214,7 @@ const hideFixtureModal = () => {
                 @autoCompleteRemaining="autoCompleteRemaining"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
-                @goToPastFlyers="goToPastFlyers"
+                @goToPastFlyers="routing.toHistory"
                 @showAbandonModal="() => setShowAbandonModal(true)" />
 
             <div v-if="!isHistoric" class="border-top-1 pt-2">
@@ -261,7 +250,7 @@ const hideFixtureModal = () => {
                 @autoComplete="autoComplete"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
-                @goToPastFlyers="goToPastFlyers"
+                @goToPastFlyers="routing.toHistory"
                 @showAbandonModal="() => setShowAbandonModal(true)" />
         </template>
     </PageTemplate>

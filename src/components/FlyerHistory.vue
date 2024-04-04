@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { useRouter } from "vue-router"
 import { useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./modals/ConfirmModal.vue"
@@ -10,13 +9,13 @@ import { useFlyer } from "../composables/useFlyer"
 
 import type { Flyer } from "../data/Flyer"
 
-import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
-const flyerStore = useFlyerStore()
-const flyerHistoryStore = useFlyerHistoryStore()
+const emit = defineEmits<{
+    viewFlyer: [flyer: Flyer]
+}>()
 
-const router = useRouter()
+const flyerHistoryStore = useFlyerHistoryStore()
 
 const {
     flyer,
@@ -32,17 +31,6 @@ const setSelectedFlyer = (f: Flyer) => {
     else {
         flyer.value = null
     }
-}
-
-const viewFlyer = (f: Flyer) => {
-    flyerStore.setFlyer(f)
-
-    router.push({
-        name: "play",
-        query: {
-            historic: 1,
-        }
-    })
 }
 
 const deleteMessage = computed(() => {
@@ -71,7 +59,7 @@ const isSelected = (f: Flyer) => flyer.value?.id === f.id
             :index="i"
             :showDetails="isSelected(f)"
             @setSelected="() => setSelectedFlyer(f)"
-            @view="() => viewFlyer(f)"
+            @view="emit('viewFlyer', f)"
             @confirmDelete="() => setShowDeleteModal(true)" />
 
         <ConfirmModal

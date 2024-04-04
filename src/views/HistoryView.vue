@@ -8,24 +8,27 @@ import HistoryButtons from "../components/HistoryButtons.vue"
 import ImportPastFlyersModal from "../components/modals/ImportPastFlyersModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useTimedRef } from "../composables/useTimedRef"
 
 import type { Flyer } from "../data/Flyer"
 
+import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
 
 const {
     copy,
 } = useClipboard()
 
-const flyerHistory = useFlyerHistoryStore()
+const flyerStore = useFlyerStore()
+const flyerHistoryStore = useFlyerHistoryStore()
 
 const {
     isSmallScreen,
 } = useScreenSizes()
 
-const router = useRouter()
+const routing = useRouting(useRouter())
 
 const importText = ref("")
 const [showImportModal, setShowImportModal] = useToggle(false)
@@ -42,10 +45,16 @@ const {
     value: isExported,
 } = useTimedRef(2000, false)
 
+const viewFlyer = (f: Flyer) => {
+    flyerStore.setFlyer(f)
+
+    routing.toPlayHistoric()
+}
+
 const importPastFlyers = () => {
     try {
         const data = <Flyer[]>JSON.parse(importText.value)
-        flyerHistory.importFlyers(data)
+        flyerHistoryStore.importFlyers(data)
 
         isImported.value = true
         importText.value = ""
@@ -59,16 +68,10 @@ const importPastFlyers = () => {
 }
 
 const exportPastFlyers = () => {
-    const data = JSON.stringify(flyerHistory.pastFlyers)
+    const data = JSON.stringify(flyerHistoryStore.pastFlyers)
     copy(data)
 
     isExported.value = true
-}
-
-const newFlyer = () => {
-    router.push({
-        name: "setup",
-    })
 }
 </script>
 
@@ -78,12 +81,12 @@ const newFlyer = () => {
             <div class="flex align-items-center justify-content-between">
                 <h1>Past Flyers</h1>
 
-                <Button icon="pi pi-plus" severity="info" @click="newFlyer" />
+                <Button icon="pi pi-plus" severity="info" @click="routing.toSetup" />
             </div>
         </template>
 
         <template #content>
-            <FlyerHistory />
+            <FlyerHistory @viewFlyer="viewFlyer" />
         </template>
 
         <template v-if="!isSmallScreen" #sidebar>

@@ -4,19 +4,14 @@ import { useRouter } from "vue-router"
 
 import PageTemplate from "../components/PageTemplate.vue"
 
+import { useRouting } from "../composables/useRouting"
 import { useTimedRef } from "../composables/useTimedRef"
 
-const router = useRouter()
+const routing = useRouting(useRouter())
 
 const {
     value: isCleared,
 } = useTimedRef(2000, false)
-
-const backToSetup = () => {
-    router.push({
-        name: "setup",
-    })
-}
 
 const clearButtonLabel = computed(() => isCleared.value ? "Done!" : "Clear local storage")
 
@@ -48,7 +43,7 @@ const clearLocalStorage = () => {
                 class="mb-2"
                 label="Go back"
                 severity="info"
-                @click="backToSetup" />
+                @click="routing.toSetup" />
         </template>
     </PageTemplate>
 </template>
