@@ -7,6 +7,7 @@ import FlyerHistory from "../components/FlyerHistory.vue"
 import HistoryButtons from "../components/HistoryButtons.vue"
 import ImportPastFlyersModal from "../components/modals/ImportPastFlyersModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 
 import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
@@ -81,7 +82,11 @@ const exportPastFlyers = () => {
             <div class="flex align-items-center justify-content-between">
                 <h1>Past Flyers</h1>
 
-                <Button icon="pi pi-plus" severity="info" @click="routing.toSetup" />
+                <div class="flex gap-1">
+                    <Button icon="pi pi-plus" severity="info" @click="routing.toSetup" />
+
+                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+                </div>
             </div>
         </template>
 
