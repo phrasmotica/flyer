@@ -86,6 +86,7 @@ const start = () => {
 
         <template v-if="!isSmallScreen" #sidebar>
             <FlyerSummary
+                sidebar
                 @confirmStart="() => setShowModal(true)" />
         </template>
 

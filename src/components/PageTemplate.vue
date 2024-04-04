@@ -11,6 +11,7 @@ const slots = useSlots()
 <template>
     <!-- LOW: make this better. This isn't great on wide screens,
     plus it'd be better to not have two scroll bars... -->
+    <!-- MEDIUM: set a sensible max height for everything -->
     <main class="flex flex-column justify-content-between">
         <Toast />
 

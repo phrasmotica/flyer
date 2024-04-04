@@ -8,6 +8,7 @@ import { useSettings } from "../composables/useSettings"
 import { useSettingsStore } from "../stores/settings"
 
 const props = defineProps<{
+    sidebar?: boolean
     overflow?: boolean
 }>()
 
@@ -28,7 +29,14 @@ const {
 
 <template>
     <div>
-        <div :class="[props.overflow && 'maxh-30 overflow-y-auto']">
+        <div v-if="props.sidebar" class="p-fluid mb-2">
+            <Button label="Start" :disabled="isInvalid" @click="emit('confirmStart')" />
+        </div>
+
+        <div :class="[
+            props.overflow && 'maxh-30 overflow-y-auto',
+            props.sidebar && 'maxh-60 overflow-y-auto',
+        ]">
             <InfoList
                 :settings="settings.specification"
                 :playerCount="settings.playerCount"
@@ -43,7 +51,7 @@ const {
                     :playerCount="settings.playerCount" />
             </div>
 
-            <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200 mb-2">
+            <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200">
                 <div>
                     Estimated duration <em>({{ durationPerFrame }} min(s) per frame)</em>
                 </div>
@@ -54,7 +62,7 @@ const {
             </div>
         </div>
 
-        <div class="p-fluid">
+        <div v-if="!props.sidebar" class="p-fluid mt-2">
             <Button label="Start" :disabled="isInvalid" @click="emit('confirmStart')" />
         </div>
     </div>
@@ -63,5 +71,9 @@ const {
 <style scoped>
 .maxh-30 {
     max-height: 30vh;
+}
+
+.maxh-60 {
+    max-height: 60vh;
 }
 </style>
