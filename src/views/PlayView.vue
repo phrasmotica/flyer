@@ -170,6 +170,8 @@ const autoCompleteRemaining = () => {
         return
     }
 
+    console.log("autoCompleteRemaining")
+
     const raceTo = settings.value.raceTo
 
     flyerStore.autoCompletePhase(
@@ -253,6 +255,7 @@ const hideFixtureModal = () => {
         <template v-if="isSmallScreen" #buttons>
             <PlayButtons
                 @autoComplete="autoComplete"
+                @autoCompleteRemaining="autoCompleteRemaining"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
                 @goToPastFlyers="routing.toHistory"
