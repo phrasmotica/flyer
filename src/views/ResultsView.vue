@@ -205,6 +205,7 @@ const goToPastFlyers = () => {
         </template>
 
         <template #modals>
+            <!-- TODO: create a component for this -->
             <ConfirmModal
                 :visible="showGoToSetupModal"
                 header="New flyer"
@@ -215,6 +216,7 @@ const goToPastFlyers = () => {
                 @confirm="goToSetup"
                 @hide="hideGoToSetupModal" />
 
+            <!-- TODO: create a component for this -->
             <ConfirmModal
                 :visible="showStartPlayOffModal"
                 header="Start Play-Off"

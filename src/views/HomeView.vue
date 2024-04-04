@@ -4,16 +4,14 @@ import { useRouter } from "vue-router"
 import { useFocus } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
-import ConfirmModal from "../components/ConfirmModal.vue"
 import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
 import FlyerSummary from "../components/FlyerSummary.vue"
-import LabelledCheckbox from "../components/LabelledCheckbox.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import StartFlyerModal from "../components/StartFlyerModal.vue"
 
 import { useScreenSizes } from "../composables/useScreenSizes"
 import { useSettings } from "../composables/useSettings"
-import { useTweaks } from "../composables/useTweaks"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
@@ -31,15 +29,12 @@ const {
 
 const toast = useToast()
 
-const { selectOnFocus } = useTweaks()
-
 const {
     settings,
 } = useSettings(settingsStore.settings)
 
 const nameInput = ref()
 const showModal = ref(false)
-const entryFeesPaid = ref(false)
 
 useFocus(nameInput, { initialValue: true })
 
@@ -81,7 +76,6 @@ const viewPastFlyers = () => {
 
 const hideModal = () => {
     showModal.value = false
-    entryFeesPaid.value = false
 }
 </script>
 
@@ -114,30 +108,10 @@ const hideModal = () => {
         </template>
 
         <template #modals>
-            <ConfirmModal
-                :visible="showModal"
-                header="Start Flyer"
-                message="Please enter a name for the flyer:"
-                confirmLabel="Start"
-                :confirmDisabled="settings.specification.name.length <= 0 || (settings.specification.entryFeeRequired && !entryFeesPaid)"
-                cancelLabel="Go back"
+            <StartFlyerModal
+                v-model:visible="showModal"
                 @confirm="start"
-                @hide="hideModal">
-                <div class="p-fluid mb-2">
-                    <InputText
-                        ref="nameInput"
-                        placeholder="Flyer name"
-                        v-model="settings.specification.name"
-                        @focus="selectOnFocus" />
-                </div>
-
-                <div class="p-fluid mb-2">
-                    <LabelledCheckbox
-                        v-if="settings.specification.entryFeeRequired"
-                        v-model="entryFeesPaid"
-                        label="Entry fees paid?" />
-                </div>
-            </ConfirmModal>
+                @hide="hideModal" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>

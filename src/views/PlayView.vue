@@ -229,6 +229,7 @@ onUnmounted(() => {
             <div class="flex align-items-baseline justify-content-between">
                 <h1>{{ header }}</h1>
 
+                <!-- TODO: create a component for this -->
                 <div class="cursor-pointer" @click="() => toggleShowPrice()">
                     <Price v-if="showPrice" :amount="totalCost" />
                     <Clock v-else :elapsedMilliseconds="clockDisplay" :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
@@ -270,6 +271,7 @@ onUnmounted(() => {
                 :fixture="selectedFixture"
                 @hide="hideFixtureModal" />
 
+            <!-- TODO: create a component for this -->
             <ConfirmModal
                 :visible="showFinishModal"
                 header="Finish Flyer"
@@ -280,6 +282,7 @@ onUnmounted(() => {
                 @confirm="finish"
                 @hide="hideFinishModal" />
 
+            <!-- TODO: create a component for this -->
             <ConfirmModal
                 :visible="showAbandonModal"
                 header="Abandon flyer"
