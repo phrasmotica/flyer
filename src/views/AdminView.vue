@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { useRouter } from "vue-router"
+import { useTitle } from "@vueuse/core"
 
 import PageTemplate from "../components/PageTemplate.vue"
 
 import { useRouting } from "../composables/useRouting"
 import { useTimedRef } from "../composables/useTimedRef"
+
+useTitle("Flyer - Admin")
 
 const routing = useRouting(useRouter())
 

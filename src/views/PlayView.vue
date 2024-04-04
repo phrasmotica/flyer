@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
-import { useToggle } from "@vueuse/core"
+import { useTitle, useToggle } from "@vueuse/core"
 
 import AbandonFlyerModal from "../components/modals/AbandonFlyerModal.vue"
 import FinishFlyerModal from "../components/modals/FinishFlyerModal.vue"
@@ -49,6 +49,8 @@ const {
     nextFreeFixture,
     getRoundWithIndex,
 } = usePhase(currentPhase.value)
+
+useTitle("Flyer - " + settings.value.name)
 
 const phaseEvents = usePhaseEvents(currentPhase.value)
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useRouter } from "vue-router"
-import { useFocus, useToggle } from "@vueuse/core"
+import { useFocus, useTitle, useToggle } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
 import FlyerForm from "../components/FlyerForm.vue"
@@ -17,6 +17,8 @@ import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
+
+useTitle("Flyer - New Flyer")
 
 const routing = useRouting(useRouter())
 

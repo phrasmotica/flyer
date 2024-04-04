@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useRouter } from "vue-router"
-import { useClipboard, useToggle } from "@vueuse/core"
+import { useClipboard, useTitle, useToggle } from "@vueuse/core"
 
 import FlyerHistory from "../components/FlyerHistory.vue"
 import HistoryButtons from "../components/HistoryButtons.vue"
@@ -17,6 +17,8 @@ import type { Flyer } from "../data/Flyer"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useFlyerHistoryStore } from "../stores/flyerHistory"
+
+useTitle("Flyer - Past Flyers")
 
 const {
     copy,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { useRouter } from "vue-router"
-import { useToggle } from "@vueuse/core"
+import { useTitle, useToggle } from "@vueuse/core"
 
 import Clock from "../components/Clock.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
@@ -48,6 +48,8 @@ const {
     estimatedDurationMinutes,
     durationMilliseconds,
 } = usePhase(mainPhase.value)
+
+useTitle("Flyer - " + settings.value.name + " - Results")
 
 const {
     isKnockout,
