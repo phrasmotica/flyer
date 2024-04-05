@@ -1,3 +1,9 @@
+#results-container {
+  /* MEDIUM: this is a hack to make downloaded images look OK on macOS, but
+  it's not a guarantee that it'll look OK on all OSes... */
+  background-color: #121212;
+}
+
 :root {
   font-family: "Inter var", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
