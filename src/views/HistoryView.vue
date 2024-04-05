@@ -3,6 +3,7 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useClipboard, useTitle, useToggle } from "@vueuse/core"
 
+import DarkModeToggleButton from "../components/DarkModeToggleButton.vue"
 import FlyerHistory from "../components/FlyerHistory.vue"
 import HistoryButtons from "../components/HistoryButtons.vue"
 import ImportPastFlyersModal from "../components/modals/ImportPastFlyersModal.vue"
@@ -88,6 +89,8 @@ const exportPastFlyers = () => {
                     <Button icon="pi pi-plus" severity="info" @click="routing.toSetup" />
 
                     <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+
+                    <DarkModeToggleButton v-if="!isSmallScreen" />
                 </div>
             </div>
         </template>

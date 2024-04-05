@@ -3,7 +3,9 @@ import { computed } from "vue"
 import { useRouter } from "vue-router"
 import { useTitle } from "@vueuse/core"
 
+import DarkModeToggleButton from "../components/DarkModeToggleButton.vue"
 import PageTemplate from "../components/PageTemplate.vue"
+import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 
 import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
@@ -33,7 +35,15 @@ const clearLocalStorage = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <h1>Admin</h1>
+            <div class="flex align-items-center justify-content-between">
+                <h1>Admin</h1>
+
+                <div class="flex gap-1">
+                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+
+                    <DarkModeToggleButton v-if="!isSmallScreen" />
+                </div>
+            </div>
         </template>
 
         <template #content>

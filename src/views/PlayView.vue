@@ -4,6 +4,7 @@ import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
 import AbandonFlyerModal from "../components/modals/AbandonFlyerModal.vue"
+import DarkModeToggleButton from "../components/DarkModeToggleButton.vue"
 import FinishFlyerModal from "../components/modals/FinishFlyerModal.vue"
 import FixtureModal from "../components/modals/FixtureModal.vue"
 import FlyerClock from "../components/FlyerClock.vue"
@@ -205,7 +206,11 @@ const hideFixtureModal = () => {
                     <FlyerClock />
                 </div>
 
-                <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+                <div class="flex gap-1">
+                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+
+                    <DarkModeToggleButton v-if="!isSmallScreen" />
+                </div>
             </div>
         </template>
 
