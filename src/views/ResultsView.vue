@@ -144,18 +144,20 @@ const save = () => {
 
 <template>
     <PageTemplate>
+        <template #header>
+            <div class="flex align-items-baseline justify-content-between">
+                <h1>{{ settings.name }} - Results</h1>
+
+                <Clock
+                    :elapsedMilliseconds="durationMilliseconds || 0"
+                    :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
+            </div>
+        </template>
+
         <template #content>
-            <!-- LOW: put this into the header template. Currently not possible because
-            the results-container div needs to contain the content as well... -->
+            <!-- MEDIUM: make this contain the page header as well. Maybe create
+            a new component (modal?) specifically for downloading an image of -->
             <div id="results-container">
-                <div class="flex align-items-baseline justify-content-between border-bottom-1 mb-2">
-                    <h1>{{ settings.name }} - Results</h1>
-
-                    <Clock
-                        :elapsedMilliseconds="durationMilliseconds || 0"
-                        :warnAfterMilliseconds="estimatedDurationMinutes * 60000" />
-                </div>
-
                 <div v-if="isRoundRobin || isWinnerStaysOn">
                     <ResultsTable />
 
