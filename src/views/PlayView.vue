@@ -173,8 +173,6 @@ const autoCompleteRemaining = () => {
         return
     }
 
-    console.log("autoCompleteRemaining")
-
     const raceTo = settings.value.raceTo
 
     flyerStore.autoCompletePhase(
