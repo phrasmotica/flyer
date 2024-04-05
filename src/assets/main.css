@@ -57,10 +57,6 @@ a,
   background-color: var(--color-background)!important;
 }
 
-#results-container {
-  background-color: var(--color-background)!important;
-}
-
 @media screen and (max-width: 575px) {
   .p-toast {
     left: 20px;
