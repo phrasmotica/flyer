@@ -18,6 +18,12 @@ const slots = useSlots()
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <div v-if="slots.header" class="border-bottom-1 mb-2">
                 <slot name="header" />
+
+                <!-- TODO: add a slot for header buttons -->
+
+                <!-- TODO: add a button for customising UI appearance in a
+                modal. Light/dark mode, colour theme, sidebar position, etc.
+                This should appear for all screen sizes -->
             </div>
 
             <div v-if="slots.sidebar">

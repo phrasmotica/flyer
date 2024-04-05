@@ -6,18 +6,25 @@ import { usePrimeVue } from 'primevue/config'
 
 const isDark = useDark()
 
-const primeVue = usePrimeVue()
+const PrimeVue = usePrimeVue()
 
 const lightTheme = "aura-light-green"
 const darkTheme = "aura-dark-green"
 
-watch(isDark, () => {
+const setDark = () => {
+    let [oldTheme, newTheme] = [darkTheme, lightTheme]
+
     if (isDark.value) {
-        primeVue.changeTheme(lightTheme, darkTheme, 'theme-link', () => {})
+        [oldTheme, newTheme] = [newTheme, oldTheme]
     }
-    else {
-        primeVue.changeTheme(darkTheme, lightTheme, 'theme-link', () => {})
-    }
+
+    PrimeVue.changeTheme(oldTheme, newTheme, 'theme-link', () => {})
+}
+
+setDark()
+
+watch(isDark, () => {
+    setDark()
 })
 </script>
 
