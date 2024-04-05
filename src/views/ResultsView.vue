@@ -128,7 +128,12 @@ const saveResults = () => {
     saveElement({
         element,
         baseName: settings.value.name,
-        onClone(_, element) {
+        onClone(document, element) {
+            const header = document.getElementById("results-header")!
+            header.classList.add("border-bottom-1")
+            header.classList.add("mb-2")
+            element.prepend(header)
+
             element.style.padding = "1rem"
         },
         success() {
@@ -148,7 +153,7 @@ const save = () => {
     <PageTemplate>
         <template #header>
             <div class="flex gap-2 align-items-center">
-                <div class="flex flex-grow-1 align-items-baseline justify-content-between">
+                <div id="results-header" class="flex flex-grow-1 align-items-baseline justify-content-between">
                     <h1>{{ settings.name }} - Results</h1>
 
                     <FlyerClock />
@@ -163,8 +168,6 @@ const save = () => {
         </template>
 
         <template #content>
-            <!-- MEDIUM: make this contain the page header as well. Maybe create
-            a new component (modal?) specifically for downloading an image of -->
             <div id="results-container">
                 <div v-if="isRoundRobin || isWinnerStaysOn">
                     <ResultsTable />
