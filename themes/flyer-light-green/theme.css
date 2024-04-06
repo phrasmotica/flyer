@@ -1,0 +1,19 @@
+body {
+    background-color: #fff;
+}
+
+footer,
+.nav-buttons {
+    transition: color 0.5s, background-color 0.5s;
+    background-color: seashell !important;
+}
+
+#results-container {
+    /* MEDIUM: this is a hack to make downloaded images look OK on macOS, but
+    it's not a guarantee that it'll look OK on all OSes... */
+    background-color: #fff;
+}
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+    color: hsla(160, 100%, 37%, 1);
+}

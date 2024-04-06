@@ -1,18 +1,3 @@
-body {
-  background-color: #FFF;
-}
-
-footer, .nav-buttons {
-  transition: color 0.5s, background-color 0.5s;
-  background-color: seashell!important;
-}
-
-#results-container {
-  /* MEDIUM: this is a hack to make downloaded images look OK on macOS, but
-  it's not a guarantee that it'll look OK on all OSes... */
-  background-color: #FFF;
-}
-
 :root {
   font-family: "Inter var", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
