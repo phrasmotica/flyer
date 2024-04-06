@@ -3,9 +3,9 @@ import { computed, watch } from "vue"
 
 import ConfirmModal from "./ConfirmModal.vue"
 
-import { useFlyer } from "../../composables/useFlyer"
+import { useFlyer } from "@/composables/useFlyer"
 
-import type { Flyer } from "../../data/Flyer"
+import type { Flyer } from "@/data/Flyer"
 
 const visible = defineModel<boolean>("visible", {
     default: false,

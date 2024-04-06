@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 
-import { KnockoutScheduler } from "../src/data/KnockoutScheduler"
+import { KnockoutScheduler } from "@/data/KnockoutScheduler"
 
 test("computes groups of fixtures correctly for fixed draw", () => {
     const scheduler = new KnockoutScheduler(false)

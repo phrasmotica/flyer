@@ -3,11 +3,11 @@ import { computed } from "vue"
 import { useRouter } from "vue-router"
 import { useTitle } from "@vueuse/core"
 
-import PageTemplate from "../components/PageTemplate.vue"
+import PageTemplate from "@/components/PageTemplate.vue"
 
-import { useRouting } from "../composables/useRouting"
-import { useScreenSizes } from "../composables/useScreenSizes"
-import { useTimedRef } from "../composables/useTimedRef"
+import { useRouting } from "@/composables/useRouting"
+import { useScreenSizes } from "@/composables/useScreenSizes"
+import { useTimedRef } from "@/composables/useTimedRef"
 
 useTitle("Flyer - Admin")
 

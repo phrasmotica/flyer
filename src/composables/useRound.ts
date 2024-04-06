@@ -4,9 +4,9 @@ import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
 
-import type { Fixture } from "../data/Fixture"
-import type { Phase } from "../data/Phase"
-import type { Round } from "../data/Round"
+import type { Fixture } from "@/data/Fixture"
+import type { Phase } from "@/data/Phase"
+import type { Round } from "@/data/Round"
 
 export const useRound = (r: Round | undefined, p: Phase | null) => {
     const round = ref(r)

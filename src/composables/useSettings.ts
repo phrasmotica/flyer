@@ -2,7 +2,7 @@ import { computed, ref } from "vue"
 
 import { useScheduler } from "./useScheduler"
 
-import type { FlyerSettings } from "../data/FlyerSettings"
+import type { FlyerSettings } from "@/data/FlyerSettings"
 
 export const useSettings = (s: FlyerSettings) => {
     const settings = ref(s)

@@ -7,10 +7,10 @@ import { usePhaseSettings } from "./usePhaseSettings"
 import { RoundStatus } from "./useRound"
 import { useScheduler } from "./useScheduler"
 
-import type { Fixture } from "../data/Fixture"
-import type { Phase } from "../data/Phase"
-import type { PhaseSettings } from "../data/PhaseSettings"
-import type { Round } from "../data/Round"
+import type { Fixture } from "@/data/Fixture"
+import type { Phase } from "@/data/Phase"
+import type { PhaseSettings } from "@/data/PhaseSettings"
+import type { Round } from "@/data/Round"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)

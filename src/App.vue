@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router'
 import { useDark } from "@vueuse/core"
 import { usePrimeVue } from 'primevue/config'
 
-import { useUiStore } from "./stores/ui"
+import { useUiStore } from "@/stores/ui"
 
 const uiStore = useUiStore()
 

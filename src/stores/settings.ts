@@ -2,12 +2,12 @@ import { computed, watch } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
-import { useListFallback } from "../composables/useListFallback"
-import { usePhaseSettings } from "../composables/usePhaseSettings"
+import { useListFallback } from "@/composables/useListFallback"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 
-import type { FlyerSettings } from "../data/FlyerSettings"
-import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "../data/PhaseSettings"
-import type { Table } from "../data/Table"
+import type { FlyerSettings } from "@/data/FlyerSettings"
+import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "@/data/PhaseSettings"
+import type { Table } from "@/data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)

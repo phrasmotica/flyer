@@ -2,8 +2,8 @@ import { computed, ref } from "vue"
 
 import { useRankings } from "./useRankings"
 
-import type { Phase } from "../data/Phase"
-import type { PlayerRecord } from "../data/PlayerRecord"
+import type { Phase } from "@/data/Phase"
+import type { PlayerRecord } from "@/data/PlayerRecord"
 
 export const usePlayOffs = (p: Phase[]) => {
     const playOffs = ref(p)

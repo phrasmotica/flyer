@@ -6,7 +6,7 @@ import { usePhaseSettings } from "./usePhaseSettings"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
 
-import type { Phase } from "../data/Phase"
+import type { Phase } from "@/data/Phase"
 
 export const useStandings = (p: Phase | null) => {
     const {

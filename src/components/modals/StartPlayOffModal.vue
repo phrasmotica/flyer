@@ -3,10 +3,10 @@ import { computed } from "vue"
 
 import ConfirmModal from "./ConfirmModal.vue"
 
-import { useFlyer } from "../../composables/useFlyer"
-import { useStandings } from "../../composables/useStandings"
+import { useFlyer } from "@/composables/useFlyer"
+import { useStandings } from "@/composables/useStandings"
 
-import { useFlyerStore } from "../../stores/flyer"
+import { useFlyerStore } from "@/stores/flyer"
 
 const visible = defineModel<boolean>("visible", {
     default: false,

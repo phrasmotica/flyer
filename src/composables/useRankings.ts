@@ -1,8 +1,8 @@
-import type { Fixture } from "../data/Fixture"
-import { TieBreaker, Format, type PhaseSettings } from "../data/PhaseSettings"
-import type { Player } from "../data/Player"
-import type { PlayerRecord } from "../data/PlayerRecord"
-import type { PlayOff } from "../data/PlayOff"
+import type { Fixture } from "@/data/Fixture"
+import { TieBreaker, Format, type PhaseSettings } from "@/data/PhaseSettings"
+import type { Player } from "@/data/Player"
+import type { PlayerRecord } from "@/data/PlayerRecord"
+import type { PlayOff } from "@/data/PlayOff"
 
 export const useRankings = () => {
     const hasPlayed = (f: Fixture, playerId: string) => {

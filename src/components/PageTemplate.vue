@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useSlots } from "vue"
 
-import UiThemeButton from "./UiThemeButton.vue"
+import UiThemeButton from "./theming/UiThemeButton.vue"
 
-import { useUiStore } from "../stores/ui"
+import { useUiStore } from "@/stores/ui"
 
 const uiStore = useUiStore()
 

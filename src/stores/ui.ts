@@ -2,7 +2,7 @@ import { computed } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 
-import { FlyerFormSection, PlayViewSection, SidebarPosition, type UiSettings } from "../data/UiSettings"
+import { FlyerFormSection, PlayViewSection, SidebarPosition, type UiSettings } from "@/data/UiSettings"
 
 const defaultSettings: UiSettings = {
     baseColourTheme: "aura-light-green",

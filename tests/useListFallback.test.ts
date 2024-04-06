@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 
-import { useListFallback } from "../src/composables/useListFallback"
+import { useListFallback } from "@/composables/useListFallback"
 
 const { getFallback } = useListFallback()
 

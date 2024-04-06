@@ -1,0 +1,73 @@
+<script setup lang="ts">
+import { computed } from "vue"
+
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
+
+import type { PhaseSettings } from "@/data/PhaseSettings"
+
+const props = defineProps<{
+    settings: PhaseSettings
+    playerCount: number
+    tableCount: number
+    raceTos: {
+        name: string
+        raceTo: number | null
+    }[]
+}>()
+
+const {
+    formatSummary,
+    formatDetails,
+    drawSummary,
+    raceSummary,
+    winsRequiredSummary,
+    rulesSummary,
+    rulesDetails,
+    tieBreakerSummary,
+    tieBreakerDetails,
+    isRoundRobin,
+    isWinnerStaysOn,
+    isFixedMatchLength,
+} = usePhaseSettings(props.settings)
+
+const variableRacesSummary = computed(() => {
+    if (isFixedMatchLength.value) {
+        return ""
+    }
+
+    return "Races to " + props.raceTos
+        .map(r => `${r.raceTo!} (${r.name})`)
+        .join(", then ")
+})
+</script>
+
+<template>
+    <div class="mb-2">
+        <strong>{{ props.playerCount }} players</strong>
+    </div>
+
+    <div class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong v-if="props.tableCount > 1">{{ props.tableCount }} tables</strong>
+        <strong v-else>{{ props.tableCount }} table</strong>
+    </div>
+
+    <div class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong v-if="isWinnerStaysOn">{{ winsRequiredSummary }}</strong>
+        <strong v-else-if="variableRacesSummary">{{ variableRacesSummary }}</strong>
+        <strong v-else-if="raceSummary">{{ raceSummary }}</strong>
+    </div>
+
+    <div class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong>{{ formatSummary }}</strong>&nbsp;<em>({{ formatDetails }})</em>
+        <span v-if="drawSummary">&nbsp;via a <strong>{{ drawSummary }}</strong></span>
+        <!-- MEDIUM: indicate how many stages are involved, if it's a round-robin -->
+    </div>
+
+    <div class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong>{{ rulesSummary }}</strong>&nbsp;<em>({{ rulesDetails }})</em>
+    </div>
+
+    <div v-if="isRoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
+        <strong>{{ tieBreakerSummary }}</strong>&nbsp;<em>({{ tieBreakerDetails }})</em>
+    </div>
+</template>

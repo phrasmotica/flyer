@@ -2,7 +2,7 @@
 import { computed, ref } from "vue"
 
 import ConfirmModal from "./ConfirmModal.vue"
-import TableInput from "../TableInput.vue"
+import TableInput from "../setup/TableInput.vue"
 
 const visible = defineModel<boolean>("visible", {
     default: false,

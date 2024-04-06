@@ -1,8 +1,8 @@
 import { computed, ref } from "vue"
 
-import { Format, TieBreaker, MatchLengthModel, type PhaseSettings } from "../data/PhaseSettings"
+import { Format, TieBreaker, MatchLengthModel, type PhaseSettings } from "@/data/PhaseSettings"
 
-import { formatList, matchLengthModelList, ruleSetList, tieBreakerList } from "../stores/settings"
+import { formatList, matchLengthModelList, ruleSetList, tieBreakerList } from "@/stores/settings"
 
 export const usePhaseSettings = (s: PhaseSettings) => {
     const settings = ref(s)

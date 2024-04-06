@@ -9,9 +9,9 @@ import { usePhaseSettings } from "./usePhaseSettings"
 import { useRound } from "./useRound"
 import { useScheduler } from "./useScheduler"
 
-import type { Fixture } from "../data/Fixture"
-import type { Phase } from "../data/Phase"
-import type { Round } from "../data/Round"
+import type { Fixture } from "@/data/Fixture"
+import type { Phase } from "@/data/Phase"
+import type { Round } from "@/data/Round"
 
 // LOW: ideally this would not have to accept undefined, but we use it in places
 // where the argument can currently be undefined (see FixtureModal.vue)

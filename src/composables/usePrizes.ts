@@ -3,7 +3,7 @@ import type { MeterItem } from "primevue/metergroup"
 
 import { usePhaseSettings } from "./usePhaseSettings"
 
-import { MoneySplit, type PhaseSettings } from "../data/PhaseSettings"
+import { MoneySplit, type PhaseSettings } from "@/data/PhaseSettings"
 
 export const usePrizes = (p: PhaseSettings, c: number) => {
     const playerCount = ref(c)

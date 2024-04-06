@@ -3,19 +3,19 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useClipboard, useTitle, useToggle } from "@vueuse/core"
 
-import FlyerHistory from "../components/FlyerHistory.vue"
-import HistoryButtons from "../components/HistoryButtons.vue"
-import ImportPastFlyersModal from "../components/modals/ImportPastFlyersModal.vue"
-import PageTemplate from "../components/PageTemplate.vue"
+import FlyerHistory from "@/components/history/FlyerHistory.vue"
+import HistoryButtons from "@/components/history/HistoryButtons.vue"
+import ImportPastFlyersModal from "@/components/modals/ImportPastFlyersModal.vue"
+import PageTemplate from "@/components/PageTemplate.vue"
 
-import { useRouting } from "../composables/useRouting"
-import { useScreenSizes } from "../composables/useScreenSizes"
-import { useTimedRef } from "../composables/useTimedRef"
+import { useRouting } from "@/composables/useRouting"
+import { useScreenSizes } from "@/composables/useScreenSizes"
+import { useTimedRef } from "@/composables/useTimedRef"
 
-import type { Flyer } from "../data/Flyer"
+import type { Flyer } from "@/data/Flyer"
 
-import { useFlyerStore } from "../stores/flyer"
-import { useFlyerHistoryStore } from "../stores/flyerHistory"
+import { useFlyerStore } from "@/stores/flyer"
+import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 
 useTitle("Flyer - Past Flyers")
 

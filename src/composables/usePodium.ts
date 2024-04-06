@@ -4,7 +4,7 @@ import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
 
-import type { Phase } from "../data/Phase"
+import type { Phase } from "@/data/Phase"
 import { usePrizes } from "./usePrizes"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently

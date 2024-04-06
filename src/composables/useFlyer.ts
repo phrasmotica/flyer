@@ -3,7 +3,7 @@ import { computed, ref } from "vue"
 import { usePlayOffs } from "./usePlayOffs"
 import { useStandings } from "./useStandings"
 
-import type { Flyer } from "../data/Flyer"
+import type { Flyer } from "@/data/Flyer"
 
 export const useFlyer = (f: Flyer | null) => {
     const flyer = ref(f)

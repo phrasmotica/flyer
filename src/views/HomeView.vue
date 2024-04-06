@@ -4,18 +4,18 @@ import { useRouter } from "vue-router"
 import { useFocus, useTitle, useToggle } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
-import FlyerForm from "../components/FlyerForm.vue"
-import FlyerFormSection from "../components/FlyerFormSection.vue"
-import FlyerSummary from "../components/FlyerSummary.vue"
-import PageTemplate from "../components/PageTemplate.vue"
-import StartFlyerModal from "../components/modals/StartFlyerModal.vue"
+import FlyerForm from "@/components/setup/FlyerForm.vue"
+import FlyerFormSection from "@/components/setup/FlyerFormSection.vue"
+import FlyerSummary from "@/components/setup/FlyerSummary.vue"
+import PageTemplate from "@/components/PageTemplate.vue"
+import StartFlyerModal from "@/components/modals/StartFlyerModal.vue"
 
-import { useRouting } from "../composables/useRouting"
-import { useScreenSizes } from "../composables/useScreenSizes"
-import { useSettings } from "../composables/useSettings"
+import { useRouting } from "@/composables/useRouting"
+import { useScreenSizes } from "@/composables/useScreenSizes"
+import { useSettings } from "@/composables/useSettings"
 
-import { useFlyerStore } from "../stores/flyer"
-import { useSettingsStore } from "../stores/settings"
+import { useFlyerStore } from "@/stores/flyer"
+import { useSettingsStore } from "@/stores/settings"
 
 useTitle("Flyer - New Flyer")
 

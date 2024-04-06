@@ -2,12 +2,12 @@
 import { useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./ConfirmModal.vue"
-import LabelledCheckbox from "../LabelledCheckbox.vue"
+import LabelledCheckbox from "../setup/LabelledCheckbox.vue"
 
-import { useSettings } from "../../composables/useSettings"
-import { useTweaks } from "../../composables/useTweaks"
+import { useSettings } from "@/composables/useSettings"
+import { useTweaks } from "@/composables/useTweaks"
 
-import { useSettingsStore } from "../../stores/settings"
+import { useSettingsStore } from "@/stores/settings"
 
 const visible = defineModel<boolean>("visible", {
     default: false,
