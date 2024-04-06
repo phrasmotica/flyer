@@ -13,3 +13,7 @@ footer,
     it's not a guarantee that it'll look OK on all OSes... */
     background-color: #121212;
 }
+
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+    color: hsla(160, 100%, 37%, 1);
+}

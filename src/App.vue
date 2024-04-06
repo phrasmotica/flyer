@@ -15,8 +15,8 @@ const PrimeVue = usePrimeVue()
 const lightBaseTheme = "aura-light-green"
 const darkBaseTheme = "aura-dark-green"
 
-const lightTheme = "flyer-light"
-const darkTheme = "flyer-dark"
+const lightTheme = "flyer-light-green"
+const darkTheme = "flyer-dark-green"
 
 const setDark = () => {
     let newBaseTheme = isDark.value ? darkBaseTheme : lightBaseTheme

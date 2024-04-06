@@ -378,10 +378,6 @@ onUpdated(() => {
     transition: background-color 0.5s;
 }
 
-.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
-    color: hsla(160, 100%, 37%, 1);
-}
-
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link .p-menuitem-icon {
     margin-right: 0;
     font-size: 1.5rem;
