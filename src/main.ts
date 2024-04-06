@@ -18,6 +18,7 @@ import Dropdown from 'primevue/dropdown'
 import IconField from "primevue/iconfield"
 import InputIcon from "primevue/inputicon"
 import InputNumber from "primevue/inputnumber"
+import InputSwitch from 'primevue/inputswitch'
 import InputText from "primevue/inputtext"
 import Message from 'primevue/message'
 import MeterGroup from 'primevue/metergroup'
@@ -78,6 +79,7 @@ app.component("Dropdown", Dropdown)
 app.component("IconField", IconField)
 app.component("InputIcon", InputIcon)
 app.component("InputNumber", InputNumber)
+app.component("InputSwitch", InputSwitch)
 app.component("InputText", InputText)
 app.component("Message", Message)
 app.component("MeterGroup", MeterGroup)
