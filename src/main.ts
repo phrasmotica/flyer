@@ -21,6 +21,7 @@ import InputNumber from "primevue/inputnumber"
 import InputText from "primevue/inputtext"
 import Message from 'primevue/message'
 import MeterGroup from 'primevue/metergroup'
+import OverlayPanel from 'primevue/overlaypanel'
 import RadioButton from 'primevue/radiobutton'
 import SelectButton from "primevue/selectbutton"
 import SplitButton from 'primevue/splitbutton'
@@ -80,6 +81,7 @@ app.component("InputNumber", InputNumber)
 app.component("InputText", InputText)
 app.component("Message", Message)
 app.component("MeterGroup", MeterGroup)
+app.component("OverlayPanel", OverlayPanel)
 app.component("RadioButton", RadioButton)
 app.component("SelectButton", SelectButton)
 app.component("Slider", Slider)
