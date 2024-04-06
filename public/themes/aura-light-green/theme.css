@@ -1,3 +1,7 @@
+body {
+  background-color: #FFF;
+}
+
 #results-container {
   /* MEDIUM: this is a hack to make downloaded images look OK on macOS, but
   it's not a guarantee that it'll look OK on all OSes... */
