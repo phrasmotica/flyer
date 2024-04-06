@@ -169,7 +169,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
                 <div
                     class="p-1 mr-1 border-round-md text-left flex-1"
                     :class="playerCellClass(fixture, 0)"
-                    @click="handleNameClick(fixture.id)">
+                    @click="() => handleNameClick(fixture!.id)">
                     <span v-if="fixture.scores[0].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
@@ -220,7 +220,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
                 <div
                     class="p-1 ml-1 border-round-md text-right flex-1"
                     :class="playerCellClass(fixture, 1)"
-                    @click="handleNameClick(fixture.id)">
+                    @click="() => handleNameClick(fixture!.id)">
                     <span v-if="fixture.scores[1].isBye" class="text-gray-400">
                         <em>(bye)</em>
                     </span>
