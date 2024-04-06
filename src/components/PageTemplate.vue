@@ -65,19 +65,8 @@ main {
     height: 100dvh;
 }
 
-.nav-buttons {
-    transition: color 0.5s, background-color 0.5s;
-    background-color: seashell!important;
-}
-
 .nav-buttons > .p-button:last-child {
     margin-bottom: 0!important;
-}
-
-@media (prefers-color-scheme: dark) {
-    .nav-buttons {
-        background-color: rgb(68, 60, 53)!important;
-    }
 }
 
 @media screen and (max-width: 767px) {
