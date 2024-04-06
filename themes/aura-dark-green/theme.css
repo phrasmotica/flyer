@@ -1,3 +1,12 @@
+body {
+  background-color: #121212;
+}
+
+footer, .nav-buttons {
+  transition: color 0.5s, background-color 0.5s;
+  background-color: rgb(68, 60, 53)!important;
+}
+
 #results-container {
   /* MEDIUM: this is a hack to make downloaded images look OK on macOS, but
   it's not a guarantee that it'll look OK on all OSes... */
