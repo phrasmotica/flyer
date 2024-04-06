@@ -12,14 +12,19 @@ const isDark = useDark()
 
 const PrimeVue = usePrimeVue()
 
-const lightTheme = "aura-light-green"
-const darkTheme = "aura-dark-green"
+const lightBaseTheme = "aura-light-green"
+const darkBaseTheme = "aura-dark-green"
+
+const lightTheme = "flyer-light"
+const darkTheme = "flyer-dark"
 
 const setDark = () => {
+    let newBaseTheme = isDark.value ? darkBaseTheme : lightBaseTheme
+    PrimeVue.changeTheme(uiStore.baseColourTheme, newBaseTheme, 'theme-link-base', () => {})
+    uiStore.settings.baseColourTheme = newBaseTheme
+
     let newTheme = isDark.value ? darkTheme : lightTheme
-
-    PrimeVue.changeTheme(uiStore.colourTheme, newTheme, 'theme-link', () => {})
-
+    PrimeVue.changeTheme(uiStore.colourTheme, newTheme, 'theme-link-flyer', () => {})
     uiStore.settings.colourTheme = newTheme
 }
 

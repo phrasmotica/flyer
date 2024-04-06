@@ -1,4 +1,5 @@
 export interface UiSettings {
+    baseColourTheme: string
     colourTheme: string
     sidebarPosition: SidebarPosition
     flyerFormSection: FlyerFormSection

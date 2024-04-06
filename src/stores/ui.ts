@@ -5,7 +5,8 @@ import { useStorage } from "@vueuse/core"
 import { FlyerFormSection, PlayViewSection, SidebarPosition, type UiSettings } from "../data/UiSettings"
 
 const defaultSettings: UiSettings = {
-    colourTheme: "aura-light-green",
+    baseColourTheme: "aura-light-green",
+    colourTheme: "flyer-light",
     sidebarPosition: SidebarPosition.Right,
     flyerFormSection: FlyerFormSection.Players,
     currentSection: PlayViewSection.Fixtures,
@@ -15,6 +16,7 @@ const defaultSettings: UiSettings = {
 export const useUiStore = defineStore("ui", () => {
     const settings = useStorage("ui", defaultSettings)
 
+    const baseColourTheme = computed(() => settings.value.baseColourTheme)
     const colourTheme = computed(() => settings.value.colourTheme)
     const sidebarPosition = computed(() => settings.value.sidebarPosition)
     const flyerFormSection = computed(() => settings.value.flyerFormSection)
@@ -47,6 +49,7 @@ export const useUiStore = defineStore("ui", () => {
     return {
         settings,
 
+        baseColourTheme,
         colourTheme,
         flyerFormSection,
         currentSection,
