@@ -60,6 +60,7 @@ const variableRacesSummary = computed(() => {
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
         <strong>{{ formatSummary }}</strong>&nbsp;<em>({{ formatDetails }})</em>
         <span v-if="drawSummary">&nbsp;via a <strong>{{ drawSummary }}</strong></span>
+        <!-- MEDIUM: indicate how many stages are involved, if it's a round-robin -->
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
