@@ -2,9 +2,7 @@
 import { useDark, useToggle } from "@vueuse/core"
 import { computed } from "vue"
 
-const isDark = useDark({
-    selector: ":root",
-})
+const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
 const icon = computed(() => isDark.value ? "pi pi-sun" : "pi pi-moon")
