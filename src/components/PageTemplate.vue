@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { useSlots } from "vue"
 
+import DarkModeToggleButton from "./DarkModeToggleButton.vue"
+import SidebarLayoutToggleButton from "./SidebarLayoutToggleButton.vue"
+
+import { useScreenSizes } from "../composables/useScreenSizes"
+
 import { useUiStore } from "../stores/ui"
 
 const uiStore = useUiStore()
 
 const slots = useSlots()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 </script>
 
 <template>
@@ -17,13 +26,22 @@ const slots = useSlots()
 
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <div v-if="slots.header" class="border-bottom-1 mb-2">
-                <slot name="header" />
+                <div class="flex gap-2 align-items-center">
+                    <slot name="header" />
 
-                <!-- TODO: add a slot for header buttons -->
+                    <div class="flex gap-1">
+                        <slot name="headerButtons" />
 
-                <!-- TODO: add a button for customising UI appearance in a
-                modal. Light/dark mode, colour theme, sidebar position, etc.
-                This should appear for all screen sizes -->
+                        <SidebarLayoutToggleButton v-if="!isSmallScreen" />
+
+                        <DarkModeToggleButton v-if="!isSmallScreen" />
+
+                        <!-- TODO: add a button for customising UI appearance in a
+                        modal. Light/dark mode, colour theme, sidebar position, etc.
+                        This should appear for all screen sizes -->
+                    </div>
+                </div>
+
             </div>
 
             <div v-if="slots.sidebar">

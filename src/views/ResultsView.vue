@@ -3,7 +3,6 @@ import { computed } from "vue"
 import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
-import DarkModeToggleButton from "@/components/DarkModeToggleButton.vue"
 import FlyerClock from "@/components/FlyerClock.vue"
 import LightsCalculator from "../components/LightsCalculator.vue"
 import NewFlyerModal from "@/components/modals/NewFlyerModal.vue"
@@ -12,7 +11,6 @@ import Podium from "../components/Podium.vue"
 import ResultsButtons from "../components/ResultsButtons.vue"
 import ResultsMessages from "@/components/ResultsMessages.vue"
 import ResultsTable from "../components/ResultsTable.vue"
-import SidebarLayoutToggleButton from "@/components/SidebarLayoutToggleButton.vue"
 import StartPlayOffModal from "../components/modals/StartPlayOffModal.vue"
 import WinningsList from "../components/WinningsList.vue"
 
@@ -152,18 +150,10 @@ const save = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex gap-2 align-items-center">
-                <div id="results-header" class="flex flex-grow-1 align-items-baseline justify-content-between">
-                    <h1>{{ settings.name }} - Results</h1>
+            <div id="results-header" class="flex flex-grow-1 align-items-baseline justify-content-between">
+                <h1>{{ settings.name }} - Results</h1>
 
-                    <FlyerClock />
-                </div>
-
-                <div class="flex gap-1">
-                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
-
-                    <DarkModeToggleButton v-if="!isSmallScreen" />
-                </div>
+                <FlyerClock />
             </div>
         </template>
 

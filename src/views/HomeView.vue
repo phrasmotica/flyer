@@ -8,7 +8,6 @@ import FlyerForm from "../components/FlyerForm.vue"
 import FlyerFormSection from "../components/FlyerFormSection.vue"
 import FlyerSummary from "../components/FlyerSummary.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 import StartFlyerModal from "../components/modals/StartFlyerModal.vue"
 
 import { useRouting } from "../composables/useRouting"
@@ -17,7 +16,6 @@ import { useSettings } from "../composables/useSettings"
 
 import { useFlyerStore } from "../stores/flyer"
 import { useSettingsStore } from "../stores/settings"
-import DarkModeToggleButton from "@/components/DarkModeToggleButton.vue"
 
 useTitle("Flyer - New Flyer")
 
@@ -69,20 +67,16 @@ const start = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex align-items-center justify-content-between">
+            <div class="flex flex-grow-1 align-items-center justify-content-between">
                 <h1>New Flyer</h1>
-
-                <div class="flex gap-1">
-                    <Button
-                        icon="pi pi-history"
-                        severity="info"
-                        @click="routing.toHistory" />
-
-                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
-
-                    <DarkModeToggleButton v-if="!isSmallScreen" />
-                </div>
             </div>
+        </template>
+
+        <template #headerButtons>
+            <Button
+                icon="pi pi-history"
+                severity="info"
+                @click="routing.toHistory" />
         </template>
 
         <template #content>

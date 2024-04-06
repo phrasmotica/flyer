@@ -4,14 +4,12 @@ import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
 import AbandonFlyerModal from "../components/modals/AbandonFlyerModal.vue"
-import DarkModeToggleButton from "../components/DarkModeToggleButton.vue"
 import FinishFlyerModal from "../components/modals/FinishFlyerModal.vue"
 import FixtureModal from "../components/modals/FixtureModal.vue"
 import FlyerClock from "../components/FlyerClock.vue"
 import PageTemplate from "../components/PageTemplate.vue"
 import PlayButtons from "../components/PlayButtons.vue"
 import PlaySections from "../components/PlaySections.vue"
-import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 
 import { useFlyer } from "../composables/useFlyer"
 import { usePhase } from "../composables/usePhase"
@@ -197,18 +195,10 @@ const hideFixtureModal = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex gap-2 align-items-center">
-                <div class="flex flex-grow-1 align-items-baseline justify-content-between">
-                    <h1>{{ header }}</h1>
+            <div class="flex flex-grow-1 align-items-baseline justify-content-between">
+                <h1>{{ header }}</h1>
 
-                    <FlyerClock />
-                </div>
-
-                <div class="flex gap-1">
-                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
-
-                    <DarkModeToggleButton v-if="!isSmallScreen" />
-                </div>
+                <FlyerClock />
             </div>
         </template>
 

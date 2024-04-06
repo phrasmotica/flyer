@@ -3,12 +3,10 @@ import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useClipboard, useTitle, useToggle } from "@vueuse/core"
 
-import DarkModeToggleButton from "../components/DarkModeToggleButton.vue"
 import FlyerHistory from "../components/FlyerHistory.vue"
 import HistoryButtons from "../components/HistoryButtons.vue"
 import ImportPastFlyersModal from "../components/modals/ImportPastFlyersModal.vue"
 import PageTemplate from "../components/PageTemplate.vue"
-import SidebarLayoutToggleButton from "../components/SidebarLayoutToggleButton.vue"
 
 import { useRouting } from "../composables/useRouting"
 import { useScreenSizes } from "../composables/useScreenSizes"
@@ -82,17 +80,13 @@ const exportPastFlyers = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex align-items-center justify-content-between">
+            <div class="flex flex-grow-1 align-items-center justify-content-between">
                 <h1>Past Flyers</h1>
-
-                <div class="flex gap-1">
-                    <Button icon="pi pi-plus" severity="info" @click="routing.toSetup" />
-
-                    <SidebarLayoutToggleButton v-if="!isSmallScreen" />
-
-                    <DarkModeToggleButton v-if="!isSmallScreen" />
-                </div>
             </div>
+        </template>
+
+        <template #headerButtons>
+            <Button icon="pi pi-plus" severity="info" @click="routing.toSetup" />
         </template>
 
         <template #content>
