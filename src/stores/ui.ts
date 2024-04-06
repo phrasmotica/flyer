@@ -13,6 +13,17 @@ const defaultSettings: UiSettings = {
     pinnedSection: null,
 }
 
+export const sidebarPositionOptions = [
+    {
+        name: "Left",
+        value: SidebarPosition.Left,
+    },
+    {
+        name: "Right",
+        value: SidebarPosition.Right,
+    },
+]
+
 export const useUiStore = defineStore("ui", () => {
     const settings = useStorage("ui", defaultSettings)
 
