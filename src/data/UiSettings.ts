@@ -1,4 +1,5 @@
 export interface UiSettings {
+    colourTheme: string
     sidebarPosition: SidebarPosition
     flyerFormSection: FlyerFormSection
     currentSection: PlayViewSection

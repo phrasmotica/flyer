@@ -4,6 +4,10 @@ import { RouterView } from 'vue-router'
 import { useDark } from "@vueuse/core"
 import { usePrimeVue } from 'primevue/config'
 
+import { useUiStore } from "./stores/ui"
+
+const uiStore = useUiStore()
+
 const isDark = useDark()
 
 const PrimeVue = usePrimeVue()
@@ -12,13 +16,11 @@ const lightTheme = "aura-light-green"
 const darkTheme = "aura-dark-green"
 
 const setDark = () => {
-    let [oldTheme, newTheme] = [darkTheme, lightTheme]
+    let newTheme = isDark.value ? darkTheme : lightTheme
 
-    if (isDark.value) {
-        [oldTheme, newTheme] = [newTheme, oldTheme]
-    }
+    PrimeVue.changeTheme(uiStore.colourTheme, newTheme, 'theme-link', () => {})
 
-    PrimeVue.changeTheme(oldTheme, newTheme, 'theme-link', () => {})
+    uiStore.settings.colourTheme = newTheme
 }
 
 setDark()
