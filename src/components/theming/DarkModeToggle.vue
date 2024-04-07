@@ -5,9 +5,6 @@ import { v4 as uuidv4 } from "uuid"
 const isDark = useDark()
 
 const id = "dark-mode-toggle-" + uuidv4()
-
-// BUG: when page is reloaded while in dark mode, the page reverts to light mode
-// and the toggle still says it's dark mode
 </script>
 
 <template>
