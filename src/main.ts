@@ -61,7 +61,14 @@ app.use(createI18n({
             }
         },
     },
-    messages: {},
+    messages: {
+        // HIGH: store these in a JSON file
+        "en-GB": {
+            common: {
+                "nTimes": "once | {n} times",
+            },
+        },
+    },
 }))
 
 app.use(createPinia())

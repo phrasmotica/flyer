@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 
 import type { PhaseSettings } from "@/data/PhaseSettings"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     settings: PhaseSettings
@@ -16,6 +19,7 @@ const props = defineProps<{
 }>()
 
 const {
+    settings,
     formatSummary,
     formatDetails,
     drawSummary,
@@ -39,6 +43,14 @@ const variableRacesSummary = computed(() => {
         .map(r => `${r.raceTo!} (${r.name})`)
         .join(", then ")
 })
+
+const stagesSummary = computed(() => {
+    if (isRoundRobin.value) {
+        return t("common.nTimes", settings.value.stageCount)
+    }
+
+    return ""
+})
 </script>
 
 <template>
@@ -58,7 +70,9 @@ const variableRacesSummary = computed(() => {
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
-        <strong>{{ formatSummary }}</strong>&nbsp;<em>({{ formatDetails }})</em>
+        <strong>{{ formatSummary }}</strong>&nbsp;
+        <em>({{ formatDetails }}<span v-if="stagesSummary">, {{ stagesSummary }}</span>)</em>
+
         <span v-if="drawSummary">&nbsp;via a <strong>{{ drawSummary }}</strong></span>
         <!-- MEDIUM: indicate how many stages are involved, if it's a round-robin -->
     </div>
