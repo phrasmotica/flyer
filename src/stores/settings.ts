@@ -7,25 +7,28 @@ import { usePhaseSettings } from "@/composables/usePhaseSettings"
 
 import type { FlyerSettings } from "@/data/FlyerSettings"
 import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "@/data/PhaseSettings"
+import type { SettingsDetails } from "@/data/SettingsDetails"
 import type { Table } from "@/data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 
-export const matchLengthModelList = [
+export const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
     {
         value: MatchLengthModel.Fixed,
         name: "Fixed",
         summary: "Fixed races",
+        details: "",
     },
     {
         value: MatchLengthModel.Variable,
         name: "Variable",
         summary: "Variable races",
+        details: "",
     },
 ]
 
-export const formatList = [
+export const formatList: SettingsDetails<Format>[] = [
     {
         value: Format.Knockout,
         name: "Knockout",
@@ -36,7 +39,7 @@ export const formatList = [
         value: Format.RoundRobin,
         name: "Round-Robin",
         summary: "Round-Robin format",
-        details: "every player plays against every other player once",
+        details: "every player plays against every other player",
     },
     {
         value: Format.WinnerStaysOn,
@@ -46,7 +49,7 @@ export const formatList = [
     },
 ]
 
-export const ruleSetList = [
+export const ruleSetList: SettingsDetails<RuleSet>[] = [
     {
         value: RuleSet.Blackball,
         name: "Blackball",
@@ -61,7 +64,7 @@ export const ruleSetList = [
     },
 ]
 
-export const tieBreakerList = [
+export const tieBreakerList: SettingsDetails<TieBreaker>[] = [
     {
         value: TieBreaker.HeadToHead,
         name: "Head-to-Head",
