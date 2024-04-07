@@ -1,4 +1,14 @@
-@import './base.css';
+body {
+  min-height: 100vh;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
 
 #app {
   max-width: 1280px;
@@ -9,53 +19,17 @@
   font-weight: normal;
 }
 
-/* HIGH: sort this out for different colour themes */
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: color 0.4s, background-color 0.5s;
+h1, h2, h3, .p-button-label, .p-dialog-title {
+  margin: 0;
+  font-weight: normal;
+}
+
+a {
   padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
 }
 
 .p-message .p-message-text {
     font-size: 14px;
-}
-
-.p-tieredmenu .p-menuitem > .p-menuitem-content a.p-menuitem-link {
-    color: #334155;
-}
-
-.p-button.p-button-secondary, .p-button-group.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button {
-  transition: color 0.5s, background-color 0.5s;
-}
-
-.p-button.p-button-danger, .p-button-group.p-button-danger > .p-button, .p-splitbutton.p-button-danger > .p-button {
-  background-color: red;
-  border-color: red;
-}
-
-.p-dialog {
-  border-color: var(--color-background)!important;
-}
-
-.p-dialog-header, .p-dialog-content {
-  transition: color 0.5s, background-color 0.5s;
-  color: var(--color-text);
-  background-color: var(--color-background)!important;
 }
 
 @media screen and (max-width: 575px) {
