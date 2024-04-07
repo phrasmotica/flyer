@@ -8,8 +8,8 @@ const id = "dark-mode-toggle-" + uuidv4()
 </script>
 
 <template>
-    <div class="flex gap-2 align-items-center justify-content-between">
-        <label :for="id">
+    <div class="flex gap-4 align-items-center justify-content-between">
+        <label :for="id" class="text-sm">
             Dark mode
         </label>
 
