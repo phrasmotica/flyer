@@ -14,7 +14,7 @@ const flyerStore = useFlyerStore()
 
 const {
     overallStandings,
-    moneyRecipients,
+    overallMoneyRecipients,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -27,15 +27,15 @@ const {
         <p v-if="overallStandings[0]" class="m-0 text-center text-xl">
             <span v-if="isHistoric">{{ overallStandings[0].name }} won&nbsp;</span>
             <span v-else>{{ overallStandings[0].name }} wins&nbsp;</span>
-            <span v-if="moneyRecipients.length > 0" class="font-bold" :style="{color: moneyRecipients[0].colour,}">
-                {{ n(moneyRecipients[0].winnings, "currency") }}
+            <span v-if="overallMoneyRecipients.length > 0" class="font-bold" :style="{color: overallMoneyRecipients[0].colour,}">
+                {{ n(overallMoneyRecipients[0].winnings, "currency") }}
             </span>
         </p>
 
-        <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
+        <div v-if="overallMoneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
             <WinningsList
                 header="Other prize money:"
-                :winnings="moneyRecipients.slice(1)" />
+                :winnings="overallMoneyRecipients.slice(1)" />
         </div>
     </div>
 </template>

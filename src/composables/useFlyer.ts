@@ -16,13 +16,13 @@ export const useFlyer = (f: Flyer | null) => {
         completedPlayOffs,
         getPlayOffRank,
         processStandings,
-    } = usePlayOffs(playOffPhases.value)
+        getMoneyRecipients,
+    } = usePlayOffs(playOffPhases.value, mainPhase.value)
 
     const {
         standings,
         playOffs,
         requiresPlayOff,
-        moneyRecipients,
     } = useStandings(mainPhase.value)
 
     const currentPhase = computed(() => {
@@ -38,6 +38,8 @@ export const useFlyer = (f: Flyer | null) => {
     const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
 
     const overallStandings = computed(() => processStandings(standings.value))
+
+    const overallMoneyRecipients = computed(() => getMoneyRecipients(standings.value))
 
     const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
@@ -58,9 +60,9 @@ export const useFlyer = (f: Flyer | null) => {
         playOffs,
         requiresPlayOff,
         completedPlayOffs,
-        moneyRecipients,
 
         overallStandings,
+        overallMoneyRecipients,
         incompleteCount,
 
         getPlayOffRank,
