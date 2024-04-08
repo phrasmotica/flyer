@@ -123,6 +123,8 @@ const showSection = (section: PlayViewSection) => {
 
             <PhaseEventLogSection v-if="showSection(PlayViewSection.EventLog)" />
         </div>
+
+        <!-- MEDIUM: show tie-breaker messages for results table -->
     </div>
 </template>
 
