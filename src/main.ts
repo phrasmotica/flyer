@@ -35,6 +35,8 @@ import ToastService from 'primevue/toastservice'
 import App from './App.vue'
 import router from './router'
 
+import enGb from "./i18n/en-GB.json"
+
 const app = createApp(App)
 
 app.use(createI18n({
@@ -62,12 +64,7 @@ app.use(createI18n({
         },
     },
     messages: {
-        // HIGH: store these in a JSON file
-        "en-GB": {
-            common: {
-                "nTimes": "once | {n} times",
-            },
-        },
+        "en-GB": enGb,
     },
 }))
 
