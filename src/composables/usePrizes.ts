@@ -54,14 +54,20 @@ export const usePrizes = (p: PhaseSettings, c: number) => {
     const prizeLabels = computed(() => {
         if (isKnockout.value) {
             return [
-                "Winner",
-                "Runner-Up",
-                "Semi-Finalist 1", "Semi-Finalist 2",
-                "Quarter-Finalist 1", "Quarter-Finalist 2", "Quarter-Finalist 3", "Quarter-Finalist 4"
+                "prizePot.winner",
+                "prizePot.runnerUp",
+                "prizePot.semiFinalist", "prizePot.semiFinalist",
+                "prizePot.quarterFinalist", "prizePot.quarterFinalist", "prizePot.quarterFinalist", "prizePot.quarterFinalist"
             ]
         }
 
-        return ["Winner", "Runner-Up", "3rd Place", "4th Place", "5th Place", "6th Place", "7th Place", "8th Place"]
+        return [
+            "prizePot.winner",
+            "prizePot.runnerUp",
+            // LOW: do localisation with "Nst/Nnd/Nrd/Nth" in different languages
+            "prizePot.pos3", "prizePot.pos4",
+            "prizePot.pos5", "prizePot.pos6", "prizePot.pos7", "prizePot.pos8"
+        ]
     })
 
     const prizeMoniesMeterItems = computed(() => prizeMonies.value.map<MeterItem>((x, i) => ({

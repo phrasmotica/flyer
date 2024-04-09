@@ -41,5 +41,28 @@
         "formatDescription": "{formatName} between {playerCount} players, races to {raceTo}.",
         "tookNMinutes": "Took 1 minute, won by {winner}. | Took {n} minutes, won by {winner}.",
         "requiredNPlayOffs": "Required 1 play-off. | Required {n} play-offs."
+    },
+    "prizes": {
+        "requireEntryFee": "Require entry fee",
+        "entryFee": "Entry fee",
+        "entryFeeSuffix": " entry fee",
+        "moneySplit": "Money split"
+    },
+    "prizePot": {
+        "winnerTakesAll": "Winner Takes All",
+        "70-30": "70/30",
+        "60-25-15": "60/25/15",
+        "55-25-10-10": "55/25/10/10",
+        "totalPrizePot": "Total prize pot",
+        "winner": "Winner",
+        "runnerUp": "Runner-Up",
+        "semiFinalist": "Semi-Finalist {n}",
+        "quarterFinalist": "Quarter-Finalist {n}",
+        "pos3": "3rd Place",
+        "pos4": "4th Place",
+        "pos5": "5th Place",
+        "pos6": "6th Place",
+        "pos7": "7th Place",
+        "pos8": "8th Place"
     }
 }

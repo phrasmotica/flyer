@@ -327,24 +327,25 @@ onUpdated(() => {
 
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Prizes">
                 <LabelledCheckbox
-                    label="Require entry fee"
+                    :label="t('prizes.requireEntryFee')"
                     v-model="settingsStore.settings.specification.entryFeeRequired" />
 
                 <div v-if="settingsStore.settings.specification.entryFeeRequired">
                     <div class="p-fluid mb-2">
                         <label for="entryFeeStepper" class="font-bold">
-                            Entry fee
+                            {{ t("prizes.entryFee") }}
                         </label>
 
                         <CurrencyStepper
                             inputId="entryFeeStepper"
                             v-model="settingsStore.settings.specification.entryFee"
                             :min="5" :max="20" :step="5"
-                            suffix=" entry fee" />
+                            :suffix="t('prizes.entryFeeSuffix')" />
                     </div>
 
                     <LabelledDropdown
-                        label="Money split"
+                        localise
+                        :label="t('prizes.moneySplit')"
                         v-model="settingsStore.settings.specification.moneySplit"
                         :options="settingsStore.moneySplitOptions"
                         :disabled="!settingsStore.settings.specification.entryFeeRequired" />

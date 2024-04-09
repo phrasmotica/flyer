@@ -187,22 +187,22 @@ export const useSettingsStore = defineStore("settings", () => {
     const moneySplitOptions = computed(() => [
         {
             value: MoneySplit.WinnerTakesAll,
-            name: "Winner Takes All",
+            name: "prizePot.winnerTakesAll",
             disabled: false,
         },
         {
             value: MoneySplit.SeventyThirty,
-            name: "70/30",
+            name: "prizePot.70-30",
             disabled: false,
         },
         {
             value: MoneySplit.SixtyTwentyFiveFifteen,
-            name: "60/25/15",
+            name: "prizePot.60-25-15",
             disabled: settings.value.playerCount < 3,
         },
         {
             value: MoneySplit.SemiFinalists,
-            name: "55/25/10/10",
+            name: "prizePot.55-25-10-10",
             disabled: settings.value.playerCount < 4,
         },
     ])
