@@ -1,5 +1,30 @@
 {
     "common": {
-        "nTimes": "once | {n} times"
+        "nTimes": "once | {n} times",
+        "view": "View",
+        "delete": "Delete"
+    },
+    "format": {
+        "format": "Format",
+        "knockoutName": "Knockout",
+        "knockoutSummary": "Knockout format",
+        "knockoutDetails": "losers are immediately eliminated until one player remains",
+        "roundRobinName": "Round-Robin",
+        "roundRobinSummary": "Round-Robin format",
+        "roundRobinDetails": "every player plays against every other player",
+        "winnerStaysOnName": "Winner Stays On",
+        "winnerStaysOnSummary": "Winner Stays On format",
+        "winnerStaysOnDetails": "gauntlet-style until one player has won enough matches"
+    },
+    "history": {
+        "emptyHistory": "No past flyers!",
+        "failedToImport": "Failed to import!",
+        "importData": "Import data",
+        "exportData": "Export data",
+        "dataImported": "Data imported!",
+        "dataExported": "Data copied to clipboard!",
+        "formatDescription": "{formatName} between {playerCount} players, races to {raceTo}.",
+        "tookNMinutes": "Took 1 minute, won by {winner}. | Took {n} minutes, won by {winner}.",
+        "requiredNPlayOffs": "Required 1 play-off. | Required {n} play-offs."
     }
 }

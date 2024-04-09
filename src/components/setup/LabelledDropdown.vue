@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import { v4 as uuidv4 } from "uuid"
 
 const value = defineModel<string | number>()
@@ -7,9 +9,23 @@ const props = defineProps<{
     label: string
     options: { name: string, value: (string | number), disabled?: boolean }[]
     disabled?: boolean
+    localise?: boolean
 }>()
 
+const { t } = useI18n()
+
 const id = "labelled-dropdown-" + uuidv4()
+
+const localisedOptions = computed(() => {
+    if (props.localise) {
+        return props.options.map(o => ({
+            ...o,
+            name: t(o.name),
+        }))
+    }
+
+    return props.options
+})
 </script>
 
 <template>
@@ -24,11 +40,11 @@ const id = "labelled-dropdown-" + uuidv4()
         <Dropdown
             :inputId="id"
             v-model="value"
-            :options="props.options"
+            :options="localisedOptions"
             placeholder="-"
             optionLabel="name"
             optionValue="value"
             optionDisabled="disabled"
-            :disabled="props.disabled || props.options.length <= 0" />
+            :disabled="props.disabled || localisedOptions.length <= 0" />
     </div>
 </template>

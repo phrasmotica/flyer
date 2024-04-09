@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 
@@ -14,19 +15,21 @@ const emit = defineEmits<{
     showImportModal: []
 }>()
 
+const { t } = useI18n()
+
 const flyerHistoryStore = useFlyerHistoryStore()
 
 const importButtonLabel = computed(() => {
     // MEDIUM: don't show the failed to import message here. Notify the user
     // elsewhere, e.g. in a toast message
     if (props.failedToImport) {
-        return "Failed to import from clipboard!"
+        return t("history.failedToImport")
     }
 
-    return props.isImported ? "Data imported from clipboard!" : "Import data"
+    return props.isImported ? t("history.dataImported") : t("history.importData")
 })
 
-const exportButtonLabel = computed(() => props.isExported ? "Data copied to clipboard!" : "Export data")
+const exportButtonLabel = computed(() => props.isExported ? t("history.dataExported") : t("history.exportData"))
 </script>
 
 <template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core"
+import { useI18n } from "vue-i18n"
 
 import DeleteFlyerModal from "../modals/DeleteFlyerModal.vue"
 import PastFlyerInfo from "./PastFlyerInfo.vue"
@@ -13,6 +14,8 @@ import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 const emit = defineEmits<{
     viewFlyer: [flyer: Flyer]
 }>()
+
+const { t } = useI18n()
 
 const flyerHistoryStore = useFlyerHistoryStore()
 
@@ -59,7 +62,7 @@ const isSelected = (f: Flyer) => flyer.value?.id === f.id
 
     <div v-else>
         <Message severity="info" :closable="false">
-            No past flyers!
+            {{ t("history.emptyHistory") }}
         </Message>
     </div>
 </template>

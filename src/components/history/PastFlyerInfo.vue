@@ -10,7 +10,7 @@ import { useStandings } from "@/composables/useStandings"
 
 import type { Flyer } from "@/data/Flyer"
 
-const { d } = useI18n()
+const { d, t } = useI18n()
 
 const props = defineProps<{
     flyer: Flyer
@@ -70,16 +70,26 @@ watch(props, () => {
 
         <div v-if="props.showDetails" class="font-italic">
             <div>
-                {{ formatName }} between {{ players.length }} players, races to {{ settings.raceTo }}.&nbsp;
-                Took {{ durationMinutes! }} minute(s), won by {{ (winner || firstPlace)!.name }}.
+                {{ t("history.formatDescription", {
+                    formatName: t(formatName),
+                    playerCount: players.length,
+                    raceTo: settings.raceTo,
+                }) }}
+
+                {{ t("history.tookNMinutes", {
+                    n: durationMinutes!,
+                    winner: (winner || firstPlace)!.name,
+                }) }}
 
                 <!-- LOW: add more play-off info -->
-                <span v-if="playOffPhases.length > 0">Required {{ playOffPhases.length }} play-off(s).</span>
+                <span v-if="playOffPhases.length > 0">
+                    {{ t("history.requiredNPlayOffs", playOffPhases.length) }}
+                </span>
             </div>
 
             <div class="flex p-fluid gap-2 my-2">
-                <Button label="View" severity="info" @click="emit('view')" />
-                <Button label="Delete" severity="danger" @click="emit('confirmDelete')" />
+                <Button :label="t('common.view')" severity="info" @click="emit('view')" />
+                <Button :label="t('common.delete')" severity="danger" @click="emit('confirmDelete')" />
             </div>
         </div>
     </div>

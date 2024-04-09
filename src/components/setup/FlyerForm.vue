@@ -41,7 +41,7 @@ const {
     isWinnerStaysOn,
 } = usePhaseSettings(settingsStore.settings.specification)
 
-const { n } = useI18n()
+const { n, t } = useI18n()
 
 const { blurNumberInputs } = useTweaks()
 
@@ -178,7 +178,8 @@ onUpdated(() => {
                     <div class="col-12 md:col-6 mb-0 p-0 p-fluid">
                         <div class="md:mr-1">
                             <LabelledDropdown
-                                label="Format"
+                                localise
+                                :label="t('format.format')"
                                 v-model="settingsStore.settings.specification.format"
                                 :options="settingsStore.formatList" />
                         </div>
@@ -267,7 +268,7 @@ onUpdated(() => {
 
                     <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
                         <span v-if="isWinnerStaysOn">
-                            {{ formatSummary }} can only use one table.
+                            {{ t(formatSummary) }} can only use one table.
                         </span>
                         <span v-else>
                             Cannot be more than half the number of players rounded down ({{ maxTableCount }}).

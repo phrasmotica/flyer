@@ -13,6 +13,8 @@ import type { Table } from "@/data/Table"
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 
+// MEDIUM: either export these lists from here, or from the defineStore() call.
+// Not both...
 export const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
     {
         value: MatchLengthModel.Fixed,
@@ -31,21 +33,21 @@ export const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
 export const formatList: SettingsDetails<Format>[] = [
     {
         value: Format.Knockout,
-        name: "Knockout",
-        summary: "Knockout format",
-        details: "losers are immediately eliminated until one player remains",
+        name: "format.knockoutName",
+        summary: "format.knockoutSummary",
+        details: "format.knockoutDetails",
     },
     {
         value: Format.RoundRobin,
-        name: "Round-Robin",
-        summary: "Round-Robin format",
-        details: "every player plays against every other player",
+        name: "format.roundRobinName",
+        summary: "format.roundRobinSummary",
+        details: "format.roundRobinDetails",
     },
     {
         value: Format.WinnerStaysOn,
-        name: "Winner Stays On",
-        summary: "Winner Stays On format",
-        details: "gauntlet-style until one player has won enough matches",
+        name: "format.winnerStaysOnName",
+        summary: "format.winnerStaysOnSummary",
+        details: "format.winnerStaysOnDetails",
     },
 ]
 
