@@ -33,7 +33,6 @@ const {
 } = useSettings(settingsStore.settings)
 
 const {
-    formatSummary,
     isFixedMatchLength,
     isVariableMatchLength,
     isKnockout,
@@ -254,32 +253,30 @@ onUpdated(() => {
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Tables">
                 <div class="p-fluid mb-2">
                     <label for="tablesStepper" class="font-bold">
-                        Tables
+                        {{ t("form.tables") }}
                     </label>
 
-                    <div class="md:hidden">
-                        <Stepper
-                            v-model="settingsStore.settings.tableCount"
-                            :min="1" :max="maxTableCount"
-                            :suffix="settingsStore.settings.tableCount > 1 ? ' tables' : ' table'"
-                            inputId="tablesStepper"
-                            :disabled="isWinnerStaysOn" />
+                    <div v-if="!isWinnerStaysOn">
+                        <!-- MEDIUM: show/hide these via useScreenSizes() -->
+                        <div class="md:hidden mb-2">
+                            <Stepper
+                                v-model="settingsStore.settings.tableCount"
+                                :min="1" :max="maxTableCount"
+                                :suffix="t(settingsStore.settings.tableCount !== 1 ? 'form.tablesSuffix' : 'form.tableSuffix')"
+                                inputId="tablesStepper" />
+                        </div>
+
+                        <div class="hidden md:block">
+                            <LabelledSlider
+                                v-model="settingsStore.settings.tableCount"
+                                :min="1" :max="maxTableCount" />
+                        </div>
                     </div>
 
-                    <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
-                        <span v-if="isWinnerStaysOn">
-                            {{ t(formatSummary) }} can only use one table.
-                        </span>
-                        <span v-else>
-                            Cannot be more than half the number of players rounded down ({{ maxTableCount }}).
-                        </span>
-                    </p>
-
-                    <div class="hidden md:block">
-                        <LabelledSlider
-                            v-model="settingsStore.settings.tableCount"
-                            :min="1" :max="maxTableCount" />
-                    </div>
+                    <Message class="m-0 mb-2" severity="info" :closable="false">
+                        <span v-if="isWinnerStaysOn">{{ t("form.winnerStaysOnTableLimit") }}</span>
+                        <span v-else>{{ t("form.tableLimit", { maxTableCount }) }}</span>
+                    </Message>
                 </div>
 
                 <div class="p-fluid mb-2">
@@ -305,7 +302,7 @@ onUpdated(() => {
 
                 <div class="flex align-items-center justify-content-between border-top-1 border-gray-200">
                     <span>
-                        Estimated cost
+                        {{ t("form.estimatedCost") }}
                     </span>
 
                     <div class="ml-2">
@@ -315,9 +312,9 @@ onUpdated(() => {
                     </div>
                 </div>
 
-                <div class="font-italic text-xs md:text-base text-color-secondary">
-                    This will be split evenly between ALL players.
-                </div>
+                <Message class="m-0" severity="info" :closable="false">
+                    {{ t("form.costSplitEvenly") }}
+                </Message>
             </div>
 
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Prizes">

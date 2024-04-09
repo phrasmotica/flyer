@@ -4,6 +4,17 @@
         "view": "View",
         "delete": "Delete"
     },
+    "form": {
+        "tables": "Tables",
+        "tableLimit": "Cannot be more than half the number of players rounded down ({maxTableCount}).",
+        "tableSuffix": " table",
+        "tablesSuffix": " tables",
+        "winnerStaysOnTableLimit": "Winner Stays On format can only use one table.",
+        "tableName": "Table name",
+        "perHourSuffix": " per hour",
+        "estimatedCost": "Estimated cost",
+        "costSplitEvenly": "This will be split evenly between ALL players."
+    },
     "format": {
         "format": "Format",
         "knockoutName": "Knockout",

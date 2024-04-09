@@ -28,6 +28,7 @@ const { selectOnFocus } = useTweaks()
 
 <style scoped>
 .player-name-input .pi-exclamation-circle {
+    /* MEDIUM: align this with the base colour themes */
     color: red;
 }
 </style>
