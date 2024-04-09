@@ -86,17 +86,25 @@ onUpdated(() => {
         <!-- LOW: only make the form content overflow with a scroll bar, not the tab menu also -->
         <div id="form-content">
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Players">
-                <div class="p-fluid mb-2 md:hidden">
-                    <Stepper
-                        v-model="settingsStore.settings.playerCount"
-                        :min="2" :max="maxPlayersEnv"
-                        suffix=" players" />
-                </div>
+                <div class="p-fluid">
+                    <label for="playersStepper" class="font-bold">
+                        {{ t("form.players") }}
+                    </label>
 
-                <div class="mt-2 hidden md:block">
-                    <LabelledSlider
-                        v-model="settingsStore.settings.playerCount"
-                        :min="2" :max="maxPlayersEnv" />
+                    <!-- MEDIUM: show/hide these via useScreenSizes() -->
+                    <div class="md:hidden mb-2">
+                        <Stepper
+                            v-model="settingsStore.settings.playerCount"
+                            :min="2" :max="maxPlayersEnv"
+                            :suffix="t(settingsStore.settings.playerCount !== 1 ? 'form.playersSuffix' : 'form.playerSuffix')"
+                            inputId="playersStepper" />
+                    </div>
+
+                    <div class="hidden md:block">
+                        <LabelledSlider
+                            v-model="settingsStore.settings.playerCount"
+                            :min="2" :max="maxPlayersEnv" />
+                    </div>
                 </div>
 
                 <div v-for="_, i in settingsStore.settings.playerNames.slice(0, settingsStore.settings.playerCount)">
@@ -104,7 +112,7 @@ onUpdated(() => {
                         <NameInput
                             v-model="settingsStore.settings.playerNames[i]"
                             class="flex-grow-1"
-                            placeholder="Name" />
+                            :placeholder="t('form.name')" />
 
                         <Button
                             tabindex="-1"

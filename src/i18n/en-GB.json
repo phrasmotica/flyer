@@ -5,6 +5,10 @@
         "delete": "Delete"
     },
     "form": {
+        "players": "Players",
+        "name": "Name",
+        "playerSuffix": " player",
+        "playersSuffix": " players",
         "tables": "Tables",
         "tableLimit": "Cannot be more than half the number of players rounded down ({maxTableCount}).",
         "tableSuffix": " table",
