@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     value: number
@@ -7,11 +10,7 @@ const props = defineProps<{
 }>()
 
 const summary = computed(() => {
-    if (props.singular) {
-        return `Race to ${props.value}`
-    }
-
-    return `Races to ${props.value}`
+    return t(props.singular ? 'races.raceToN' : 'races.racesToN', props.value)
 })
 </script>
 

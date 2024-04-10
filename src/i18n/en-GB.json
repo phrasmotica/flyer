@@ -127,6 +127,14 @@
         "stageSuffix": " stage",
         "stagesDescription": "This is the number of times each player will play the others."
     },
+    "table": {
+        "available": "AVAILABLE",
+        "busy": "BUSY"
+    },
+    "races": {
+        "raceToN": "Race to {n}",
+        "racesToN": "Races to {n}"
+    },
     "tieBreaker": {
         "tieBreaker": "Tie Breaker",
         "headToHeadName": "Head-to-Head",

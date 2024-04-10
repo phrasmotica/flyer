@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
@@ -7,6 +8,8 @@ import { usePhase } from "@/composables/usePhase"
 import type { Table } from "@/data/Table"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     table: Table
@@ -30,7 +33,7 @@ const label = computed(() => {
         return props.table.name
     }
 
-    return props.table.name + " - " + (isBusy.value ? "BUSY" : "AVAILABLE")
+    return props.table.name + " - " + (isBusy.value ? t('table.busy') : t('table.available'))
 })
 
 const severity = computed(() => isBusy.value ? "danger" : "primary")
