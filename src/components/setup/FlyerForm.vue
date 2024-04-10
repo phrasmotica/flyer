@@ -202,7 +202,8 @@ onUpdated(() => {
                         class="col-12 md:col-6 p-0 p-fluid">
                         <div class="md:mr-1">
                             <LabelledDropdown
-                                label="Tie Breaker"
+                                localise
+                                :label="t('tieBreaker.tieBreaker')"
                                 v-model="settingsStore.settings.specification.tieBreaker"
                                 :options="settingsStore.tieBreakerList" />
                         </div>

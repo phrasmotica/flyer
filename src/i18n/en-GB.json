@@ -87,5 +87,17 @@
         "internationalName": "International",
         "internationalSummary": "International rules",
         "internationalDetails": "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted"
+    },
+    "tieBreaker": {
+        "tieBreaker": "Tie Breaker",
+        "headToHeadName": "Head-to-Head",
+        "headToHeadSummary": "Head-to-Head tie-breaker",
+        "headToHeadDetails": "decided by the tied players' head-to-head records",
+        "playOffName": "Play-Off",
+        "playOffSummary": "Play-Off tie-breaker",
+        "playOffDetails": "decided by a race-to-1 knockout play-off between the tied players",
+        "runoutsName": "Runouts",
+        "runoutsSummary": "Runouts tie-breaker",
+        "runoutsDetails": "decided by the number of runouts made by the tied players"
     }
 }

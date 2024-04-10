@@ -69,21 +69,21 @@ export const ruleSetList: SettingsDetails<RuleSet>[] = [
 export const tieBreakerList: SettingsDetails<TieBreaker>[] = [
     {
         value: TieBreaker.HeadToHead,
-        name: "Head-to-Head",
-        summary: "Head-to-Head tie-breaker",
-        details: "decided by the tied players' head-to-head records",
+        name: "tieBreaker.headToHeadName",
+        summary: "tieBreaker.headToHeadSummary",
+        details: "tieBreaker.headToHeadDetails",
     },
     {
         value: TieBreaker.PlayOff,
-        name: "Play-Off",
-        summary: "Play-Off tie-breaker",
-        details: "decided by a race-to-1 knockout play-off between the tied players",
+        name: "tieBreaker.playOffName",
+        summary: "tieBreaker.playOffSummary",
+        details: "tieBreaker.playOffDetails",
     },
     {
         value: TieBreaker.Runouts,
-        name: "Runouts",
-        summary: "Runouts tie-breaker",
-        details: "decided by the number of runouts made by the tied players",
+        name: "tieBreaker.runoutsName",
+        summary: "tieBreaker.runoutsSummary",
+        details: "tieBreaker.runoutsDetails",
     },
 ]
 

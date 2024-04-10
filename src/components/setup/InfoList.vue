@@ -73,7 +73,6 @@ const stagesSummary = computed(() => {
         <strong>{{ t(formatSummary) }}</strong>&nbsp;<em>({{ t(formatDetails) }}<span v-if="stagesSummary">, {{ stagesSummary }}</span>)</em>
 
         <span v-if="drawSummary">&nbsp;via a <strong>{{ drawSummary }}</strong></span>
-        <!-- MEDIUM: indicate how many stages are involved, if it's a round-robin -->
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
@@ -81,6 +80,6 @@ const stagesSummary = computed(() => {
     </div>
 
     <div v-if="isRoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
-        <strong>{{ tieBreakerSummary }}</strong>&nbsp;<em>({{ tieBreakerDetails }})</em>
+        <strong>{{ t(tieBreakerSummary) }}</strong>&nbsp;<em>({{ t(tieBreakerDetails) }})</em>
     </div>
 </template>
