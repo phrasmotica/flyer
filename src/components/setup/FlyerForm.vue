@@ -231,27 +231,27 @@ onUpdated(() => {
 
                 <div v-if="isKnockout || isRoundRobin">
                     <p class="m-0 font-bold">
-                        Advanced
+                        {{ t('form.advanced') }}
                     </p>
 
                     <LabelledCheckbox
                         v-if="isKnockout"
-                        label="Randomly draw all rounds"
+                        :label="t('form.randomlyDrawAllRounds')"
                         v-model="settingsStore.settings.specification.randomlyDrawAllRounds" />
 
                     <LabelledCheckbox
                         v-if="isRoundRobin"
-                        label="Require completed rounds"
+                        :label="t('form.requireCompletedRounds')"
                         v-model="settingsStore.settings.specification.requireCompletedRounds" />
 
                     <LabelledCheckbox
                         v-if="isRoundRobin"
-                        label="Allow early finish"
+                        :label="t('form.allowEarlyFinish')"
                         v-model="settingsStore.settings.specification.allowEarlyFinish" />
 
                     <LabelledCheckbox
                         v-if="isRoundRobin"
-                        label="Allow draws"
+                        :label="t('form.allowDraws')"
                         v-model="settingsStore.settings.specification.allowDraws" />
                 </div>
             </div>

@@ -17,7 +17,12 @@
         "tableName": "Table name",
         "perHourSuffix": " per hour",
         "estimatedCost": "Estimated cost",
-        "costSplitEvenly": "This will be split evenly between ALL players."
+        "costSplitEvenly": "This will be split evenly between ALL players.",
+        "advanced": "Advanced",
+        "randomlyDrawAllRounds": "Randomly draw all rounds",
+        "requireCompletedRounds": "Require completed rounds",
+        "allowEarlyFinish": "Allow early finish",
+        "allowDraws": "Allow draws"
     },
     "format": {
         "format": "Format",
