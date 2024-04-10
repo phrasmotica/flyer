@@ -78,5 +78,14 @@
         "pos6": "6th Place",
         "pos7": "7th Place",
         "pos8": "8th Place"
+    },
+    "rules": {
+        "rules": "Rules",
+        "blackballName": "Blackball",
+        "blackballSummary": "Blackball rules",
+        "blackballDetails": "foul gives a free shot and a visit with ball-in-hand behind the baulk line, skill shots are permitted",
+        "internationalName": "International",
+        "internationalSummary": "International rules",
+        "internationalDetails": "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted"
     }
 }

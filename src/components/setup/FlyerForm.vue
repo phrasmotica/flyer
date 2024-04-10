@@ -191,7 +191,8 @@ onUpdated(() => {
                     <div class="col-12 md:col-6 p-0 p-fluid">
                         <div class="md:ml-1">
                             <LabelledDropdown
-                                label="Rules"
+                                localise
+                                :label="t('rules.rules')"
                                 v-model="settingsStore.settings.specification.ruleSet"
                                 :options="settingsStore.ruleSetList" />
                         </div>

@@ -54,15 +54,15 @@ export const formatList: SettingsDetails<Format>[] = [
 export const ruleSetList: SettingsDetails<RuleSet>[] = [
     {
         value: RuleSet.Blackball,
-        name: "Blackball",
-        summary: "Blackball rules",
-        details: "foul gives a free shot and a visit with ball-in-hand behind the baulk line, skill shots are permitted",
+        name: "rules.blackballName",
+        summary: "rules.blackballSummary",
+        details: "rules.blackballDetails",
     },
     {
         value: RuleSet.International,
-        name: "International",
-        summary: "International rules",
-        details: "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted",
+        name: "rules.internationalName",
+        summary: "rules.internationalSummary",
+        details: "rules.internationalDetails",
     },
 ]
 

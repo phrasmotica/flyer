@@ -78,7 +78,7 @@ const stagesSummary = computed(() => {
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
-        <strong>{{ rulesSummary }}</strong>&nbsp;<em>({{ rulesDetails }})</em>
+        <strong>{{ t(rulesSummary) }}</strong>&nbsp;<em>({{ t(rulesDetails) }})</em>
     </div>
 
     <div v-if="isRoundRobin" class="pt-2 border-top-1 border-gray-200 mb-2">
