@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 
 import type { Flyer } from "@/data/Flyer"
+
+const { t } = useI18n()
 
 const visible = defineModel<boolean>("visible", {
     default: false,
@@ -34,18 +37,17 @@ const deleteMessage = computed(() => {
         return ""
     }
 
-    return `Are you sure you want to delete ${mainPhase.value.settings.name}? This cannot be undone!`
+    return t('history.deleteAreYouSure', {
+        name: mainPhase.value.settings.name
+    })
 })
 </script>
 
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        header="Delete flyer"
+        :header="t('history.deleteFlyer')"
         :message="deleteMessage"
-        confirmLabel="Yes"
-        :confirmDisabled="false"
-        cancelLabel="No"
         @confirm="emit('confirm')"
         @hide="emit('hide')" />
 </template>

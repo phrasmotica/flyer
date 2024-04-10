@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const visible = defineModel<boolean>("visible", {
     default: false,
@@ -9,9 +12,9 @@ const props = defineProps<{
     visible: boolean
     header: string
     message: string
-    confirmLabel: string
-    confirmDisabled: boolean
-    cancelLabel: string
+    confirmLabel?: string
+    confirmDisabled?: boolean
+    cancelLabel?: string
 }>()
 
 const emit = defineEmits<{
@@ -19,8 +22,8 @@ const emit = defineEmits<{
     hide: []
 }>()
 
-const confirmLabel = computed(() => props.confirmLabel || "Yes")
-const cancelLabel = computed(() => props.cancelLabel || "No")
+const confirmLabel = computed(() => props.confirmLabel || t('common.yes'))
+const cancelLabel = computed(() => props.cancelLabel || t('common.no'))
 </script>
 
 <template>

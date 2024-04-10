@@ -2,7 +2,13 @@
     "common": {
         "nTimes": "once | {n} times",
         "view": "View",
-        "delete": "Delete"
+        "delete": "Delete",
+        "yes": "Yes",
+        "no": "No",
+        "add": "Add",
+        "cancel": "Cancel",
+        "start": "Start",
+        "goBack": "Go back"
     },
     "form": {
         "players": "Players",
@@ -22,7 +28,11 @@
         "randomlyDrawAllRounds": "Randomly draw all rounds",
         "requireCompletedRounds": "Require completed rounds",
         "allowEarlyFinish": "Allow early finish",
-        "allowDraws": "Allow draws"
+        "allowDraws": "Allow draws",
+        "startFlyer": "Start Flyer",
+        "pleaseEnterName": "Please enter a name for the flyer:",
+        "flyerName": "Flyer name",
+        "entryFeesPaidConfirm": "Entry fees paid?"
     },
     "format": {
         "format": "Format",
@@ -45,7 +55,11 @@
         "dataExported": "Data copied to clipboard!",
         "formatDescription": "{formatName} between {playerCount} players, races to {raceTo}.",
         "tookNMinutes": "Took 1 minute, won by {winner}. | Took {n} minutes, won by {winner}.",
-        "requiredNPlayOffs": "Required 1 play-off. | Required {n} play-offs."
+        "requiredNPlayOffs": "Required 1 play-off. | Required {n} play-offs.",
+        "deleteFlyer": "Delete flyer",
+        "deleteAreYouSure": "Are you sure you want to delete {name}? This cannot be undone!",
+        "import": "Import",
+        "pleasePasteData": "Please paste flyer data here:"
     },
     "matchLengthModel": {
         "fixedName": "Fixed",
@@ -60,6 +74,14 @@
         "winSuffix": " win",
         "winsSuffix": " wins",
         "winsRequiredLimit": "Must be at least one fewer than the player count ({limit})."
+    },
+    "play": {
+        "abandonFlyer": "Abandon flyer",
+        "abandonAreYouSure": "Are you sure you want to abandon this flyer?",
+        "addNewTable": "Add new table",
+        "tableX": "Table X",
+        "finishFlyer": "Finish flyer",
+        "finishAreYouSure": "Are you ready to finish the flyer?"
     },
     "prizes": {
         "requireEntryFee": "Require entry fee",
@@ -83,6 +105,12 @@
         "pos6": "6th Place",
         "pos7": "7th Place",
         "pos8": "8th Place"
+    },
+    "results": {
+        "newFlyer": "New flyer",
+        "newFlyerAreYouSure": "Are you sure you want to start a new flyer? The current one has not been saved!",
+        "startPlayOff": "Start Play-Off",
+        "startPlayOffName": "Are you sure you want to start the {name}?"
     },
     "rules": {
         "rules": "Rules",

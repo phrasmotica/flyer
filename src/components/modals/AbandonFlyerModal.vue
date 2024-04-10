@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
+
 import ConfirmModal from "./ConfirmModal.vue"
+
+const { t } = useI18n()
 
 const visible = defineModel<boolean>("visible", {
     default: false,
@@ -14,11 +18,8 @@ const emit = defineEmits<{
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        header="Abandon flyer"
-        message="Are you sure you want to abandon this flyer?"
-        confirmLabel="Yes"
-        :confirmDisabled="false"
-        cancelLabel="No"
+        :header="t('play.abandonFlyer')"
+        :message="t('play.abandonAreYouSure')"
         @confirm="emit('confirm')"
         @hide="emit('hide')" />
 </template>

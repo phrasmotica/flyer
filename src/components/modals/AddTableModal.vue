@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
 import TableInput from "../setup/TableInput.vue"
+
+const { t } = useI18n()
 
 const visible = defineModel<boolean>("visible", {
     default: false,
@@ -13,7 +16,7 @@ const emit = defineEmits<{
     hide: []
 }>()
 
-const newTableName = ref("Table X")
+const newTableName = ref(t('play.tableX'))
 const newTableCost = ref(9)
 
 const canAdd = computed(() => !!newTableName.value)
@@ -30,11 +33,11 @@ const addNewTable = () => {
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        header="Add new table"
+        :header="t('play.addNewTable')"
         message=""
-        confirmLabel="Add"
+        :confirmLabel="t('common.add')"
         :confirmDisabled="!canAdd"
-        cancelLabel="Cancel"
+        :cancelLabel="t('common.cancel')"
         @confirm="addNewTable"
         @hide="emit('hide')">
         <TableInput

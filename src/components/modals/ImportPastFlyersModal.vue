@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
+
 import ConfirmModal from "./ConfirmModal.vue"
+
+const { t } = useI18n()
 
 const text = defineModel<string>("text", {
     default: "",
@@ -18,11 +22,10 @@ const emit = defineEmits<{
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        header="Import data"
-        message="Please paste flyer data here:"
-        confirmLabel="Import"
-        :confirmDisabled="false"
-        cancelLabel="Cancel"
+        :header="t('history.importData')"
+        :message="t('history.pleasePasteData')"
+        :confirmLabel="t('history.import')"
+        :cancelLabel="t('common.cancel')"
         @confirm="emit('importPastFlyers')"
         @hide="emit('hide')">
         <div class="p-fluid">

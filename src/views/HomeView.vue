@@ -34,6 +34,7 @@ const {
     settings,
 } = useSettings(settingsStore.settings)
 
+// BUG: move this into StartFlyerModal
 const nameInput = ref()
 const [showModal, setShowModal] = useToggle()
 

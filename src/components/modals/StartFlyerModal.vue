@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
 import { useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./ConfirmModal.vue"
@@ -8,6 +9,8 @@ import { useSettings } from "@/composables/useSettings"
 import { useTweaks } from "@/composables/useTweaks"
 
 import { useSettingsStore } from "@/stores/settings"
+
+const { t } = useI18n()
 
 const visible = defineModel<boolean>("visible", {
     default: false,
@@ -38,17 +41,17 @@ const hide = () => {
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        header="Start Flyer"
-        message="Please enter a name for the flyer:"
-        confirmLabel="Start"
+        :header="t('form.startFlyer')"
+        :message="t('form.pleaseEnterName')"
+        :confirmLabel="t('common.start')"
         :confirmDisabled="settings.specification.name.length <= 0 || (settings.specification.entryFeeRequired && !entryFeesPaid)"
-        cancelLabel="Go back"
+        :cancelLabel="t('common.goBack')"
         @confirm="emit('confirm')"
         @hide="hide">
         <div class="p-fluid mb-2">
             <InputText
                 ref="nameInput"
-                placeholder="Flyer name"
+                :placeholder="t('form.flyerName')"
                 v-model="settings.specification.name"
                 @focus="selectOnFocus" />
         </div>
@@ -57,7 +60,7 @@ const hide = () => {
             <LabelledCheckbox
                 v-if="settings.specification.entryFeeRequired"
                 v-model="entryFeesPaid"
-                label="Entry fees paid?" />
+                :label="t('form.entryFeesPaidConfirm')" />
         </div>
     </ConfirmModal>
 </template>
