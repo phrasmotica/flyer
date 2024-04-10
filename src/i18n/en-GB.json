@@ -10,6 +10,11 @@
         "start": "Start",
         "goBack": "Go back"
     },
+    "fixture": {
+        "byeIndicator": "(bye)",
+        "headerFormat": "{round} - {players}",
+        "playerJoiner": " v "
+    },
     "form": {
         "players": "Players",
         "name": "Name",
@@ -83,6 +88,9 @@
         "finishFlyer": "Finish flyer",
         "finishAreYouSure": "Are you ready to finish the flyer?"
     },
+    "player": {
+        "unknownIndicator": "???"
+    },
     "prizes": {
         "requireEntryFee": "Require entry fee",
         "entryFee": "Entry fee",
@@ -111,6 +119,9 @@
         "newFlyerAreYouSure": "Are you sure you want to start a new flyer? The current one has not been saved!",
         "startPlayOff": "Start Play-Off",
         "startPlayOffName": "Are you sure you want to start the {name}?"
+    },
+    "round": {
+        "unknownIndicator": "???"
     },
     "rules": {
         "rules": "Rules",

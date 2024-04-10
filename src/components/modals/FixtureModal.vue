@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 import Clock from "../play/Clock.vue"
 import LabelledDropdown from "../setup/LabelledDropdown.vue"
@@ -17,9 +18,11 @@ import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useRound } from "@/composables/useRound"
 import { useTweaks } from "@/composables/useTweaks"
 
-import type { Fixture, Score } from "@/data/Fixture"
+import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     visible: boolean
@@ -47,7 +50,7 @@ const {
     getRoundWithIndex,
     getTable,
     getFixtureStatus,
-    getFixtureHeader,
+    getPlayerName,
 } = usePhase(currentPhase.value)
 
 const phaseEvents = usePhaseEvents(currentPhase.value)
@@ -258,6 +261,28 @@ const resetPlayerScores = () => {
         comment.value = initialComment.value
     }
 }
+
+const getPlayersDescription = (scores: Score[]) => {
+    return scores.map(s => {
+        if (s.isBye) {
+            return t("fixture.byeIndicator")
+        }
+
+        return getPlayerName(s.playerId) || t("player.unknownIndicator")
+    }).join(t("fixture.playerJoiner"))
+}
+
+const header = computed(() => {
+    let round = t("round.unknownIndicator")
+    let players = getPlayersDescription(emptyScores(2))
+
+    if (fixture.value) {
+        round = getRound(fixture.value.id)?.name || t("round.unknownIndicator")
+        players = getPlayersDescription(fixture.value.scores)
+    }
+
+    return t("fixture.headerFormat", { round, players })
+})
 </script>
 
 <template>
@@ -266,7 +291,7 @@ const resetPlayerScores = () => {
         modal
         class="mx-4"
         v-model:visible="visible"
-        :header="getFixtureHeader(fixture)"
+        :header="header"
         @hide="hide">
         <div v-if="hasStarted" id="score-inputs" class="mb-2">
             <!-- MEDIUM: this is getting crowded. Design a better layout -->

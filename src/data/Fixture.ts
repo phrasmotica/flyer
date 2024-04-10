@@ -34,3 +34,7 @@ export enum Prioritisation {
     Up,
     Down,
 }
+
+export const emptyScores = (count: number) => {
+    return new Array(count).fill(0).map(_ => <Score>{})
+}

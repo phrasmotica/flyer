@@ -172,7 +172,7 @@ export const usePhase = (p: Phase | null) => {
         })
     }
 
-    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name || id || "???"
+    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name
 
     const getTable = (id: string) => tables.value.find(p => p.id === id)
 
@@ -237,10 +237,6 @@ export const usePhase = (p: Phase | null) => {
         }).join(" v ")
     }
 
-    const getFixtureHeader = (fixture: Fixture | undefined) => {
-        return `${getRound(fixture?.id || "")?.name || "???"} - ${getFixtureDescription(fixture)}`
-    }
-
     const getScoreDescription = (fixture: Fixture) => {
         if (fixture.scores.some(s => s.isBye)) {
             return "W/O"
@@ -303,7 +299,6 @@ export const usePhase = (p: Phase | null) => {
         getRoundWithIndex,
         getFixtureStatus,
         getFixtureDescription,
-        getFixtureHeader,
         getScoreDescription,
         pauseClock,
         resumeClock,
