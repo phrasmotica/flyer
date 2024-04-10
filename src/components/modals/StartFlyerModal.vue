@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { ref } from "vue"
 import { useI18n } from "vue-i18n"
-import { useToggle } from "@vueuse/core"
+import { useFocus, useToggle } from "@vueuse/core"
 
 import ConfirmModal from "./ConfirmModal.vue"
 import LabelledCheckbox from "../setup/LabelledCheckbox.vue"
@@ -28,6 +29,10 @@ const { selectOnFocus } = useTweaks()
 const {
     settings,
 } = useSettings(settingsStore.settings)
+
+const nameInput = ref()
+
+useFocus(nameInput, { initialValue: true })
 
 const [entryFeesPaid, setEntryFeesPaid] = useToggle()
 

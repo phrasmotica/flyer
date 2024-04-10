@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue"
 import { useRouter } from "vue-router"
-import { useFocus, useTitle, useToggle } from "@vueuse/core"
+import { useTitle, useToggle } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
 
 import FlyerForm from "@/components/setup/FlyerForm.vue"
@@ -33,12 +32,7 @@ const toast = useToast()
 const {
     settings,
 } = useSettings(settingsStore.settings)
-
-// BUG: move this into StartFlyerModal
-const nameInput = ref()
 const [showModal, setShowModal] = useToggle()
-
-useFocus(nameInput, { initialValue: true })
 
 const start = () => {
     try {
