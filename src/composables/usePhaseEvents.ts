@@ -6,7 +6,7 @@ import type { Phase } from "@/data/Phase"
 export const usePhaseEvents = (p: Phase | null) => {
     const {
         settings,
-        getFixtureDescription,
+        getFixtureDescription, // MEDIUM: move this method into this composable
         getScoreDescription,
     } = usePhase(p)
 
