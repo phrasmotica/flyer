@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
 import { useToggle } from "@vueuse/core"
 
 import AddTableModal from "../modals/AddTableModal.vue"
@@ -12,13 +13,15 @@ import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 
+const { t } = useI18n()
+
 const emit = defineEmits<{
     showFixtureModal: [fixture: Fixture]
 }>()
 
 const flyerStore = useFlyerStore()
 
-const newTableName = ref("Table X")
+const newTableName = ref(t('play.tableX'))
 const newTableCost = ref(9)
 
 const [showAddTableModal, setShowAddTableModal] = useToggle(false)
@@ -63,6 +66,8 @@ const addNewTable = () => {
 
     <AddTableModal
         v-model:visible="showAddTableModal"
+        v-model:name="newTableName"
+        v-model:cost="newTableCost"
         @confirm="addNewTable"
         @hide="() => setShowAddTableModal(false)" />
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
@@ -11,13 +11,13 @@ const visible = defineModel<boolean>("visible", {
     default: false,
 })
 
+const newTableName = defineModel<string>("name")
+const newTableCost = defineModel<number>("cost")
+
 const emit = defineEmits<{
     confirm: []
     hide: []
 }>()
-
-const newTableName = ref(t('play.tableX'))
-const newTableCost = ref(9)
 
 const canAdd = computed(() => !!newTableName.value)
 
