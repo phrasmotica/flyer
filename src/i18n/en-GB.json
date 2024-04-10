@@ -88,6 +88,12 @@
         "internationalSummary": "International rules",
         "internationalDetails": "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted"
     },
+    "stages": {
+        "numberOfStages": "Number of stages",
+        "stagesSuffix": " stages",
+        "stageSuffix": " stage",
+        "stagesDescription": "This is the number of times each player will play the others."
+    },
     "tieBreaker": {
         "tieBreaker": "Tie Breaker",
         "headToHeadName": "Head-to-Head",

@@ -213,18 +213,18 @@ onUpdated(() => {
                         class="col-12 md:col-6 p-0 p-fluid">
                         <div class="md:ml-1 mb-2">
                             <label for="stageCountStepper" class="font-bold">
-                                Number of stages
+                                {{ t('stages.numberOfStages') }}
                             </label>
 
                             <Stepper
                                 inputId="stageCountStepper"
                                 v-model="settingsStore.settings.specification.stageCount"
                                 :min="1" :max="4"
-                                :suffix="settingsStore.settings.specification.stageCount > 1 ? ' stages' : ' stage'" />
+                                :suffix="settingsStore.settings.specification.stageCount > 1 ? t('stages.stagesSuffix') : t('stages.stageSuffix')" />
 
-                            <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
-                                This is the number of times each player will play the others.
-                            </p>
+                            <Message class="m-0 mt-2" severity="info" :closable="false">
+                                {{ t('stages.stagesDescription') }}
+                            </Message>
                         </div>
                     </div>
                 </div>
