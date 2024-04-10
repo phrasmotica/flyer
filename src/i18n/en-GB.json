@@ -14,7 +14,6 @@
         "finish": "Finish"
     },
     "fixture": {
-        "byeIndicator": "(bye)",
         "unknownStatus": "???",
         "waitingForRoundGenerationStatus": "Waiting for round to be generated",
         "waitingForPreviousResultStatus": "Waiting for a previous result",
@@ -77,7 +76,8 @@
         "deleteFlyer": "Delete flyer",
         "deleteAreYouSure": "Are you sure you want to delete {name}? This cannot be undone!",
         "import": "Import",
-        "pleasePasteData": "Please paste flyer data here:"
+        "pleasePasteData": "Please paste flyer data here:",
+        "backToPastFlyers": "Back to past flyers"
     },
     "matchLengthModel": {
         "fixedName": "Fixed",
@@ -94,14 +94,20 @@
         "winsRequiredLimit": "Must be at least one fewer than the player count ({limit})."
     },
     "play": {
+        "abandon": "Abandon",
         "abandonFlyer": "Abandon flyer",
         "abandonAreYouSure": "Are you sure you want to abandon this flyer?",
         "addNewTable": "Add new table",
         "tableX": "Table X",
+        "generateNextRound": "Generate next round",
+        "generateRound": "Generate {round}",
         "finishFlyer": "Finish flyer",
-        "finishAreYouSure": "Are you ready to finish the flyer?"
+        "finishAreYouSure": "Are you ready to finish the flyer?",
+        "viewResults": "View results"
     },
     "player": {
+        "byeIndicator": "(bye)",
+        "pendingIndicator": "TBD",
         "unknownIndicator": "???"
     },
     "prizes": {

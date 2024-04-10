@@ -266,7 +266,7 @@ const resetPlayerScores = () => {
 const getPlayersDescription = (scores: Score[]) => {
     return scores.map(s => {
         if (s.isBye) {
-            return t("fixture.byeIndicator")
+            return t("player.byeIndicator")
         }
 
         return getPlayerName(s.playerId) || t("player.unknownIndicator")

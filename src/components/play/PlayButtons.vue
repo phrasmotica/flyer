@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import { useEnv } from "@/composables/useEnv"
 import { useFlyer } from "@/composables/useFlyer"
@@ -8,6 +9,8 @@ import { useQueryParams } from "@/composables/useQueryParams"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     sidebar?: boolean
@@ -58,39 +61,44 @@ const showAutoCompleteButton = computed(() => {
 })
 
 const generateNextRoundLabel = computed(() => {
-    if (nextRoundToGenerate.value) {
-        return "Generate " + nextRoundToGenerate.value.name
+    if (!nextRoundToGenerate.value) {
+        return t('play.generateNextRound')
     }
 
-    return "Generate next round"
+    return t('play.generateRound', {
+        round: nextRoundToGenerate.value.name,
+    })
 })
 
 const finishButtonText = computed(() => {
     if (hasStarted.value && hasFinished.value) {
-        return "View results"
+        return t('play.viewResults')
     }
 
-    return "Finish"
+    return t('common.finish')
 })
 </script>
 
 <template>
     <div class="p-fluid">
-        <Button
-            v-if="showAutoCompleteButton"
-            class="mb-2"
-            label="Auto-complete"
-            severity="help"
-            :disabled="!isFixtures || remainingCount <= 0"
-            @click="emit('autoComplete')" />
+        <div>
+            <!-- debug stuff, no need to localise -->
+            <Button
+                v-if="showAutoCompleteButton"
+                class="mb-2"
+                label="Auto-complete"
+                severity="help"
+                :disabled="!isFixtures || remainingCount <= 0"
+                @click="emit('autoComplete')" />
 
-        <Button
-            v-if="showAutoCompleteButton"
-            class="mb-2"
-            label="Auto-complete remaining"
-            severity="help"
-            :disabled="!isFixtures || remainingCount <= 0"
-            @click="emit('autoCompleteRemaining')" />
+            <Button
+                v-if="showAutoCompleteButton"
+                class="mb-2"
+                label="Auto-complete remaining"
+                severity="help"
+                :disabled="!isFixtures || remainingCount <= 0"
+                @click="emit('autoCompleteRemaining')" />
+        </div>
 
         <Button
             v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
@@ -109,14 +117,14 @@ const finishButtonText = computed(() => {
         <Button
             v-if="!hasFinished"
             class="mb-2"
-            label="Abandon"
+            :label="t('play.abandon')"
             severity="danger"
             @click="emit('showAbandonModal')" />
 
         <Button
             v-if="isHistoric"
             class="mb-2"
-            label="Back to past flyers"
+            :label="t('history.backToPastFlyers')"
             severity="info"
             @click="emit('goToPastFlyers')" />
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { watch } from "vue"
+import { computed, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 import ScoreCell from "./ScoreCell.vue"
 import TableBadge from "./TableBadge.vue"
@@ -15,7 +16,8 @@ import { useTimedRef } from "@/composables/useTimedRef"
 import { Prioritisation, type Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
-import { computed } from "vue"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     fixture: Fixture
@@ -171,15 +173,17 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
                     :class="playerCellClass(fixture, 0)"
                     @click="() => handleNameClick(fixture!.id)">
                     <span v-if="fixture.scores[0].isBye" class="text-gray-400">
-                        <em>(bye)</em>
+                        <em>{{ t('player.byeIndicator') }}</em>
                     </span>
 
                     <span v-else-if="fixture.scores[0].playerId" :class="playerNameClass(fixture.scores[0].playerId, 0)">
-                        {{ getPlayerName(fixture.scores[0].playerId) }}
+                        {{ getPlayerName(fixture.scores[0].playerId) || t('player.unknownIndicator') }}
                     </span>
 
                     <span v-else-if="fixture.parentFixtures[0]?.fixtureId || isRandomDraw">
-                        <em class="text-gray-400">TBD</em>
+                        <em class="text-gray-400">
+                            {{ t('player.pendingIndicator') }}
+                        </em>
                     </span>
                 </div>
 
@@ -222,15 +226,17 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
                     :class="playerCellClass(fixture, 1)"
                     @click="() => handleNameClick(fixture!.id)">
                     <span v-if="fixture.scores[1].isBye" class="text-gray-400">
-                        <em>(bye)</em>
+                        <em>{{ t('player.byeIndicator') }}</em>
                     </span>
 
                     <span v-else-if="fixture.scores[1].playerId" :class="playerNameClass(fixture.scores[1].playerId, 1)">
-                        {{ getPlayerName(fixture.scores[1].playerId) }}
+                        {{ getPlayerName(fixture.scores[1].playerId) || t('player.unknownIndicator') }}
                     </span>
 
                     <span v-else-if="fixture.parentFixtures[1]?.fixtureId || isRandomDraw">
-                        <em class="text-gray-400">TBD</em>
+                        <em class="text-gray-400">
+                            {{ t('player.pendingIndicator') }}
+                        </em>
                     </span>
                 </div>
             </div>
