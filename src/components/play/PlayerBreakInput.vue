@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
+
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 
@@ -6,10 +8,12 @@ import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 
+const { t } = useI18n()
+
 const props = defineProps<{
     fixture: Fixture
     playerId: string
-    breakerId: string
+    breakerId: string // MEDIUM: use defineModel() instead
 }>()
 
 const emit = defineEmits<{
@@ -30,7 +34,7 @@ const {
 <template>
     <div class="flex flex-column align-items-center">
         <div class="font-bold">
-            {{ getPlayerName(props.playerId) }}
+            {{ getPlayerName(props.playerId) || t("player.unknownIndicator") }}
         </div>
 
         <RadioButton

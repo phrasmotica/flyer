@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import ScoreCell from "./ScoreCell.vue"
 
@@ -9,6 +10,8 @@ import { usePhase } from "@/composables/usePhase"
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     fixture: Fixture
@@ -39,7 +42,7 @@ const didRunOut = computed(() => props.playerId === props.ranOut)
 <template>
     <div class="flex flex-column align-items-center">
         <div class="font-bold" :class="[props.fixture.breakerId === props.playerId && 'underline']">
-            {{ getPlayerName(props.playerId) }}
+            {{ getPlayerName(props.playerId) || t("player.unknownIndicator") }}
         </div>
 
         <div v-if="props.finished" class="text-4xl font-bold">
@@ -58,7 +61,7 @@ const didRunOut = computed(() => props.playerId === props.ranOut)
             @update:modelValue="emit('setWinner')" />
 
         <div class="text-xs mt-2">
-            Ran Out
+            {{ t("fixture.ranOut") }}
         </div>
 
         <div v-if="props.finished">

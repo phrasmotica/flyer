@@ -207,31 +207,32 @@ const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.val
 const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
 
 const startButtonText = computed(() => {
+    // MEDIUM: move most of this into a composable?
     if (fixtureStatus.value === FixtureStatus.Unknown) {
-        return "???"
+        return t('fixture.unknownStatus')
     }
 
     if (fixtureStatus.value === FixtureStatus.WaitingForRoundGeneration) {
-        return "Waiting for round to be generated"
+        return t('fixture.waitingForRoundGenerationStatus')
     }
 
     if (fixtureStatus.value === FixtureStatus.WaitingForPreviousResult) {
-        return "Waiting for a previous result"
+        return t('fixture.waitingForPreviousResultStatus')
     }
 
     if (fixtureStatus.value === FixtureStatus.WaitingForPlayers) {
-        return "Waiting for players to be free"
+        return t('fixture.waitingForPlayersStatus')
     }
 
     if (fixtureStatus.value === FixtureStatus.WaitingForRound) {
-        return "Waiting for round to start"
+        return t('fixture.waitingForRoundStatus')
     }
 
     if (fixtureStatus.value === FixtureStatus.WaitingForTable) {
-        return "Waiting for a free table"
+        return t('fixture.waitingForTableStatus')
     }
 
-    return "Start"
+    return t('common.start')
 })
 
 const hide = () => {
@@ -330,22 +331,27 @@ const header = computed(() => {
                     :finished="hasFinished" />
             </div>
 
-            <div v-if="!hasFinished" class="flex p-fluid mt-2">
-                <Textarea
-                    class="text-xs md:text-sm"
-                    rows="3"
-                    placeholder="Add a comment..."
-                    v-model="comment" />
-            </div>
+            <!-- MEDIUM: create a component for this -->
+            <div>
+                <div v-if="!hasFinished" class="flex p-fluid mt-2">
+                    <Textarea
+                        class="text-xs md:text-sm"
+                        rows="3"
+                        :placeholder="t('fixture.addAComment')"
+                        v-model="comment" />
+                </div>
 
-            <div v-else-if="comment" class="flex p-fluid pt-1 border-top-1 border-none border-dashed border-gray-200">
-                <p class="m-0 text-xs md:text-sm">
-                    {{ comment }}
-                </p>
+                <div v-else-if="comment" class="flex p-fluid pt-1 border-top-1 border-none border-dashed border-gray-200">
+                    <p class="m-0 text-xs md:text-sm">
+                        {{ comment }}
+                    </p>
+                </div>
             </div>
         </div>
         <div v-else-if="fixtureStatus === FixtureStatus.ReadyToStart">
-            <p class="m-0 text-center">Who will break first?</p>
+            <p class="m-0 text-center">
+                {{ t('fixture.whoWillBreakFirst') }}
+            </p>
 
             <div class="grid m-0">
                 <PlayerBreakInput
@@ -360,7 +366,7 @@ const header = computed(() => {
 
         <div class="p-fluid">
             <LabelledDropdown v-if="!hasStarted"
-                label="Table"
+                :label="t('table.table')"
                 :options="freeTablesOptions"
                 v-model="tableId" />
 
@@ -374,17 +380,17 @@ const header = computed(() => {
                 <div class="col-6 p-0 pr-1">
                     <Button
                         type="button"
-                        label="Close"
+                        :label="t('common.close')"
                         severity="secondary"
                         @click="hide" />
                 </div>
 
                 <div class="col-6 p-0 pl-1">
                     <SplitButton v-if="canBeFinished"
-                        label="Finish"
+                        :label="t('common.finish')"
                         :model="[
                             {
-                                label: 'Update',
+                                label: t('common.update'),
                                 command: () => updateScores(false),
                             },
                         ]"
@@ -392,7 +398,7 @@ const header = computed(() => {
 
                     <Button v-else
                         type="button"
-                        label="Update"
+                        :label="t('common.update')"
                         severity="info"
                         @click="() => updateScores(false)" />
                 </div>

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import type { Fixture } from "@/data/Fixture"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     fixture: Fixture
@@ -40,7 +43,7 @@ const isWalkover = computed(() => props.fixture.scores.some(s => s.isBye))
 
 const scoreText = computed(() => {
     if (props.simple && props.fixture.finishTime) {
-        return props.isWinner ? "W" : "L"
+        return props.isWinner ? t('score.win') : t('score.lose')
     }
 
     return props.score
@@ -68,7 +71,7 @@ const handleClick = () => {
             {{ scoreText }}
         </span>
         <span v-else>
-            ?
+            {{ t("score.unknown") }}
         </span>
     </div>
 </template>
@@ -84,6 +87,7 @@ const handleClick = () => {
     height: 4rem;
 }
 
+/* MEDIUM: improve these colours for the colour themes */
 .loser {
     background-color: red;
 }

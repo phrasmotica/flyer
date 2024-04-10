@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onUpdated } from "vue"
+import { useI18n } from "vue-i18n"
 import { v4 as uuidv4 } from "uuid"
 
 import ScoreCell from "./ScoreCell.vue"
@@ -12,6 +13,8 @@ import { useTweaks } from "@/composables/useTweaks"
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const score = defineModel<number>("score")
 const runouts = defineModel<number>("runouts")
@@ -52,7 +55,7 @@ onUpdated(() => {
 <template>
     <div class="flex flex-column align-items-center">
         <div class="font-bold" :class="[props.fixture.breakerId === props.playerId && 'underline']">
-            {{ getPlayerName(props.playerId) }}
+            {{ getPlayerName(props.playerId) || t("player.unknownIndicator") }}
         </div>
 
         <div v-if="props.finished">
@@ -80,7 +83,7 @@ onUpdated(() => {
         </InputNumber>
 
         <div class="text-xs mt-2">
-            Runouts
+            {{ t('fixture.runouts') }}
         </div>
 
         <div v-if="props.finished">

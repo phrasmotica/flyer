@@ -8,12 +8,25 @@
         "add": "Add",
         "cancel": "Cancel",
         "start": "Start",
-        "goBack": "Go back"
+        "goBack": "Go back",
+        "close": "Close",
+        "update": "Update",
+        "finish": "Finish"
     },
     "fixture": {
         "byeIndicator": "(bye)",
+        "unknownStatus": "???",
+        "waitingForRoundGenerationStatus": "Waiting for round to be generated",
+        "waitingForPreviousResultStatus": "Waiting for a previous result",
+        "waitingForPlayersStatus": "Waiting for players to be free",
+        "waitingForRoundStatus": "Waiting for round to start",
+        "waitingForTableStatus": "Waiting for a free table",
         "headerFormat": "{round} - {players}",
-        "playerJoiner": " v "
+        "playerJoiner": " v ",
+        "whoWillBreakFirst": "Who will break first?",
+        "ranOut": "Ran Out",
+        "runouts": "Runouts",
+        "addAComment": "Add a comment..."
     },
     "form": {
         "players": "Players",
@@ -132,6 +145,11 @@
         "internationalSummary": "International rules",
         "internationalDetails": "foul gives one visit with ball-in-hand, skill shots and loss-of-turn shots are permitted"
     },
+    "score": {
+        "win": "W",
+        "lose": "L",
+        "unknown": "?"
+    },
     "stages": {
         "numberOfStages": "Number of stages",
         "stagesSuffix": " stages",
@@ -139,6 +157,7 @@
         "stagesDescription": "This is the number of times each player will play the others."
     },
     "table": {
+        "table": "Table",
         "available": "AVAILABLE",
         "busy": "BUSY"
     },
