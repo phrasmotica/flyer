@@ -48,7 +48,13 @@
         "fixedDetails": "",
         "variableName": "Variable",
         "variableSummary": "Variable races",
-        "variableDetails": ""
+        "variableDetails": "",
+        "allRounds": "All rounds",
+        "racesToPrefix": "Races to ",
+        "winsRequired": "Wins required",
+        "winSuffix": " win",
+        "winsSuffix": " wins",
+        "winsRequiredLimit": "Must be at least one fewer than the player count ({limit})."
     },
     "prizes": {
         "requireEntryFee": "Require entry fee",

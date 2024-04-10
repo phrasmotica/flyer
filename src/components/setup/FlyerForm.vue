@@ -134,14 +134,14 @@ onUpdated(() => {
                 <div class="mb-2 px-2 border-1 border-gray-200 border-round-md">
                     <div v-if="isRoundRobin || (isKnockout && isFixedMatchLength)" class="p-fluid mb-2">
                         <label for="raceToStepper" class="font-bold">
-                            All rounds
+                            {{ t("matchLengthModel.allRounds") }}
                         </label>
 
                         <Stepper
                             inputId="raceToStepper"
                             v-model="settingsStore.settings.specification.raceTo"
                             :min="1" :max="maxRaceEnv"
-                            prefix="Races to " />
+                            :prefix="t('matchLengthModel.racesToPrefix')" />
                     </div>
 
                     <div v-else-if="isKnockout && isVariableMatchLength">
@@ -154,24 +154,26 @@ onUpdated(() => {
                                 :inputId="'raceToRoundStepper' + i"
                                 v-model="settingsStore.settings.raceToPerRound[i]"
                                 :min="1" :max="maxRaceEnv"
-                                prefix="Races to " />
+                                :prefix="t('matchLengthModel.racesToPrefix')" />
                         </div>
                     </div>
 
                     <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
                         <label for="winsRequiredStepper" class="font-bold">
-                            Wins required
+                            {{ t('matchLengthModel.winsRequired') }}
                         </label>
 
                         <Stepper
                             inputId="winsRequiredStepper"
                             v-model="settingsStore.settings.specification.winsRequired"
                             :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
-                            :suffix="settingsStore.settings.specification.winsRequired > 1 ? ' wins' : ' win'" />
+                            :suffix="t(settingsStore.settings.specification.winsRequired !== 1 ? 'matchLengthModel.winsSuffix' : 'matchLengthModel.winSuffix')" />
 
-                        <p class="m-0 text-xs md:text-base font-italic text-color-secondary">
-                            Must be at least one fewer than the player count ({{ settingsStore.settings.playerCount - 1 }}).
-                        </p>
+                        <Message class="m-0 mt-2" severity="info" :closable="false">
+                            {{ t('matchLengthModel.winsRequiredLimit', {
+                                limit: settingsStore.settings.playerCount - 1,
+                            }) }}
+                        </Message>
                     </div>
                 </div>
 
