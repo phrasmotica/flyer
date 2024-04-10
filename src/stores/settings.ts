@@ -13,23 +13,23 @@ import type { Table } from "@/data/Table"
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 
-// MEDIUM: either export these lists from here, or from the defineStore() call.
-// Not both...
-export const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
+const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
     {
         value: MatchLengthModel.Fixed,
-        name: "Fixed",
-        summary: "Fixed races",
-        details: "",
+        name: "matchLengthModel.fixedName",
+        summary: "matchLengthModel.fixedSummary",
+        details: "matchLengthModel.fixedDetails",
     },
     {
         value: MatchLengthModel.Variable,
-        name: "Variable",
-        summary: "Variable races",
-        details: "",
+        name: "matchLengthModel.variableName",
+        summary: "matchLengthModel.variableSummary",
+        details: "matchLengthModel.variableDetails",
     },
 ]
 
+// MEDIUM: either export these lists from here, or from the defineStore() call.
+// Not both...
 export const formatList: SettingsDetails<Format>[] = [
     {
         value: Format.Knockout,

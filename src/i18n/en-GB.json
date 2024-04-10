@@ -42,6 +42,14 @@
         "tookNMinutes": "Took 1 minute, won by {winner}. | Took {n} minutes, won by {winner}.",
         "requiredNPlayOffs": "Required 1 play-off. | Required {n} play-offs."
     },
+    "matchLengthModel": {
+        "fixedName": "Fixed",
+        "fixedSummary": "Fixed races",
+        "fixedDetails": "",
+        "variableName": "Variable",
+        "variableSummary": "Variable races",
+        "variableDetails": ""
+    },
     "prizes": {
         "requireEntryFee": "Require entry fee",
         "entryFee": "Entry fee",

@@ -7,6 +7,7 @@ import CurrencyStepper from "./CurrencyStepper.vue"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledDropdown from "./LabelledDropdown.vue"
 import LabelledSlider from "./LabelledSlider.vue"
+import MatchLengthModelSelect from "./MatchLengthModelSelect.vue"
 import NameInput from "./NameInput.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
@@ -127,14 +128,7 @@ onUpdated(() => {
 
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Settings">
                 <div class="p-fluid mb-1">
-                    <SelectButton
-                        id="matchLengthModelSelect"
-                        v-model="settingsStore.settings.specification.matchLengthModel"
-                        :disabled="!isKnockout"
-                        :options="settingsStore.matchLengthModelList"
-                        optionLabel="summary"
-                        optionValue="value"
-                        aria-labelledby="basic" />
+                    <MatchLengthModelSelect />
                 </div>
 
                 <div class="mb-2 px-2 border-1 border-gray-200 border-round-md">

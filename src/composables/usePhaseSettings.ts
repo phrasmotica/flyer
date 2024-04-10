@@ -2,28 +2,10 @@ import { computed, ref } from "vue"
 
 import { Format, TieBreaker, MatchLengthModel, type PhaseSettings } from "@/data/PhaseSettings"
 
-import { formatList, matchLengthModelList, ruleSetList, tieBreakerList } from "@/stores/settings"
+import { formatList, ruleSetList, tieBreakerList } from "@/stores/settings"
 
 export const usePhaseSettings = (s: PhaseSettings) => {
     const settings = ref(s)
-
-    const matchLengthModelName = computed(() => {
-        const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
-        if (!matchLengthModel) {
-            throw `Invalid match length model ${settings.value.matchLengthModel}!`
-        }
-
-        return matchLengthModel.name
-    })
-
-    const matchLengthModelSummary = computed(() => {
-        const matchLengthModel = matchLengthModelList.find(s => s.value === settings.value.matchLengthModel)
-        if (!matchLengthModel) {
-            throw `Invalid match length model ${settings.value.matchLengthModel}!`
-        }
-
-        return matchLengthModel.summary
-    })
 
     const formatName = computed(() => {
         const format = formatList.find(s => s.value === settings.value.format)
@@ -113,9 +95,6 @@ export const usePhaseSettings = (s: PhaseSettings) => {
 
     return {
         settings,
-
-        matchLengthModelName,
-        matchLengthModelSummary,
 
         formatName,
         formatSummary,
