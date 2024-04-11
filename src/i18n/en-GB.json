@@ -157,6 +157,7 @@
     "score": {
         "win": "W",
         "lose": "L",
+        "runout": "R",
         "unknown": "?"
     },
     "stages": {

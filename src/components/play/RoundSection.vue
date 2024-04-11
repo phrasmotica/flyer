@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { watch } from "vue"
+import { useI18n } from "vue-i18n"
 import { useToggle } from "@vueuse/core"
 
 import FixtureCard from "./FixtureCard.vue"
@@ -15,6 +16,8 @@ import type { Fixture } from "@/data/Fixture"
 import type { Round } from "@/data/Round"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     round: Round
@@ -73,7 +76,7 @@ const [showComments, toggleComments] = useToggle(false)
             class="flex align-items-center flex-1 cursor-pointer"
             @click="toggleContent()">
             <h3 class="font-bold">
-                {{ name }}
+                {{ name || t('round.unknownIndicator') }}
             </h3>
 
             <RaceToBadge v-if="isVariableMatchLength"

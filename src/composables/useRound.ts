@@ -23,7 +23,7 @@ export const useRound = (r: Round | undefined, p: Phase | null) => {
         isWinnerStaysOn,
     } = usePhaseSettings(settings.value)
 
-    const name = computed(() => round.value?.name || "")
+    const name = computed(() => round.value?.name)
     const fixtures = computed(() => round.value?.fixtures || [])
     const raceTo = computed(() => round.value?.raceTo || settings.value.raceTo)
 

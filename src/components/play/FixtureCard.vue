@@ -167,6 +167,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
         </div>
 
         <div class="grid m-0 py-1">
+            <!-- HIGH: create a component for these two divs -->
             <div class="flex align-items-center justify-content-between col-6 p-0 pr-1">
                 <div
                     class="p-1 mr-1 border-round-md text-left flex-1"
@@ -189,7 +190,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
 
                 <Badge v-if="fixture.scores[0].runouts > 0"
                     class="p-badge-sm mr-1 cursor-pointer"
-                    :value="isWinnerStaysOn ? 'R' : fixture.scores[0].runouts"
+                    :value="isWinnerStaysOn ? t('score.runout') : fixture.scores[0].runouts"
                     severity="contrast"
                     @click="handleClick" />
 
@@ -217,7 +218,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
 
                 <Badge v-if="fixture.scores[1].runouts > 0"
                     class="p-badge-sm ml-1 cursor-pointer"
-                    :value="isWinnerStaysOn ? 'R' : fixture.scores[1].runouts"
+                    :value="isWinnerStaysOn ? t('score.runout') : fixture.scores[1].runouts"
                     severity="contrast"
                     @click="handleClick" />
 
@@ -242,6 +243,7 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
             </div>
         </div>
 
+        <!-- MEDIUM: format this better -->
         <div v-if="props.showComment && fixture.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
             <p class="m-0 text-xs md:text-sm">
                 {{ fixture.comment }}
