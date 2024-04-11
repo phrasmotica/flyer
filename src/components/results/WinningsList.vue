@@ -14,11 +14,16 @@ const props = defineProps<{
     }[]
 }>()
 
-const { n } = useI18n()
+const { n, t } = useI18n()
 
 const {
     isHistoric,
 } = useQueryParams()
+
+const getMessage = (name: string) => {
+    const key = isHistoric.value ? 'results.winningsMessageHistoric' : 'results.winningsMessage'
+    return t(key, { name })
+}
 </script>
 
 <template>
@@ -26,8 +31,8 @@ const {
         <p v-if="props.header" class="m-0">{{ props.header }}</p>
 
         <p v-for="w in props.winnings" class="m-0">
-            <span v-if="isHistoric">{{ w.player.name }} won&nbsp;</span>
-            <span v-else>{{ w.player.name }} wins&nbsp;</span>
+            <!-- HIGH: create a component for this, and use it in WinningsSummary too -->
+            <span>{{ getMessage(w.player.name) }}</span>
 
             <span class="font-bold" :style="{color: w.colour,}">
                 {{ n(w.winnings, "currency") }}
