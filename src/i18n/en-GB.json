@@ -179,7 +179,8 @@
     "table": {
         "table": "Table",
         "available": "AVAILABLE",
-        "busy": "BUSY"
+        "busy": "BUSY",
+        "costPerHour": "{cost} per hour"
     },
     "races": {
         "raceToN": "Race to {n}",

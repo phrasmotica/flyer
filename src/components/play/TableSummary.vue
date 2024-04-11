@@ -22,7 +22,7 @@ const emit = defineEmits<{
     showFixtureModal: [fixture: Fixture]
 }>()
 
-const { d, n } = useI18n()
+const { d, n, t } = useI18n()
 
 const flyerStore = useFlyerStore()
 
@@ -32,9 +32,9 @@ const {
 
 const {
     fixtures,
-    getRound,
     isInProgress,
-    getFixtureHeader,
+    getPlayerName,
+    getRound,
 } = usePhase(currentPhase.value)
 
 const {
@@ -49,7 +49,11 @@ const {
     pauseClock,
 } = useFixture("tableSummary", fixture.value, getRound(fixture.value?.id || ""), currentPhase.value)
 
-const fixtureDescription = computed(() => fixture.value ? getFixtureHeader(fixture.value) : null)
+const fixtureDescription = computed(() => {
+    return fixture.value!.scores
+        .map(s => getPlayerName(s.playerId) || t("player.unknownIndicator"))
+        .join(t("fixture.playerJoiner"))
+})
 
 const fixtureClock = computed(() => d(elapsedMilliseconds.value, "clock"))
 
@@ -67,11 +71,15 @@ onUnmounted(() => {
 <template>
     <div class="flex">
         <div class="flex-grow-1">
-            <TableBadge :showBusy="!isHistoric" :table="props.table" />
+            <div>
+                <TableBadge :showBusy="!isHistoric" :table="props.table" />
+            </div>
 
             <div>
                 <Badge severity="secondary">
-                    {{ n(props.table.costPerHour, "currency") }} per hour
+                    {{ t('table.costPerHour', {
+                        cost: n(props.table.costPerHour, "currency"),
+                    }) }}
                 </Badge>
             </div>
 
