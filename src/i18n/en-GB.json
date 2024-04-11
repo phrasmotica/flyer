@@ -148,6 +148,10 @@
         "pos7": "7th Place",
         "pos8": "8th Place"
     },
+    "races": {
+        "raceToN": "Race to {n}",
+        "racesToN": "Races to {n}"
+    },
     "results": {
         "rankHeader": "#",
         "nameHeader": "Name",
@@ -209,9 +213,9 @@
         "busy": "BUSY",
         "costPerHour": "{cost} per hour"
     },
-    "races": {
-        "raceToN": "Race to {n}",
-        "racesToN": "Races to {n}"
+    "theming": {
+        "darkMode": "Dark mode",
+        "sidebarPosition": "Sidebar position"
     },
     "tieBreaker": {
         "tieBreaker": "Tie Breaker",
