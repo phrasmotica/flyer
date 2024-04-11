@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { computed } from "vue"
+import { useI18n } from "vue-i18n"
+
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     isInProgress?: boolean
@@ -47,31 +52,54 @@ const rowClass = (data: any) => {
 }
 
 const getPlayOffIndex = (playerId: string) => {
-    return playOffs.value.filter(x => !phaseIsComplete(x.id)).findIndex(p => p.players.some(x => x.id === playerId))
+    const incompletePlayOffs = playOffs.value.filter(x => !phaseIsComplete(x.id))
+    return incompletePlayOffs.findIndex(p => p.players.some(x => x.id === playerId))
+}
+
+const showRank = computed(() => true)
+const showName = computed(() => true)
+const showPlayed = computed(() => props.isInProgress && !props.isPinned)
+const showWins = computed(() => true)
+const showDraws = computed(() => settings.value.allowDraws && !props.isPinned)
+const showLosses = computed(() => !isWinnerStaysOn.value)
+const showDiff = computed(() => !isWinnerStaysOn.value && !props.isPinned)
+const showRunouts = computed(() => (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
+const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
+
+const showPlayOffIndex = (playerId: string) => {
+    return !props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(playerId) >= 0
 }
 </script>
 
 <template>
     <!-- LOW: ensure table does not need to scroll sideways on narrow screens -->
     <DataTable size="small" :value="overallStandings" :rowClass="rowClass">
-        <Column header="#" field="rank"></Column>
-        <Column field="name" header="Name">
+        <Column v-if="showRank" field="rank" :header="t('results.rankHeader')" />
+
+        <Column v-if="showName" field="name" :header="t('results.nameHeader')">
             <template #body="slotData">
                 {{ slotData.data.name }}
-                <span v-if="!props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(slotData.data.playerId) >= 0">
+                <span v-if="showPlayOffIndex(slotData.data.playerId)">
                     <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId) + 1 }}</sup>
                 </span>
             </template>
         </Column>
-        <Column v-if="props.isInProgress && !props.isPinned" field="played" header="P"></Column>
-        <Column field="wins" header="W"></Column>
-        <Column v-if="settings.allowDraws && !props.isPinned" field="draws" header="D"></Column>
-        <Column v-if="!isWinnerStaysOn" field="losses" header="L"></Column>
-        <Column v-if="!isWinnerStaysOn && !props.isPinned" field="diff" header="+/-"></Column>
-        <Column v-if="(isNotSmallScreen || isWinnerStaysOn) && !props.isPinned" field="runouts" header="R/O"></Column>
-        <Column v-if="completedPlayOffs.length > 0" header="P/O">
+
+        <Column v-if="showPlayed" field="played" :header="t('results.playedHeader')" />
+
+        <Column v-if="showWins" field="wins" :header="t('results.winsHeader')" />
+
+        <Column v-if="showDraws" field="draws" :header="t('results.drawsHeader')" />
+
+        <Column v-if="showLosses" field="losses" :header="t('results.lossesHeader')" />
+
+        <Column v-if="showDiff" field="diff" :header="t('results.diffHeader')" />
+
+        <Column v-if="showRunouts" field="runouts" :header="t('results.runoutsHeader')" />
+
+        <Column v-if="showPlayOffRank" :header="t('results.playOffRankHeader')">
             <template #body="slotData">
-                {{ getPlayOffRank(slotData.data.playerId) || "-" }}
+                {{ getPlayOffRank(slotData.data.playerId) || t('results.noPlayOffRank') }}
             </template>
         </Column>
     </DataTable>

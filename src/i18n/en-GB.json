@@ -137,6 +137,16 @@
         "pos8": "8th Place"
     },
     "results": {
+        "rankHeader": "#",
+        "nameHeader": "Name",
+        "playedHeader": "P",
+        "winsHeader": "W",
+        "drawsHeader": "D",
+        "lossesHeader": "L",
+        "diffHeader": "+/-",
+        "runoutsHeader": "R/O",
+        "playOffRankHeader": "P/O",
+        "noPlayOffRank": "-",
         "newFlyer": "New flyer",
         "newFlyerAreYouSure": "Are you sure you want to start a new flyer? The current one has not been saved!",
         "startPlayOff": "Start Play-Off",
