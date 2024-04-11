@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
@@ -17,6 +18,8 @@ import { useFlyerStore } from "@/stores/flyer"
 import { useSettingsStore } from "@/stores/settings"
 
 useTitle("Flyer - New Flyer")
+
+const { t } = useI18n()
 
 const routing = useRouting(useRouter())
 
@@ -45,8 +48,8 @@ const start = () => {
         toast.add({
             group: "errors",
             severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to start flyer! Please try again.',
+            summary: t('common.error'),
+            detail: t('form.failedToStart'),
             life: 3000,
         })
 
@@ -63,7 +66,7 @@ const start = () => {
     <PageTemplate>
         <template #header>
             <div class="flex flex-grow-1 align-items-center justify-content-between">
-                <h1>New Flyer</h1>
+                <h1>{{ t('form.newFlyer') }}</h1>
             </div>
         </template>
 
@@ -92,7 +95,7 @@ const start = () => {
         </template>
 
         <template v-if="isSmallScreen" #buttons>
-            <FlyerFormSection hidden noUnderline header="Summary">
+            <FlyerFormSection hidden noUnderline :header="t('form.summary')">
                 <FlyerSummary
                     overflow
                     @confirmStart="() => setShowModal(true)" />

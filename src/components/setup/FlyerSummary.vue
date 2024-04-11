@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n"
+
 import Clock from "../play/Clock.vue"
 import InfoList from "./InfoList.vue"
 import PrizePotSummary from "./PrizePotSummary.vue"
@@ -6,6 +8,8 @@ import PrizePotSummary from "./PrizePotSummary.vue"
 import { useSettings } from "@/composables/useSettings"
 
 import { useSettingsStore } from "@/stores/settings"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     sidebar?: boolean
@@ -30,7 +34,10 @@ const {
 <template>
     <div>
         <div v-if="props.sidebar" class="p-fluid mb-2">
-            <Button label="Start" :disabled="isInvalid" @click="emit('confirmStart')" />
+            <Button
+                :label="t('common.start')"
+                :disabled="isInvalid"
+                @click="emit('confirmStart')" />
         </div>
 
         <div :class="[
@@ -53,7 +60,7 @@ const {
 
             <div class="flex align-items-center justify-content-between pt-2 border-top-1 border-gray-200">
                 <div>
-                    Estimated duration <em>({{ durationPerFrame }} min(s) per frame)</em>
+                    {{ t('form.estimatedDuration') }} <em>{{ t('form.minsPerFrame', durationPerFrame) }}</em>
                 </div>
 
                 <div class="ml-2">
@@ -63,7 +70,10 @@ const {
         </div>
 
         <div v-if="!props.sidebar" class="p-fluid mt-2">
-            <Button label="Start" :disabled="isInvalid" @click="emit('confirmStart')" />
+            <Button
+                :label="t('common.start')"
+                :disabled="isInvalid"
+                @click="emit('confirmStart')" />
         </div>
     </div>
 </template>
