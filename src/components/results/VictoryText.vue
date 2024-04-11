@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, watch } from "vue"
+import { useI18n } from "vue-i18n"
 import { useSorted } from "@vueuse/core"
 
 import { useFixture } from "@/composables/useFixture"
@@ -10,6 +11,8 @@ import { usePodium } from "@/composables/usePodium"
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     fixture: Fixture
@@ -46,27 +49,33 @@ const sortedScores = useSorted(scores, (a, b) => b - a)
 const scoreText = computed(() => {
     // MEDIUM: use usePhase().getScoreDescription()
     if (isWalkover.value) {
-        return "W/O"
+        return t('podium.walkover')
     }
 
-    return sortedScores.value.join("-")
+    return sortedScores.value.join(t('podium.scoreJoiner'))
 })
 
 const opponentName = computed(() => getPlayerName(getOpponent(winner.value?.id || "")))
 
 const roundName = computed(() => {
     if (fixture.value) {
-        return getRound(fixture.value.id)?.name || "UNKNOWN"
+        return getRound(fixture.value.id)?.name || t('round.unknownIndicator')
     }
 
-    return "UNKNOWN"
+    return t('round.unknownIndicator')
 })
 </script>
 
 <template>
     <span>
         <span class="font-bold">{{ scoreText }}</span>
-        <span v-if="!isWalkover">&nbsp;v {{ opponentName }}</span>
-        <span class="font-italic">&nbsp;({{ roundName }})</span>
+
+        <span v-if="!isWalkover">{{ t('podium.opponentFormat', {
+            name: opponentName,
+        }) }}</span>
+
+        <span class="font-italic">{{ t('podium.roundFormat', {
+            name: roundName,
+        }) }}</span>
     </span>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { useQueryParams } from "@/composables/useQueryParams"
@@ -7,6 +8,8 @@ import { useStandings } from "@/composables/useStandings"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     imageSaved: boolean
@@ -50,11 +53,13 @@ const alreadySaved = computed(() => {
     return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)
 })
 
-const saveImageButtonText = computed(() => props.imageSaved ? "Downloading..." : "Download image")
+const saveImageButtonText = computed(() => t(props.imageSaved ? "results.downloading" : "results.downloadImage"))
 
-const saveButtonText = computed(() => alreadySaved.value ? "Flyer saved!" : "Save flyer")
+const saveButtonText = computed(() => t(alreadySaved.value ? 'results.flyerSaved' : 'results.saveFlyer'))
 
-const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name || "(UNKNOWN PLAY-OFF)")
+const playOffButtonText = computed(() => t('results.startPlayOffButton', {
+    name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
+}))
 </script>
 
 <template>
@@ -79,12 +84,15 @@ const playOffButtonText = computed(() => "Start the " + nextPlayOff.value?.name 
                         @click="emit('saveResults')" />
                 </div>
 
-                <Button label="New flyer" severity="info" @click="emit('confirmGoToSetup')" />
+                <Button
+                    :label="t('results.newFlyer')"
+                    severity="info"
+                    @click="emit('confirmGoToSetup')" />
             </div>
 
             <div v-else>
                 <Button
-                    label="Back to past flyers"
+                    :label="t('results.backToPastFlyers')"
                     severity="info"
                     @click="emit('goToPastFlyers')" />
             </div>

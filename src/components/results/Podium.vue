@@ -8,7 +8,7 @@ import { usePodium } from "@/composables/usePodium"
 
 import { useFlyerStore } from "@/stores/flyer"
 
-const { n } = useI18n()
+const { n, t } = useI18n()
 
 const flyerStore = useFlyerStore()
 
@@ -26,11 +26,13 @@ const {
 <template>
     <div v-if="winner">
         <div class="text-center">
-            <p class="m-0">The winner is</p>
+            <p class="m-0">{{ t('podium.theWinnerIs') }}</p>
+
             <h1 class="font-bold">{{ winner.name }}</h1>
 
             <p v-if="moneyRecipients.length > 0" class="m-0 text-xl">
-                who wins
+                {{ t('podium.whoWins') }}
+
                 <span class="font-bold" :style="{color: moneyRecipients[0].colour,}">
                     {{ n(moneyRecipients[0].winnings, "currency") }}
                 </span>
@@ -45,6 +47,8 @@ const {
     </div>
 
     <div v-else>
-        <p class="m-0 text-center">No winner!</p>
+        <Message class="m-0" :closable="false">
+            {{ t('podium.noWinner') }}
+        </Message>
     </div>
 </template>

@@ -113,6 +113,18 @@
         "pendingIndicator": "TBD",
         "unknownIndicator": "???"
     },
+    "playOff": {
+        "unknownIndicator": "???"
+    },
+    "podium": {
+        "theWinnerIs": "The winner is",
+        "whoWins": "who wins ",
+        "noWinner": "No winner!",
+        "walkover": "W/O",
+        "scoreJoiner": "-",
+        "opponentFormat": " v {name}",
+        "roundFormat": " ({name})"
+    },
     "prizes": {
         "requireEntryFee": "Require entry fee",
         "entryFee": "Entry fee",
@@ -154,8 +166,16 @@
         "winningsMessage": "{name} wins ",
         "winningsMessageHistoric": "{name} won ",
         "otherPrizeMoney": "Other prize money:",
+        "theLightsCost": "The lights cost ",
+        "soEveryPlayerPays": "so every player pays",
+        "saveFlyer": "Save flyer",
+        "flyerSaved": "Flyer saved!",
+        "downloadImage": "Download image",
+        "downloading": "Downloading...",
         "newFlyer": "New flyer",
+        "backToPastFlyers": "Back to past flyers",
         "newFlyerAreYouSure": "Are you sure you want to start a new flyer? The current one has not been saved!",
+        "startPlayOffButton": "Start the {name}",
         "startPlayOff": "Start Play-Off",
         "startPlayOffName": "Are you sure you want to start the {name}?"
     },

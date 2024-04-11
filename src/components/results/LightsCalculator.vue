@@ -9,7 +9,7 @@ import { usePhase } from "@/composables/usePhase"
 
 import { useFlyerStore } from "@/stores/flyer"
 
-const { n } = useI18n()
+const { n, t } = useI18n()
 
 const flyerStore = useFlyerStore()
 
@@ -27,13 +27,18 @@ const lightsCost = ref(totalCost.value)
 
 <template>
     <div class="flex align-items-center gap-1">
-        The lights cost&nbsp;
+        {{ t('results.theLightsCost') }}
+
         <CurrencyStepper
             v-model="lightsCost"
             inputClass="text-center font-bold w-6rem" />
     </div>
 
     <p class="m-0 mt-2">
-        so every player pays <strong>{{ n(lightsCost / players.length, "currency") }}</strong>
+        {{ t('results.soEveryPlayerPays') }}
+
+        <span class="font-bold">
+            {{ n(lightsCost / players.length, "currency") }}
+        </span>
     </p>
 </template>
