@@ -94,6 +94,9 @@
         "winsRequiredLimit": "Must be at least one fewer than the player count ({limit})."
     },
     "play": {
+        "pinThisSection": "Pin this section",
+        "unpinThisSection": "Unpin this section",
+        "thisSectionIsPinned": "This section is pinned",
         "abandon": "Abandon",
         "abandonFlyer": "Abandon flyer",
         "abandonAreYouSure": "Are you sure you want to abandon this flyer?",

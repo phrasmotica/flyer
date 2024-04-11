@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import type { MenuItem } from "primevue/menuitem"
 
 import FixtureList from "./FixtureList.vue"
@@ -14,6 +15,8 @@ import type { Fixture } from "@/data/Fixture"
 import { PlayViewSection } from "@/data/UiSettings"
 
 import { useUiStore } from "@/stores/ui"
+
+const { t } = useI18n()
 
 const props = defineProps<{
     overflow?: boolean
@@ -58,10 +61,10 @@ const items = computed(() => <MenuItem[]>[
 
 const pinButtonLabel = computed(() => {
     if (uiStore.pinnedSection === uiStore.currentSection) {
-        return "Unpin this section"
+        return t('play.unpinThisSection')
     }
 
-    return "Pin this section"
+    return t('play.pinThisSection')
 })
 
 const canPin = computed(() => uiStore.currentSection !== PlayViewSection.Fixtures)
@@ -102,10 +105,11 @@ const showSection = (section: PlayViewSection) => {
                     @click="pinSection" />
             </div>
 
-            <p v-if="!props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
-                class="m-0 text-center text-sm font-italic text-color-secondary">
-                This section is pinned
-            </p>
+            <Message v-if="!props.pinnedOnly && uiStore.pinnedSection === uiStore.currentSection"
+                severity="info" :closable="false"
+                class="m-0 mt-2">
+                {{ t('play.thisSectionIsPinned') }}
+            </Message>
         </div>
 
         <div v-if="showCurrentSection" :class="props.overflow && 'overflow'">
