@@ -104,8 +104,8 @@ const [showComments, toggleComments] = useToggle(false)
                 :fixture="f"
                 :highlightedFixtureId="props.highlightedFixtureId"
                 :showComment="showComments"
-                @showModal="emit('showModal', f)"
-                @highlight="emit('highlight', f.id)" />
+                @showModal="() => emit('showModal', f)"
+                @highlight="() => emit('highlight', f.id)" />
         </div>
     </div>
 </template>
