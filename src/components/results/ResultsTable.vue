@@ -46,6 +46,7 @@ const rowClass = (data: any) => {
     return [
         {
             'bg-primary': !data.incomplete && data.rank === 1,
+            'play-off-row': showPlayOffIndex(data.playerId),
             'incomplete-row': data.incomplete,
         },
     ]
@@ -67,7 +68,7 @@ const showRunouts = computed(() => (isNotSmallScreen.value || isWinnerStaysOn.va
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
 const showPlayOffIndex = (playerId: string) => {
-    return !props.isInProgress && !allPlayOffsComplete && getPlayOffIndex(playerId) >= 0
+    return !props.isInProgress && !allPlayOffsComplete.value && getPlayOffIndex(playerId) >= 0
 }
 </script>
 
