@@ -3,6 +3,7 @@ import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import Clock from "../play/Clock.vue"
+import CommentMessage from "../play/CommentMessage.vue"
 import LabelledDropdown from "../setup/LabelledDropdown.vue"
 import PlayerBreakInput from "../play/PlayerBreakInput.vue"
 import PlayerScoreInput from "../play/PlayerScoreInput.vue"
@@ -341,10 +342,8 @@ const header = computed(() => {
                         v-model="comment" />
                 </div>
 
-                <div v-else-if="comment" class="flex p-fluid pt-1 border-top-1 border-none border-dashed border-gray-200">
-                    <p class="m-0 text-xs md:text-sm">
-                        {{ comment }}
-                    </p>
+                <div v-else-if="comment">
+                    <CommentMessage :comment="comment" />
                 </div>
             </div>
         </div>

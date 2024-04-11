@@ -2,6 +2,7 @@
 import { computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
+import CommentMessage from "./CommentMessage.vue"
 import ScoreCell from "./ScoreCell.vue"
 import TableBadge from "./TableBadge.vue"
 
@@ -243,16 +244,17 @@ const playerCellClass = (fixture: Fixture, slot: 0 | 1) => {
             </div>
         </div>
 
-        <!-- MEDIUM: format this better -->
-        <div v-if="props.showComment && fixture.comment" class="mt-1 pt-1 border-top-1 border-none border-dashed border-gray-200">
-            <p class="m-0 text-xs md:text-sm">
-                {{ fixture.comment }}
-            </p>
+        <div v-if="props.showComment && fixture.comment">
+            <CommentMessage :comment="fixture.comment" />
         </div>
     </div>
 </template>
 
 <style scoped>
+.p-message-wrapper {
+    padding: 0.25rem!important;
+}
+
 .p-badge.p-badge-sm {
     font-size: 0.75rem;
     min-width: 1.25rem;
