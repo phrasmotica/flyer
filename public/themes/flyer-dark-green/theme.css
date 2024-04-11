@@ -17,3 +17,8 @@ footer,
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
     color: hsla(160, 100%, 37%, 1);
 }
+
+.incomplete-row {
+    background: rgba(234, 179, 8, 0.16);
+    color: #eab308;
+}

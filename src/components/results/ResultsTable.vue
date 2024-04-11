@@ -46,7 +46,7 @@ const rowClass = (data: any) => {
     return [
         {
             'bg-primary': !data.incomplete && data.rank === 1,
-            'bg-gray-400': data.incomplete,
+            'incomplete-row': data.incomplete,
         },
     ]
 }
