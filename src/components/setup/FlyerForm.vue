@@ -181,7 +181,6 @@ onUpdated(() => {
                     <div class="col-12 md:col-6 mb-0 p-0 p-fluid">
                         <div class="md:mr-1">
                             <LabelledDropdown
-                                localise
                                 :label="t('format.format')"
                                 v-model="settingsStore.settings.specification.format"
                                 :options="settingsStore.formatList" />
@@ -191,7 +190,6 @@ onUpdated(() => {
                     <div class="col-12 md:col-6 p-0 p-fluid">
                         <div class="md:ml-1">
                             <LabelledDropdown
-                                localise
                                 :label="t('rules.rules')"
                                 v-model="settingsStore.settings.specification.ruleSet"
                                 :options="settingsStore.ruleSetList" />
@@ -202,7 +200,6 @@ onUpdated(() => {
                         class="col-12 md:col-6 p-0 p-fluid">
                         <div class="md:mr-1">
                             <LabelledDropdown
-                                localise
                                 :label="t('tieBreaker.tieBreaker')"
                                 v-model="settingsStore.settings.specification.tieBreaker"
                                 :options="settingsStore.tieBreakerList" />
@@ -342,7 +339,6 @@ onUpdated(() => {
                     </div>
 
                     <LabelledDropdown
-                        localise
                         :label="t('prizes.moneySplit')"
                         v-model="settingsStore.settings.specification.moneySplit"
                         :options="settingsStore.moneySplitOptions"

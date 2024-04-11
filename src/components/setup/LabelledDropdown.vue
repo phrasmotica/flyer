@@ -9,23 +9,16 @@ const props = defineProps<{
     label: string
     options: { name: string, value: (string | number), disabled?: boolean }[]
     disabled?: boolean
-    localise?: boolean
 }>()
 
 const { t } = useI18n()
 
 const id = "labelled-dropdown-" + uuidv4()
 
-const localisedOptions = computed(() => {
-    if (props.localise) {
-        return props.options.map(o => ({
-            ...o,
-            name: t(o.name),
-        }))
-    }
-
-    return props.options
-})
+const localisedOptions = computed(() => props.options.map(o => ({
+    ...o,
+    name: t(o.name),
+})))
 </script>
 
 <template>
