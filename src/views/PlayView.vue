@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
@@ -24,6 +25,8 @@ import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
+
+const { t } = useI18n()
 
 const flyerStore = useFlyerStore()
 const uiStore = useUiStore()
@@ -224,9 +227,9 @@ const hideFixtureModal = () => {
                     overflow
                     pinnedOnly />
 
-                <p v-else class="m-0 text-center text-sm font-italic text-color-secondary">
-                    No section pinned
-                </p>
+                <Message v-else class="m-0" severity="secondary" :closable="false">
+                    {{ t('play.noSectionPinned') }}
+                </Message>
             </div>
         </template>
 

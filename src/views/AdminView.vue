@@ -9,6 +9,8 @@ import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useTimedRef } from "@/composables/useTimedRef"
 
+// debug page, no need to localise
+
 useTitle("Flyer - Admin")
 
 const routing = useRouting(useRouter())

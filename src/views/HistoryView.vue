@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
+import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useClipboard, useTitle, useToggle } from "@vueuse/core"
 
@@ -17,7 +18,9 @@ import type { Flyer } from "@/data/Flyer"
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 
-useTitle("Flyer - Past Flyers")
+const { t } = useI18n()
+
+useTitle("Flyer - " + t('history.pastFlyers'))
 
 const {
     copy,
@@ -81,7 +84,7 @@ const exportPastFlyers = () => {
     <PageTemplate>
         <template #header>
             <div class="flex flex-grow-1 align-items-center justify-content-between">
-                <h1>Past Flyers</h1>
+                <h1>{{ t('history.pastFlyers') }}</h1>
             </div>
         </template>
 

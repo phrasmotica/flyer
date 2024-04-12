@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
@@ -28,6 +29,8 @@ import { useTimedRef } from "@/composables/useTimedRef"
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 
+const { t } = useI18n()
+
 const routing = useRouting(useRouter())
 
 const flyerStore = useFlyerStore()
@@ -45,11 +48,9 @@ const {
 
 const {
     settings,
-    estimatedDurationMinutes,
-    durationMilliseconds,
 } = usePhase(mainPhase.value)
 
-useTitle("Flyer - " + settings.value.name + " - Results")
+useTitle("Flyer - " + settings.value.name + " - " + t('results.results'))
 
 const {
     isKnockout,
@@ -151,7 +152,7 @@ const save = () => {
     <PageTemplate>
         <template #header>
             <div id="results-header" class="flex flex-grow-1 align-items-baseline justify-content-between">
-                <h1>{{ settings.name }} - Results</h1>
+                <h1>{{ settings.name }} - {{ t('results.results') }}</h1>
 
                 <FlyerClock />
             </div>
@@ -169,7 +170,9 @@ const save = () => {
                     <Podium />
 
                     <div v-if="moneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
-                        <WinningsList header="Other prize money:" :winnings="moneyRecipients.slice(1)" />
+                        <WinningsList
+                            :header="t('results.otherPrizeMoney')"
+                            :winnings="moneyRecipients.slice(1)" />
                     </div>
                 </div>
             </div>

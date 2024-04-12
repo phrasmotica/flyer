@@ -72,6 +72,7 @@
         "winnerStaysOnDetails": "gauntlet-style until one player has won enough matches"
     },
     "history": {
+        "pastFlyers": "Past Flyers",
         "emptyHistory": "No past flyers!",
         "failedToImport": "Failed to import!",
         "importData": "Import data",
@@ -105,6 +106,7 @@
         "pinThisSection": "Pin this section",
         "unpinThisSection": "Unpin this section",
         "thisSectionIsPinned": "This section is pinned",
+        "noSectionPinned": "No section pinned",
         "abandon": "Abandon",
         "abandonFlyer": "Abandon flyer",
         "abandonAreYouSure": "Are you sure you want to abandon this flyer?",
@@ -161,6 +163,7 @@
         "racesToN": "Races to {n}"
     },
     "results": {
+        "results": "Results",
         "rankHeader": "#",
         "nameHeader": "Name",
         "playedHeader": "P",

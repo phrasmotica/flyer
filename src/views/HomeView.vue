@@ -17,9 +17,9 @@ import { useSettings } from "@/composables/useSettings"
 import { useFlyerStore } from "@/stores/flyer"
 import { useSettingsStore } from "@/stores/settings"
 
-useTitle("Flyer - New Flyer")
-
 const { t } = useI18n()
+
+useTitle("Flyer - " + t('form.newFlyer'))
 
 const routing = useRouting(useRouter())
 
