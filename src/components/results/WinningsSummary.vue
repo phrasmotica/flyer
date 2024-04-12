@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 
-import Winnings from "./Winnings.vue"
+import WinnerWinnings from "./WinnerWinnings.vue"
 import WinningsList from "./WinningsList.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
@@ -20,7 +20,7 @@ const {
 <template>
     <div>
         <div v-if="overallMoneyRecipients.length > 0" class="m-0 text-center text-xl">
-            <Winnings :winnings="overallMoneyRecipients[0]" />
+            <WinnerWinnings :winnings="overallMoneyRecipients[0]" />
         </div>
 
         <div v-if="overallMoneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
