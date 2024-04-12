@@ -19,6 +19,10 @@ const slots = useSlots()
 
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <div v-if="slots.header" class="border-bottom-1 mb-2">
+                <!-- HIGH: improve layout on small screen. Ideally put the
+                header text at the top on its own, then below that put a
+                left slot, e.g. for the flyer clock, and a right slot for the
+                header buttons -->
                 <div class="flex gap-2 align-items-center">
                     <slot name="header" />
 
