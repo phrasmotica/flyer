@@ -1,4 +1,5 @@
 import './assets/main.css'
+import '/node_modules/primeflex/primeflex.css'
 
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
