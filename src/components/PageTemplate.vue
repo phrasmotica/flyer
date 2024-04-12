@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { useSlots } from "vue"
+import { computed, useSlots } from "vue"
 
 import UiThemeButton from "./theming/UiThemeButton.vue"
+
+import { useScreenSizes } from "@/composables/useScreenSizes"
 
 import { useUiStore } from "@/stores/ui"
 
 const uiStore = useUiStore()
 
 const slots = useSlots()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
+
+const headerSize = computed(() => isSmallScreen.value ? "text-2xl" : "text-4xl")
 </script>
 
 <template>
@@ -19,20 +27,39 @@ const slots = useSlots()
 
         <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
             <div v-if="slots.header" class="border-bottom-1 mb-2">
-                <!-- HIGH: improve layout on small screen. Ideally put the
-                header text at the top on its own, then below that put a
-                left slot, e.g. for the flyer clock, and a right slot for the
-                header buttons -->
-                <div class="flex gap-2 align-items-center">
-                    <slot name="header" />
+                <div v-if="isSmallScreen && slots.subHeaderLeft">
+                    <div :class="headerSize">
+                        <slot name="header" />
+                    </div>
 
-                    <div class="flex gap-1">
-                        <slot name="headerButtons" />
+                    <div class="flex align-items-end pb-1">
+                        <slot name="subHeaderLeft" />
 
-                        <UiThemeButton />
+                        <div class="flex gap-1 flex-grow-1 justify-content-end">
+                            <slot name="headerButtons" />
+
+                            <UiThemeButton />
+                        </div>
                     </div>
                 </div>
 
+                <div v-else>
+                    <div class="flex align-items-end justify-content-between">
+                        <div :class="headerSize">
+                            <slot name="header" />
+                        </div>
+
+                        <div class="flex gap-2 align-items-end mb-1">
+                            <slot name="subHeaderLeft" />
+
+                            <div class="flex gap-1">
+                                <slot name="headerButtons" />
+
+                                <UiThemeButton />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div v-if="slots.sidebar">

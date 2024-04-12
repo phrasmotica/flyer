@@ -198,11 +198,11 @@ const hideFixtureModal = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex flex-grow-1 align-items-baseline justify-content-between">
-                <h1>{{ header }}</h1>
+            {{ header }}
+        </template>
 
-                <FlyerClock />
-            </div>
+        <template #subHeaderLeft>
+            <FlyerClock />
         </template>
 
         <template #content>

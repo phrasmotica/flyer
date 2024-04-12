@@ -65,9 +65,7 @@ const start = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex flex-grow-1 align-items-center justify-content-between">
-                <h1>{{ t('form.newFlyer') }}</h1>
-            </div>
+            {{ t('form.newFlyer') }}
         </template>
 
         <template #headerButtons>

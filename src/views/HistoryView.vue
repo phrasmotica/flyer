@@ -83,9 +83,7 @@ const exportPastFlyers = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div class="flex flex-grow-1 align-items-center justify-content-between">
-                <h1>{{ t('history.pastFlyers') }}</h1>
-            </div>
+            {{ t('history.pastFlyers') }}
         </template>
 
         <template #headerButtons>

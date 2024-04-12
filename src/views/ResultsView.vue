@@ -151,11 +151,11 @@ const save = () => {
 <template>
     <PageTemplate>
         <template #header>
-            <div id="results-header" class="flex flex-grow-1 align-items-baseline justify-content-between">
-                <h1>{{ settings.name }} - {{ t('results.results') }}</h1>
+            {{ settings.name }} - {{ t('results.results') }}
+        </template>
 
-                <FlyerClock />
-            </div>
+        <template #subHeaderLeft>
+            <FlyerClock />
         </template>
 
         <template #content>
