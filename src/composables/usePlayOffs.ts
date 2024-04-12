@@ -6,6 +6,7 @@ import { useRankings } from "./useRankings"
 
 import type { Phase } from "@/data/Phase"
 import type { PlayerRecord } from "@/data/PlayerRecord"
+import type { Winnings } from "@/data/Winnings"
 
 export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
     const playOffs = ref(p)
@@ -70,7 +71,7 @@ export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
     const getMoneyRecipients = (initialStandings: PlayerRecord[]) => {
         const finalStandings = processStandings(initialStandings)
 
-        const recipients = []
+        const recipients: Winnings[] = []
         const remainingPrizeMonies = [...prizeMonies.value]
 
         let c = 0
@@ -79,7 +80,7 @@ export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
             if (remainingPrizeMonies.length > 0) {
                 recipients.push({
                     player: players.value.find(p => p.id === s.playerId)!,
-                    winnings: remainingPrizeMonies.shift()!,
+                    amount: remainingPrizeMonies.shift()!,
                     colour: prizeColours.value[c],
                 })
 

@@ -25,16 +25,19 @@ const {
 
 <template>
     <div v-if="winner">
+        <!-- HIGH: create a component for this and use it in WinningsSummary also -->
         <div class="text-center">
             <p class="m-0">{{ t('podium.theWinnerIs') }}</p>
 
-            <h1 class="font-bold">{{ winner.name }}</h1>
+            <p class="m-0 text-4xl font-bold">
+                {{ winner.name }}
+            </p>
 
             <p v-if="moneyRecipients.length > 0" class="m-0 text-xl">
                 {{ t('podium.whoWins') }}
 
                 <span class="font-bold" :style="{color: moneyRecipients[0].colour,}">
-                    {{ n(moneyRecipients[0].winnings, "currency") }}
+                    {{ n(moneyRecipients[0].amount, "currency") }}
                 </span>
             </p>
         </div>

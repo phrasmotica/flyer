@@ -6,6 +6,7 @@ import { useRankings } from "./useRankings"
 
 import type { Phase } from "@/data/Phase"
 import { usePrizes } from "./usePrizes"
+import type { Winnings } from "@/data/Winnings"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
 // accepts null (see ResultsTable.vue)
@@ -102,10 +103,10 @@ export const usePodium = (p: Phase | null) => {
             return []
         }
 
-        const recipients = [
+        const recipients: Winnings[] = [
             {
                 player: winner.value,
-                winnings: prizeMonies.value[0],
+                amount: prizeMonies.value[0],
                 colour: prizeColours.value[0],
             }
         ]
@@ -130,7 +131,7 @@ export const usePodium = (p: Phase | null) => {
             for (const l of losers) {
                 recipients.push({
                     player: l,
-                    winnings: remainingPrizeMonies.splice(0, 1)[0],
+                    amount: remainingPrizeMonies.splice(0, 1)[0],
                     colour: prizeColours.value[c],
                 })
 
