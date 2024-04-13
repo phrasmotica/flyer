@@ -4,7 +4,8 @@ import { v4 as uuidv4 } from "uuid"
 
 import { useRankings } from "@/composables/useRankings"
 
-import type { Fixture, FixtureSwap, Score } from "@/data/Fixture"
+import type { Fixture, Score } from "@/data/Fixture"
+import type { FixtureSwap } from "@/data/FixtureSwap"
 import type { Flyer } from "@/data/Flyer"
 import type { FlyerSettings } from "@/data/FlyerSettings"
 import type { IScheduler } from "@/data/IScheduler"

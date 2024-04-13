@@ -1,6 +1,7 @@
 import { usePhase } from "./usePhase"
 
-import type { Fixture, FixtureSwap } from "@/data/Fixture"
+import type { Fixture } from "@/data/Fixture"
+import type { FixtureSwap } from "@/data/FixtureSwap"
 import type { Phase } from "@/data/Phase"
 
 export const usePhaseEvents = (p: Phase | null) => {

@@ -9,7 +9,8 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 
-import { Prioritisation, type Fixture } from "@/data/Fixture"
+import type { Fixture } from "@/data/Fixture"
+import { Prioritisation } from "@/data/FixtureSwap"
 
 import { useFlyerStore } from "@/stores/flyer"
 

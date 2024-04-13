@@ -10,20 +10,6 @@ export interface Fixture {
     comment: string
 }
 
-export interface FixtureSwap {
-    id: string
-
-    roundAIndex: number
-    fixtureAIndex: number
-    fixtureAId: string
-
-    roundBIndex: number
-    fixtureBIndex: number
-    fixtureBId: string
-
-    timestamp: number
-}
-
 export interface ParentFixture {
     fixtureId: string
     takeLoser: boolean
@@ -34,12 +20,6 @@ export interface Score {
     score: number
     runouts: number
     isBye: boolean
-}
-
-export enum Prioritisation {
-    None,
-    Up,
-    Down,
 }
 
 export const emptyScores = (count: number) => {

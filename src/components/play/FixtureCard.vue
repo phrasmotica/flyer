@@ -12,7 +12,8 @@ import { usePhase } from "@/composables/usePhase"
 import { useRound } from "@/composables/useRound"
 import { useTimedRef } from "@/composables/useTimedRef"
 
-import { Prioritisation, type Fixture } from "@/data/Fixture"
+import type { Fixture } from "@/data/Fixture"
+import { Prioritisation } from "@/data/FixtureSwap"
 
 import { useFlyerStore } from "@/stores/flyer"
 

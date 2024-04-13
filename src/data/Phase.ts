@@ -1,4 +1,4 @@
-import type { FixtureSwap } from "./Fixture"
+import type { FixtureSwap } from "./FixtureSwap"
 import type { PhaseEvent } from "./PhaseEvent"
 import type { PhaseSettings } from "./PhaseSettings"
 import type { Player } from "./Player"
