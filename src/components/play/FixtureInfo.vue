@@ -9,11 +9,12 @@ import RaceToBadge from "./RaceToBadge.vue"
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
+import { useTables } from "@/composables/useTables"
 
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
-import { usePlayers } from "@/composables/usePlayers"
 
 const { t } = useI18n()
 
@@ -29,12 +30,15 @@ const {
 
 const {
     getRound,
-    getTable,
 } = usePhase(currentPhase.value)
 
 const {
     getPlayer,
 } = usePlayers(currentPhase.value)
+
+const {
+    getTable,
+} = useTables(currentPhase.value)
 
 const {
     fixture,

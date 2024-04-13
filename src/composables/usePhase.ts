@@ -165,8 +165,6 @@ export const usePhase = (p: Phase | null) => {
         })
     }
 
-    const getTable = (id: string) => tables.value.find(p => p.id === id)
-
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
     const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus?: RoundStatus) => {
@@ -279,7 +277,6 @@ export const usePhase = (p: Phase | null) => {
         canStartFixture,
         canPrioritiseFixture,
         isBusy,
-        getTable,
         getRound,
         getFixtureStatus,
         getFixtureDescription,

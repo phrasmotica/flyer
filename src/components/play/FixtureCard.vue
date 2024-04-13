@@ -11,6 +11,7 @@ import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useRound } from "@/composables/useRound"
+import { useTables } from "@/composables/useTables"
 import { useTimedRef } from "@/composables/useTimedRef"
 
 import type { Fixture } from "@/data/Fixture"
@@ -44,13 +45,16 @@ const {
     nextFreeFixture,
     canStartFixture,
     getRound,
-    getTable,
 } = usePhase(currentPhase.value)
 
 const {
     unacknowledgedSwap,
     acknowledgeSwap,
 } = useFixtureSwaps(currentPhase.value)
+
+const {
+    getTable,
+} = useTables(currentPhase.value)
 
 const {
     status,

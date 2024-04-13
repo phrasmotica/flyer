@@ -9,9 +9,13 @@ export const useTables = (p: Phase | null) => {
 
     const costPerHour = computed(() => tables.value.map(t => t.costPerHour).reduce((a, b) => a + b, 0))
 
+    const getTable = (id: string) => tables.value.find(p => p.id === id)
+
     return {
         tables,
 
         costPerHour,
+
+        getTable,
     }
 }
