@@ -71,6 +71,7 @@ const {
     comment,
     players,
     elapsedMilliseconds,
+    hasTable,
     hasStarted,
     hasFinished,
     isInProgress,
@@ -119,12 +120,23 @@ watch([scores, runouts], () => {
     blurActive()
 })
 
-const startFixture = () => {
+const assignTable = () => {
     if (!currentPhase.value || !fixture.value || freeTables.value.length <= 0 || !tableId.value) {
         return
     }
 
-    flyerStore.startFixture(currentPhase.value, fixture.value.id, tableId.value, breakerId.value)
+    flyerStore.assignTable(currentPhase.value, fixture.value.id, tableId.value)
+
+    const message = phaseEvents.fixtureAssigned(fixture.value, tableId.value)
+    flyerStore.addPhaseEvent(currentPhase.value, message)
+}
+
+const startFixture = () => {
+    if (!currentPhase.value || !fixture.value || !table.value) {
+        return
+    }
+
+    flyerStore.startFixture(currentPhase.value, fixture.value.id, breakerId.value)
 
     const message = phaseEvents.fixtureStarted(fixture.value)
     flyerStore.addPhaseEvent(currentPhase.value, message)
@@ -202,6 +214,8 @@ const freeTablesOptions = computed(() => freeTables.value.map(t => ({
     name: t.name,
     value: t.id,
 })))
+
+const canAssign = computed(() => !!tableId.value)
 
 const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.value, currentRoundStatus.value))
 
@@ -303,6 +317,7 @@ const header = computed(() => {
                     :warnAfterMilliseconds="estimatedDurationMilliseconds" />
 
                 <div class="p-fluid flex justify-content-center gap-2">
+                    <!-- HIGH: show this even if the fixture has not started -->
                     <TableBadge v-if="table" :table="table" />
 
                     <RaceToBadge singular :value="raceTo" />
@@ -347,6 +362,26 @@ const header = computed(() => {
                 </div>
             </div>
         </div>
+        <div v-else-if="fixtureStatus === FixtureStatus.WaitingForAssignment">
+            <!-- HIGH: this component is a fucking mess. Split it into smaller components -->
+            <div class="p-fluid">
+                <p class="m-0 text-center">
+                    {{ t('fixture.pleaseAssignTable') }}
+                </p>
+
+                <LabelledDropdown v-if="!hasTable"
+                    noLocalise
+                    :label="t('table.table')"
+                    :options="freeTablesOptions"
+                    v-model="tableId" />
+
+                <Button v-if="!hasTable"
+                    type="button"
+                    :label="'Assign'"
+                    :disabled="!canAssign"
+                    @click="assignTable" />
+            </div>
+        </div>
         <div v-else-if="fixtureStatus === FixtureStatus.ReadyToStart">
             <p class="m-0 text-center">
                 {{ t('fixture.whoWillBreakFirst') }}
@@ -364,12 +399,7 @@ const header = computed(() => {
         </div>
 
         <div class="p-fluid">
-            <LabelledDropdown v-if="!hasStarted"
-                :label="t('table.table')"
-                :options="freeTablesOptions"
-                v-model="tableId" />
-
-            <Button v-if="!hasStarted"
+            <Button v-if="hasTable && !hasStarted"
                 type="button"
                 :label="startButtonText"
                 :disabled="!canStart"

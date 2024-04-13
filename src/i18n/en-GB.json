@@ -23,6 +23,7 @@
         "waitingForTableStatus": "Waiting for a free table",
         "headerFormat": "{round} - {players}",
         "playerJoiner": " v ",
+        "pleaseAssignTable": "Please assign a table:",
         "whoWillBreakFirst": "Who will break first?",
         "ranOut": "Ran Out",
         "runouts": "Runouts",

@@ -216,8 +216,12 @@ export const usePhase = (p: Phase | null) => {
             }
         }
 
-        if (freeTables.value.length <= 0) {
-            return FixtureStatus.WaitingForTable
+        if (!fixture.tableId) {
+            if (freeTables.value.length <= 0) {
+                return FixtureStatus.WaitingForTable
+            }
+
+            return FixtureStatus.WaitingForAssignment
         }
 
         return FixtureStatus.ReadyToStart
@@ -313,6 +317,7 @@ export enum FixtureStatus {
     WaitingForPlayers,
     WaitingForRound,
     WaitingForTable,
+    WaitingForAssignment,
     ReadyToStart,
     InProgress,
     Finished,
