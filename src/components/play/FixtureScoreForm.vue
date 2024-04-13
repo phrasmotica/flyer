@@ -36,16 +36,13 @@ const {
 
 const {
     settings,
-    nextFixture,
-    nextFreeFixture,
     getRound,
-    getRoundWithIndex,
+    getFixtureSwap,
 } = usePhase(currentPhase.value)
 
 const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
-    isRoundRobin,
     isWinnerStaysOn,
 } = usePhaseSettings(settings.value)
 
@@ -111,26 +108,17 @@ const updateScores = (finish: boolean) => {
 
     flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
 
-    if (finish) {
-        const message = phaseEvents.fixtureFinished(fixture.value)
-        flyerStore.addPhaseEvent(currentPhase.value, message)
+    const swap = getFixtureSwap()
+    if (swap) {
+        // generate this now - the computed properties update after the swap...
+        const message = phaseEvents.fixturesSwapped(swap)
 
-        if (isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
-            const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)
-            const [roundB, indexB] = getRoundWithIndex(nextFreeFixture.value.id)
-
-            if (roundA && roundB) {
-                // generate this now - the computed properties update after the swap...
-                const message = phaseEvents.fixturesSwapped(nextFixture.value, nextFreeFixture.value)
-
-                // if necessary, swap the next fixture in the current round (or
-                // the first fixture in the next round) with the first upcoming fixture
-                // where all players are free
-                const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
-                if (didSwap) {
-                    flyerStore.addPhaseEvent(currentPhase.value, message)
-                }
-            }
+        // if necessary, swap the next fixture in the current round (or
+        // the first fixture in the next round) with the first upcoming fixture
+        // where all players are free
+        const didSwap = flyerStore.swapFixtures(currentPhase.value, swap)
+        if (didSwap) {
+            flyerStore.addPhaseEvent(currentPhase.value, message)
         }
     }
 

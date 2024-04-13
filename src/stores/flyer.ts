@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid"
 
 import { useRankings } from "@/composables/useRankings"
 
-import type { Fixture, Score } from "@/data/Fixture"
+import type { Fixture, FixtureSwap, Score } from "@/data/Fixture"
 import type { Flyer } from "@/data/Flyer"
 import type { FlyerSettings } from "@/data/FlyerSettings"
 import type { IScheduler } from "@/data/IScheduler"
@@ -404,28 +404,23 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPhaseEvent(phase, `${phase.settings.name} was auto-completed.`, PhaseEventLevel.Internal)
     }
 
-    const swapFixtures = (phase: Phase, roundA: Round, fixtureIndexA: number, roundB: Round, fixtureIndexB: number) => {
-        if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
-            return false
-        }
+    const swapFixtures = (phase: Phase, swap: FixtureSwap) => {
+        console.debug(`Swapping round ${swap.roundAIndex} fixture ${swap.fixtureAIndex} and round ${swap.roundBIndex} fixture ${swap.fixtureBIndex}`)
 
-        console.debug(`Swapping round ${roundA.index} fixture ${fixtureIndexA} and round ${roundB.index} fixture ${fixtureIndexB}`)
+        const roundA = phase.rounds.find(r => r.index === swap.roundAIndex)!
+        const roundB = phase.rounds.find(r => r.index === swap.roundBIndex)!
 
-        const fixtureAId = roundA.fixtures[fixtureIndexA].id
-        const fixtureBId = roundB.fixtures[fixtureIndexB].id
-
-        const temp = roundA.fixtures[fixtureIndexA]
-        roundA.fixtures[fixtureIndexA] = roundB.fixtures[fixtureIndexB]
-        roundB.fixtures[fixtureIndexB] = temp
+        const temp = roundA.fixtures[swap.fixtureAIndex]
+        roundA.fixtures[swap.fixtureAIndex] = roundB.fixtures[swap.fixtureBIndex]
+        roundB.fixtures[swap.fixtureBIndex] = temp
 
         phase.fixtureSwaps.push({
+            ...swap,
             id: uuidv4(),
-            fixtureAId,
-            fixtureBId,
             timestamp: Date.now(),
         })
 
-        addPhaseEvent(phase, `Fixture ${fixtureBId} was prioritised in place of fixture ${fixtureAId}.`, PhaseEventLevel.Internal)
+        addPhaseEvent(phase, `Fixture ${swap.fixtureBId} was prioritised in place of fixture ${swap.fixtureAId}.`, PhaseEventLevel.Internal)
 
         return true
     }

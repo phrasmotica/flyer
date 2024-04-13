@@ -1,12 +1,13 @@
 import { usePhase } from "./usePhase"
 
-import type { Fixture } from "@/data/Fixture"
+import type { Fixture, FixtureSwap } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
 
 export const usePhaseEvents = (p: Phase | null) => {
     const {
         settings,
         players,
+        fixtures,
         tables,
         getFixtureDescription, // MEDIUM: move this method into this composable
         getScoreDescription,
@@ -38,9 +39,13 @@ export const usePhaseEvents = (p: Phase | null) => {
 
     const phaseAutoCompleted = () => `${settings.value.name} was auto-completed.`
 
-    const fixturesSwapped = (f: Fixture, g: Fixture) => {
+    const fixturesSwapped = (swap: FixtureSwap) => {
+        const f = fixtures.value.find(f => f.id === swap.fixtureAId)
+        const g = fixtures.value.find(f => f.id === swap.fixtureBId)
+
         const fixtureADescription = getFixtureDescription(f)
         const fixtureBDescription = getFixtureDescription(g)
+
         return `${fixtureBDescription} was prioritised in place of ${fixtureADescription}.`
     }
 

@@ -7,7 +7,7 @@ import { usePhaseSettings } from "./usePhaseSettings"
 import { RoundStatus } from "./useRound"
 import { useScheduler } from "./useScheduler"
 
-import type { Fixture } from "@/data/Fixture"
+import type { Fixture, FixtureSwap } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
 import type { PhaseSettings } from "@/data/PhaseSettings"
 import type { Round } from "@/data/Round"
@@ -41,6 +41,7 @@ export const usePhase = (p: Phase | null) => {
     const rounds = computed(() => phase.value?.rounds || [])
 
     const {
+        isRoundRobin,
         isWinnerStaysOn,
     } = usePhaseSettings(settings.value)
 
@@ -258,6 +259,37 @@ export const usePhase = (p: Phase | null) => {
         return fixture.scores.map(s => s.score).join("-")
     }
 
+    const getFixtureSwap = (): FixtureSwap | null => {
+        if (!phase.value || !isRoundRobin.value || !nextFixture.value || !nextFreeFixture.value) {
+            return null
+        }
+
+        const [roundA, fixtureIndexA] = getRoundWithIndex(nextFixture.value.id)
+        const [roundB, fixtureIndexB] = getRoundWithIndex(nextFreeFixture.value.id)
+
+        if (!roundA || !roundB) {
+            return null
+        }
+
+        if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
+            return null
+        }
+
+        return {
+            id: "",
+
+            roundAIndex: roundA.index,
+            fixtureAIndex: fixtureIndexA,
+            fixtureAId: nextFixture.value.id,
+
+            roundBIndex: roundB.index,
+            fixtureBIndex: fixtureIndexB,
+            fixtureBId: nextFreeFixture.value.id,
+
+            timestamp: 0,
+        }
+    }
+
     watch(phase, () => {
         clockable.value = phase.value
     })
@@ -310,13 +342,13 @@ export const usePhase = (p: Phase | null) => {
         getPlayerName,
         getTable,
         getRound,
-        getRoundWithIndex,
         getFixtureStatus,
         getFixtureDescription,
         getScoreDescription,
         pauseClock,
         resumeClock,
         acknowledgeSwap,
+        getFixtureSwap,
     }
 }
 

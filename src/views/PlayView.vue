@@ -15,7 +15,6 @@ import PlaySections from "@/components/play/PlaySections.vue"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRound } from "@/composables/useRound"
 import { useRouting } from "@/composables/useRouting"
@@ -48,17 +47,12 @@ const {
     currentRound,
     nextRoundToGenerate,
     nextFixture,
-    nextFreeFixture,
-    getRoundWithIndex,
+    getFixtureSwap,
 } = usePhase(currentPhase.value)
 
 useTitle("Flyer - " + settings.value.name)
 
 const phaseEvents = usePhaseEvents(currentPhase.value)
-
-const {
-    isRoundRobin,
-} = usePhaseSettings(settings.value)
 
 const {
     winners,
@@ -150,21 +144,17 @@ const autoComplete = () => {
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 
-    if (isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
-        const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)
-        const [roundB, indexB] = getRoundWithIndex(nextFreeFixture.value.id)
+    const swap = getFixtureSwap()
+    if (swap) {
+        // generate this now - the computed properties update after the swap...
+        const message = phaseEvents.fixturesSwapped(swap)
 
-        if (roundA && roundB) {
-            // generate this now - the computed properties update after the swap...
-            const message = phaseEvents.fixturesSwapped(nextFixture.value, nextFreeFixture.value)
-
-            // if necessary, swap the next fixture in the current round (or
-            // the first fixture in the next round) with the first upcoming fixture
-            // where all players are free
-            const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
-            if (didSwap) {
-                flyerStore.addPhaseEvent(currentPhase.value, message)
-            }
+        // if necessary, swap the next fixture in the current round (or
+        // the first fixture in the next round) with the first upcoming fixture
+        // where all players are free
+        const didSwap = flyerStore.swapFixtures(currentPhase.value, swap)
+        if (didSwap) {
+            flyerStore.addPhaseEvent(currentPhase.value, message)
         }
     }
 }
