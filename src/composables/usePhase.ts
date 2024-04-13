@@ -155,14 +155,17 @@ export const usePhase = (p: Phase | null) => {
     const canPrioritiseFixture = (fixture: Fixture | undefined) => {
         const status = getFixtureStatus(fixture)
 
-        if (settings.value.requireCompletedRounds) {
-            return status === FixtureStatus.ReadyToStart
+        const validStatuses = [
+            FixtureStatus.ReadyToStart,
+            FixtureStatus.WaitingForBreaker,
+            FixtureStatus.WaitingForAssignment,
+        ]
+
+        if (!settings.value.requireCompletedRounds) {
+            validStatuses.push(FixtureStatus.WaitingForRound)
         }
 
-        return [
-            FixtureStatus.ReadyToStart,
-            FixtureStatus.WaitingForRound,
-        ].includes(status)
+        return validStatuses.includes(status)
     }
 
     const isBusy = (playerId: string) => {
