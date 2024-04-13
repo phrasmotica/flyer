@@ -5,10 +5,7 @@ import { useI18n } from "vue-i18n"
 import AssignBreakerForm from "../play/AssignBreakerForm.vue"
 import AssignTableForm from "../play/AssignTableForm.vue"
 import Clock from "../play/Clock.vue"
-import CommentBox from "../play/CommentBox.vue"
-import CommentMessage from "../play/CommentMessage.vue"
-import PlayerScoreInput from "../play/PlayerScoreInput.vue"
-import PlayerWinInput from "../play/PlayerWinInput.vue"
+import FixtureScoreForm from "../play/FixtureScoreForm.vue"
 import RaceToBadge from "../play/RaceToBadge.vue"
 import TableBadge from "../play/TableBadge.vue"
 
@@ -16,9 +13,7 @@ import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { FixtureStatus, usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useRound } from "@/composables/useRound"
-import { useTweaks } from "@/composables/useTweaks"
 
 import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
 
@@ -42,13 +37,9 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
     currentRound,
-    nextFixture,
-    nextFreeFixture,
     canStartFixture,
     getRound,
-    getRoundWithIndex,
     getTable,
     getFixtureStatus,
     getPlayer,
@@ -70,25 +61,14 @@ const {
     scores,
     runouts,
     comment,
-    players,
     elapsedMilliseconds,
     hasStarted,
     hasFinished,
     isInProgress,
-    canBeFinished,
     estimatedDurationMilliseconds,
     durationMilliseconds,
-    setWinner,
-    setRanOut,
     resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
-
-const {
-    isRoundRobin,
-    isWinnerStaysOn,
-} = usePhaseSettings(settings.value)
-
-const { blurActive } = useTweaks()
 
 const visible = ref(props.visible)
 
@@ -112,12 +92,6 @@ watch(props, () => {
     }
 })
 
-// hack to stop InputNumber elements from focusing after pressing their buttons.
-// Important for mobile UX
-watch([scores, runouts], () => {
-    blurActive()
-})
-
 const startFixture = () => {
     if (!currentPhase.value || !fixture.value || !table.value || !breaker.value) {
         return
@@ -131,72 +105,8 @@ const startFixture = () => {
     resumeClock()
 }
 
-const updateScores = (finish: boolean) => {
-    if (!fixture.value || !currentPhase.value) {
-        return
-    }
-
-    flyerStore.updateComment(currentPhase.value, fixture.value.id, comment.value)
-
-    const newScores = players.value.map<Score>((id, i) => ({
-        playerId: id,
-        score: scores.value[i],
-        runouts: runouts.value[i],
-        isBye: false,
-    }))
-
-    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
-
-    if (finish) {
-        const message = phaseEvents.fixtureFinished(fixture.value)
-        flyerStore.addPhaseEvent(currentPhase.value, message)
-
-        if (isRoundRobin.value && nextFixture.value && nextFreeFixture.value) {
-            const [roundA, indexA] = getRoundWithIndex(nextFixture.value.id)
-            const [roundB, indexB] = getRoundWithIndex(nextFreeFixture.value.id)
-
-            if (roundA && roundB) {
-                // generate this now - the computed properties update after the swap...
-                const message = phaseEvents.fixturesSwapped(nextFixture.value, nextFreeFixture.value)
-
-                // if necessary, swap the next fixture in the current round (or
-                // the first fixture in the next round) with the first upcoming fixture
-                // where all players are free
-                const didSwap = flyerStore.swapFixtures(currentPhase.value, roundA, indexA, roundB, indexB)
-                if (didSwap) {
-                    flyerStore.addPhaseEvent(currentPhase.value, message)
-                }
-            }
-        }
-    }
-
-    hide()
-}
-
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 const breaker = computed(() => getPlayer(fixture.value?.breakerId || ""))
-
-const winner = computed(() => {
-    const maxScore = scores.value.reduce((a, b) => Math.max(a, b), -1)
-
-    if (maxScore > 0 && scores.value.filter(a => a === maxScore).length === 1) {
-        const playerIndex = scores.value.findIndex(a => a === maxScore)
-        return players.value[playerIndex]
-    }
-
-    return ""
-})
-
-const ranOut = computed(() => {
-    const maxRunouts = runouts.value.reduce((a, b) => Math.max(a, b), -1)
-
-    if (maxRunouts > 0 && runouts.value.filter(a => a === maxRunouts).length === 1) {
-        const playerIndex = runouts.value.findIndex(a => a === maxRunouts)
-        return players.value[playerIndex]
-    }
-
-    return ""
-})
 
 const canStart = computed(() => canStartFixture(fixture.value, currentRoundStatus.value))
 
@@ -313,64 +223,10 @@ const header = computed(() => {
 
         <!-- MEDIUM: this is getting crowded. Design a better layout -->
 
-        <div id="score-inputs">
-            <div v-if="hasStarted" class="grid m-0">
-                <PlayerWinInput v-if="isWinnerStaysOn"
-                    v-for="p, i in players"
-                    class="col-6"
-                    :fixture="fixture"
-                    :playerId="p"
-                    :winner="winner"
-                    :ranOut="ranOut"
-                    :finished="hasFinished"
-                    @setWinner="() => setWinner(i, true)"
-                    @setRanOut="() => setRanOut(i)" />
-
-                <PlayerScoreInput v-else
-                    v-for="p, i in players"
-                    class="col-6"
-                    :fixture="fixture"
-                    :playerId="p"
-                    v-model:score="scores[i]"
-                    v-model:runouts="runouts[i]"
-                    :isWinner="winner === p"
-                    :finished="hasFinished" />
-            </div>
-        </div>
-
-        <div v-if="hasStarted" id="comment-box-wrapper" class="mt-2">
-            <CommentBox v-if="!hasFinished" v-model="comment" />
-            <CommentMessage v-else-if="comment" :comment="comment" />
-        </div>
-
-        <div v-if="fixtureStatus === FixtureStatus.InProgress" class="p-fluid">
-            <div class="grid m-0">
-                <div class="col-6 p-0 pr-1">
-                    <Button
-                        type="button"
-                        :label="t('common.close')"
-                        severity="secondary"
-                        @click="hide" />
-                </div>
-
-                <div class="col-6 p-0 pl-1">
-                    <SplitButton v-if="canBeFinished"
-                        :label="t('common.finish')"
-                        :model="[
-                            {
-                                label: t('common.update'),
-                                command: () => updateScores(false),
-                            },
-                        ]"
-                        @click="() => updateScores(true)" />
-
-                    <Button v-else
-                        type="button"
-                        :label="t('common.update')"
-                        severity="info"
-                        @click="() => updateScores(false)" />
-                </div>
-            </div>
+        <div v-if="hasStarted">
+            <FixtureScoreForm
+                :fixture="fixture"
+                @hide="hide" />
         </div>
 
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForAssignment">
