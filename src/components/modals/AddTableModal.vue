@@ -34,7 +34,6 @@ const addNewTable = () => {
     <ConfirmModal
         v-model:visible="visible"
         :header="t('play.addNewTable')"
-        message=""
         :confirmLabel="t('common.add')"
         :confirmDisabled="!canAdd"
         :cancelLabel="t('common.cancel')"

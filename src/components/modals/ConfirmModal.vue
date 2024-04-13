@@ -11,7 +11,7 @@ const visible = defineModel<boolean>("visible", {
 const props = defineProps<{
     visible: boolean
     header: string
-    message: string
+    message?: string
     confirmLabel?: string
     confirmDisabled?: boolean
     cancelLabel?: string
@@ -33,7 +33,7 @@ const cancelLabel = computed(() => props.cancelLabel || t('common.no'))
         v-model:visible="visible"
         :header="props.header"
         @hide="emit('hide')">
-        <div class="font-bold mb-2">
+        <div v-if="props.message" class="font-bold mb-2">
             {{ props.message }}
         </div>
 
