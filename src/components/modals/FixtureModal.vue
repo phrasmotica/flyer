@@ -2,11 +2,11 @@
 import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
+import AssignBreakerForm from "../play/AssignBreakerForm.vue"
 import AssignTableForm from "../play/AssignTableForm.vue"
 import Clock from "../play/Clock.vue"
 import CommentBox from "../play/CommentBox.vue"
 import CommentMessage from "../play/CommentMessage.vue"
-import PlayerBreakInput from "../play/PlayerBreakInput.vue"
 import PlayerScoreInput from "../play/PlayerScoreInput.vue"
 import PlayerWinInput from "../play/PlayerWinInput.vue"
 import RaceToBadge from "../play/RaceToBadge.vue"
@@ -118,17 +118,6 @@ watch([scores, runouts], () => {
     blurActive()
 })
 
-const assignBreaker = () => {
-    if (!currentPhase.value || !fixture.value || !breakerId.value) {
-        return
-    }
-
-    flyerStore.assignBreaker(currentPhase.value, fixture.value.id, breakerId.value)
-
-    const message = phaseEvents.fixtureAssignedBreaker(fixture.value, breakerId.value)
-    flyerStore.addPhaseEvent(currentPhase.value, message)
-}
-
 const startFixture = () => {
     if (!currentPhase.value || !fixture.value || !table.value || !breaker.value) {
         return
@@ -208,8 +197,6 @@ const ranOut = computed(() => {
 
     return ""
 })
-
-const canAssignBreaker = computed(() => !!breakerId.value)
 
 const canStart = computed(() => canStartFixture(fixture.value, currentRoundStatus.value))
 
@@ -391,27 +378,7 @@ const header = computed(() => {
         </div>
 
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForBreaker">
-            <div class="p-fluid">
-                <p class="m-0 text-center">
-                    {{ t('fixture.whoWillBreakFirst') }}
-                </p>
-
-                <div class="grid m-0">
-                    <PlayerBreakInput
-                        v-for="p in players"
-                        class="col-6"
-                        :fixture="fixture"
-                        :playerId="p"
-                        :breakerId="breakerId"
-                        @setBreakerId="breakerId = p" />
-                </div>
-
-                <Button
-                    type="button"
-                    :label="t('common.assign')"
-                    :disabled="!canAssignBreaker"
-                    @click="assignBreaker" />
-            </div>
+            <AssignBreakerForm :fixture="fixture" />
         </div>
 
         <div v-else class="p-fluid">
