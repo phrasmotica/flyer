@@ -126,7 +126,6 @@ export const usePhase = (p: Phase | null) => {
 
         const validStatuses = [
             FixtureStatus.ReadyToStart,
-            FixtureStatus.WaitingForBreaker,
             FixtureStatus.WaitingForAssignment,
         ]
 
@@ -137,10 +136,10 @@ export const usePhase = (p: Phase | null) => {
         return validStatuses.includes(status)
     }
 
-    const isBusy = (playerId: string) => {
+    const isBusy = (playerId: string, forFixtureId: string) => {
         return rounds.value.flatMap(r => r.fixtures).some(f => {
-            const isInProgress = f.startTime && !f.finishTime
-            return isInProgress && f.scores.some(s => s.playerId === playerId)
+            const isAssigned = (!!f.tableId && !f.finishTime) && f.id !== forFixtureId
+            return isAssigned && f.scores.some(s => s.playerId === playerId)
         })
     }
 
@@ -165,7 +164,7 @@ export const usePhase = (p: Phase | null) => {
             return FixtureStatus.WaitingForPreviousResult
         }
 
-        if (fixture.scores.some(s => isBusy(s.playerId))) {
+        if (fixture.scores.some(s => isBusy(s.playerId, fixture.id))) {
             return FixtureStatus.WaitingForPlayers
         }
 

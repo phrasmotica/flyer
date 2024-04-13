@@ -10,7 +10,7 @@ export const useFixtureList = (p: Phase | null) => {
     const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
     const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
-    const nextFixture = computed(() => fixtures.value.find(f => !f.startTime))
+    const nextFixture = computed(() => fixtures.value.find(f => !f.tableId))
 
     return {
         fixtures,

@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n"
 import LabelledDropdown from "../setup/LabelledDropdown.vue"
 
 import { useFixture } from "@/composables/useFixture"
+import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
@@ -33,6 +34,10 @@ const {
 } = usePhase(currentPhase.value)
 
 const {
+    processSwap,
+} = useFixtureSwaps(currentPhase.value)
+
+const {
     getRound,
 } = useRounds(currentPhase.value)
 
@@ -57,6 +62,8 @@ const assignTable = () => {
 
     const message = phaseEvents.fixtureAssignedTable(fixture.value, tableId.value)
     flyerStore.addPhaseEvent(currentPhase.value, message)
+
+    processSwap()
 }
 </script>
 
