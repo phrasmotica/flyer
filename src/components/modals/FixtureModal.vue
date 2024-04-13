@@ -325,22 +325,28 @@ const header = computed(() => {
         <!-- HIGH: this component is a fucking mess. Render each part of it
         according to conditions, rather than rendering a distinct set of
         elements for each fixtures status. Also split it into smaller components -->
-        <div v-if="hasStarted">
-            <!-- MEDIUM: this is getting crowded. Design a better layout -->
-            <div class="mb-2">
+
+        <div id="fixture-info">
+            <div v-if="table" class="mb-2">
                 <Clock
+                    v-if="hasStarted"
                     :elapsedMilliseconds="durationMilliseconds || elapsedMilliseconds"
                     :warnAfterMilliseconds="estimatedDurationMilliseconds" />
 
                 <div class="p-fluid flex justify-content-center gap-2">
-                    <!-- HIGH: show this even if the fixture has not started -->
-                    <TableBadge v-if="table" :table="table" />
+                    <TableBadge :table="table" />
 
                     <RaceToBadge singular :value="raceTo" />
                 </div>
             </div>
 
-            <div class="grid m-0">
+            <!-- HIGH: show assigned breaker if applicable -->
+        </div>
+
+        <!-- MEDIUM: this is getting crowded. Design a better layout -->
+
+        <div id="score-inputs">
+            <div v-if="hasStarted" class="grid m-0">
                 <PlayerWinInput v-if="isWinnerStaysOn"
                     v-for="p, i in players"
                     class="col-6"
@@ -362,52 +368,53 @@ const header = computed(() => {
                     :isWinner="winner === p"
                     :finished="hasFinished" />
             </div>
+        </div>
 
-            <!-- MEDIUM: create a component for this -->
-            <div class="mb-2">
-                <div v-if="!hasFinished" class="flex p-fluid mt-2">
-                    <Textarea
-                        class="text-xs md:text-sm"
-                        rows="3"
-                        :placeholder="t('fixture.addAComment')"
-                        v-model="comment" />
-                </div>
-
-                <div v-else-if="comment">
-                    <CommentMessage :comment="comment" />
-                </div>
+        <!-- MEDIUM: create a component for this -->
+        <div v-if="hasStarted" id="comment-box" class="mb-2">
+            <div v-if="!hasFinished" class="flex p-fluid mt-2">
+                <Textarea
+                    class="text-xs md:text-sm"
+                    rows="3"
+                    :placeholder="t('fixture.addAComment')"
+                    v-model="comment" />
             </div>
 
-            <div v-if="!hasFinished" class="p-fluid">
-                <div class="grid m-0">
-                    <div class="col-6 p-0 pr-1">
-                        <Button
-                            type="button"
-                            :label="t('common.close')"
-                            severity="secondary"
-                            @click="hide" />
-                    </div>
+            <div v-else-if="comment">
+                <CommentMessage :comment="comment" />
+            </div>
+        </div>
 
-                    <div class="col-6 p-0 pl-1">
-                        <SplitButton v-if="canBeFinished"
-                            :label="t('common.finish')"
-                            :model="[
-                                {
-                                    label: t('common.update'),
-                                    command: () => updateScores(false),
-                                },
-                            ]"
-                            @click="() => updateScores(true)" />
+        <div v-if="fixtureStatus === FixtureStatus.InProgress" class="p-fluid">
+            <div class="grid m-0">
+                <div class="col-6 p-0 pr-1">
+                    <Button
+                        type="button"
+                        :label="t('common.close')"
+                        severity="secondary"
+                        @click="hide" />
+                </div>
 
-                        <Button v-else
-                            type="button"
-                            :label="t('common.update')"
-                            severity="info"
-                            @click="() => updateScores(false)" />
-                    </div>
+                <div class="col-6 p-0 pl-1">
+                    <SplitButton v-if="canBeFinished"
+                        :label="t('common.finish')"
+                        :model="[
+                            {
+                                label: t('common.update'),
+                                command: () => updateScores(false),
+                            },
+                        ]"
+                        @click="() => updateScores(true)" />
+
+                    <Button v-else
+                        type="button"
+                        :label="t('common.update')"
+                        severity="info"
+                        @click="() => updateScores(false)" />
                 </div>
             </div>
         </div>
+
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForAssignment">
             <div class="p-fluid">
                 <p class="m-0 text-center">
@@ -427,6 +434,7 @@ const header = computed(() => {
                     @click="assignTable" />
             </div>
         </div>
+
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForBreaker">
             <div class="p-fluid">
                 <p class="m-0 text-center">
@@ -450,8 +458,6 @@ const header = computed(() => {
                     @click="assignBreaker" />
             </div>
         </div>
-
-        <!-- HIGH: show assigned table and breaker if the fixture is ready to start -->
 
         <div v-else class="p-fluid">
             <Button v-if="!hasStarted"
