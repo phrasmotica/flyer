@@ -2,7 +2,6 @@
 import { computed } from "vue"
 
 import { useFixtureList } from "@/composables/useFixtureList"
-import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
@@ -34,10 +33,6 @@ const {
     remainingCount,
     nextFixture,
 } = useFixtureList(phase.value)
-
-const {
-    processSwap,
-} = useFixtureSwaps(currentPhase.value)
 
 const {
     settings,
@@ -73,8 +68,6 @@ const autoStart = () => {
         freeTables.value[0].id)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
-
-    processSwap()
 }
 
 const autoComplete = () => {
@@ -91,8 +84,6 @@ const autoComplete = () => {
         raceTo.value)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
-
-    processSwap()
 }
 
 const autoCompleteRemaining = () => {

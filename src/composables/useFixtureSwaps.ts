@@ -1,4 +1,4 @@
-import { computed } from "vue"
+import { computed, watch } from "vue"
 
 import { useArray } from "./useArray"
 import { useFixtureList } from "./useFixtureList"
@@ -56,6 +56,10 @@ export const useFixtureSwaps = (p: Phase | null) => {
         return [round, round?.fixtures.findIndex(f => f.id === fixtureId) ?? -1]
     }
 
+    watch(nextFixture, () => {
+        swapIfNeeded()
+    })
+
     const getFixtureSwap = (): FixtureSwap | null => {
         if (!phase.value || !isRoundRobin.value || !nextFixture.value || !nextFreeFixture.value) {
             return null
@@ -87,7 +91,7 @@ export const useFixtureSwaps = (p: Phase | null) => {
         }
     }
 
-    const processSwap = () => {
+    const swapIfNeeded = () => {
         const swap = getFixtureSwap()
         if (swap) {
             // generate this now - the computed properties update after the swap...
@@ -107,7 +111,6 @@ export const useFixtureSwaps = (p: Phase | null) => {
         fixtureSwaps,
         unacknowledgedSwap,
 
-        processSwap,
         acknowledgeSwap,
     }
 }

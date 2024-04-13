@@ -12,7 +12,6 @@ import { useRounds } from "@/composables/useRounds"
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
-import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 
 const { t } = useI18n()
 
@@ -30,10 +29,6 @@ const {
     canStartFixture,
     getFixtureStatus,
 } = usePhase(currentPhase.value)
-
-const {
-    processSwap,
-} = useFixtureSwaps(currentPhase.value)
 
 const {
     currentRound,
@@ -89,11 +84,6 @@ const startFixture = () => {
 
     const message = phaseEvents.fixtureStarted(fixture.value)
     flyerStore.addPhaseEvent(currentPhase.value, message)
-
-    // HIGH: do all fixture-swapping automatically inside useFixtureSwaps(), by
-    // reacting to the state of the phase and its players, tables, fixture
-    // statuses, etc
-    processSwap()
 }
 </script>
 

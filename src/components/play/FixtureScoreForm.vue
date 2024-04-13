@@ -8,7 +8,7 @@ import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
 import { useFixture } from "@/composables/useFixture"
-import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
+
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useRounds } from "@/composables/useRounds"
@@ -37,10 +37,6 @@ const {
 const {
     getRound,
 } = useRounds(currentPhase.value)
-
-const {
-    processSwap,
-} = useFixtureSwaps(currentPhase.value)
 
 const {
     isWinnerStaysOn,
@@ -107,8 +103,6 @@ const updateScores = (finish: boolean) => {
     }))
 
     flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
-
-    processSwap()
 
     hide()
 }
