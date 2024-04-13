@@ -36,6 +36,12 @@ onUpdated(() => {
 </script>
 
 <template>
+    <!-- BUG: too wide when used inside <AddTableModal> on 320px mobile. The
+        <input> element itself can have its width set lower to resolve things,
+        but it and the stepper buttons are still encased in a <span>, god knows
+        why... how can we get the <input> element to only be as wide as is
+        allowed by the modal? Try putting this element inside a
+        <div class="flex justify-content-center"> -->
     <InputNumber
         :id="id"
         v-model="value"
