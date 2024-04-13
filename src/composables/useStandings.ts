@@ -4,6 +4,7 @@ import { useSorted } from "@vueuse/core"
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
+import { usePlayers } from "./usePlayers"
 import { useRankings } from "./useRankings"
 
 import type { Phase } from "@/data/Phase"
@@ -11,9 +12,12 @@ import type { Phase } from "@/data/Phase"
 export const useStandings = (p: Phase | null) => {
     const {
         phase,
-        players,
         settings,
     } = usePhase(p)
+
+    const {
+        players,
+    } = usePlayers(phase.value)
 
     const {
         fixtures,

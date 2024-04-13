@@ -3,6 +3,7 @@ import { computed } from "vue"
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
+import { usePlayers } from "./usePlayers"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
 
@@ -15,9 +16,12 @@ export const usePodium = (p: Phase | null) => {
     const {
         phase,
         settings,
-        players,
         rounds,
     } = usePhase(p)
+
+    const {
+        players,
+    } = usePlayers(phase.value)
 
     const {
         fixtures,

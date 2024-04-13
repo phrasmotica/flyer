@@ -1,6 +1,7 @@
 import { computed, ref } from "vue"
 
 import { usePhase } from "./usePhase"
+import { usePlayers } from "./usePlayers"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
 
@@ -12,9 +13,13 @@ export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
     const playOffs = ref(p)
 
     const {
+        phase,
         settings,
-        players,
     } = usePhase(mp)
+
+    const {
+        players,
+    } = usePlayers(phase.value)
 
     const {
         computeStandings,

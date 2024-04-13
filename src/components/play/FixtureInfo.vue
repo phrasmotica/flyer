@@ -13,6 +13,7 @@ import { usePhase } from "@/composables/usePhase"
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+import { usePlayers } from "@/composables/usePlayers"
 
 const { t } = useI18n()
 
@@ -27,10 +28,13 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    getPlayer,
     getRound,
     getTable,
 } = usePhase(currentPhase.value)
+
+const {
+    getPlayer,
+} = usePlayers(currentPhase.value)
 
 const {
     fixture,

@@ -4,6 +4,7 @@ import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 import { useClock } from "./useClock"
 import { useFixtureList } from "./useFixtureList"
 import { usePhaseSettings } from "./usePhaseSettings"
+import { usePlayers } from "./usePlayers"
 import { RoundStatus } from "./useRound"
 import { useScheduler } from "./useScheduler"
 import { useTables } from "./useTables"
@@ -22,11 +23,15 @@ export const usePhase = (p: Phase | null) => {
     } = useFixtureList(phase.value)
 
     const {
+        players,
+        getPlayerName,
+    } = usePlayers(phase.value)
+
+    const {
         tables,
         costPerHour,
     } = useTables(phase.value)
 
-    const players = computed(() => phase.value?.players || [])
     const eventLog = computed(() => phase.value?.eventLog || [])
 
     // LOW: do something better here than casting an empty object to PhaseSettings
@@ -160,10 +165,6 @@ export const usePhase = (p: Phase | null) => {
         })
     }
 
-    const getPlayer = (id: string) => players.value.find(p => p.id === id)
-
-    const getPlayerName = (id: string) => getPlayer(id)?.name
-
     const getTable = (id: string) => tables.value.find(p => p.id === id)
 
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
@@ -253,7 +254,6 @@ export const usePhase = (p: Phase | null) => {
     return {
         phase,
 
-        players,
         settings,
         rounds,
         raceTos,
@@ -279,8 +279,6 @@ export const usePhase = (p: Phase | null) => {
         canStartFixture,
         canPrioritiseFixture,
         isBusy,
-        getPlayer,
-        getPlayerName,
         getTable,
         getRound,
         getFixtureStatus,

@@ -11,6 +11,7 @@ import StartFixtureButton from "../play/StartFixtureButton.vue"
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { FixtureStatus, usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 import { useRound } from "@/composables/useRound"
 
 import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
@@ -38,8 +39,11 @@ const {
     currentRound,
     getRound,
     getFixtureStatus,
-    getPlayerName,
 } = usePhase(currentPhase.value)
+
+const {
+    getPlayerName,
+} = usePlayers(currentPhase.value)
 
 const {
     status: currentRoundStatus,

@@ -1,5 +1,6 @@
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
+import { usePlayers } from "./usePlayers"
 import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
@@ -10,7 +11,6 @@ export const usePhaseEvents = (p: Phase | null) => {
     const {
         phase,
         settings,
-        players,
         getFixtureDescription, // MEDIUM: move this method into this composable
         getScoreDescription,
     } = usePhase(p)
@@ -18,6 +18,10 @@ export const usePhaseEvents = (p: Phase | null) => {
     const {
         fixtures,
     } = useFixtureList(phase.value)
+
+    const {
+        players,
+    } = usePlayers(phase.value)
 
     const {
         tables,

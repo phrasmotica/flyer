@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 import { usePodium } from "@/composables/usePodium"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useStandings } from "@/composables/useStandings"
@@ -31,10 +32,13 @@ const {
 
 const {
     phase,
-    players,
     settings,
     durationMinutes,
 } = usePhase(mainPhase.value)
+
+const {
+    players,
+} = usePlayers(mainPhase.value)
 
 const {
     winner,

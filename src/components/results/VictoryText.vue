@@ -6,6 +6,7 @@ import { useSorted } from "@vueuse/core"
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 import { usePodium } from "@/composables/usePodium"
 
 import type { Fixture } from "@/data/Fixture"
@@ -26,8 +27,11 @@ const {
 
 const {
     getRound,
-    getPlayerName,
 } = usePhase(mainPhase.value)
+
+const {
+    getPlayerName,
+} = usePlayers(mainPhase.value)
 
 const {
     winner,

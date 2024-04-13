@@ -8,6 +8,7 @@ import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePlayers } from "@/composables/usePlayers"
 
 import type { Fixture } from "@/data/Fixture"
 import { Prioritisation } from "@/data/FixtureSwap"
@@ -38,8 +39,11 @@ const {
 const {
     settings,
     getRound,
-    getPlayerName,
 } = usePhase(currentPhase.value)
+
+const {
+    getPlayerName,
+} = usePlayers(currentPhase.value)
 
 const {
     fixture,

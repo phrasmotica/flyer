@@ -6,6 +6,7 @@ import CurrencyStepper from "../setup/CurrencyStepper.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -18,9 +19,12 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    players,
     totalCost,
 } = usePhase(mainPhase.value)
+
+const {
+    players,
+} = usePlayers(mainPhase.value)
 
 const lightsCost = ref(totalCost.value)
 </script>

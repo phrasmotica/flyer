@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 
 import type { Fixture } from "@/data/Fixture"
 
@@ -28,7 +28,7 @@ const {
 
 const {
     getPlayerName,
-} = usePhase(currentPhase.value)
+} = usePlayers(currentPhase.value)
 </script>
 
 <template>

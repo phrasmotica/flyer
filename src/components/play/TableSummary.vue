@@ -8,6 +8,7 @@ import { useFixture } from "@/composables/useFixture"
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 import { useQueryParams } from "@/composables/useQueryParams"
 
 import type { Table } from "@/data/Table"
@@ -34,9 +35,12 @@ const {
 const {
     phase,
     isInProgress,
-    getPlayerName,
     getRound,
 } = usePhase(currentPhase.value)
+
+const {
+    getPlayerName,
+} = usePlayers(currentPhase.value)
 
 const {
     fixtures,

@@ -8,6 +8,7 @@ import ScoreCell from "./ScoreCell.vue"
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePlayers } from "@/composables/usePlayers"
 import { useTweaks } from "@/composables/useTweaks"
 
 import type { Fixture } from "@/data/Fixture"
@@ -33,9 +34,12 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    getPlayerName,
     getRound,
 } = usePhase(currentPhase.value)
+
+const {
+    getPlayerName,
+} = usePlayers(currentPhase.value)
 
 const {
     raceTo,
