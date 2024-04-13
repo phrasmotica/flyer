@@ -5,6 +5,7 @@ import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseEvents } from "./usePhaseEvents"
 import { usePhaseSettings } from "./usePhaseSettings"
+import { useRounds } from "./useRounds"
 
 import type { FixtureSwap } from "@/data/FixtureSwap"
 import type { Phase } from "@/data/Phase"
@@ -17,12 +18,15 @@ export const useFixtureSwaps = (p: Phase | null) => {
         phase,
         settings,
         nextFreeFixture,
-        getRound,
     } = usePhase(p)
 
     const {
         nextFixture,
     } = useFixtureList(phase.value)
+
+    const {
+        getRound,
+    } = useRounds(phase.value)
 
     const {
         push: acknowledgeSwap,

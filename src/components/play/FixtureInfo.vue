@@ -8,8 +8,8 @@ import RaceToBadge from "./RaceToBadge.vue"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
+import { useRounds } from "@/composables/useRounds"
 import { useTables } from "@/composables/useTables"
 
 import type { Fixture } from "@/data/Fixture"
@@ -30,7 +30,7 @@ const {
 
 const {
     getRound,
-} = usePhase(currentPhase.value)
+} = useRounds(currentPhase.value)
 
 const {
     getPlayer,

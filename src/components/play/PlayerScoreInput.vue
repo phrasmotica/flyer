@@ -7,8 +7,8 @@ import ScoreCell from "./ScoreCell.vue"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
+import { useRounds } from "@/composables/useRounds"
 import { useTweaks } from "@/composables/useTweaks"
 
 import type { Fixture } from "@/data/Fixture"
@@ -35,7 +35,7 @@ const {
 
 const {
     getRound,
-} = usePhase(currentPhase.value)
+} = useRounds(currentPhase.value)
 
 const {
     getPlayerName,

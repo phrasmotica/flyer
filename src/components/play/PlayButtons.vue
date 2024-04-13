@@ -9,6 +9,7 @@ import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useQueryParams } from "@/composables/useQueryParams"
+import { useRounds } from "@/composables/useRounds"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -36,18 +37,20 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    phase,
     settings,
     hasStarted,
     hasFinished,
-    nextRoundToGenerate,
     readyToGenerateNextRound,
-    generationIsComplete,
 } = usePhase(currentPhase.value)
 
 const {
     remainingCount,
-} = useFixtureList(phase.value)
+} = useFixtureList(currentPhase.value)
+
+const {
+    nextRoundToGenerate,
+    generationIsComplete,
+} = useRounds(currentPhase.value)
 
 const {
     isHistoric,

@@ -9,6 +9,7 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
+import { useRounds } from "@/composables/useRounds"
 
 import type { Fixture } from "@/data/Fixture"
 import { Prioritisation } from "@/data/FixtureSwap"
@@ -38,12 +39,15 @@ const {
 
 const {
     settings,
-    getRound,
 } = usePhase(currentPhase.value)
 
 const {
     getPlayerName,
 } = usePlayers(currentPhase.value)
+
+const {
+    getRound,
+} = useRounds(currentPhase.value)
 
 const {
     fixture,

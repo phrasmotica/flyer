@@ -6,6 +6,7 @@ import { useFixtureList } from "./useFixtureList"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
 import { RoundStatus } from "./useRound"
+import { useRounds } from "./useRounds"
 import { useScheduler } from "./useScheduler"
 import { useTables } from "./useTables"
 
@@ -28,6 +29,13 @@ export const usePhase = (p: Phase | null) => {
     } = usePlayers(phase.value)
 
     const {
+        rounds,
+        currentRound,
+        generatedRounds,
+        getRound,
+    } = useRounds(phase.value)
+
+    const {
         tables,
         costPerHour,
     } = useTables(phase.value)
@@ -44,8 +52,6 @@ export const usePhase = (p: Phase | null) => {
         resumeClock,
     } = useClock("PhaseClock " + settings.value.name, phase.value)
 
-    const rounds = computed(() => phase.value?.rounds || [])
-
     const {
         isWinnerStaysOn,
     } = usePhaseSettings(settings.value)
@@ -54,46 +60,22 @@ export const usePhase = (p: Phase | null) => {
         scheduler,
     } = useScheduler(settings.value)
 
-    const raceTos = computed(() => rounds.value.map(r => ({
-        name: r.name,
-        raceTo: r.raceTo,
-    })))
-
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
-
-    const currentRound = computed(() => {
-        const startedRounds = [...rounds.value.filter(r => r.fixtures.some(f => f.startTime))]
-
-        startedRounds.sort((r, s) => {
-            const startTime1 = r.fixtures.map(f => f.startTime!).reduce((t1, t2) => Math.min(t1, t2))
-            const startTime2 = s.fixtures.map(f => f.startTime!).reduce((t1, t2) => Math.min(t1, t2))
-            return startTime1 - startTime2
-        })
-
-        return startedRounds[0] || rounds.value[0]
-    })
-
-    const nextRoundToGenerate = computed(() => rounds.value.find(r => !r.isGenerated))
 
     const readyToGenerateNextRound = computed(() => {
         if (!settings.value.randomlyDrawAllRounds) {
             return false
         }
 
-        // don't want to include the always-generated final round, so
-        // use a take-while approach
-        const generatedRounds = takeWhile([...rounds.value], r => r.isGenerated)
-        if (generatedRounds.length >= rounds.value.length) {
+        if (generatedRounds.value.length >= rounds.value.length) {
             return false
         }
 
-        const lastGeneratedRound = generatedRounds.at(-1)
+        const lastGeneratedRound = generatedRounds.value.at(-1)
         return lastGeneratedRound && lastGeneratedRound.fixtures.every(f => f.startTime && f.finishTime)
     })
-
-    const generationIsComplete = computed(() => rounds.value.every(r => r.isGenerated))
 
     const estimatedDurationMinutes = computed(() => {
         if (!phase.value) {
@@ -164,8 +146,6 @@ export const usePhase = (p: Phase | null) => {
             return isInProgress && f.scores.some(s => s.playerId === playerId)
         })
     }
-
-    const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
     const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus?: RoundStatus) => {
         if (!fixture) {
@@ -241,29 +221,16 @@ export const usePhase = (p: Phase | null) => {
         clockable.value = phase.value
     })
 
-    const takeWhile = <T>(arr: T[], pred: (x: T) => boolean): T[] => {
-        if (arr.length <= 0) {
-            return []
-        }
-
-        return pred(arr[0]) ? [arr[0], ...takeWhile(arr.slice(1, -1), pred)] : []
-    }
-
     return {
         phase,
 
         settings,
-        rounds,
-        raceTos,
         eventLog,
 
         elapsedMilliseconds,
         hasStarted,
         hasFinished,
         isInProgress,
-        currentRound,
-        nextRoundToGenerate,
-        generationIsComplete,
         readyToGenerateNextRound,
         estimatedDurationMinutes,
         durationMinutes,
@@ -277,7 +244,6 @@ export const usePhase = (p: Phase | null) => {
         canStartFixture,
         canPrioritiseFixture,
         isBusy,
-        getRound,
         getFixtureStatus,
         getFixtureDescription,
         getScoreDescription,

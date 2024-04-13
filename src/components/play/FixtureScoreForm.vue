@@ -12,6 +12,7 @@ import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { useRounds } from "@/composables/useRounds"
 import { useTweaks } from "@/composables/useTweaks"
 
 import type { Fixture, Score } from "@/data/Fixture"
@@ -36,8 +37,11 @@ const {
 
 const {
     settings,
-    getRound,
 } = usePhase(currentPhase.value)
+
+const {
+    getRound,
+} = useRounds(currentPhase.value)
 
 const {
     processSwap,

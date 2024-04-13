@@ -7,6 +7,7 @@ import { useFlyer } from "@/composables/useFlyer"
 import { FixtureStatus, usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useRound } from "@/composables/useRound"
+import { useRounds } from "@/composables/useRounds"
 
 import type { Fixture } from "@/data/Fixture"
 
@@ -25,11 +26,14 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    currentRound,
     canStartFixture,
-    getRound,
     getFixtureStatus,
 } = usePhase(currentPhase.value)
+
+const {
+    currentRound,
+    getRound,
+} = useRounds(currentPhase.value)
 
 const phaseEvents = usePhaseEvents(currentPhase.value)
 

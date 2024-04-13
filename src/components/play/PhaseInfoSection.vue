@@ -5,6 +5,7 @@ import PrizePotSummary from "../setup/PrizePotSummary.vue"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
+import { useRounds } from "@/composables/useRounds"
 import { useTables } from "@/composables/useTables"
 
 import { useFlyerStore } from "@/stores/flyer"
@@ -17,12 +18,15 @@ const {
 
 const {
     settings,
-    raceTos,
 } = usePhase(currentPhase.value)
 
 const {
     players,
 } = usePlayers(currentPhase.value)
+
+const {
+    raceTos,
+} = useRounds(currentPhase.value)
 
 const {
     tables,

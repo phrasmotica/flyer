@@ -16,6 +16,7 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRound } from "@/composables/useRound"
+import { useRounds } from "@/composables/useRounds"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
@@ -42,9 +43,12 @@ const {
 const {
     settings,
     hasFinished,
+} = usePhase(currentPhase.value)
+
+const {
     currentRound,
     nextRoundToGenerate,
-} = usePhase(currentPhase.value)
+} = useRounds(currentPhase.value)
 
 useTitle("Flyer - " + settings.value.name)
 

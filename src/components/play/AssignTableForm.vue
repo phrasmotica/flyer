@@ -8,6 +8,7 @@ import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
+import { useRounds } from "@/composables/useRounds"
 
 import type { Fixture } from "@/data/Fixture"
 
@@ -29,8 +30,11 @@ const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
     freeTables,
-    getRound,
 } = usePhase(currentPhase.value)
+
+const {
+    getRound,
+} = useRounds(currentPhase.value)
 
 const {
     fixture,

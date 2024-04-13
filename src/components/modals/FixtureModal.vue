@@ -13,6 +13,7 @@ import { useFlyer } from "@/composables/useFlyer"
 import { FixtureStatus, usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
 import { useRound } from "@/composables/useRound"
+import { useRounds } from "@/composables/useRounds"
 
 import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
 
@@ -36,10 +37,13 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    currentRound,
-    getRound,
     getFixtureStatus,
 } = usePhase(currentPhase.value)
+
+const {
+    currentRound,
+    getRound,
+} = useRounds(currentPhase.value)
 
 const {
     getPlayerName,

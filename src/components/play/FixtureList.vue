@@ -2,7 +2,7 @@
 import RoundSection from "./RoundSection.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
+import { useRounds } from "@/composables/useRounds"
 import { useStringToggle } from "@/composables/useStringToggle"
 
 import type { Fixture } from "@/data/Fixture"
@@ -21,7 +21,7 @@ const {
 
 const {
     rounds,
-} = usePhase(currentPhase.value)
+} = useRounds(currentPhase.value)
 
 const [highlightedFixtureId, highlight] = useStringToggle("")
 </script>

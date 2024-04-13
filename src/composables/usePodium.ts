@@ -6,6 +6,7 @@ import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
+import { useRounds } from "./useRounds"
 
 import type { Phase } from "@/data/Phase"
 import type { Winnings } from "@/data/Winnings"
@@ -16,7 +17,6 @@ export const usePodium = (p: Phase | null) => {
     const {
         phase,
         settings,
-        rounds,
     } = usePhase(p)
 
     const {
@@ -26,6 +26,10 @@ export const usePodium = (p: Phase | null) => {
     const {
         fixtures,
     } = useFixtureList(phase.value)
+
+    const {
+        rounds,
+    } = useRounds(phase.value)
 
     const {
         getWinner,

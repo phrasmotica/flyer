@@ -10,6 +10,7 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
 import { useQueryParams } from "@/composables/useQueryParams"
+import { useRounds } from "@/composables/useRounds"
 
 import type { Table } from "@/data/Table"
 import type { Fixture } from "@/data/Fixture"
@@ -33,18 +34,20 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    phase,
     isInProgress,
-    getRound,
 } = usePhase(currentPhase.value)
+
+const {
+    fixtures,
+} = useFixtureList(currentPhase.value)
 
 const {
     getPlayerName,
 } = usePlayers(currentPhase.value)
 
 const {
-    fixtures,
-} = useFixtureList(phase.value)
+    getRound,
+} = useRounds(currentPhase.value)
 
 const {
     isHistoric,
