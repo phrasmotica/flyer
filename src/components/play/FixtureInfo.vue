@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue"
+import { useI18n } from "vue-i18n"
 
 import Clock from "./Clock.vue"
 import TableBadge from "./TableBadge.vue"
@@ -13,6 +14,8 @@ import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 
+const { t } = useI18n()
+
 const props = defineProps<{
     fixture: Fixture
 }>()
@@ -24,6 +27,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    getPlayer,
     getRound,
     getTable,
 } = usePhase(currentPhase.value)
@@ -54,6 +58,7 @@ const ensureResumed = () => {
 }
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
+const breaker = computed(() => getPlayer(fixture.value?.breakerId || ""))
 </script>
 
 <template>
@@ -71,6 +76,11 @@ const table = computed(() => getTable(fixture.value?.tableId || ""))
             </div>
         </div>
 
-        <!-- HIGH: show assigned breaker if applicable -->
+        <div v-if="breaker && !hasStarted" class="mb-2">
+            <p class="m-0">
+                <span class="font-bold">{{ breaker.name }}</span>
+                {{ t('fixture.playerToBreak') }}
+            </p>
+        </div>
     </div>
 </template>
