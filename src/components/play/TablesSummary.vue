@@ -8,6 +8,7 @@ import TableSummary from "./TableSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { useTables } from "@/composables/useTables"
 
 import type { Fixture } from "@/data/Fixture"
 
@@ -31,10 +32,13 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    tables,
     isInProgress,
     maxTableCount,
 } = usePhase(currentPhase.value)
+
+const {
+    tables,
+} = useTables(currentPhase.value)
 
 const maxTablesReached = computed(() => tables.value.length >= maxTableCount.value)
 

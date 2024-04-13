@@ -1,6 +1,7 @@
 import { computed } from "vue"
 import { useSorted } from "@vueuse/core"
 
+import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
@@ -9,10 +10,14 @@ import type { Phase } from "@/data/Phase"
 
 export const useStandings = (p: Phase | null) => {
     const {
-        fixtures,
+        phase,
         players,
         settings,
     } = usePhase(p)
+
+    const {
+        fixtures,
+    } = useFixtureList(phase.value)
 
     const {
         isKnockout,

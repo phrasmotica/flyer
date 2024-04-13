@@ -1,4 +1,6 @@
+import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
+import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
 import type { FixtureSwap } from "@/data/FixtureSwap"
@@ -6,13 +8,20 @@ import type { Phase } from "@/data/Phase"
 
 export const usePhaseEvents = (p: Phase | null) => {
     const {
+        phase,
         settings,
         players,
-        fixtures,
-        tables,
         getFixtureDescription, // MEDIUM: move this method into this composable
         getScoreDescription,
     } = usePhase(p)
+
+    const {
+        fixtures,
+    } = useFixtureList(phase.value)
+
+    const {
+        tables,
+    } = useTables(phase.value)
 
     const fixtureAssignedTable = (f: Fixture, tableId: string) => {
         const description = getFixtureDescription(f)

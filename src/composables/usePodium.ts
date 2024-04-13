@@ -1,11 +1,12 @@
 import { computed } from "vue"
 
+import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
+import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
 
 import type { Phase } from "@/data/Phase"
-import { usePrizes } from "./usePrizes"
 import type { Winnings } from "@/data/Winnings"
 
 // LOW: ideally this would not have to accept null, but useFlyer() currently
@@ -14,10 +15,13 @@ export const usePodium = (p: Phase | null) => {
     const {
         phase,
         settings,
-        fixtures,
         players,
         rounds,
     } = usePhase(p)
+
+    const {
+        fixtures,
+    } = useFixtureList(phase.value)
 
     const {
         getWinner,

@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n"
 import TableBadge from "./TableBadge.vue"
 
 import { useFixture } from "@/composables/useFixture"
+import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useQueryParams } from "@/composables/useQueryParams"
@@ -31,11 +32,15 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    fixtures,
+    phase,
     isInProgress,
     getPlayerName,
     getRound,
 } = usePhase(currentPhase.value)
+
+const {
+    fixtures,
+} = useFixtureList(phase.value)
 
 const {
     isHistoric,

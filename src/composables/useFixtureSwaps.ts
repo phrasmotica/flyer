@@ -1,6 +1,7 @@
 import { computed } from "vue"
 
 import { useArray } from "./useArray"
+import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseEvents } from "./usePhaseEvents"
 import { usePhaseSettings } from "./usePhaseSettings"
@@ -15,10 +16,13 @@ export const useFixtureSwaps = (p: Phase | null) => {
     const {
         phase,
         settings,
-        nextFixture,
         nextFreeFixture,
         getRound,
     } = usePhase(p)
+
+    const {
+        nextFixture,
+    } = useFixtureList(phase.value)
 
     const {
         push: acknowledgeSwap,

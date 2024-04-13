@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import { useFixtureList } from "@/composables/useFixtureList"
 import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
+import { useTables } from "@/composables/useTables"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
@@ -23,16 +25,23 @@ const {
 const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
+    phase,
     settings,
-    tables,
     freeTables,
+} = usePhase(currentPhase.value)
+
+const {
     remainingCount,
     nextFixture,
-} = usePhase(currentPhase.value)
+} = useFixtureList(phase.value)
 
 const {
     processSwap,
 } = useFixtureSwaps(currentPhase.value)
+
+const {
+    tables,
+} = useTables(currentPhase.value)
 
 const isFixtures = computed(() => uiStore.isFixtures)
 

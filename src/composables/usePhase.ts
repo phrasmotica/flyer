@@ -2,9 +2,11 @@ import { computed, ref, watch } from "vue"
 import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 
 import { useClock } from "./useClock"
+import { useFixtureList } from "./useFixtureList"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { RoundStatus } from "./useRound"
 import { useScheduler } from "./useScheduler"
+import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
@@ -15,9 +17,16 @@ import type { PhaseSettings } from "@/data/PhaseSettings"
 export const usePhase = (p: Phase | null) => {
     const phase = ref(p)
 
-    const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
+    const {
+        fixtures,
+    } = useFixtureList(phase.value)
+
+    const {
+        tables,
+        costPerHour,
+    } = useTables(phase.value)
+
     const players = computed(() => phase.value?.players || [])
-    const tables = computed(() => phase.value?.tables || [])
     const eventLog = computed(() => phase.value?.eventLog || [])
 
     // LOW: do something better here than casting an empty object to PhaseSettings
@@ -48,9 +57,6 @@ export const usePhase = (p: Phase | null) => {
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
-
-    const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
-    const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
     const currentRound = computed(() => {
         const startedRounds = [...rounds.value.filter(r => r.fixtures.some(f => f.startTime))]
@@ -110,8 +116,6 @@ export const usePhase = (p: Phase | null) => {
 
     const clockDisplay = computed(() => durationMilliseconds.value || elapsedMilliseconds.value)
 
-    const costPerHour = computed(() => tables.value.map(t => t.costPerHour).reduce((a, b) => a + b, 0))
-
     const totalCost = computed(() => {
         const durationHours = (durationMilliseconds.value || elapsedMilliseconds.value) / 3600000
         return costPerHour.value * durationHours
@@ -126,8 +130,6 @@ export const usePhase = (p: Phase | null) => {
 
         return Math.floor(players.value.length / 2)
     })
-
-    const nextFixture = computed(() => fixtures.value.find(f => !f.startTime))
 
     const nextFreeFixture = computed(() => fixtures.value.find(canPrioritiseFixture))
 
@@ -251,9 +253,7 @@ export const usePhase = (p: Phase | null) => {
     return {
         phase,
 
-        fixtures,
         players,
-        tables,
         settings,
         rounds,
         raceTos,
@@ -263,8 +263,6 @@ export const usePhase = (p: Phase | null) => {
         hasStarted,
         hasFinished,
         isInProgress,
-        isComplete,
-        remainingCount,
         currentRound,
         nextRoundToGenerate,
         generationIsComplete,
@@ -276,7 +274,6 @@ export const usePhase = (p: Phase | null) => {
         totalCost,
         freeTables,
         maxTableCount,
-        nextFixture,
         nextFreeFixture,
 
         canStartFixture,

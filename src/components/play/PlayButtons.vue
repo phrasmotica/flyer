@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n"
 import DebugButtons from "./DebugButtons.vue"
 
 import { useEnv } from "@/composables/useEnv"
+import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useQueryParams } from "@/composables/useQueryParams"
@@ -35,14 +36,18 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    phase,
     settings,
     hasStarted,
     hasFinished,
-    remainingCount,
     nextRoundToGenerate,
     readyToGenerateNextRound,
     generationIsComplete,
 } = usePhase(currentPhase.value)
+
+const {
+    remainingCount,
+} = useFixtureList(phase.value)
 
 const {
     isHistoric,
