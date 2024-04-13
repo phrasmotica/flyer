@@ -22,6 +22,7 @@ import { useTweaks } from "@/composables/useTweaks"
 import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+import CommentBox from "../play/CommentBox.vue"
 
 const { t } = useI18n()
 
@@ -370,19 +371,9 @@ const header = computed(() => {
             </div>
         </div>
 
-        <!-- MEDIUM: create a component for this -->
-        <div v-if="hasStarted" id="comment-box" class="mb-2">
-            <div v-if="!hasFinished" class="flex p-fluid mt-2">
-                <Textarea
-                    class="text-xs md:text-sm"
-                    rows="3"
-                    :placeholder="t('fixture.addAComment')"
-                    v-model="comment" />
-            </div>
-
-            <div v-else-if="comment">
-                <CommentMessage :comment="comment" />
-            </div>
+        <div v-if="hasStarted" id="comment-box-wrapper" class="mt-2">
+            <CommentBox v-if="!hasFinished" v-model="comment" />
+            <CommentMessage v-else-if="comment" :comment="comment" />
         </div>
 
         <div v-if="fixtureStatus === FixtureStatus.InProgress" class="p-fluid">
