@@ -6,6 +6,7 @@ import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useTables } from "@/composables/useTables"
 
 import { useFlyerStore } from "@/stores/flyer"
@@ -26,7 +27,6 @@ const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
     phase,
-    settings,
     freeTables,
 } = usePhase(currentPhase.value)
 
@@ -38,6 +38,10 @@ const {
 const {
     processSwap,
 } = useFixtureSwaps(currentPhase.value)
+
+const {
+    settings,
+} = usePhaseSettings(currentPhase.value)
 
 const {
     tables,

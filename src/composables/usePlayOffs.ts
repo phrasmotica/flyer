@@ -8,13 +8,13 @@ import { useRankings } from "./useRankings"
 import type { Phase } from "@/data/Phase"
 import type { PlayerRecord } from "@/data/PlayerRecord"
 import type { Winnings } from "@/data/Winnings"
+import { usePhaseSettings } from "./usePhaseSettings"
 
 export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
     const playOffs = ref(p)
 
     const {
         phase,
-        settings,
     } = usePhase(mp)
 
     const {
@@ -24,6 +24,10 @@ export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
     const {
         computeStandings,
     } = useRankings()
+
+    const {
+        settings,
+    } = usePhaseSettings(phase.value)
 
     const {
         prizeMonies,

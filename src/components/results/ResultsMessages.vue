@@ -7,7 +7,6 @@ import TiesBrokenMessage from "./TiesBrokenMessage.vue"
 import WinningsSummary from "./WinningsSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useStandings } from "@/composables/useStandings"
 
@@ -23,12 +22,8 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
-} = usePhase(mainPhase.value)
-
-const {
     isWinnerStaysOn,
-} = usePhaseSettings(settings.value)
+} = usePhaseSettings(mainPhase.value)
 
 const {
     requiresPlayOff,

@@ -47,16 +47,16 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
 } = usePhase(mainPhase.value)
 
-useTitle("Flyer - " + settings.value.name + " - " + t('results.results'))
-
 const {
+    settings,
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-} = usePhaseSettings(settings.value)
+} = usePhaseSettings(mainPhase.value)
+
+useTitle("Flyer - " + settings.value.name + " - " + t('results.results'))
 
 const {
     moneyRecipients,

@@ -14,6 +14,7 @@ import PlaySections from "@/components/play/PlaySections.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
@@ -38,12 +39,15 @@ const {
 
 const {
     settings: mainPhaseSettings,
-} = usePhase(mainPhase.value)
+} = usePhaseSettings(mainPhase.value)
+
+const {
+    hasFinished,
+} = usePhase(currentPhase.value)
 
 const {
     settings,
-    hasFinished,
-} = usePhase(currentPhase.value)
+} = usePhaseSettings(currentPhase.value)
 
 const {
     currentRound,

@@ -32,7 +32,6 @@ const {
 
 const {
     phase,
-    settings,
     durationMinutes,
 } = usePhase(mainPhase.value)
 
@@ -45,8 +44,9 @@ const {
 } = usePodium(mainPhase.value)
 
 const {
+    settings,
     formatName,
-} = usePhaseSettings(settings.value)
+} = usePhaseSettings(mainPhase.value)
 
 const {
     firstPlace,

@@ -1,17 +1,17 @@
 import { computed, ref } from "vue"
 import type { MeterItem } from "primevue/metergroup"
 
-import { usePhaseSettings } from "./usePhaseSettings"
+import { usePhaseSettingsInternal } from "./usePhaseSettings"
 
 import { MoneySplit, type PhaseSettings } from "@/data/PhaseSettings"
 
-export const usePrizes = (p: PhaseSettings, c: number) => {
+export const usePrizes = (s: PhaseSettings, c: number) => {
     const playerCount = ref(c)
 
     const {
         settings,
         isKnockout,
-    } = usePhaseSettings(p)
+    } = usePhaseSettingsInternal(s)
 
     const prizePot = computed(() => playerCount.value * settings.value.entryFee)
 

@@ -3,7 +3,6 @@ import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
@@ -32,11 +31,8 @@ const {
 
 const {
     settings,
-} = usePhase(mainPhase.value)
-
-const {
     isWinnerStaysOn,
-} = usePhaseSettings(settings.value)
+} = usePhaseSettings(mainPhase.value)
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {

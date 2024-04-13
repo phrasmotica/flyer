@@ -16,7 +16,6 @@ import { useFlyerStore } from "@/stores/flyer"
 export const useFixtureSwaps = (p: Phase | null) => {
     const {
         phase,
-        settings,
         nextFreeFixture,
     } = usePhase(p)
 
@@ -29,6 +28,10 @@ export const useFixtureSwaps = (p: Phase | null) => {
     } = useRounds(phase.value)
 
     const {
+        isRoundRobin,
+    } = usePhaseSettings(phase.value)
+
+    const {
         push: acknowledgeSwap,
         includes: alreadyAcknowledgedSwap,
     } = useArray<string>()
@@ -36,10 +39,6 @@ export const useFixtureSwaps = (p: Phase | null) => {
     const flyerStore = useFlyerStore()
 
     const phaseEvents = usePhaseEvents(phase.value)
-
-    const {
-        isRoundRobin,
-    } = usePhaseSettings(settings.value)
 
     const fixtureSwaps = computed(() => phase.value?.fixtureSwaps || [])
 

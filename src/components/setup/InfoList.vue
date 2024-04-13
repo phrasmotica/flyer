@@ -2,7 +2,7 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
 
 import type { PhaseSettings } from "@/data/PhaseSettings"
 
@@ -32,7 +32,7 @@ const {
     isRoundRobin,
     isWinnerStaysOn,
     isFixedMatchLength,
-} = usePhaseSettings(props.settings)
+} = usePhaseSettingsInternal(props.settings)
 
 const variableRacesSummary = computed(() => {
     if (isFixedMatchLength.value) {

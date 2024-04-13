@@ -2,7 +2,7 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
 
 import { useSettingsStore } from "@/stores/settings"
 
@@ -12,7 +12,7 @@ const settingsStore = useSettingsStore()
 
 const {
     isKnockout,
-} = usePhaseSettings(settingsStore.settings.specification)
+} = usePhaseSettingsInternal(settingsStore.settings.specification)
 
 const localisedOptions = computed(() => settingsStore.matchLengthModelList.map(x => ({
     ...x,

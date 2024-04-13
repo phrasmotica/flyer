@@ -12,7 +12,6 @@ import type { Phase } from "@/data/Phase"
 export const useStandings = (p: Phase | null) => {
     const {
         phase,
-        settings,
     } = usePhase(p)
 
     const {
@@ -24,10 +23,11 @@ export const useStandings = (p: Phase | null) => {
     } = useFixtureList(phase.value)
 
     const {
+        settings,
         isKnockout,
         isRoundRobin,
         usesPlayOff,
-    } = usePhaseSettings(settings.value)
+    } = usePhaseSettings(phase.value)
 
     const {
         computeStandings,

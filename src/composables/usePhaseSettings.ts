@@ -1,10 +1,21 @@
 import { computed, ref } from "vue"
 
+import type { Phase } from "@/data/Phase"
 import { Format, TieBreaker, MatchLengthModel, type PhaseSettings } from "@/data/PhaseSettings"
 
 import { formatList, ruleSetList, tieBreakerList } from "@/stores/settings"
 
-export const usePhaseSettings = (s: PhaseSettings) => {
+export const usePhaseSettings = (p: Phase | null) => {
+    const phase = ref(p)
+
+    // LOW: do something better here than casting an empty object to PhaseSettings
+    const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
+
+    return usePhaseSettingsInternal(settings.value)
+}
+
+// MEDIUM: name this something better...
+export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const settings = ref(s)
 
     const formatName = computed(() => {

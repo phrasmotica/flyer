@@ -3,7 +3,6 @@ import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 
@@ -19,12 +18,8 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
-} = usePhase(mainPhase.value)
-
-const {
     tieBreakerName,
-} = usePhaseSettings(settings.value)
+} = usePhaseSettings(mainPhase.value)
 
 const {
     isHistoric,

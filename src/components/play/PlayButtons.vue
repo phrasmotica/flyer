@@ -8,6 +8,7 @@ import { useEnv } from "@/composables/useEnv"
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRounds } from "@/composables/useRounds"
 
@@ -37,7 +38,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
     hasStarted,
     hasFinished,
     readyToGenerateNextRound,
@@ -51,6 +51,10 @@ const {
     nextRoundToGenerate,
     generationIsComplete,
 } = useRounds(currentPhase.value)
+
+const {
+    settings,
+} = usePhaseSettings(currentPhase.value)
 
 const {
     isHistoric,

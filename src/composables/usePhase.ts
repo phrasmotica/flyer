@@ -12,7 +12,6 @@ import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
-import type { PhaseSettings } from "@/data/PhaseSettings"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
@@ -40,10 +39,12 @@ export const usePhase = (p: Phase | null) => {
         costPerHour,
     } = useTables(phase.value)
 
-    const eventLog = computed(() => phase.value?.eventLog || [])
+    const {
+        settings,
+        isWinnerStaysOn,
+    } = usePhaseSettings(phase.value)
 
-    // LOW: do something better here than casting an empty object to PhaseSettings
-    const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
+    const eventLog = computed(() => phase.value?.eventLog || [])
 
     const {
         clockable,
@@ -51,10 +52,6 @@ export const usePhase = (p: Phase | null) => {
         pauseClock,
         resumeClock,
     } = useClock("PhaseClock " + settings.value.name, phase.value)
-
-    const {
-        isWinnerStaysOn,
-    } = usePhaseSettings(settings.value)
 
     const {
         scheduler,
@@ -224,7 +221,6 @@ export const usePhase = (p: Phase | null) => {
     return {
         phase,
 
-        settings,
         eventLog,
 
         elapsedMilliseconds,

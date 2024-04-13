@@ -10,7 +10,6 @@ import PlayerWinInput from "./PlayerWinInput.vue"
 import { useFixture } from "@/composables/useFixture"
 import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useRounds } from "@/composables/useRounds"
 import { useTweaks } from "@/composables/useTweaks"
@@ -36,10 +35,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
-} = usePhase(currentPhase.value)
-
-const {
     getRound,
 } = useRounds(currentPhase.value)
 
@@ -49,7 +44,7 @@ const {
 
 const {
     isWinnerStaysOn,
-} = usePhaseSettings(settings.value)
+} = usePhaseSettings(currentPhase.value)
 
 const {
     fixture,

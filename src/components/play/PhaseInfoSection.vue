@@ -3,7 +3,7 @@ import InfoList from "../setup/InfoList.vue"
 import PrizePotSummary from "../setup/PrizePotSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
 import { useRounds } from "@/composables/useRounds"
 import { useTables } from "@/composables/useTables"
@@ -17,16 +17,16 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
-} = usePhase(currentPhase.value)
-
-const {
     players,
 } = usePlayers(currentPhase.value)
 
 const {
     raceTos,
 } = useRounds(currentPhase.value)
+
+const {
+    settings,
+} = usePhaseSettings(currentPhase.value)
 
 const {
     tables,

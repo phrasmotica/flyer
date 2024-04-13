@@ -16,7 +16,6 @@ import type { Winnings } from "@/data/Winnings"
 export const usePodium = (p: Phase | null) => {
     const {
         phase,
-        settings,
     } = usePhase(p)
 
     const {
@@ -36,9 +35,10 @@ export const usePodium = (p: Phase | null) => {
     } = useRankings()
 
     const {
+        settings,
         isRoundRobin,
         isWinnerStaysOn,
-    } = usePhaseSettings(settings.value)
+    } = usePhaseSettings(phase.value)
 
     const {
         prizeMonies,

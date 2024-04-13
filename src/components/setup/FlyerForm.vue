@@ -13,7 +13,7 @@ import PrizePotSummary from "./PrizePotSummary.vue"
 import Stepper from "./Stepper.vue"
 import TableInput from "./TableInput.vue"
 
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
 import { useSettings } from "@/composables/useSettings"
 import { useTweaks } from "@/composables/useTweaks"
 
@@ -39,7 +39,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-} = usePhaseSettings(settingsStore.settings.specification)
+} = usePhaseSettingsInternal(settingsStore.settings.specification)
 
 const { n, t } = useI18n()
 
