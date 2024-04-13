@@ -4,10 +4,8 @@ import { useI18n } from "vue-i18n"
 
 import AssignBreakerForm from "../play/AssignBreakerForm.vue"
 import AssignTableForm from "../play/AssignTableForm.vue"
-import Clock from "../play/Clock.vue"
+import FixtureInfo from "../play/FixtureInfo.vue"
 import FixtureScoreForm from "../play/FixtureScoreForm.vue"
-import RaceToBadge from "../play/RaceToBadge.vue"
-import TableBadge from "../play/TableBadge.vue"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
@@ -40,9 +38,7 @@ const {
     currentRound,
     canStartFixture,
     getRound,
-    getTable,
     getFixtureStatus,
-    getPlayer,
     getPlayerName,
 } = usePhase(currentPhase.value)
 
@@ -55,25 +51,16 @@ const {
 const {
     fixture,
     round,
-    breakerId,
-    tableId,
-    raceTo,
     scores,
     runouts,
     comment,
-    elapsedMilliseconds,
     hasStarted,
     hasFinished,
-    isInProgress,
-    estimatedDurationMilliseconds,
-    durationMilliseconds,
     resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
 
 const visible = ref(props.visible)
 
-const initialBreakerId = ref(breakerId.value)
-const initialTableId = ref(tableId.value)
 const initialScores = ref(scores.value)
 const initialRunouts = ref(runouts.value)
 const initialComment = ref(comment.value)
@@ -86,14 +73,10 @@ watch(props, () => {
     round.value = getRound(props.fixture?.id || "")
 
     setInitialPlayerScores(props.fixture)
-
-    if (props.visible && isInProgress.value) {
-        resumeClock()
-    }
 })
 
 const startFixture = () => {
-    if (!currentPhase.value || !fixture.value || !table.value || !breaker.value) {
+    if (!currentPhase.value || !fixture.value) {
         return
     }
 
@@ -105,40 +88,33 @@ const startFixture = () => {
     resumeClock()
 }
 
-const table = computed(() => getTable(fixture.value?.tableId || ""))
-const breaker = computed(() => getPlayer(fixture.value?.breakerId || ""))
-
 const canStart = computed(() => canStartFixture(fixture.value, currentRoundStatus.value))
 
 const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
 
 const startButtonText = computed(() => {
-    // MEDIUM: move most of this into a composable?
-    if (fixtureStatus.value === FixtureStatus.Unknown) {
-        return t('fixture.unknownStatus')
-    }
+    switch (fixtureStatus.value) {
+        case FixtureStatus.Unknown:
+            return t('fixture.unknownStatus')
 
-    if (fixtureStatus.value === FixtureStatus.WaitingForRoundGeneration) {
-        return t('fixture.waitingForRoundGenerationStatus')
-    }
+        case FixtureStatus.WaitingForRoundGeneration:
+            return t('fixture.waitingForRoundGenerationStatus')
 
-    if (fixtureStatus.value === FixtureStatus.WaitingForPreviousResult) {
-        return t('fixture.waitingForPreviousResultStatus')
-    }
+        case FixtureStatus.WaitingForPreviousResult:
+            return t('fixture.waitingForPreviousResultStatus')
 
-    if (fixtureStatus.value === FixtureStatus.WaitingForPlayers) {
-        return t('fixture.waitingForPlayersStatus')
-    }
+        case FixtureStatus.WaitingForPlayers:
+            return t('fixture.waitingForPlayersStatus')
 
-    if (fixtureStatus.value === FixtureStatus.WaitingForRound) {
-        return t('fixture.waitingForRoundStatus')
-    }
+        case FixtureStatus.WaitingForRound:
+            return t('fixture.waitingForRoundStatus')
 
-    if (fixtureStatus.value === FixtureStatus.WaitingForTable) {
-        return t('fixture.waitingForTableStatus')
-    }
+        case FixtureStatus.WaitingForTable:
+            return t('fixture.waitingForTableStatus')
 
-    return t('common.start')
+        default:
+            return t('common.start')
+    }
 })
 
 const hide = () => {
@@ -148,21 +124,13 @@ const hide = () => {
 }
 
 const setInitialPlayerScores = (fixture: Fixture | undefined) => {
-    initialBreakerId.value = fixture?.breakerId || ""
-    initialTableId.value = fixture?.tableId || ""
     initialScores.value = fixture?.scores.map(f => f.score) || []
     initialRunouts.value = fixture?.scores.map(f => f.runouts) || []
     initialComment.value = fixture?.comment || ""
 }
 
 const resetPlayerScores = () => {
-    if (hasFinished.value) {
-        breakerId.value = ""
-        tableId.value = ""
-    }
-    else {
-        breakerId.value = initialBreakerId.value
-        tableId.value = initialTableId.value
+    if (!hasFinished.value) {
         scores.value = initialScores.value
         runouts.value = initialRunouts.value
         comment.value = initialComment.value
@@ -200,28 +168,10 @@ const header = computed(() => {
         v-model:visible="visible"
         :header="header"
         @hide="hide">
-        <!-- HIGH: this component is a fucking mess. Render each part of it
-        according to conditions, rather than rendering a distinct set of
-        elements for each fixtures status. Also split it into smaller components -->
-
-        <div id="fixture-info">
-            <div v-if="table" class="mb-2">
-                <Clock
-                    v-if="hasStarted"
-                    :elapsedMilliseconds="durationMilliseconds || elapsedMilliseconds"
-                    :warnAfterMilliseconds="estimatedDurationMilliseconds" />
-
-                <div class="p-fluid flex justify-content-center gap-2">
-                    <TableBadge :table="table" />
-
-                    <RaceToBadge singular :value="raceTo" />
-                </div>
-            </div>
-
-            <!-- HIGH: show assigned breaker if applicable -->
-        </div>
-
         <!-- MEDIUM: this is getting crowded. Design a better layout -->
+        <div>
+            <FixtureInfo :fixture="fixture" />
+        </div>
 
         <div v-if="hasStarted">
             <FixtureScoreForm
