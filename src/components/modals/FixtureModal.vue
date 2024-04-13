@@ -50,29 +50,15 @@ const {
 
 const {
     fixture,
-    round,
-    scores,
-    runouts,
-    comment,
     hasStarted,
-    hasFinished,
     resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
 
 const visible = ref(props.visible)
 
-const initialScores = ref(scores.value)
-const initialRunouts = ref(runouts.value)
-const initialComment = ref(comment.value)
-
 watch(props, () => {
     visible.value = props.visible
     fixture.value = props.fixture
-
-    // LOW: recompute this entirely inside useFixture()
-    round.value = getRound(props.fixture?.id || "")
-
-    setInitialPlayerScores(props.fixture)
 })
 
 const startFixture = () => {
@@ -118,23 +104,7 @@ const startButtonText = computed(() => {
 })
 
 const hide = () => {
-    resetPlayerScores()
-
     emit('hide')
-}
-
-const setInitialPlayerScores = (fixture: Fixture | undefined) => {
-    initialScores.value = fixture?.scores.map(f => f.score) || []
-    initialRunouts.value = fixture?.scores.map(f => f.runouts) || []
-    initialComment.value = fixture?.comment || ""
-}
-
-const resetPlayerScores = () => {
-    if (!hasFinished.value) {
-        scores.value = initialScores.value
-        runouts.value = initialRunouts.value
-        comment.value = initialComment.value
-    }
 }
 
 const getPlayersDescription = (scores: Score[]) => {

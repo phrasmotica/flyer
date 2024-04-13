@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import CommentBox from "./CommentBox.vue"
@@ -62,6 +62,10 @@ const {
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
 
 const { blurActive } = useTweaks()
+
+const initialScores = ref(scores.value)
+const initialRunouts = ref(runouts.value)
+const initialComment = ref(comment.value)
 
 // hack to stop InputNumber elements from focusing after pressing their buttons.
 // Important for mobile UX
@@ -134,8 +138,24 @@ const updateScores = (finish: boolean) => {
 }
 
 const hide = () => {
+    resetPlayerScores()
+
     emit('hide')
 }
+
+const resetPlayerScores = () => {
+    if (!hasFinished.value) {
+        scores.value = initialScores.value
+        runouts.value = initialRunouts.value
+        comment.value = initialComment.value
+    }
+}
+
+onMounted(() => {
+    initialScores.value = fixture.value?.scores.map(f => f.score) || []
+    initialRunouts.value = fixture.value?.scores.map(f => f.runouts) || []
+    initialComment.value = fixture.value?.comment || ""
+})
 </script>
 
 <template>
