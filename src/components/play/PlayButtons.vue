@@ -2,13 +2,14 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
+import DebugButtons from "./DebugButtons.vue"
+
 import { useEnv } from "@/composables/useEnv"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useQueryParams } from "@/composables/useQueryParams"
 
 import { useFlyerStore } from "@/stores/flyer"
-import { useUiStore } from "@/stores/ui"
 
 const { t } = useI18n()
 
@@ -17,8 +18,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    autoComplete: []
-    autoCompleteRemaining: []
     generateNextRound: []
     confirmFinish: []
     showAbandonModal: []
@@ -26,7 +25,6 @@ const emit = defineEmits<{
 }>()
 
 const flyerStore = useFlyerStore()
-const uiStore = useUiStore()
 
 const {
     isDebug,
@@ -50,16 +48,6 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const isFixtures = computed(() => uiStore.isFixtures)
-
-const showAutoCompleteButton = computed(() => {
-    if (isHistoric.value || !isDebug) {
-        return false
-    }
-
-    return props.sidebar || remainingCount.value > 0
-})
-
 const generateNextRoundLabel = computed(() => {
     if (!nextRoundToGenerate.value) {
         return t('play.generateNextRound')
@@ -81,24 +69,8 @@ const finishButtonText = computed(() => {
 
 <template>
     <div class="p-fluid">
-        <div>
-            <!-- debug stuff, no need to localise -->
-            <Button
-                v-if="showAutoCompleteButton"
-                class="mb-2"
-                label="Auto-complete"
-                severity="help"
-                :disabled="!isFixtures || remainingCount <= 0"
-                @click="emit('autoComplete')" />
-
-            <Button
-                v-if="showAutoCompleteButton"
-                class="mb-2"
-                label="Auto-complete remaining"
-                severity="help"
-                :disabled="!isFixtures || remainingCount <= 0"
-                @click="emit('autoCompleteRemaining')" />
-        </div>
+        <DebugButtons v-if="!isHistoric && isDebug"
+            :hideInstead="!props.sidebar" />
 
         <Button
             v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"

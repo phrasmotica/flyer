@@ -14,7 +14,6 @@ import PlaySections from "@/components/play/PlaySections.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
-import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRound } from "@/composables/useRound"
 import { useRouting } from "@/composables/useRouting"
@@ -42,17 +41,12 @@ const {
 
 const {
     settings,
-    tables,
     hasFinished,
     currentRound,
     nextRoundToGenerate,
-    nextFixture,
-    getFixtureSwap,
 } = usePhase(currentPhase.value)
 
 useTitle("Flyer - " + settings.value.name)
-
-const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
     winners,
@@ -126,55 +120,6 @@ const abandon = () => {
     routing.toSetup()
 }
 
-const autoComplete = () => {
-    if (!currentPhase.value || !nextFixture.value) {
-        return
-    }
-
-    // LOW: compute the correct race-to for the next fixture
-    const raceTo = settings.value.raceTo
-
-    const message = phaseEvents.fixtureAutoCompleted(nextFixture.value)
-
-    flyerStore.autoCompleteFixture(
-        currentPhase.value,
-        nextFixture.value,
-        tables.value[0].id,
-        raceTo)
-
-    flyerStore.addPhaseEvent(currentPhase.value, message)
-
-    const swap = getFixtureSwap()
-    if (swap) {
-        // generate this now - the computed properties update after the swap...
-        const message = phaseEvents.fixturesSwapped(swap)
-
-        // if necessary, swap the next fixture in the current round (or
-        // the first fixture in the next round) with the first upcoming fixture
-        // where all players are free
-        const didSwap = flyerStore.swapFixtures(currentPhase.value, swap)
-        if (didSwap) {
-            flyerStore.addPhaseEvent(currentPhase.value, message)
-        }
-    }
-}
-
-const autoCompleteRemaining = () => {
-    if (!currentPhase.value || !nextFixture.value) {
-        return
-    }
-
-    const raceTo = settings.value.raceTo
-
-    flyerStore.autoCompletePhase(
-        currentPhase.value,
-        tables.value[0].id,
-        raceTo)
-
-    const message = phaseEvents.phaseAutoCompleted()
-    flyerStore.addPhaseEvent(currentPhase.value, message)
-}
-
 const selectForRecording = (f: Fixture) => {
     selectedFixture.value = f
     setShowFixtureModal(true)
@@ -205,8 +150,6 @@ const hideFixtureModal = () => {
         <template v-if="!isSmallScreen" #sidebar>
             <PlayButtons
                 sidebar
-                @autoComplete="autoComplete"
-                @autoCompleteRemaining="autoCompleteRemaining"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
                 @goToPastFlyers="routing.toHistory"
@@ -242,8 +185,6 @@ const hideFixtureModal = () => {
 
         <template v-if="isSmallScreen" #buttons>
             <PlayButtons
-                @autoComplete="autoComplete"
-                @autoCompleteRemaining="autoCompleteRemaining"
                 @confirmFinish="confirmFinish"
                 @generateNextRound="generateNextRound"
                 @goToPastFlyers="routing.toHistory"
