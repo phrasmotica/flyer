@@ -37,7 +37,7 @@ const nextPlayOff = computed(() => {
 })
 
 const message = computed(() => t('results.startPlayOffName', {
-    name: nextPlayOff.value?.name || '(UNKNOWN)',
+    name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
 }))
 </script>
 
