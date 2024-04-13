@@ -151,7 +151,9 @@ const save = () => {
 <template>
     <PageTemplate>
         <template #header>
-            {{ settings.name }} - {{ t('results.results') }}
+            <div id="results-header">
+                {{ settings.name }} - {{ t('results.results') }}
+            </div>
         </template>
 
         <template #subHeaderLeft>
