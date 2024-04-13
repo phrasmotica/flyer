@@ -2,9 +2,10 @@
 import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
+import AssignTableForm from "../play/AssignTableForm.vue"
 import Clock from "../play/Clock.vue"
+import CommentBox from "../play/CommentBox.vue"
 import CommentMessage from "../play/CommentMessage.vue"
-import LabelledDropdown from "../setup/LabelledDropdown.vue"
 import PlayerBreakInput from "../play/PlayerBreakInput.vue"
 import PlayerScoreInput from "../play/PlayerScoreInput.vue"
 import PlayerWinInput from "../play/PlayerWinInput.vue"
@@ -22,7 +23,6 @@ import { useTweaks } from "@/composables/useTweaks"
 import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
-import CommentBox from "../play/CommentBox.vue"
 
 const { t } = useI18n()
 
@@ -44,7 +44,6 @@ const {
 const {
     settings,
     currentRound,
-    freeTables,
     nextFixture,
     nextFreeFixture,
     canStartFixture,
@@ -106,8 +105,6 @@ watch(props, () => {
     // LOW: recompute this entirely inside useFixture()
     round.value = getRound(props.fixture?.id || "")
 
-    tableId.value = freeTables.value[0]?.id || ""
-
     setInitialPlayerScores(props.fixture)
 
     if (props.visible && isInProgress.value) {
@@ -120,17 +117,6 @@ watch(props, () => {
 watch([scores, runouts], () => {
     blurActive()
 })
-
-const assignTable = () => {
-    if (!currentPhase.value || !fixture.value || freeTables.value.length <= 0 || !tableId.value) {
-        return
-    }
-
-    flyerStore.assignTable(currentPhase.value, fixture.value.id, tableId.value)
-
-    const message = phaseEvents.fixtureAssignedTable(fixture.value, tableId.value)
-    flyerStore.addPhaseEvent(currentPhase.value, message)
-}
 
 const assignBreaker = () => {
     if (!currentPhase.value || !fixture.value || !breakerId.value) {
@@ -223,12 +209,6 @@ const ranOut = computed(() => {
     return ""
 })
 
-const freeTablesOptions = computed(() => freeTables.value.map(t => ({
-    name: t.name,
-    value: t.id,
-})))
-
-const canAssignTable = computed(() => !!tableId.value)
 const canAssignBreaker = computed(() => !!breakerId.value)
 
 const canStart = computed(() => canStartFixture(fixture.value, currentRoundStatus.value))
@@ -407,23 +387,7 @@ const header = computed(() => {
         </div>
 
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForAssignment">
-            <div class="p-fluid">
-                <p class="m-0 text-center">
-                    {{ t('fixture.pleaseAssignTable') }}
-                </p>
-
-                <LabelledDropdown
-                    noLocalise
-                    :label="t('table.table')"
-                    :options="freeTablesOptions"
-                    v-model="tableId" />
-
-                <Button
-                    type="button"
-                    :label="t('common.assign')"
-                    :disabled="!canAssignTable"
-                    @click="assignTable" />
-            </div>
+            <AssignTableForm :fixture="fixture" />
         </div>
 
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForBreaker">
