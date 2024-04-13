@@ -129,7 +129,7 @@ const defaultSettings: FlyerSettings = {
         tieBreaker: TieBreaker.HeadToHead,
         name: "",
     }
-    // HIGH: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
+    // MEDIUM: allow a flyer to have multiple phases, e.g. round-robin then a knockout final between the top 2
 }
 
 const expectedKnockoutRoundsCount = Math.ceil(Math.log2(maxPlayersEnv))
