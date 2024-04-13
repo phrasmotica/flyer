@@ -6,11 +6,11 @@ import AssignBreakerForm from "../play/AssignBreakerForm.vue"
 import AssignTableForm from "../play/AssignTableForm.vue"
 import FixtureInfo from "../play/FixtureInfo.vue"
 import FixtureScoreForm from "../play/FixtureScoreForm.vue"
+import StartFixtureButton from "../play/StartFixtureButton.vue"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { FixtureStatus, usePhase } from "@/composables/usePhase"
-import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useRound } from "@/composables/useRound"
 
 import { emptyScores, type Fixture, type Score } from "@/data/Fixture"
@@ -36,13 +36,10 @@ const {
 
 const {
     currentRound,
-    canStartFixture,
     getRound,
     getFixtureStatus,
     getPlayerName,
 } = usePhase(currentPhase.value)
-
-const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
     status: currentRoundStatus,
@@ -51,7 +48,6 @@ const {
 const {
     fixture,
     hasStarted,
-    resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
 
 const visible = ref(props.visible)
@@ -61,47 +57,7 @@ watch(props, () => {
     fixture.value = props.fixture
 })
 
-const startFixture = () => {
-    if (!currentPhase.value || !fixture.value) {
-        return
-    }
-
-    flyerStore.startFixture(currentPhase.value, fixture.value.id)
-
-    const message = phaseEvents.fixtureStarted(fixture.value)
-    flyerStore.addPhaseEvent(currentPhase.value, message)
-
-    resumeClock()
-}
-
-const canStart = computed(() => canStartFixture(fixture.value, currentRoundStatus.value))
-
 const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
-
-const startButtonText = computed(() => {
-    switch (fixtureStatus.value) {
-        case FixtureStatus.Unknown:
-            return t('fixture.unknownStatus')
-
-        case FixtureStatus.WaitingForRoundGeneration:
-            return t('fixture.waitingForRoundGenerationStatus')
-
-        case FixtureStatus.WaitingForPreviousResult:
-            return t('fixture.waitingForPreviousResultStatus')
-
-        case FixtureStatus.WaitingForPlayers:
-            return t('fixture.waitingForPlayersStatus')
-
-        case FixtureStatus.WaitingForRound:
-            return t('fixture.waitingForRoundStatus')
-
-        case FixtureStatus.WaitingForTable:
-            return t('fixture.waitingForTableStatus')
-
-        default:
-            return t('common.start')
-    }
-})
 
 const hide = () => {
     emit('hide')
@@ -157,12 +113,8 @@ const header = computed(() => {
             <AssignBreakerForm :fixture="fixture" />
         </div>
 
-        <div v-else class="p-fluid">
-            <Button v-if="!hasStarted"
-                type="button"
-                :label="startButtonText"
-                :disabled="!canStart"
-                @click="startFixture" />
+        <div v-else-if="!hasStarted">
+            <StartFixtureButton :fixture="fixture" />
         </div>
     </Dialog>
 </template>

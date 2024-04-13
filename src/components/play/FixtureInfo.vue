@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue"
+import { computed, onMounted, watch } from "vue"
 
 import Clock from "./Clock.vue"
 import TableBadge from "./TableBadge.vue"
@@ -39,11 +39,19 @@ const {
     resumeClock,
 } = useFixture("modal", props.fixture, getRound(props.fixture.id), currentPhase.value)
 
+watch(props, () => {
+    ensureResumed()
+})
+
 onMounted(() => {
+    ensureResumed()
+})
+
+const ensureResumed = () => {
     if (isInProgress.value) {
         resumeClock()
     }
-})
+}
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 </script>
