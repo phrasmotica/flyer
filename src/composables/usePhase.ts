@@ -1,30 +1,21 @@
 import { computed, ref, watch } from "vue"
 import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 
-import { useArray } from "./useArray"
 import { useClock } from "./useClock"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { RoundStatus } from "./useRound"
 import { useScheduler } from "./useScheduler"
 
 import type { Fixture } from "@/data/Fixture"
-import type { FixtureSwap } from "@/data/FixtureSwap"
 import type { Phase } from "@/data/Phase"
 import type { PhaseSettings } from "@/data/PhaseSettings"
-import type { Round } from "@/data/Round"
 
 // LOW: ideally this would not have to accept null, but we use it in places
 // where the argument can currently be null (see ResultsTable.vue)
 export const usePhase = (p: Phase | null) => {
     const phase = ref(p)
 
-    const {
-        push: acknowledgeSwap,
-        includes: alreadyAcknowledgedSwap,
-    } = useArray<string>()
-
     const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
-    const fixtureSwaps = computed(() => phase.value?.fixtureSwaps || [])
     const players = computed(() => phase.value?.players || [])
     const tables = computed(() => phase.value?.tables || [])
     const eventLog = computed(() => phase.value?.eventLog || [])
@@ -42,22 +33,12 @@ export const usePhase = (p: Phase | null) => {
     const rounds = computed(() => phase.value?.rounds || [])
 
     const {
-        isRoundRobin,
         isWinnerStaysOn,
     } = usePhaseSettings(settings.value)
 
     const {
         scheduler,
     } = useScheduler(settings.value)
-
-    const unacknowledgedSwap = computed(() => {
-        const lastSwap = fixtureSwaps.value.at(-1)
-        if (!lastSwap || alreadyAcknowledgedSwap(lastSwap.id)) {
-            return null
-        }
-
-        return lastSwap
-    })
 
     const raceTos = computed(() => rounds.value.map(r => ({
         name: r.name,
@@ -185,11 +166,6 @@ export const usePhase = (p: Phase | null) => {
 
     const getRound = (fixtureId: string) => rounds.value.find(r => r.fixtures.some(f => f.id === fixtureId))
 
-    const getRoundWithIndex = (fixtureId: string): [Round | undefined, number] => {
-        const round = getRound(fixtureId)
-        return [round, round?.fixtures.findIndex(f => f.id === fixtureId) ?? -1]
-    }
-
     const getFixtureStatus = (fixture: Fixture | undefined, currentRoundStatus?: RoundStatus) => {
         if (!fixture) {
             return FixtureStatus.Unknown
@@ -260,37 +236,6 @@ export const usePhase = (p: Phase | null) => {
         return fixture.scores.map(s => s.score).join("-")
     }
 
-    const getFixtureSwap = (): FixtureSwap | null => {
-        if (!phase.value || !isRoundRobin.value || !nextFixture.value || !nextFreeFixture.value) {
-            return null
-        }
-
-        const [roundA, fixtureIndexA] = getRoundWithIndex(nextFixture.value.id)
-        const [roundB, fixtureIndexB] = getRoundWithIndex(nextFreeFixture.value.id)
-
-        if (!roundA || !roundB) {
-            return null
-        }
-
-        if (roundA.index === roundB.index && fixtureIndexA === fixtureIndexB) {
-            return null
-        }
-
-        return {
-            id: "",
-
-            roundAIndex: roundA.index,
-            fixtureAIndex: fixtureIndexA,
-            fixtureAId: nextFixture.value.id,
-
-            roundBIndex: roundB.index,
-            fixtureBIndex: fixtureIndexB,
-            fixtureBId: nextFreeFixture.value.id,
-
-            timestamp: 0,
-        }
-    }
-
     watch(phase, () => {
         clockable.value = phase.value
     })
@@ -307,8 +252,6 @@ export const usePhase = (p: Phase | null) => {
         phase,
 
         fixtures,
-        fixtureSwaps,
-        unacknowledgedSwap,
         players,
         tables,
         settings,
@@ -348,8 +291,6 @@ export const usePhase = (p: Phase | null) => {
         getScoreDescription,
         pauseClock,
         resumeClock,
-        acknowledgeSwap,
-        getFixtureSwap,
     }
 }
 

@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
-
-import type { Phase } from "@/data/Phase"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
@@ -29,8 +28,11 @@ const {
     freeTables,
     remainingCount,
     nextFixture,
-    getFixtureSwap,
 } = usePhase(currentPhase.value)
+
+const {
+    processSwap,
+} = useFixtureSwaps(currentPhase.value)
 
 const isFixtures = computed(() => uiStore.isFixtures)
 
@@ -59,7 +61,7 @@ const autoStart = () => {
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 
-    processSwap(currentPhase.value)
+    processSwap()
 }
 
 const autoComplete = () => {
@@ -77,7 +79,7 @@ const autoComplete = () => {
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 
-    processSwap(currentPhase.value)
+    processSwap()
 }
 
 const autoCompleteRemaining = () => {
@@ -92,22 +94,6 @@ const autoCompleteRemaining = () => {
 
     const message = phaseEvents.phaseAutoCompleted()
     flyerStore.addPhaseEvent(currentPhase.value, message)
-}
-
-const processSwap = (phase: Phase) => {
-    const swap = getFixtureSwap()
-    if (swap) {
-        // generate this now - the computed properties update after the swap...
-        const message = phaseEvents.fixturesSwapped(swap)
-
-        // if necessary, swap the next fixture in the current round (or
-        // the first fixture in the next round) with the first upcoming fixture
-        // where all players are free
-        const didSwap = flyerStore.swapFixtures(phase, swap)
-        if (didSwap) {
-            flyerStore.addPhaseEvent(phase, message)
-        }
-    }
 }
 </script>
 

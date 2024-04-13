@@ -7,6 +7,7 @@ import TableBadge from "./TableBadge.vue"
 
 import { useEnv } from "@/composables/useEnv"
 import { useFixture } from "@/composables/useFixture"
+import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useRound } from "@/composables/useRound"
@@ -39,14 +40,17 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    unacknowledgedSwap,
     currentRound,
     nextFreeFixture,
     canStartFixture,
     getRound,
     getTable,
-    acknowledgeSwap,
 } = usePhase(currentPhase.value)
+
+const {
+    unacknowledgedSwap,
+    acknowledgeSwap,
+} = useFixtureSwaps(currentPhase.value)
 
 const {
     status,
@@ -78,6 +82,9 @@ watch(props, () => {
     prioritisationStatus.value = status
 
     if (status !== Prioritisation.None) {
+        // MEDIUM: probably shouldn't be doing this in a UI component...
+        // do it after a swap happens in the flyer store, and respond to those
+        // swaps here.
         acknowledgeSwap(unacknowledgedSwap.value.id)
     }
 })

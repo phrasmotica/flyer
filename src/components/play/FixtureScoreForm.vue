@@ -8,9 +8,9 @@ import PlayerScoreInput from "./PlayerScoreInput.vue"
 import PlayerWinInput from "./PlayerWinInput.vue"
 
 import { useFixture } from "@/composables/useFixture"
+import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
-import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useTweaks } from "@/composables/useTweaks"
 
@@ -37,10 +37,11 @@ const {
 const {
     settings,
     getRound,
-    getFixtureSwap,
 } = usePhase(currentPhase.value)
 
-const phaseEvents = usePhaseEvents(currentPhase.value)
+const {
+    processSwap,
+} = useFixtureSwaps(currentPhase.value)
 
 const {
     isWinnerStaysOn,
@@ -108,19 +109,7 @@ const updateScores = (finish: boolean) => {
 
     flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
 
-    const swap = getFixtureSwap()
-    if (swap) {
-        // generate this now - the computed properties update after the swap...
-        const message = phaseEvents.fixturesSwapped(swap)
-
-        // if necessary, swap the next fixture in the current round (or
-        // the first fixture in the next round) with the first upcoming fixture
-        // where all players are free
-        const didSwap = flyerStore.swapFixtures(currentPhase.value, swap)
-        if (didSwap) {
-            flyerStore.addPhaseEvent(currentPhase.value, message)
-        }
-    }
+    processSwap()
 
     hide()
 }
