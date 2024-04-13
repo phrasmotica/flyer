@@ -373,6 +373,18 @@ export const useFlyerStore = defineStore("flyer", () => {
 
     const clear = () => flyer.value = null
 
+    const autoStartFixture = (phase: Phase, fixture: Fixture, tableId: string) => {
+        console.debug("Auto-starting fixture " + fixture.id)
+
+        const breakerId = getRandom(fixture.scores).playerId
+
+        assignTable(phase, fixture.id, tableId, false)
+        assignBreaker(phase, fixture.id, breakerId, false)
+        startFixture(phase, fixture.id, false)
+
+        addPhaseEvent(phase, `Fixture ${fixture.id} was auto-started.`, PhaseEventLevel.Internal)
+    }
+
     const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
@@ -448,6 +460,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPlayOff,
         clear,
 
+        autoStartFixture,
         autoCompleteFixture,
         autoCompletePhase,
         swapFixtures,

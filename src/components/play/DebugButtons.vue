@@ -5,6 +5,8 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
 
+import type { Phase } from "@/data/Phase"
+
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
@@ -24,6 +26,7 @@ const phaseEvents = usePhaseEvents(currentPhase.value)
 const {
     settings,
     tables,
+    freeTables,
     remainingCount,
     nextFixture,
     getFixtureSwap,
@@ -31,12 +34,33 @@ const {
 
 const isFixtures = computed(() => uiStore.isFixtures)
 
+const showAutoStartButton = computed(() => {
+    return remainingCount.value > 0 || !props.hideInstead
+})
+
 const showAutoCompleteButton = computed(() => {
     return remainingCount.value > 0 || !props.hideInstead
 })
 
 // LOW: compute the correct race-to for the next fixture
 const raceTo = computed(() => settings.value.raceTo)
+
+const autoStart = () => {
+    if (!currentPhase.value || !nextFixture.value || freeTables.value.length <= 0) {
+        return
+    }
+
+    const message = phaseEvents.fixtureStarted(nextFixture.value)
+
+    flyerStore.autoStartFixture(
+        currentPhase.value,
+        nextFixture.value,
+        freeTables.value[0].id)
+
+    flyerStore.addPhaseEvent(currentPhase.value, message)
+
+    processSwap(currentPhase.value)
+}
 
 const autoComplete = () => {
     if (!currentPhase.value || !nextFixture.value) {
@@ -53,19 +77,7 @@ const autoComplete = () => {
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 
-    const swap = getFixtureSwap()
-    if (swap) {
-        // generate this now - the computed properties update after the swap...
-        const message = phaseEvents.fixturesSwapped(swap)
-
-        // if necessary, swap the next fixture in the current round (or
-        // the first fixture in the next round) with the first upcoming fixture
-        // where all players are free
-        const didSwap = flyerStore.swapFixtures(currentPhase.value, swap)
-        if (didSwap) {
-            flyerStore.addPhaseEvent(currentPhase.value, message)
-        }
-    }
+    processSwap(currentPhase.value)
 }
 
 const autoCompleteRemaining = () => {
@@ -81,11 +93,35 @@ const autoCompleteRemaining = () => {
     const message = phaseEvents.phaseAutoCompleted()
     flyerStore.addPhaseEvent(currentPhase.value, message)
 }
+
+const processSwap = (phase: Phase) => {
+    const swap = getFixtureSwap()
+    if (swap) {
+        // generate this now - the computed properties update after the swap...
+        const message = phaseEvents.fixturesSwapped(swap)
+
+        // if necessary, swap the next fixture in the current round (or
+        // the first fixture in the next round) with the first upcoming fixture
+        // where all players are free
+        const didSwap = flyerStore.swapFixtures(phase, swap)
+        if (didSwap) {
+            flyerStore.addPhaseEvent(phase, message)
+        }
+    }
+}
 </script>
 
 <template>
     <div>
         <!-- debug stuff, no need to localise -->
+        <Button
+            v-if="showAutoStartButton"
+            class="mb-2"
+            label="Auto-start"
+            severity="help"
+            :disabled="!isFixtures || remainingCount <= 0"
+            @click="autoStart" />
+
         <Button
             v-if="showAutoCompleteButton"
             class="mb-2"
