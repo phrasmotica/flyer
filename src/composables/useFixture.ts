@@ -64,7 +64,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const isDraw = computed(() => uniqueScores.value.length <= 1)
 
-    const hasTable = computed(() => !!fixture.value?.tableId)
     const hasStarted = computed(() => !!fixture.value?.startTime)
     const hasFinished = computed(() => !!fixture.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
@@ -165,7 +164,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         players,
         isWalkover,
         elapsedMilliseconds,
-        hasTable,
         hasStarted,
         hasFinished,
         isInProgress,

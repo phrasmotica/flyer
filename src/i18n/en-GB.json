@@ -12,7 +12,8 @@
         "close": "Close",
         "update": "Update",
         "finish": "Finish",
-        "error": "Error"
+        "error": "Error",
+        "assign": "Assign"
     },
     "fixture": {
         "unknownStatus": "???",

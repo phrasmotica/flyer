@@ -172,7 +172,9 @@ export const usePhase = (p: Phase | null) => {
         })
     }
 
-    const getPlayerName = (id: string) => players.value.find(p => p.id === id)?.name
+    const getPlayer = (id: string) => players.value.find(p => p.id === id)
+
+    const getPlayerName = (id: string) => getPlayer(id)?.name
 
     const getTable = (id: string) => tables.value.find(p => p.id === id)
 
@@ -222,6 +224,10 @@ export const usePhase = (p: Phase | null) => {
             }
 
             return FixtureStatus.WaitingForAssignment
+        }
+
+        if (!fixture.breakerId) {
+            return FixtureStatus.WaitingForBreaker
         }
 
         return FixtureStatus.ReadyToStart
@@ -297,6 +303,7 @@ export const usePhase = (p: Phase | null) => {
         canStartFixture,
         canPrioritiseFixture,
         isBusy,
+        getPlayer,
         getPlayerName,
         getTable,
         getRound,
@@ -318,6 +325,7 @@ export enum FixtureStatus {
     WaitingForRound,
     WaitingForTable,
     WaitingForAssignment,
+    WaitingForBreaker,
     ReadyToStart,
     InProgress,
     Finished,

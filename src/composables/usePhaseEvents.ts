@@ -6,12 +6,13 @@ import type { Phase } from "@/data/Phase"
 export const usePhaseEvents = (p: Phase | null) => {
     const {
         settings,
+        players,
         tables,
         getFixtureDescription, // MEDIUM: move this method into this composable
         getScoreDescription,
     } = usePhase(p)
 
-    const fixtureAssigned = (f: Fixture, tableId: string) => {
+    const fixtureAssignedTable = (f: Fixture, tableId: string) => {
         const description = getFixtureDescription(f)
         const table = tables.value.find(t => t.id === tableId)
         if (!table) {
@@ -19,6 +20,16 @@ export const usePhaseEvents = (p: Phase | null) => {
         }
 
         return `${description} was assigned to ${table.name}.`
+    }
+
+    const fixtureAssignedBreaker = (f: Fixture, breakerId: string) => {
+        const description = getFixtureDescription(f)
+        const player = players.value.find(p => p.id === breakerId)
+        if (!player) {
+            return `An unknown player will break first in ${description}.`
+        }
+
+        return `${player.name} will break first in ${description}.`
     }
 
     const fixtureStarted = (f: Fixture) => `${getFixtureDescription(f)} was started.`
@@ -34,7 +45,8 @@ export const usePhaseEvents = (p: Phase | null) => {
     }
 
     return {
-        fixtureAssigned,
+        fixtureAssignedTable,
+        fixtureAssignedBreaker,
         fixtureStarted,
         fixtureFinished,
         fixtureAutoCompleted,

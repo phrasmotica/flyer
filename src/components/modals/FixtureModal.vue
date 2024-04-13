@@ -51,6 +51,7 @@ const {
     getRoundWithIndex,
     getTable,
     getFixtureStatus,
+    getPlayer,
     getPlayerName,
 } = usePhase(currentPhase.value)
 
@@ -71,7 +72,6 @@ const {
     comment,
     players,
     elapsedMilliseconds,
-    hasTable,
     hasStarted,
     hasFinished,
     isInProgress,
@@ -127,16 +127,27 @@ const assignTable = () => {
 
     flyerStore.assignTable(currentPhase.value, fixture.value.id, tableId.value)
 
-    const message = phaseEvents.fixtureAssigned(fixture.value, tableId.value)
+    const message = phaseEvents.fixtureAssignedTable(fixture.value, tableId.value)
+    flyerStore.addPhaseEvent(currentPhase.value, message)
+}
+
+const assignBreaker = () => {
+    if (!currentPhase.value || !fixture.value || !breakerId.value) {
+        return
+    }
+
+    flyerStore.assignBreaker(currentPhase.value, fixture.value.id, breakerId.value)
+
+    const message = phaseEvents.fixtureAssignedBreaker(fixture.value, breakerId.value)
     flyerStore.addPhaseEvent(currentPhase.value, message)
 }
 
 const startFixture = () => {
-    if (!currentPhase.value || !fixture.value || !table.value) {
+    if (!currentPhase.value || !fixture.value || !table.value || !breaker.value) {
         return
     }
 
-    flyerStore.startFixture(currentPhase.value, fixture.value.id, breakerId.value)
+    flyerStore.startFixture(currentPhase.value, fixture.value.id)
 
     const message = phaseEvents.fixtureStarted(fixture.value)
     flyerStore.addPhaseEvent(currentPhase.value, message)
@@ -187,6 +198,7 @@ const updateScores = (finish: boolean) => {
 }
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
+const breaker = computed(() => getPlayer(fixture.value?.breakerId || ""))
 
 const winner = computed(() => {
     const maxScore = scores.value.reduce((a, b) => Math.max(a, b), -1)
@@ -215,9 +227,10 @@ const freeTablesOptions = computed(() => freeTables.value.map(t => ({
     value: t.id,
 })))
 
-const canAssign = computed(() => !!tableId.value)
+const canAssignTable = computed(() => !!tableId.value)
+const canAssignBreaker = computed(() => !!breakerId.value)
 
-const canStart = computed(() => !!breakerId.value && canStartFixture(fixture.value, currentRoundStatus.value))
+const canStart = computed(() => canStartFixture(fixture.value, currentRoundStatus.value))
 
 const fixtureStatus = computed(() => getFixtureStatus(fixture.value, currentRoundStatus.value))
 
@@ -309,7 +322,10 @@ const header = computed(() => {
         v-model:visible="visible"
         :header="header"
         @hide="hide">
-        <div v-if="hasStarted" id="score-inputs" class="mb-2">
+        <!-- HIGH: this component is a fucking mess. Render each part of it
+        according to conditions, rather than rendering a distinct set of
+        elements for each fixtures status. Also split it into smaller components -->
+        <div v-if="hasStarted">
             <!-- MEDIUM: this is getting crowded. Design a better layout -->
             <div class="mb-2">
                 <Clock
@@ -348,7 +364,7 @@ const header = computed(() => {
             </div>
 
             <!-- MEDIUM: create a component for this -->
-            <div>
+            <div class="mb-2">
                 <div v-if="!hasFinished" class="flex p-fluid mt-2">
                     <Textarea
                         class="text-xs md:text-sm"
@@ -361,77 +377,88 @@ const header = computed(() => {
                     <CommentMessage :comment="comment" />
                 </div>
             </div>
+
+            <div v-if="!hasFinished" class="p-fluid">
+                <div class="grid m-0">
+                    <div class="col-6 p-0 pr-1">
+                        <Button
+                            type="button"
+                            :label="t('common.close')"
+                            severity="secondary"
+                            @click="hide" />
+                    </div>
+
+                    <div class="col-6 p-0 pl-1">
+                        <SplitButton v-if="canBeFinished"
+                            :label="t('common.finish')"
+                            :model="[
+                                {
+                                    label: t('common.update'),
+                                    command: () => updateScores(false),
+                                },
+                            ]"
+                            @click="() => updateScores(true)" />
+
+                        <Button v-else
+                            type="button"
+                            :label="t('common.update')"
+                            severity="info"
+                            @click="() => updateScores(false)" />
+                    </div>
+                </div>
+            </div>
         </div>
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForAssignment">
-            <!-- HIGH: this component is a fucking mess. Split it into smaller components -->
             <div class="p-fluid">
                 <p class="m-0 text-center">
                     {{ t('fixture.pleaseAssignTable') }}
                 </p>
 
-                <LabelledDropdown v-if="!hasTable"
+                <LabelledDropdown
                     noLocalise
                     :label="t('table.table')"
                     :options="freeTablesOptions"
                     v-model="tableId" />
 
-                <Button v-if="!hasTable"
+                <Button
                     type="button"
-                    :label="'Assign'"
-                    :disabled="!canAssign"
+                    :label="t('common.assign')"
+                    :disabled="!canAssignTable"
                     @click="assignTable" />
             </div>
         </div>
-        <div v-else-if="fixtureStatus === FixtureStatus.ReadyToStart">
-            <p class="m-0 text-center">
-                {{ t('fixture.whoWillBreakFirst') }}
-            </p>
+        <div v-else-if="fixtureStatus === FixtureStatus.WaitingForBreaker">
+            <div class="p-fluid">
+                <p class="m-0 text-center">
+                    {{ t('fixture.whoWillBreakFirst') }}
+                </p>
 
-            <div class="grid m-0">
-                <PlayerBreakInput
-                    v-for="p in players"
-                    class="col-6"
-                    :fixture="fixture"
-                    :playerId="p"
-                    :breakerId="breakerId"
-                    @setBreakerId="breakerId = p" />
+                <div class="grid m-0">
+                    <PlayerBreakInput
+                        v-for="p in players"
+                        class="col-6"
+                        :fixture="fixture"
+                        :playerId="p"
+                        :breakerId="breakerId"
+                        @setBreakerId="breakerId = p" />
+                </div>
+
+                <Button
+                    type="button"
+                    :label="t('common.assign')"
+                    :disabled="!canAssignBreaker"
+                    @click="assignBreaker" />
             </div>
         </div>
 
-        <div class="p-fluid">
-            <Button v-if="hasTable && !hasStarted"
+        <!-- HIGH: show assigned table and breaker if the fixture is ready to start -->
+
+        <div v-else class="p-fluid">
+            <Button v-if="!hasStarted"
                 type="button"
                 :label="startButtonText"
                 :disabled="!canStart"
                 @click="startFixture" />
-
-            <div v-if="isInProgress" class="grid m-0">
-                <div class="col-6 p-0 pr-1">
-                    <Button
-                        type="button"
-                        :label="t('common.close')"
-                        severity="secondary"
-                        @click="hide" />
-                </div>
-
-                <div class="col-6 p-0 pl-1">
-                    <SplitButton v-if="canBeFinished"
-                        :label="t('common.finish')"
-                        :model="[
-                            {
-                                label: t('common.update'),
-                                command: () => updateScores(false),
-                            },
-                        ]"
-                        @click="() => updateScores(true)" />
-
-                    <Button v-else
-                        type="button"
-                        :label="t('common.update')"
-                        severity="info"
-                        @click="() => updateScores(false)" />
-                </div>
-            </div>
         </div>
     </Dialog>
 </template>

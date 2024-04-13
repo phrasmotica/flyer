@@ -187,12 +187,24 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const startFixture = (phase: Phase, id: string, breakerId: string, addEvent = true) => {
+    const assignBreaker = (phase: Phase, id: string, breakerId: string, addEvent = true) => {
+        for (const r of phase.rounds) {
+            const idx = r.fixtures.findIndex(f => f.id === id)
+            if (idx >= 0) {
+                r.fixtures[idx].breakerId = breakerId
+
+                if (addEvent) {
+                    addPhaseEvent(phase, `${breakerId} will break first in fixture ${id}.`, PhaseEventLevel.Internal)
+                }
+            }
+        }
+    }
+
+    const startFixture = (phase: Phase, id: string, addEvent = true) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === id)
             if (idx >= 0) {
                 r.fixtures[idx].startTime = Date.now()
-                r.fixtures[idx].breakerId = breakerId
 
                 if (addEvent) {
                     addPhaseEvent(phase, `Fixture ${id} was started.`, PhaseEventLevel.Internal)
@@ -372,7 +384,8 @@ export const useFlyerStore = defineStore("flyer", () => {
         }))
 
         assignTable(phase, fixture.id, tableId, false)
-        startFixture(phase, fixture.id, breakerId, false)
+        assignBreaker(phase, fixture.id, breakerId, false)
+        startFixture(phase, fixture.id, false)
 
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
         updateScores(phase, fixture.id, newScores, true, false)
@@ -427,6 +440,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         start,
         assignTable,
+        assignBreaker,
         startFixture,
         addPhaseEvent,
         updateComment,
