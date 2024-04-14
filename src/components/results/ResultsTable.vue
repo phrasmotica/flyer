@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
+import type { DataTableExpandedRows } from "primevue/datatable"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
 import { useFlyerStore } from "@/stores/flyer"
+import { useFixtureList } from "@/composables/useFixtureList"
+import PlayerRecord from "./PlayerRecord.vue"
 
 const { t } = useI18n()
 
@@ -30,9 +33,25 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    getFixtures,
+} = useFixtureList(mainPhase.value)
+
+const {
     settings,
     isWinnerStaysOn,
 } = usePhaseSettings(mainPhase.value)
+
+const expandedRows = ref(<DataTableExpandedRows>{})
+
+const showRank = computed(() => true)
+const showName = computed(() => true)
+const showPlayed = computed(() => props.isInProgress && !props.isPinned)
+const showWins = computed(() => true)
+const showDraws = computed(() => settings.value.allowDraws && !props.isPinned)
+const showLosses = computed(() => !isWinnerStaysOn.value)
+const showDiff = computed(() => !isWinnerStaysOn.value && !props.isPinned)
+const showRunouts = computed(() => (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
+const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
 const rowClass = (data: any) => {
     if (props.isInProgress) {
@@ -53,16 +72,6 @@ const getPlayOffIndex = (playerId: string) => {
     return incompletePlayOffs.findIndex(p => p.players.some(x => x.id === playerId))
 }
 
-const showRank = computed(() => true)
-const showName = computed(() => true)
-const showPlayed = computed(() => props.isInProgress && !props.isPinned)
-const showWins = computed(() => true)
-const showDraws = computed(() => settings.value.allowDraws && !props.isPinned)
-const showLosses = computed(() => !isWinnerStaysOn.value)
-const showDiff = computed(() => !isWinnerStaysOn.value && !props.isPinned)
-const showRunouts = computed(() => (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
-const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
-
 const showPlayOffIndex = (playerId: string) => {
     return !props.isInProgress && !allPlayOffsComplete.value && getPlayOffIndex(playerId) >= 0
 }
@@ -70,8 +79,14 @@ const showPlayOffIndex = (playerId: string) => {
 
 <template>
     <!-- LOW: ensure table does not need to scroll sideways on narrow screens -->
-    <DataTable size="small" :value="overallStandings" :rowClass="rowClass">
+    <DataTable
+        size="small" dataKey="playerId"
+        v-model:expandedRows="expandedRows"
+        :value="overallStandings"
+        :rowClass="rowClass">
         <Column v-if="showRank" field="rank" :header="t('results.rankHeader')" />
+
+        <Column expander />
 
         <Column v-if="showName" field="name" :header="t('results.nameHeader')">
             <template #body="slotData">
@@ -99,6 +114,12 @@ const showPlayOffIndex = (playerId: string) => {
                 {{ getPlayOffRank(slotData.data.playerId) || t('results.noPlayOffRank') }}
             </template>
         </Column>
+
+        <template #expansion="slotProps">
+            <div class="p-2">
+                <PlayerRecord :playerId="slotProps.data.playerId" />
+            </div>
+        </template>
     </DataTable>
 </template>
 

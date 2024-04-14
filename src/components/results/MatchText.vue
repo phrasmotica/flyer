@@ -6,7 +6,6 @@ import { useSorted } from "@vueuse/core"
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePlayers } from "@/composables/usePlayers"
-import { usePodium } from "@/composables/usePodium"
 import { useRounds } from "@/composables/useRounds"
 
 import type { Fixture } from "@/data/Fixture"
@@ -16,6 +15,7 @@ import { useFlyerStore } from "@/stores/flyer"
 const { t } = useI18n()
 
 const props = defineProps<{
+    playerId: string
     fixture: Fixture
 }>()
 
@@ -34,21 +34,25 @@ const {
 } = usePlayers(mainPhase.value)
 
 const {
-    winner,
-} = usePodium(mainPhase.value)
-
-const {
     fixture,
-    scores,
     isWalkover,
-    getOpponent,
-} = useFixture("victoryText", props.fixture, getRound(props.fixture.id), mainPhase.value)
+} = useFixture("matchText", props.fixture, getRound(props.fixture.id), mainPhase.value)
 
 watch(props, () => {
     fixture.value = props.fixture
 })
 
-const sortedScores = useSorted(scores, (a, b) => b - a)
+const sortedScores = useSorted(fixture.value?.scores || [], (s, t) => {
+    if (s.playerId === props.playerId) {
+        return -1
+    }
+
+    if (t.playerId === props.playerId) {
+        return 1
+    }
+
+    return 0
+})
 
 const scoreText = computed(() => {
     // MEDIUM: use usePhase().getScoreDescription()
@@ -56,10 +60,13 @@ const scoreText = computed(() => {
         return t('podium.walkover')
     }
 
-    return sortedScores.value.join(t('podium.scoreJoiner'))
+    return sortedScores.value.map(s => s.score).join(t('podium.scoreJoiner'))
 })
 
-const opponentName = computed(() => getPlayerName(getOpponent(winner.value?.id || "")))
+const opponentName = computed(() => {
+    const firstOtherScore = sortedScores.value.find(s => s.playerId !== props.playerId)!
+    return getPlayerName(firstOtherScore.playerId)
+})
 
 const roundName = computed(() => {
     if (fixture.value) {
