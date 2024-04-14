@@ -8,6 +8,7 @@ import TableSummary from "./TableSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useTables } from "@/composables/useTables"
 
 import type { Fixture } from "@/data/Fixture"
@@ -32,9 +33,12 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    isInProgress,
     maxTableCount,
 } = usePhase(currentPhase.value)
+
+const {
+    isInProgress,
+} = usePhaseTiming(currentPhase.value)
 
 const {
     tables,

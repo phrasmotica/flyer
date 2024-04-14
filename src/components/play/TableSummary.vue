@@ -7,7 +7,7 @@ import TableBadge from "./TableBadge.vue"
 import { useFixture } from "@/composables/useFixture"
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
+import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { usePlayers } from "@/composables/usePlayers"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRounds } from "@/composables/useRounds"
@@ -35,7 +35,7 @@ const {
 
 const {
     isInProgress,
-} = usePhase(currentPhase.value)
+} = usePhaseTiming(currentPhase.value)
 
 const {
     getFixtureOnTable,

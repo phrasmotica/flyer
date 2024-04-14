@@ -7,6 +7,7 @@ import { usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
 import { usePodium } from "@/composables/usePodium"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useStandings } from "@/composables/useStandings"
 
 import type { Flyer } from "@/data/Flyer"
@@ -32,8 +33,11 @@ const {
 
 const {
     phase,
-    durationMinutes,
 } = usePhase(mainPhase.value)
+
+const {
+    durationMinutes,
+} = usePhaseTiming(mainPhase.value)
 
 const {
     players,

@@ -13,8 +13,8 @@ import PlayButtons from "@/components/play/PlayButtons.vue"
 import PlaySections from "@/components/play/PlaySections.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
@@ -43,7 +43,7 @@ const {
 
 const {
     hasFinished,
-} = usePhase(currentPhase.value)
+} = usePhaseTiming(currentPhase.value)
 
 const {
     settings,

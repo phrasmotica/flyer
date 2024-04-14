@@ -9,6 +9,7 @@ import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRounds } from "@/composables/useRounds"
 
@@ -38,8 +39,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    hasStarted,
-    hasFinished,
     readyToGenerateNextRound,
 } = usePhase(currentPhase.value)
 
@@ -55,6 +54,11 @@ const {
 const {
     settings,
 } = usePhaseSettings(currentPhase.value)
+
+const {
+    hasStarted,
+    hasFinished,
+} = usePhaseTiming(currentPhase.value)
 
 const {
     isHistoric,

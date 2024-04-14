@@ -7,6 +7,7 @@ import Price from "./Price.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
+import { usePhaseTiming } from "@/composables/usePhaseTiming"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -17,13 +18,16 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    isInProgress,
     clockDisplay,
     totalCost,
-    estimatedDurationMinutes,
     pauseClock,
     resumeClock,
 } = usePhase(currentPhase.value)
+
+const {
+    isInProgress,
+    estimatedDurationMinutes,
+} = usePhaseTiming(currentPhase.value)
 
 const [showPrice, toggleShowPrice] = useToggle()
 

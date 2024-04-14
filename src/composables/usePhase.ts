@@ -1,13 +1,12 @@
 import { computed, ref, watch } from "vue"
-import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 
 import { useClock } from "./useClock"
 import { useFixtureList } from "./useFixtureList"
 import { usePhaseSettings } from "./usePhaseSettings"
+import { usePhaseTiming } from "./usePhaseTiming"
 import { usePlayers } from "./usePlayers"
 import { RoundStatus } from "./useRound"
 import { useRounds } from "./useRounds"
-import { useScheduler } from "./useScheduler"
 import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
@@ -45,6 +44,10 @@ export const usePhase = (p: Phase | null) => {
         isWinnerStaysOn,
     } = usePhaseSettings(phase.value)
 
+    const {
+        durationMilliseconds,
+    } = usePhaseTiming(phase.value)
+
     const eventLog = computed(() => phase.value?.eventLog || [])
 
     const {
@@ -53,14 +56,6 @@ export const usePhase = (p: Phase | null) => {
         pauseClock,
         resumeClock,
     } = useClock("PhaseClock " + settings.value.name, phase.value)
-
-    const {
-        scheduler,
-    } = useScheduler(settings.value)
-
-    const hasStarted = computed(() => !!phase.value?.startTime)
-    const hasFinished = computed(() => !!phase.value?.finishTime)
-    const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const readyToGenerateNextRound = computed(() => {
         if (!settings.value.randomlyDrawAllRounds) {
@@ -73,30 +68,6 @@ export const usePhase = (p: Phase | null) => {
 
         const lastGeneratedRound = generatedRounds.value.at(-1)
         return lastGeneratedRound && lastGeneratedRound.fixtures.every(f => f.startTime && f.finishTime)
-    })
-
-    const estimatedDurationMinutes = computed(() => {
-        if (!phase.value) {
-            return 0
-        }
-
-        return scheduler.value.estimateDurationForPhase(phase.value)
-    })
-
-    const durationMinutes = computed(() => {
-        if (!phase.value?.startTime || !phase.value.finishTime) {
-            return null
-        }
-
-        return differenceInMinutes(phase.value.finishTime, phase.value.startTime)
-    })
-
-    const durationMilliseconds = computed(() => {
-        if (!phase.value?.startTime || !phase.value.finishTime) {
-            return null
-        }
-
-        return differenceInMilliseconds(phase.value.finishTime, phase.value.startTime)
     })
 
     const clockDisplay = computed(() => durationMilliseconds.value || elapsedMilliseconds.value)
@@ -209,14 +180,7 @@ export const usePhase = (p: Phase | null) => {
 
         eventLog,
 
-        elapsedMilliseconds,
-        hasStarted,
-        hasFinished,
-        isInProgress,
         readyToGenerateNextRound,
-        estimatedDurationMinutes,
-        durationMinutes,
-        durationMilliseconds,
         clockDisplay,
         totalCost,
         freeTables,
