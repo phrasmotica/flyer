@@ -55,7 +55,6 @@ const sortedScores = useSorted(fixture.value?.scores || [], (s, t) => {
 })
 
 const scoreText = computed(() => {
-    // MEDIUM: use usePhase().getScoreDescription()
     if (isWalkover.value) {
         return t('podium.walkover')
     }
