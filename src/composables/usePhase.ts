@@ -192,20 +192,6 @@ export const usePhase = (p: Phase | null) => {
         return FixtureStatus.ReadyToStart
     }
 
-    const getFixtureDescription = (fixture: Fixture | undefined) => {
-        if (!fixture) {
-            return "???"
-        }
-
-        return fixture.scores.map(s => {
-            if (s.isBye) {
-                return "(bye)"
-            }
-
-            return getPlayerName(s.playerId)
-        }).join(" v ")
-    }
-
     const getScoreDescription = (fixture: Fixture) => {
         if (fixture.scores.some(s => s.isBye)) {
             return "W/O"
@@ -241,7 +227,6 @@ export const usePhase = (p: Phase | null) => {
         canPrioritiseFixture,
         isBusy,
         getFixtureStatus,
-        getFixtureDescription,
         getScoreDescription,
         pauseClock,
         resumeClock,

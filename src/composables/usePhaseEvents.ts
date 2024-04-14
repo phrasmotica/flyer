@@ -11,7 +11,6 @@ import type { Phase } from "@/data/Phase"
 export const usePhaseEvents = (p: Phase | null) => {
     const {
         phase,
-        getFixtureDescription, // MEDIUM: move this method into this composable
         getScoreDescription,
     } = usePhase(p)
 
@@ -21,6 +20,7 @@ export const usePhaseEvents = (p: Phase | null) => {
 
     const {
         players,
+        getPlayerName,
     } = usePlayers(phase.value)
 
     const {
@@ -30,6 +30,20 @@ export const usePhaseEvents = (p: Phase | null) => {
     const {
         tables,
     } = useTables(phase.value)
+
+    const getFixtureDescription = (fixture: Fixture | undefined) => {
+        if (!fixture) {
+            return "???"
+        }
+
+        return fixture.scores.map(s => {
+            if (s.isBye) {
+                return "(bye)"
+            }
+
+            return getPlayerName(s.playerId)
+        }).join(" v ")
+    }
 
     const fixtureAssignedTable = (f: Fixture, tableId: string) => {
         const description = getFixtureDescription(f)

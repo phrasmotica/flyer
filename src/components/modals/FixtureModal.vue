@@ -102,7 +102,6 @@ const header = computed(() => {
         v-model:visible="visible"
         :header="header"
         @hide="hide">
-        <!-- MEDIUM: this is getting crowded. Design a better layout -->
         <div>
             <FixtureInfo :fixture="fixture" />
         </div>
