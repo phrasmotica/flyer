@@ -48,8 +48,6 @@ export const usePhase = (p: Phase | null) => {
         durationMilliseconds,
     } = usePhaseTiming(phase.value)
 
-    const eventLog = computed(() => phase.value?.eventLog || [])
-
     const {
         clockable,
         elapsedMilliseconds,
@@ -177,8 +175,6 @@ export const usePhase = (p: Phase | null) => {
 
     return {
         phase,
-
-        eventLog,
 
         readyToGenerateNextRound,
         clockDisplay,
