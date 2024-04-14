@@ -103,6 +103,7 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const isRandomDraw = computed(() => isKnockout.value && settings.value.randomlyDrawAllRounds)
 
     const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
+    const usesRunouts = computed(() => isRoundRobin.value && settings.value.tieBreaker === TieBreaker.Runouts)
 
     return {
         settings,
@@ -128,6 +129,8 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
         isRoundRobin,
         isWinnerStaysOn,
         isRandomDraw,
+
         usesPlayOff,
+        usesRunouts,
     }
 }

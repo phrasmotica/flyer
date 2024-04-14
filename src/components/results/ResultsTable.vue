@@ -34,19 +34,21 @@ const {
 const {
     settings,
     isWinnerStaysOn,
+    usesRunouts,
 } = usePhaseSettings(mainPhase.value)
 
 const expandedRows = ref(<DataTableExpandedRows>{})
 
 const showRank = computed(() => true)
+const showExpander = computed(() => !props.isPinned)
 const showName = computed(() => true)
 const showPlayed = computed(() => props.isInProgress && !props.isPinned)
-const showWins = computed(() => true)
+const showWins = computed(() => !props.isPinned)
 const showDraws = computed(() => settings.value.allowDraws && !props.isPinned)
-const showLosses = computed(() => !isWinnerStaysOn.value)
-const showDiff = computed(() => !isWinnerStaysOn.value && !props.isPinned)
-const showRunouts = computed(() => (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
-const showPoints = computed(() => !isWinnerStaysOn.value && !props.isPinned)
+const showLosses = computed(() => !isWinnerStaysOn.value && !props.isPinned)
+const showRunouts = computed(() => usesRunouts.value && (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
+const showPoints = computed(() => !isWinnerStaysOn.value)
+const showDiff = computed(() => !isWinnerStaysOn.value)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
 const rowClass = (data: any) => {
@@ -82,7 +84,7 @@ const showPlayOffIndex = (playerId: string) => {
         :rowClass="rowClass">
         <Column v-if="showRank" field="rank" :header="t('results.rankHeader')" />
 
-        <Column expander />
+        <Column v-if="showExpander" expander class="w-1rem" />
 
         <Column v-if="showName" field="name" :header="t('results.nameHeader')">
             <template #body="slotData">
@@ -101,8 +103,6 @@ const showPlayOffIndex = (playerId: string) => {
 
         <Column v-if="showLosses" field="losses" :header="t('results.lossesHeader')" />
 
-        <Column v-if="showDiff" field="diff" :header="t('results.diffHeader')" />
-
         <Column v-if="showRunouts" field="runouts" :header="t('results.runoutsHeader')" />
 
         <Column v-if="showPoints" field="points" :header="t('results.pointsHeader')">
@@ -110,6 +110,8 @@ const showPlayOffIndex = (playerId: string) => {
                 <span class="font-bold">{{ slotData.data.points }}</span>
             </template>
         </Column>
+
+        <Column v-if="showDiff" field="diff" :header="t('results.diffHeader')" />
 
         <Column v-if="showPlayOffRank" :header="t('results.playOffRankHeader')">
             <template #body="slotData">
