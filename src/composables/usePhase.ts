@@ -10,6 +10,7 @@ import { useRounds } from "./useRounds"
 import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
+import { FixtureStatus } from "@/data/FixtureStatus"
 import type { Phase } from "@/data/Phase"
 
 // LOW: ideally this would not have to accept null, but we use it in places
@@ -191,18 +192,4 @@ export const usePhase = (p: Phase | null) => {
         pauseClock,
         resumeClock,
     }
-}
-
-export enum FixtureStatus {
-    Unknown,
-    WaitingForRoundGeneration,
-    WaitingForPreviousResult,
-    WaitingForPlayers,
-    WaitingForRound,
-    WaitingForTable,
-    WaitingForAssignment,
-    WaitingForBreaker,
-    ReadyToStart,
-    InProgress,
-    Finished,
 }

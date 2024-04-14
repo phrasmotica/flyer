@@ -4,12 +4,13 @@ import { useI18n } from "vue-i18n"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
-import { FixtureStatus, usePhase } from "@/composables/usePhase"
+import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
 
 import type { Fixture } from "@/data/Fixture"
+import { FixtureStatus } from "@/data/FixtureStatus"
 
 import { useFlyerStore } from "@/stores/flyer"
 
