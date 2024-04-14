@@ -20,6 +20,7 @@ export const usePhase = (p: Phase | null) => {
 
     const {
         fixtures,
+        getFixtureOnTable,
     } = useFixtureList(phase.value)
 
     const {
@@ -105,7 +106,7 @@ export const usePhase = (p: Phase | null) => {
         return costPerHour.value * durationHours
     })
 
-    const freeTables = computed(() => tables.value.filter(t => !fixtures.value.some(f => f.tableId === t.id && !f.finishTime)))
+    const freeTables = computed(() => tables.value.filter(t => !getFixtureOnTable(t.id)))
 
     const maxTableCount = computed(() => {
         if (isWinnerStaysOn.value) {

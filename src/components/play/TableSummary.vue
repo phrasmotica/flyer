@@ -38,7 +38,7 @@ const {
 } = usePhase(currentPhase.value)
 
 const {
-    fixtures,
+    getFixtureOnTable,
 } = useFixtureList(currentPhase.value)
 
 const {
@@ -53,7 +53,7 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const fixture = computed(() => fixtures.value.find(f => !f.finishTime && f.tableId === props.table.id))
+const fixture = computed(() => getFixtureOnTable(props.table.id))
 
 const {
     elapsedMilliseconds,

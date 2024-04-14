@@ -16,7 +16,7 @@ export const usePhaseEvents = (p: Phase | null) => {
     } = usePhase(p)
 
     const {
-        fixtures,
+        getFixture,
     } = useFixtureList(phase.value)
 
     const {
@@ -58,8 +58,8 @@ export const usePhaseEvents = (p: Phase | null) => {
     const phaseAutoCompleted = () => `${settings.value.name} was auto-completed.`
 
     const fixturesSwapped = (swap: FixtureSwap) => {
-        const f = fixtures.value.find(f => f.id === swap.fixtureAId)
-        const g = fixtures.value.find(f => f.id === swap.fixtureBId)
+        const f = getFixture(swap.fixtureAId)
+        const g = getFixture(swap.fixtureBId)
 
         const fixtureADescription = getFixtureDescription(f)
         const fixtureBDescription = getFixtureDescription(g)

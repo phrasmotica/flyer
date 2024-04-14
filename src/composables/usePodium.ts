@@ -23,7 +23,7 @@ export const usePodium = (p: Phase | null) => {
     } = usePlayers(phase.value)
 
     const {
-        fixtures,
+        getFixtures,
     } = useFixtureList(phase.value)
 
     const {
@@ -84,7 +84,7 @@ export const usePodium = (p: Phase | null) => {
             return []
         }
 
-        const winnerFixtures = fixtures.value.filter(f => f.scores.some(s => s.playerId === winner.value!.id))
+        const winnerFixtures = getFixtures(winner.value.id)
 
         // ensures reverse chronological order
         return winnerFixtures.reverse()
