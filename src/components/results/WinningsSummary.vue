@@ -20,7 +20,9 @@ const {
 <template>
     <div>
         <div v-if="overallMoneyRecipients.length > 0" class="m-0 text-center text-xl">
-            <WinnerWinnings :winnings="overallMoneyRecipients[0]" />
+            <WinnerWinnings
+                :winner="overallMoneyRecipients[0].player"
+                :winnings="overallMoneyRecipients[0]" />
         </div>
 
         <div v-if="overallMoneyRecipients.length > 1" class="border-top-1 mt-1 pt-1">
