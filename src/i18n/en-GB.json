@@ -177,6 +177,7 @@
         "drawsHeader": "D",
         "lossesHeader": "L",
         "diffHeader": "+/-",
+        "pointsHeader": "Pts",
         "runoutsHeader": "R/O",
         "playOffRankHeader": "P/O",
         "noPlayOffRank": "-",

@@ -8,7 +8,6 @@ import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
 import { useFlyerStore } from "@/stores/flyer"
-import { useFixtureList } from "@/composables/useFixtureList"
 import PlayerRecord from "./PlayerRecord.vue"
 
 const { t } = useI18n()
@@ -33,10 +32,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    getFixtures,
-} = useFixtureList(mainPhase.value)
-
-const {
     settings,
     isWinnerStaysOn,
 } = usePhaseSettings(mainPhase.value)
@@ -51,6 +46,7 @@ const showDraws = computed(() => settings.value.allowDraws && !props.isPinned)
 const showLosses = computed(() => !isWinnerStaysOn.value)
 const showDiff = computed(() => !isWinnerStaysOn.value && !props.isPinned)
 const showRunouts = computed(() => (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
+const showPoints = computed(() => !isWinnerStaysOn.value && !props.isPinned)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
 const rowClass = (data: any) => {
@@ -108,6 +104,12 @@ const showPlayOffIndex = (playerId: string) => {
         <Column v-if="showDiff" field="diff" :header="t('results.diffHeader')" />
 
         <Column v-if="showRunouts" field="runouts" :header="t('results.runoutsHeader')" />
+
+        <Column v-if="showPoints" field="points" :header="t('results.pointsHeader')">
+            <template #body="slotData">
+                <span class="font-bold">{{ slotData.data.points }}</span>
+            </template>
+        </Column>
 
         <Column v-if="showPlayOffRank" :header="t('results.playOffRankHeader')">
             <template #body="slotData">

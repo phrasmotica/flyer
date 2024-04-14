@@ -4,6 +4,10 @@ import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
 import type { PlayOff } from "@/data/PlayOff"
 
+const POINTS_PER_WIN = 3
+const POINTS_PER_DRAW = 1
+const POINTS_PER_LOSS = 0
+
 export const useRankings = () => {
     const hasPlayed = (f: Fixture, playerId: string) => {
         if (!f.startTime || !f.finishTime) {
@@ -59,6 +63,12 @@ export const useRankings = () => {
         }).reduce((x, y) => x + y, 0)
     }
 
+    const getPoints = (fixtures: Fixture[], player: string) => {
+        return POINTS_PER_WIN * getWins(fixtures, player)
+            + POINTS_PER_DRAW * getDraws(fixtures, player)
+            + POINTS_PER_LOSS * getLosses(fixtures, player)
+    }
+
     const isIncomplete = (fixtures: Fixture[], player: string) => {
         return fixtures.some(f => f.scores.some(s => s.playerId === player) && !f.finishTime)
     }
@@ -73,20 +83,17 @@ export const useRankings = () => {
     }
 
     const sortRecords = (p: PlayerRecord, q: PlayerRecord) => {
-        if (p.wins !== q.wins) {
-            return q.wins - p.wins
-        }
-
-        if (p.losses !== q.losses) {
-            // fewer losses is better
-            return p.losses - q.losses
+        if (p.points !== q.points) {
+            return q.points - p.points
         }
 
         if (p.diff !== q.diff) {
             return q.diff - p.diff
         }
 
-        // LOW: give 3 points for a win, 1 for a draw, etc?
+        if (p.wins !== q.wins) {
+            return q.wins - p.wins
+        }
 
         return 0
     }
@@ -114,6 +121,7 @@ export const useRankings = () => {
             losses: getLosses(fixtures, p.id),
             diff: getFrameDifference(fixtures, p.id),
             runouts: getRunouts(fixtures, p.id),
+            points: getPoints(fixtures, p.id),
             incomplete: isIncomplete(fixtures, p.id),
             rank: 0,
         }))

@@ -7,6 +7,7 @@ export interface PlayerRecord {
     losses: number
     diff: number
     runouts: number
+    points: number
     incomplete: boolean
     rank: number
 }
