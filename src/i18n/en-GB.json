@@ -13,7 +13,8 @@
         "update": "Update",
         "finish": "Finish",
         "error": "Error",
-        "assign": "Assign"
+        "assign": "Assign",
+        "on": "on"
     },
     "fixture": {
         "unknownStatus": "???",
@@ -54,6 +55,8 @@
         "summary": "Summary",
         "clickToHide": "(click to hide)",
         "clickToShow": "(click to show)",
+        "playerCount": "1 player | {n} players",
+        "tableCount": "1 table | {n} tables",
         "estimatedDuration": "Estimated duration",
         "minsPerFrame": "(1 min per frame) | ({n} mins per frame)",
         "startFlyer": "Start Flyer",
