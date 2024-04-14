@@ -25,7 +25,6 @@ export const usePhase = (p: Phase | null) => {
 
     const {
         players,
-        getPlayerName,
     } = usePlayers(phase.value)
 
     const {
@@ -162,14 +161,6 @@ export const usePhase = (p: Phase | null) => {
         return FixtureStatus.ReadyToStart
     }
 
-    const getScoreDescription = (fixture: Fixture) => {
-        if (fixture.scores.some(s => s.isBye)) {
-            return "W/O"
-        }
-
-        return fixture.scores.map(s => s.score).join("-")
-    }
-
     watch(phase, () => {
         clockable.value = phase.value
     })
@@ -188,7 +179,6 @@ export const usePhase = (p: Phase | null) => {
         canPrioritiseFixture,
         isBusy,
         getFixtureStatus,
-        getScoreDescription,
         pauseClock,
         resumeClock,
     }

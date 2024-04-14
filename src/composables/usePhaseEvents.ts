@@ -11,7 +11,6 @@ import type { Phase } from "@/data/Phase"
 export const usePhaseEvents = (p: Phase | null) => {
     const {
         phase,
-        getScoreDescription,
     } = usePhase(p)
 
     const {
@@ -43,6 +42,14 @@ export const usePhaseEvents = (p: Phase | null) => {
 
             return getPlayerName(s.playerId)
         }).join(" v ")
+    }
+
+    const getScoreDescription = (fixture: Fixture) => {
+        if (fixture.scores.some(s => s.isBye)) {
+            return "W/O"
+        }
+
+        return fixture.scores.map(s => s.score).join("-")
     }
 
     const fixtureAssignedTable = (f: Fixture, tableId: string) => {
