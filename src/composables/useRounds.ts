@@ -26,6 +26,15 @@ export const useRounds = (p: Phase | null) => {
 
     const nextRoundToGenerate = computed(() => rounds.value.find(r => !r.isGenerated))
 
+    const readyToGenerateNextRound = computed(() => {
+        if (generatedRounds.value.length >= rounds.value.length) {
+            return false
+        }
+
+        const lastGeneratedRound = generatedRounds.value.at(-1)
+        return !!lastGeneratedRound && lastGeneratedRound.fixtures.every(f => f.startTime && f.finishTime)
+    })
+
     // don't want to include the always-generated final round, so
     // use a take-while approach
     const generatedRounds = computed(() => takeWhile([...rounds.value], r => r.isGenerated))
@@ -48,6 +57,7 @@ export const useRounds = (p: Phase | null) => {
         raceTos,
         currentRound,
         nextRoundToGenerate,
+        readyToGenerateNextRound,
         generatedRounds,
         generationIsComplete,
 

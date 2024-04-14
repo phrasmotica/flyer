@@ -29,7 +29,6 @@ export const usePhase = (p: Phase | null) => {
     const {
         rounds,
         currentRound,
-        generatedRounds,
         getRound,
     } = useRounds(phase.value)
 
@@ -47,19 +46,6 @@ export const usePhase = (p: Phase | null) => {
         durationMilliseconds,
         elapsedMilliseconds,
     } = usePhaseTiming(phase.value)
-
-    const readyToGenerateNextRound = computed(() => {
-        if (!settings.value.randomlyDrawAllRounds) {
-            return false
-        }
-
-        if (generatedRounds.value.length >= rounds.value.length) {
-            return false
-        }
-
-        const lastGeneratedRound = generatedRounds.value.at(-1)
-        return lastGeneratedRound && lastGeneratedRound.fixtures.every(f => f.startTime && f.finishTime)
-    })
 
     const totalCost = computed(() => {
         // BUG: this doesn't recompute every time elapsedMiilliseconds.value changes
@@ -156,7 +142,6 @@ export const usePhase = (p: Phase | null) => {
     return {
         phase,
 
-        readyToGenerateNextRound,
         totalCost,
         freeTables,
         maxTableCount,

@@ -39,15 +39,12 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    readyToGenerateNextRound,
-} = usePhase(currentPhase.value)
-
-const {
     remainingCount,
 } = useFixtureList(currentPhase.value)
 
 const {
     nextRoundToGenerate,
+    readyToGenerateNextRound,
     generationIsComplete,
 } = useRounds(currentPhase.value)
 
@@ -74,6 +71,10 @@ const generateNextRoundLabel = computed(() => {
     })
 })
 
+const canGenerateNextRound = computed(() => {
+    return settings.value.randomlyDrawAllRounds && readyToGenerateNextRound.value
+})
+
 const finishButtonText = computed(() => {
     if (hasStarted.value && hasFinished.value) {
         return t('play.viewResults')
@@ -92,7 +93,7 @@ const finishButtonText = computed(() => {
             v-if="!isHistoric && settings.randomlyDrawAllRounds && !generationIsComplete"
             class="mb-2"
             :label="generateNextRoundLabel"
-            :disabled="!readyToGenerateNextRound"
+            :disabled="!canGenerateNextRound"
             @click="emit('generateNextRound')" />
 
         <Button
