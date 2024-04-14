@@ -18,15 +18,15 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    clockDisplay,
     totalCost,
-    pauseClock,
-    resumeClock,
 } = usePhase(currentPhase.value)
 
 const {
     isInProgress,
     estimatedDurationMinutes,
+    clockDisplay,
+    pauseClock,
+    resumeClock,
 } = usePhaseTiming(currentPhase.value)
 
 const [showPrice, toggleShowPrice] = useToggle()

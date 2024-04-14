@@ -1,6 +1,5 @@
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 
-import { useClock } from "./useClock"
 import { useFixtureList } from "./useFixtureList"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { usePhaseTiming } from "./usePhaseTiming"
@@ -46,14 +45,8 @@ export const usePhase = (p: Phase | null) => {
 
     const {
         durationMilliseconds,
-    } = usePhaseTiming(phase.value)
-
-    const {
-        clockable,
         elapsedMilliseconds,
-        pauseClock,
-        resumeClock,
-    } = useClock("PhaseClock " + settings.value.name, phase.value)
+    } = usePhaseTiming(phase.value)
 
     const readyToGenerateNextRound = computed(() => {
         if (!settings.value.randomlyDrawAllRounds) {
@@ -68,9 +61,8 @@ export const usePhase = (p: Phase | null) => {
         return lastGeneratedRound && lastGeneratedRound.fixtures.every(f => f.startTime && f.finishTime)
     })
 
-    const clockDisplay = computed(() => durationMilliseconds.value || elapsedMilliseconds.value)
-
     const totalCost = computed(() => {
+        // BUG: this doesn't recompute every time elapsedMiilliseconds.value changes
         const durationHours = (durationMilliseconds.value || elapsedMilliseconds.value) / 3600000
         return costPerHour.value * durationHours
     })
@@ -161,15 +153,10 @@ export const usePhase = (p: Phase | null) => {
         return FixtureStatus.ReadyToStart
     }
 
-    watch(phase, () => {
-        clockable.value = phase.value
-    })
-
     return {
         phase,
 
         readyToGenerateNextRound,
-        clockDisplay,
         totalCost,
         freeTables,
         maxTableCount,
@@ -179,7 +166,5 @@ export const usePhase = (p: Phase | null) => {
         canPrioritiseFixture,
         isBusy,
         getFixtureStatus,
-        pauseClock,
-        resumeClock,
     }
 }

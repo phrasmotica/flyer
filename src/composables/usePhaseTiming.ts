@@ -1,6 +1,7 @@
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
 
+import { useClock } from "./useClock"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { useScheduler } from "./useScheduler"
 
@@ -14,8 +15,19 @@ export const usePhaseTiming = (p: Phase | null) => {
     } = usePhaseSettings(phase.value)
 
     const {
+        clockable,
+        elapsedMilliseconds,
+        pauseClock,
+        resumeClock,
+    } = useClock("PhaseClock " + settings.value.name, phase.value)
+
+    const {
         scheduler,
     } = useScheduler(settings.value)
+
+    watch(phase, () => {
+        clockable.value = phase.value
+    })
 
     const hasStarted = computed(() => !!phase.value?.startTime)
     const hasFinished = computed(() => !!phase.value?.finishTime)
@@ -27,6 +39,10 @@ export const usePhaseTiming = (p: Phase | null) => {
         }
 
         return scheduler.value.estimateDurationForPhase(phase.value)
+    })
+
+    const clockDisplay = computed(() => {
+        return durationMilliseconds.value || elapsedMilliseconds.value
     })
 
     const durationMinutes = computed(() => {
@@ -51,7 +67,14 @@ export const usePhaseTiming = (p: Phase | null) => {
         isInProgress,
 
         estimatedDurationMinutes,
+
+        elapsedMilliseconds,
+        clockDisplay,
+
         durationMinutes,
         durationMilliseconds,
+
+        pauseClock,
+        resumeClock,
     }
 }
