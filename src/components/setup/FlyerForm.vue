@@ -139,9 +139,9 @@ onUpdated(() => {
 
                         <Stepper
                             inputId="raceToStepper"
-                            v-model="settingsStore.settings.specification.raceTo"
+                            v-model="settingsStore.settings.specification.bestOf"
                             :min="1" :max="maxRaceEnv"
-                            :prefix="t('matchLengthModel.racesToPrefix')" />
+                            :prefix="t('matchLengthModel.bestOfPrefix')" />
                     </div>
 
                     <div v-else-if="isKnockout && isVariableMatchLength">
@@ -152,9 +152,9 @@ onUpdated(() => {
 
                             <Stepper
                                 :inputId="'raceToRoundStepper' + i"
-                                v-model="settingsStore.settings.raceToPerRound[i]"
+                                v-model="settingsStore.settings.bestOfPerRound[i]"
                                 :min="1" :max="maxRaceEnv"
-                                :prefix="t('matchLengthModel.racesToPrefix')" />
+                                :prefix="t('matchLengthModel.bestOfPrefix')" />
                         </div>
                     </div>
 

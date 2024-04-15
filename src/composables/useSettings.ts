@@ -19,7 +19,7 @@ export const useSettings = (s: FlyerSettings) => {
 
     const raceTos = computed(() => roundNames.value.map((n, i) => ({
         name: n,
-        raceTo: settings.value.raceToPerRound[i],
+        raceTo: Math.ceil((settings.value.bestOfPerRound[i] + 1) / 2),
     })))
 
     const estimatedCost = computed(() => {

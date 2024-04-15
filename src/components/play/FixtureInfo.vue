@@ -42,7 +42,7 @@ const {
 
 const {
     fixture,
-    raceTo,
+    bestOf,
     elapsedMilliseconds,
     hasStarted,
     isInProgress,
@@ -80,7 +80,7 @@ const breaker = computed(() => getPlayer(fixture.value?.breakerId || ""))
             <div class="p-fluid flex justify-content-center gap-2">
                 <TableBadge :table="table" />
 
-                <RaceToBadge singular :value="raceTo" />
+                <RaceToBadge singular :value="Math.ceil((bestOf + 1) / 2)" />
             </div>
         </div>
 

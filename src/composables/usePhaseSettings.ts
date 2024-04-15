@@ -58,7 +58,11 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
             return ""
         }
 
-        return `Races to ${settings.value.raceTo}`
+        // HIGH: include the best-of value also, or create a new property for that?
+
+        const raceTo = Math.ceil((settings.value.bestOf + 1) / 2)
+
+        return `Races to ${raceTo}`
     })
 
     const winsRequiredSummary = computed(() => {

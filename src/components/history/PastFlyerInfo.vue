@@ -81,7 +81,7 @@ watch(props, () => {
                 {{ t("history.formatDescription", {
                     formatName: t(formatName),
                     playerCount: players.length,
-                    raceTo: settings.raceTo,
+                    raceTo: Math.ceil((settings.bestOf + 1) / 2),
                 }) }}
 
                 {{ t("history.tookNMinutes", {

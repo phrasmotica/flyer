@@ -3,7 +3,7 @@ import type { PlayOff } from "./PlayOff"
 
 export interface PhaseSettings {
     matchLengthModel: MatchLengthModel
-    raceTo: number
+    bestOf: number // HIGH: store "best-of" value so we can allow draws, e.g. best of 6 frames
     winsRequired: number
     ruleSet: RuleSet
     format: Format
@@ -52,13 +52,13 @@ export enum MoneySplit {
 export const createPlayOffSettings = (phase: Phase, playOff: PlayOff): PhaseSettings => ({
     allowDraws: false,
     allowEarlyFinish: false,
+    bestOf: 1,
     entryFee: 0,
     entryFeeRequired: false,
     format: Format.Knockout,
     matchLengthModel: MatchLengthModel.Fixed,
     moneySplit: MoneySplit.WinnerTakesAll,
     name: playOff.name,
-    raceTo: 1,
     randomlyDrawAllRounds: false,
     requireCompletedRounds: true,
     ruleSet: phase.settings.ruleSet,

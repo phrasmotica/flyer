@@ -17,8 +17,8 @@ export class RoundRobinScheduler implements IScheduler {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const numFixtures = settings.specification.stageCount * settings.playerCount * (settings.playerCount - 1) / 2
-        const maxFrames = 2 * settings.specification.raceTo - 1
-        const meanFrames = (settings.specification.raceTo + maxFrames) / 2
+        const minFrames = Math.ceil((settings.specification.bestOf + 1) / 2)
+        const meanFrames = (minFrames + settings.specification.bestOf) / 2
         const expectedFramesTotal = numFixtures * meanFrames
         const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / settings.tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
@@ -32,8 +32,8 @@ export class RoundRobinScheduler implements IScheduler {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const numFixtures = settings.stageCount * playerCount * (playerCount - 1) / 2
-        const maxFrames = 2 * settings.raceTo - 1
-        const meanFrames = (settings.raceTo + maxFrames) / 2
+        const minFrames = Math.ceil((settings.bestOf + 1) / 2)
+        const meanFrames = (minFrames + settings.bestOf) / 2
         const expectedFramesTotal = numFixtures * meanFrames
         const expectedTime = Math.ceil(this.frameTimeEstimateMins * expectedFramesTotal / tableCount)
         return Math.max(this.frameTimeEstimateMins, expectedTime)
@@ -110,7 +110,7 @@ export class RoundRobinScheduler implements IScheduler {
         const round: Round = {
             index,
             name: "Round " + index,
-            raceTo: null,
+            bestOf: null,
             isGenerated: true,
             fixtures: [],
         }
@@ -165,7 +165,7 @@ export class RoundRobinScheduler implements IScheduler {
         const newRounds = rounds.map<Round>((_, r) => ({
             index: startIndex + (r + 1),
             name: "Round " + (startIndex + r + 1),
-            raceTo: null,
+            bestOf: null,
             isGenerated: true,
             fixtures: newFixtures.splice(0, fixturesPerRound),
         }))

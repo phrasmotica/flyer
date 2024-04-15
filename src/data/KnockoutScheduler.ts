@@ -23,9 +23,11 @@ export class KnockoutScheduler implements IScheduler {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
-            const raceTo = settings.specification.matchLengthModel === MatchLengthModel.Variable
-                ? settings.raceToPerRound[i]
-                : settings.specification.raceTo
+            const bestOf = settings.specification.matchLengthModel === MatchLengthModel.Variable
+                ? settings.bestOfPerRound[i]
+                : settings.specification.bestOf
+
+            const raceTo = Math.ceil((bestOf + 1) / 2)
 
             return {
                 count: x,
@@ -59,13 +61,15 @@ export class KnockoutScheduler implements IScheduler {
         // assumes perfect parallelisation across tables, i.e. does not account
         // for a player making their next opponent wait for their slow match
         const fixturesPerGroup = numFixturesPerGroup.map((x, i) => {
-            const raceTo = settings.matchLengthModel === MatchLengthModel.Variable
-                ? phase.rounds[i].raceTo!
-                : settings.raceTo
+            const bestOf = settings.matchLengthModel === MatchLengthModel.Variable
+                ? phase.rounds[i].bestOf!
+                : settings.bestOf
+
+            const raceTo = Math.ceil((bestOf + 1) / 2)
 
             return {
                 count: x,
-                meanFrames: (raceTo + (2 * raceTo - 1)) / 2,
+                meanFrames: (raceTo + bestOf) / 2,
             }
         })
 
@@ -151,9 +155,11 @@ export class KnockoutScheduler implements IScheduler {
             // ensure the final round (match) always draws from the two semi-finals
             const takeFromParents = !settings.specification.randomlyDrawAllRounds || r === numRounds - 1
 
-            const raceTo = settings.specification.matchLengthModel === MatchLengthModel.Variable
-                ? settings.raceToPerRound.at(r)!
-                : settings.specification.raceTo
+            const bestOf = settings.specification.matchLengthModel === MatchLengthModel.Variable
+                ? settings.bestOfPerRound.at(r)!
+                : settings.specification.bestOf
+
+            const raceTo = Math.ceil((bestOf + 1) / 2)
 
             const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
@@ -187,9 +193,11 @@ export class KnockoutScheduler implements IScheduler {
             // ensure the final round (match) always draws from the two semi-finals
             const takeFromParents = !phase.settings.randomlyDrawAllRounds || r === numRounds - 1
 
-            const raceTo = phase.settings.matchLengthModel === MatchLengthModel.Variable
-                ? phase.rounds[r].raceTo!
-                : phase.settings.raceTo
+            const bestOf = phase.settings.matchLengthModel === MatchLengthModel.Variable
+                ? phase.rounds[r].bestOf!
+                : phase.settings.bestOf
+
+            const raceTo = Math.ceil((bestOf + 1) / 2)
 
             const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
@@ -217,11 +225,11 @@ export class KnockoutScheduler implements IScheduler {
         }
     }
 
-    generateRound(r: number, overallPool: Player[], raceTo: number, numSpaces: number, takeFromParents: boolean) {
+    generateRound(r: number, overallPool: Player[], bestOf: number, numSpaces: number, takeFromParents: boolean) {
         const round: Round = {
             index: r + 1,
             name: this.getRoundName(numSpaces),
-            raceTo,
+            bestOf,
             isGenerated: r === 0 || takeFromParents,
             fixtures: [],
         }

@@ -21,7 +21,7 @@ export const useRound = (r: Round | undefined, p: Phase | null) => {
 
     const name = computed(() => round.value?.name)
     const fixtures = computed(() => round.value?.fixtures || [])
-    const raceTo = computed(() => round.value?.raceTo || settings.value.raceTo)
+    const bestOf = computed(() => round.value?.bestOf || settings.value.bestOf)
 
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {
@@ -59,7 +59,7 @@ export const useRound = (r: Round | undefined, p: Phase | null) => {
         round,
         name,
         fixtures,
-        raceTo,
+        bestOf,
         status,
         winners,
     }

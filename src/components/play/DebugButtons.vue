@@ -53,7 +53,7 @@ const showAutoCompleteButton = computed(() => {
 })
 
 // LOW: compute the correct race-to for the next fixture
-const raceTo = computed(() => settings.value.raceTo)
+const raceTo = computed(() => Math.ceil((settings.value.bestOf + 1) / 2))
 
 const autoStart = () => {
     if (!currentPhase.value || !nextFixture.value || freeTables.value.length <= 0) {

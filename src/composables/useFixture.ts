@@ -26,7 +26,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const {
         round,
-        raceTo,
+        bestOf,
     } = useRound(r, p)
 
     const {
@@ -65,11 +65,15 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const canBeFinished = computed(() => {
-        if (scores.value.every(s => s < raceTo.value)) {
+        // HIGH: account for draws in a best-of-even match
+
+        const raceTo = Math.ceil((settings.value.bestOf + 1) / 2)
+
+        if (scores.value.every(s => s < raceTo)) {
             return false
         }
 
-        if (scores.value.reduce((a, b) => a + b) > 2 * raceTo.value - 1) {
+        if (scores.value.reduce((a, b) => a + b) > 2 * raceTo - 1) {
             return false
         }
 
@@ -81,7 +85,8 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     })
 
     const estimatedDurationMilliseconds = computed(() => {
-        const actualRaceTo = isVariableMatchLength.value ? raceTo.value : settings.value.raceTo
+        const actualBestOf = isVariableMatchLength.value ? bestOf.value : settings.value.bestOf
+        const actualRaceTo = Math.ceil((actualBestOf + 1) / 2)
         return scheduler.value.estimateFixtureDuration(actualRaceTo)
     })
 
@@ -131,8 +136,10 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     })
 
     const setWinner = (index: number, clearRunouts: boolean) => {
+        const raceTo = Math.ceil((settings.value.bestOf + 1) / 2)
+
         scores.value.forEach((_, i) => {
-            setScore(i, i === index ? settings.value.raceTo : 0)
+            setScore(i, i === index ? raceTo : 0)
         })
 
         if (clearRunouts) {
@@ -153,7 +160,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         round,
         breakerId,
         tableId,
-        raceTo,
+        bestOf,
         scores,
         runouts,
         comment,

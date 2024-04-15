@@ -102,6 +102,7 @@
         "variableSummary": "Variable races",
         "variableDetails": "",
         "allRounds": "All rounds",
+        "bestOfPrefix": "Best of ",
         "racesToPrefix": "Races to ",
         "winsRequired": "Wins required",
         "winSuffix": " win",
