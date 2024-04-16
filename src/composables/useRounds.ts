@@ -7,9 +7,9 @@ export const useRounds = (p: Phase | null) => {
 
     const rounds = computed(() => phase.value?.rounds || [])
 
-    const raceTos = computed(() => rounds.value.map(r => ({
+    const bestOfs = computed(() => rounds.value.map(r => ({
         name: r.name,
-        // HIGH: include raceTo in Round model? Or change this to bestOfs?
+        bestOf: r.bestOf,
         raceTo: r.bestOf ? Math.ceil((r.bestOf + 1) / 2) : null,
     })))
 
@@ -55,7 +55,7 @@ export const useRounds = (p: Phase | null) => {
     return {
         rounds,
 
-        raceTos,
+        bestOfs,
         currentRound,
         nextRoundToGenerate,
         readyToGenerateNextRound,

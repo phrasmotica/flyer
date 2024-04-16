@@ -12,8 +12,9 @@ const props = defineProps<{
     settings: PhaseSettings
     playerCount: number
     tableCount: number
-    raceTos: {
+    bestOfs: {
         name: string
+        bestOf: number | null
         raceTo: number | null
     }[]
 }>()
@@ -23,6 +24,7 @@ const {
     formatSummary,
     formatDetails,
     drawSummary,
+    bestOfSummary,
     raceSummary,
     winsRequiredSummary,
     rulesSummary,
@@ -39,9 +41,18 @@ const variableRacesSummary = computed(() => {
         return ""
     }
 
-    return "Races to " + props.raceTos
+    // HIGH: declutter, or allow the user to show/hide race-to descriptions
+
+    const bestOfsStr = "Best of " + props.bestOfs
+        .map(r => `${r.bestOf!} (${r.name})`)
+        .join(", then ")
+
+    // HIGH: localise
+    const raceTosStr = "Races to " + props.bestOfs
         .map(r => `${r.raceTo!} (${r.name})`)
         .join(", then ")
+
+    return `${bestOfsStr} / ${raceTosStr}`
 })
 
 const stagesSummary = computed(() => {
@@ -61,7 +72,11 @@ const stagesSummary = computed(() => {
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
         <strong v-if="isWinnerStaysOn">{{ winsRequiredSummary }}</strong>
         <strong v-else-if="variableRacesSummary">{{ variableRacesSummary }}</strong>
-        <strong v-else-if="raceSummary">{{ raceSummary }}</strong>
+        <span v-else>
+            <strong v-if="bestOfSummary">{{ bestOfSummary }}</strong>
+            /
+            <strong v-if="raceSummary">{{ raceSummary }}</strong>
+        </span>
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">

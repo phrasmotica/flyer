@@ -65,6 +65,15 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
         return ""
     })
 
+    const bestOfSummary = computed(() => {
+        if (isVariableMatchLength.value) {
+            return ""
+        }
+
+        // HIGH: allow localisation
+        return `Best of ${bestOf.value}`
+    })
+
     const raceSummary = computed(() => {
         if (isVariableMatchLength.value) {
             return ""
@@ -126,6 +135,7 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
         formatDetails,
 
         drawSummary,
+        bestOfSummary,
         raceSummary,
         bestOf,
         raceTo,

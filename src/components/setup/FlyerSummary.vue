@@ -24,7 +24,7 @@ const settingsStore = useSettingsStore()
 
 const {
     settings,
-    raceTos,
+    bestOfs,
     durationPerFrame,
     estimatedDurationMinutes,
     isInvalid,
@@ -48,7 +48,7 @@ const {
                 :settings="settings.specification"
                 :playerCount="settings.playerCount"
                 :tableCount="settings.tableCount"
-                :raceTos="raceTos" />
+                :bestOfs="bestOfs" />
 
             <div
                 v-if="settings.specification.entryFeeRequired"
