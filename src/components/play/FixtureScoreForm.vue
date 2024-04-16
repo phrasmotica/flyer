@@ -160,7 +160,7 @@ onMounted(() => {
             <CommentMessage v-else-if="comment" :comment="comment" />
         </div>
 
-        <div class="p-fluid">
+        <div v-if="!hasFinished" class="p-fluid">
             <div class="grid m-0">
                 <!-- MEDIUM: this close button doesn't really belong here. It
                 just so happens that we're only using this component inside the
