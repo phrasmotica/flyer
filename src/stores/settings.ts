@@ -177,10 +177,18 @@ export const useSettingsStore = defineStore("settings", () => {
             settings.value.specification.matchLengthModel = MatchLengthModel.Fixed
             settings.value.tableCount = 1
 
+            // LOW: ensure wins required is (playerCount - 1) at minimum
+
             settings.value.specification.randomlyDrawAllRounds = false
             settings.value.specification.requireCompletedRounds = false
             settings.value.specification.allowDraws = false
             settings.value.specification.allowEarlyFinish = true
+        }
+    })
+
+    watch(() => settings.value.specification.bestOf, () => {
+        if (settings.value.specification.bestOf % 2 !== 0) {
+            settings.value.specification.allowDraws = false
         }
     })
 

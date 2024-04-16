@@ -39,6 +39,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
+    fixturesCanBeDrawn,
 } = usePhaseSettingsInternal(settingsStore.settings.specification)
 
 const { n, t } = useI18n()
@@ -249,7 +250,8 @@ onUpdated(() => {
                     <LabelledCheckbox
                         v-if="isRoundRobin"
                         :label="t('form.allowDraws')"
-                        v-model="settingsStore.settings.specification.allowDraws" />
+                        v-model="settingsStore.settings.specification.allowDraws"
+                        :disabled="!fixturesCanBeDrawn" />
                 </div>
             </div>
 
