@@ -42,7 +42,7 @@ const {
 } = usePlayers(currentPhase.value)
 
 const {
-    bestOf,
+    raceTo,
 } = useFixture("scoreInput", props.fixture, getRound(props.fixture.id), currentPhase.value)
 
 const { blurNumberInputs } = useTweaks()
@@ -77,7 +77,7 @@ onUpdated(() => {
             inputClass="w-4rem text-2xl font-bold py-1"
             buttonLayout="vertical"
             v-model="score"
-            :min="0" :max="Math.ceil((bestOf + 1) / 2)">
+            :min="0" :max="raceTo">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>
@@ -101,7 +101,7 @@ onUpdated(() => {
             inputClass="w-2rem px-1 text-center"
             buttonLayout="horizontal"
             v-model="runouts"
-            :min="0" :max="Math.ceil((bestOf + 1) / 2)">
+            :min="0" :max="raceTo">
             <template #incrementbuttonicon>
                 <span class="pi pi-plus" />
             </template>

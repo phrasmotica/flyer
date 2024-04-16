@@ -27,11 +27,11 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const {
         round,
         bestOf,
+        raceTo,
     } = useRound(r, p)
 
     const {
         settings,
-        isVariableMatchLength,
     } = usePhaseSettings(p)
 
     const {
@@ -67,13 +67,11 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const canBeFinished = computed(() => {
         // HIGH: account for draws in a best-of-even match
 
-        const raceTo = Math.ceil((settings.value.bestOf + 1) / 2)
-
-        if (scores.value.every(s => s < raceTo)) {
+        if (scores.value.every(s => s < raceTo.value)) {
             return false
         }
 
-        if (scores.value.reduce((a, b) => a + b) > 2 * raceTo - 1) {
+        if (scores.value.reduce((a, b) => a + b) > 2 * raceTo.value - 1) {
             return false
         }
 
@@ -85,9 +83,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     })
 
     const estimatedDurationMilliseconds = computed(() => {
-        const actualBestOf = isVariableMatchLength.value ? bestOf.value : settings.value.bestOf
-        const actualRaceTo = Math.ceil((actualBestOf + 1) / 2)
-        return scheduler.value.estimateFixtureDuration(actualRaceTo)
+        return scheduler.value.estimateFixtureDuration(raceTo.value)
     })
 
     const durationMilliseconds = computed(() => {
@@ -136,10 +132,8 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     })
 
     const setWinner = (index: number, clearRunouts: boolean) => {
-        const raceTo = Math.ceil((settings.value.bestOf + 1) / 2)
-
         scores.value.forEach((_, i) => {
-            setScore(i, i === index ? raceTo : 0)
+            setScore(i, i === index ? raceTo.value : 0)
         })
 
         if (clearRunouts) {
@@ -161,6 +155,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         breakerId,
         tableId,
         bestOf,
+        raceTo,
         scores,
         runouts,
         comment,

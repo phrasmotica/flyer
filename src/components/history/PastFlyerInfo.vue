@@ -49,6 +49,7 @@ const {
 
 const {
     settings,
+    raceTo,
     formatName,
 } = usePhaseSettings(mainPhase.value)
 
@@ -81,7 +82,7 @@ watch(props, () => {
                 {{ t("history.formatDescription", {
                     formatName: t(formatName),
                     playerCount: players.length,
-                    raceTo: Math.ceil((settings.bestOf + 1) / 2),
+                    raceTo, // MEDIUM: show variable-length races
                 }) }}
 
                 {{ t("history.tookNMinutes", {

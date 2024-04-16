@@ -42,7 +42,7 @@ const {
     name,
     fixtures,
     status,
-    bestOf,
+    raceTo,
 } = useRound(props.round, currentPhase.value)
 
 const {
@@ -76,7 +76,7 @@ const [showComments, toggleComments] = useToggle(false)
 
             <RaceToBadge v-if="isVariableMatchLength"
                 class="ml-2"
-                :value="Math.ceil((bestOf + 1) / 2)" />
+                :value="raceTo" />
         </div>
 
         <div class="ml-2">

@@ -18,6 +18,18 @@ export const usePhaseSettings = (p: Phase | null) => {
 export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const settings = ref(s)
 
+    const bestOf = computed(() => {
+        return isFixedMatchLength.value ? settings.value.bestOf : null
+    })
+
+    const raceTo = computed(() => {
+        if (bestOf.value) {
+            return Math.ceil((bestOf.value + 1) / 2)
+        }
+
+        return null
+    })
+
     const formatName = computed(() => {
         const format = formatList.find(s => s.value === settings.value.format)
         if (!format) {
@@ -58,11 +70,8 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
             return ""
         }
 
-        // HIGH: include the best-of value also, or create a new property for that?
-
-        const raceTo = Math.ceil((settings.value.bestOf + 1) / 2)
-
-        return `Races to ${raceTo}`
+        // HIGH: allow localisation
+        return `Races to ${raceTo.value}`
     })
 
     const winsRequiredSummary = computed(() => {
@@ -118,6 +127,8 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
 
         drawSummary,
         raceSummary,
+        bestOf,
+        raceTo,
         winsRequiredSummary,
 
         rulesSummary,

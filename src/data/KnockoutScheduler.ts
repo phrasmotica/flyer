@@ -27,11 +27,11 @@ export class KnockoutScheduler implements IScheduler {
                 ? settings.bestOfPerRound[i]
                 : settings.specification.bestOf
 
-            const raceTo = Math.ceil((bestOf + 1) / 2)
+            const minFrames = Math.ceil((bestOf + 1) / 2)
 
             return {
                 count: x,
-                meanFrames: (raceTo + (2 * raceTo - 1)) / 2,
+                meanFrames: (minFrames + bestOf) / 2,
             }
         })
 
@@ -65,11 +65,11 @@ export class KnockoutScheduler implements IScheduler {
                 ? phase.rounds[i].bestOf!
                 : settings.bestOf
 
-            const raceTo = Math.ceil((bestOf + 1) / 2)
+            const minFrames = Math.ceil((bestOf + 1) / 2)
 
             return {
                 count: x,
-                meanFrames: (raceTo + bestOf) / 2,
+                meanFrames: (minFrames + bestOf) / 2,
             }
         })
 
@@ -159,9 +159,7 @@ export class KnockoutScheduler implements IScheduler {
                 ? settings.bestOfPerRound.at(r)!
                 : settings.specification.bestOf
 
-            const raceTo = Math.ceil((bestOf + 1) / 2)
-
-            const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
+            const round = this.generateRound(r, overallPool, bestOf, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
 
             numSpaces /= 2
@@ -197,9 +195,7 @@ export class KnockoutScheduler implements IScheduler {
                 ? phase.rounds[r].bestOf!
                 : phase.settings.bestOf
 
-            const raceTo = Math.ceil((bestOf + 1) / 2)
-
-            const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
+            const round = this.generateRound(r, overallPool, bestOf, numSpaces, takeFromParents)
             this.generatedRounds.push(round)
 
             numSpaces /= 2

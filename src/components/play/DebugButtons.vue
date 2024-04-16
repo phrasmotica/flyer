@@ -35,7 +35,7 @@ const {
 } = useFixtureList(phase.value)
 
 const {
-    settings,
+    raceTo,
 } = usePhaseSettings(currentPhase.value)
 
 const {
@@ -51,9 +51,6 @@ const showAutoStartButton = computed(() => {
 const showAutoCompleteButton = computed(() => {
     return remainingCount.value > 0 || !props.hideInstead
 })
-
-// LOW: compute the correct race-to for the next fixture
-const raceTo = computed(() => Math.ceil((settings.value.bestOf + 1) / 2))
 
 const autoStart = () => {
     if (!currentPhase.value || !nextFixture.value || freeTables.value.length <= 0) {
@@ -77,11 +74,14 @@ const autoComplete = () => {
 
     const message = phaseEvents.fixtureAutoCompleted(nextFixture.value)
 
+    // LOW: compute the correct race-to for the next fixture
+    const fixtureRaceTo = raceTo.value || 1
+
     flyerStore.autoCompleteFixture(
         currentPhase.value,
         nextFixture.value,
         tables.value[0].id,
-        raceTo.value)
+        fixtureRaceTo)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 }
@@ -91,10 +91,13 @@ const autoCompleteRemaining = () => {
         return
     }
 
+    // LOW: compute the correct race-to for the next fixture
+    const fixtureRaceTo = raceTo.value || 1
+
     flyerStore.autoCompletePhase(
         currentPhase.value,
         tables.value[0].id,
-        raceTo.value)
+        fixtureRaceTo)
 
     const message = phaseEvents.phaseAutoCompleted()
     flyerStore.addPhaseEvent(currentPhase.value, message)
