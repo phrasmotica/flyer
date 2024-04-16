@@ -65,17 +65,16 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const canBeFinished = computed(() => {
-        // HIGH: account for draws in a best-of-even match
+        const framesPlayed = scores.value.reduce((a, b) => a + b)
+        if (framesPlayed > bestOf.value) {
+            return false
+        }
+
+        if (settings.value.allowDraws && isDraw.value) {
+            return framesPlayed === bestOf.value
+        }
 
         if (scores.value.every(s => s < raceTo.value)) {
-            return false
-        }
-
-        if (scores.value.reduce((a, b) => a + b) > 2 * raceTo.value - 1) {
-            return false
-        }
-
-        if (!settings.value.allowDraws && isDraw.value) {
             return false
         }
 

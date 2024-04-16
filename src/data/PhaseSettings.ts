@@ -3,7 +3,7 @@ import type { PlayOff } from "./PlayOff"
 
 export interface PhaseSettings {
     matchLengthModel: MatchLengthModel
-    bestOf: number // HIGH: store "best-of" value so we can allow draws, e.g. best of 6 frames
+    bestOf: number
     winsRequired: number
     ruleSet: RuleSet
     format: Format
