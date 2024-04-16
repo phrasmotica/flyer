@@ -88,8 +88,6 @@ const ranOut = computed(() => {
     return ""
 })
 
-// HIGH: prevent updating scores if more frames have been played than the best-of value
-
 const updateScores = (finish: boolean) => {
     if (!fixture.value || !currentPhase.value) {
         return

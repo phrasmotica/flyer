@@ -74,7 +74,7 @@ const autoComplete = () => {
 
     const message = phaseEvents.fixtureAutoCompleted(nextFixture.value)
 
-    // LOW: compute the correct race-to for the next fixture
+    // LOW: 1 in 3 chance to auto-complete to a draw
     const fixtureRaceTo = raceTo.value || 1
 
     flyerStore.autoCompleteFixture(
