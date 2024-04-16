@@ -75,7 +75,9 @@
         "roundRobinDetails": "every player plays against every other player",
         "winnerStaysOnName": "Winner Stays On",
         "winnerStaysOnSummary": "Winner Stays On format",
-        "winnerStaysOnDetails": "gauntlet-style until one player has won enough matches"
+        "winnerStaysOnDetails": "gauntlet-style until one player has won enough matches",
+        "fixedDraw": "via a fixed draw",
+        "randomDraw": "via a random draw"
     },
     "history": {
         "pastFlyers": "Past Flyers",
@@ -102,6 +104,9 @@
         "variableSummary": "Variable races",
         "variableDetails": "",
         "allRounds": "All rounds",
+        "bestOfN": "Best of {n}",
+        "racesToN": "Races to {n}",
+        "firstToNWins": "First to 1 win | First to {n} wins",
         "bestOfPrefix": "Best of ",
         "racesToPrefix": "Races to ",
         "winsRequired": "Wins required",

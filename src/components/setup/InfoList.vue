@@ -23,18 +23,37 @@ const {
     settings,
     formatSummary,
     formatDetails,
-    drawSummary,
-    bestOfSummary,
-    raceSummary,
-    winsRequiredSummary,
+    bestOf,
+    raceTo,
     rulesSummary,
     rulesDetails,
     tieBreakerSummary,
     tieBreakerDetails,
+    isRandomDraw,
     isRoundRobin,
     isWinnerStaysOn,
     isFixedMatchLength,
 } = usePhaseSettingsInternal(props.settings)
+
+const winsRequiredSummary = computed(() => {
+    return t('matchLengthModel.firstToNWins', settings.value.winsRequired)
+})
+
+const bestOfSummary = computed(() => {
+    if (!bestOf.value) {
+        return ""
+    }
+
+    return t('matchLengthModel.bestOfN', bestOf.value)
+})
+
+const raceSummary = computed(() => {
+    if (!raceTo.value) {
+        return ""
+    }
+
+    return t('matchLengthModel.racesToN', raceTo.value)
+})
 
 const variableRacesSummary = computed(() => {
     if (isFixedMatchLength.value) {
@@ -53,6 +72,14 @@ const variableRacesSummary = computed(() => {
         .join(", then ")
 
     return `${bestOfsStr} / ${raceTosStr}`
+})
+
+const drawSummary = computed(() => {
+    if (isRandomDraw.value) {
+        return t('format.randomDraw')
+    }
+
+    return t('format.fixedDraw')
 })
 
 const stagesSummary = computed(() => {
@@ -82,7 +109,7 @@ const stagesSummary = computed(() => {
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
         <strong>{{ t(formatSummary) }}</strong>&nbsp;<em>({{ t(formatDetails) }}<span v-if="stagesSummary">, {{ stagesSummary }}</span>)</em>
 
-        <span v-if="drawSummary">&nbsp;via a <strong>{{ drawSummary }}</strong></span>
+        <span v-if="drawSummary">&nbsp;<strong>{{ drawSummary }}</strong></span>
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">

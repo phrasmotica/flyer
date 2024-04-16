@@ -57,40 +57,6 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
         return format.details
     })
 
-    const drawSummary = computed(() => {
-        if (isKnockout.value) {
-            return settings.value.randomlyDrawAllRounds ? "random draw" : "fixed draw"
-        }
-
-        return ""
-    })
-
-    const bestOfSummary = computed(() => {
-        if (isVariableMatchLength.value) {
-            return ""
-        }
-
-        // HIGH: allow localisation
-        return `Best of ${bestOf.value}`
-    })
-
-    const raceSummary = computed(() => {
-        if (isVariableMatchLength.value) {
-            return ""
-        }
-
-        // HIGH: allow localisation
-        return `Races to ${raceTo.value}`
-    })
-
-    const winsRequiredSummary = computed(() => {
-        if (settings.value.winsRequired === 1) {
-            return `First to ${settings.value.winsRequired} win`
-        }
-
-        return `First to ${settings.value.winsRequired} wins`
-    })
-
     const rulesSummary = computed(() => {
         const ruleSet = ruleSetList.find(s => s.value === settings.value.ruleSet)
         if (!ruleSet) {
@@ -134,12 +100,8 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
         formatSummary,
         formatDetails,
 
-        drawSummary,
-        bestOfSummary,
-        raceSummary,
         bestOf,
         raceTo,
-        winsRequiredSummary,
 
         rulesSummary,
         rulesDetails,
