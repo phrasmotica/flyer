@@ -12,7 +12,7 @@ const id = "labelled-checkbox-" + uuidv4()
 </script>
 
 <template>
-    <div class="p-fluid flex justify-content-between mb-2">
+    <div class="p-fluid flex justify-content-between">
         <label :for="id" :class="[props.disabled && 'text-color-secondary']">
             {{ label }}
         </label>

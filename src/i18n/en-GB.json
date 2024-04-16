@@ -106,6 +106,7 @@
         "allRounds": "All rounds",
         "bestOfN": "Best of {n}",
         "racesToN": "Races to {n}",
+        "nDrawsAllowed": "Matches finish once the score is {n}-{n}.",
         "firstToNWins": "First to 1 win | First to {n} wins",
         "bestOfPrefix": "Best of ",
         "racesToPrefix": "Races to ",

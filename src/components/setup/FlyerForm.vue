@@ -34,12 +34,14 @@ const {
 } = useSettings(settingsStore.settings)
 
 const {
+    bestOf,
     isFixedMatchLength,
     isVariableMatchLength,
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
     fixturesCanBeDrawn,
+    allowDraws,
 } = usePhaseSettingsInternal(settingsStore.settings.specification)
 
 const { n, t } = useI18n()
@@ -85,6 +87,8 @@ onUpdated(() => {
             :model="items"
             :activeIndex="uiStore.flyerFormSection" />
 
+        <!-- HIGH: split this into smaller components -->
+
         <!-- LOW: only make the form content overflow with a scroll bar, not the tab menu also -->
         <div id="form-content">
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Players">
@@ -128,6 +132,7 @@ onUpdated(() => {
             </div>
 
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Settings">
+                <!-- HIGH: create a separate tab for selecting match lengths -->
                 <div class="p-fluid mb-1">
                     <MatchLengthModelSelect />
                 </div>
@@ -157,6 +162,17 @@ onUpdated(() => {
                                 :min="1" :max="maxRaceEnv"
                                 :prefix="t('matchLengthModel.bestOfPrefix')" />
                         </div>
+                    </div>
+
+                    <div v-if="isRoundRobin">
+                        <LabelledCheckbox
+                            :label="t('form.allowDraws')"
+                            v-model="settingsStore.settings.specification.allowDraws"
+                            :disabled="!fixturesCanBeDrawn" />
+
+                        <Message v-if="allowDraws" class="m-0 mb-2" :closable="false">
+                            {{ t('matchLengthModel.nDrawsAllowed', bestOf! / 2) }}
+                        </Message>
                     </div>
 
                     <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
@@ -233,25 +249,22 @@ onUpdated(() => {
                     </p>
 
                     <LabelledCheckbox
+                        class="mb-2"
                         v-if="isKnockout"
                         :label="t('form.randomlyDrawAllRounds')"
                         v-model="settingsStore.settings.specification.randomlyDrawAllRounds" />
 
                     <LabelledCheckbox
+                        class="mb-2"
                         v-if="isRoundRobin"
                         :label="t('form.requireCompletedRounds')"
                         v-model="settingsStore.settings.specification.requireCompletedRounds" />
 
                     <LabelledCheckbox
+                        class="mb-2"
                         v-if="isRoundRobin"
                         :label="t('form.allowEarlyFinish')"
                         v-model="settingsStore.settings.specification.allowEarlyFinish" />
-
-                    <LabelledCheckbox
-                        v-if="isRoundRobin"
-                        :label="t('form.allowDraws')"
-                        v-model="settingsStore.settings.specification.allowDraws"
-                        :disabled="!fixturesCanBeDrawn" />
                 </div>
             </div>
 
@@ -324,6 +337,7 @@ onUpdated(() => {
 
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Prizes">
                 <LabelledCheckbox
+                    class="mb-2"
                     :label="t('prizes.requireEntryFee')"
                     v-model="settingsStore.settings.specification.entryFeeRequired" />
 

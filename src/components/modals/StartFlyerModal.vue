@@ -63,6 +63,7 @@ const hide = () => {
 
         <div class="p-fluid mb-2">
             <LabelledCheckbox
+                class="mb-2"
                 v-if="settings.specification.entryFeeRequired"
                 v-model="entryFeesPaid"
                 :label="t('form.entryFeesPaidConfirm')" />
