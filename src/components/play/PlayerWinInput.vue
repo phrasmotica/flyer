@@ -51,7 +51,8 @@ const didRunOut = computed(() => props.playerId === props.ranOut)
                 static
                 simple
                 :fixture="props.fixture"
-                :isWinner="winner === props.playerId" />
+                :isWinner="winner === props.playerId"
+                :isDraw="false" />
         </div>
 
         <RadioButton v-else

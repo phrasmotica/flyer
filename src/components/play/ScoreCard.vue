@@ -48,6 +48,7 @@ const {
     fixture,
     round,
     winner,
+    isDraw,
     isWalkover,
 } = useFixture("card", props.fixture, getRound(props.fixture.id), currentPhase.value)
 
@@ -168,6 +169,7 @@ const handleClick = () => {
                 :score="score.score"
                 :runouts="score.runouts"
                 :isWinner="winner === score.playerId"
+                :isDraw="isDraw"
                 :simple="isWinnerStaysOn"
                 @clicked="handleClick" />
         </div>

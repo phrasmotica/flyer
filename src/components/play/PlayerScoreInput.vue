@@ -43,6 +43,7 @@ const {
 
 const {
     raceTo,
+    isDraw,
 } = useFixture("scoreInput", props.fixture, getRound(props.fixture.id), currentPhase.value)
 
 const { blurNumberInputs } = useTweaks()
@@ -68,7 +69,8 @@ onUpdated(() => {
                 static
                 :fixture="props.fixture"
                 :score="score"
-                :isWinner="props.isWinner" />
+                :isWinner="props.isWinner"
+                :isDraw="isDraw" />
         </div>
 
         <InputNumber v-else

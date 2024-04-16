@@ -46,7 +46,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         set: setScore,
     } = useArray(fixture.value?.scores.map(s => s.score))
 
-    const uniqueScores = useArrayUnique(scores)
+    const uniqueScores = useArrayUnique(() => fixture.value?.scores.map(s => s.score) || [])
 
     const {
         arr: runouts,
@@ -58,7 +58,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const players = computed(() => fixture.value?.scores.map(s => s.playerId) || [])
     const isWalkover = computed(() => fixture.value?.scores.some(s => s.isBye) || false)
 
-    const isDraw = computed(() => uniqueScores.value.length <= 1)
+    const areDrawing = computed(() => uniqueScores.value.length <= 1)
 
     const hasStarted = computed(() => !!fixture.value?.startTime)
     const hasFinished = computed(() => !!fixture.value?.finishTime)
@@ -70,8 +70,8 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
             return false
         }
 
-        if (settings.value.allowDraws && isDraw.value) {
-            return framesPlayed === bestOf.value
+        if (settings.value.allowDraws && areDrawing.value && framesPlayed === bestOf.value) {
+            return true
         }
 
         if (scores.value.every(s => s < raceTo.value)) {
@@ -102,6 +102,10 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
             return ""
         }
 
+        if (isDraw.value) {
+            return ""
+        }
+
         const winningScore = fixture.value.scores.reduce((s, t) => {
             if (s.isBye && !t.isBye) {
                 return t
@@ -115,6 +119,18 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         })
 
         return winningScore.playerId
+    })
+
+    const isDraw = computed(() => {
+        if (!fixture.value) {
+            return false
+        }
+
+        if (!hasStarted.value || !hasFinished.value) {
+            return false
+        }
+
+        return uniqueScores.value.length <= 1
     })
 
     const getOpponent = (playerId: string) => {
@@ -156,6 +172,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         bestOf,
         raceTo,
         scores,
+        areDrawing,
         runouts,
         comment,
         players,
@@ -168,6 +185,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         estimatedDurationMilliseconds,
         durationMilliseconds,
         winner,
+        isDraw,
         getOpponent,
         setWinner,
         setRanOut,

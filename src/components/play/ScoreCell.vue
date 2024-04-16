@@ -9,6 +9,7 @@ const { t } = useI18n()
 const props = defineProps<{
     fixture: Fixture
     isWinner: boolean
+    isDraw: boolean
     score?: number
     simple?: boolean
     large?: boolean
@@ -25,6 +26,10 @@ const cellClass = computed(() => {
     }
 
     if (props.fixture.finishTime && !props.isWinner) {
+        if (props.isDraw) {
+            return "bg-yellow-500 text-white"
+        }
+
         return "loser text-white text-sm"
     }
 
