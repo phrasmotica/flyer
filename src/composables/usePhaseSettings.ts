@@ -93,6 +93,8 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
     const usesRunouts = computed(() => isRoundRobin.value && settings.value.tieBreaker === TieBreaker.Runouts)
 
+    const allowDraws = computed(() => isRoundRobin.value && settings.value.allowDraws)
+
     return {
         settings,
 
@@ -119,5 +121,7 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
 
         usesPlayOff,
         usesRunouts,
+
+        allowDraws,
     }
 }

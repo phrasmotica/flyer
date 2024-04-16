@@ -36,6 +36,7 @@ const {
 
 const {
     raceTo,
+    allowDraws,
 } = usePhaseSettings(currentPhase.value)
 
 const {
@@ -74,14 +75,16 @@ const autoComplete = () => {
 
     const message = phaseEvents.fixtureAutoCompleted(nextFixture.value)
 
-    // LOW: 1 in 3 chance to auto-complete to a draw
     const fixtureRaceTo = raceTo.value || 1
+
+    const isDraw = allowDraws.value ? Math.floor(Math.random() * 3) === 0 : false
 
     flyerStore.autoCompleteFixture(
         currentPhase.value,
         nextFixture.value,
         tables.value[0].id,
-        fixtureRaceTo)
+        fixtureRaceTo,
+        isDraw)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 }
@@ -91,13 +94,15 @@ const autoCompleteRemaining = () => {
         return
     }
 
-    // LOW: compute the correct race-to for the next fixture
     const fixtureRaceTo = raceTo.value || 1
+
+    const isDraw = allowDraws.value && Math.floor(Math.random() * 3) === 0
 
     flyerStore.autoCompletePhase(
         currentPhase.value,
         tables.value[0].id,
-        fixtureRaceTo)
+        fixtureRaceTo,
+        isDraw)
 
     const message = phaseEvents.phaseAutoCompleted()
     flyerStore.addPhaseEvent(currentPhase.value, message)

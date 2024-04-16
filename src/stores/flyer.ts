@@ -387,7 +387,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-started.`, PhaseEventLevel.Internal)
     }
 
-    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, raceTo: number) => {
+    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, dummyScore: number, isDraw: boolean) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
         const breakerId = getRandom(fixture.scores).playerId
@@ -395,7 +395,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         const newScores = fixture.scores.map(s => ({
             ...s,
-            score: s.playerId === winnerId ? raceTo : 0,
+            score: isDraw ? dummyScore - 1 : s.playerId === winnerId ? dummyScore : 0,
         }))
 
         assignTable(phase, fixture.id, tableId, false)
@@ -408,12 +408,12 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
     }
 
-    const autoCompletePhase = (phase: Phase, tableId: string, raceTo: number) => {
+    const autoCompletePhase = (phase: Phase, tableId: string, dummyScore: number, allowDraws: boolean) => {
         const fixtures = phase.rounds.flatMap(r => r.fixtures)
 
         for (const f of fixtures.filter(f => !f.startTime)) {
-            // LOW: compute the correct race-to for each fixture
-            autoCompleteFixture(phase, f, tableId, raceTo)
+            const isDraw = allowDraws && Math.floor(Math.random() * 3) === 0
+            autoCompleteFixture(phase, f, tableId, dummyScore, isDraw)
         }
 
         addPhaseEvent(phase, `${phase.settings.name} was auto-completed.`, PhaseEventLevel.Internal)

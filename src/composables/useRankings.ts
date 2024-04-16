@@ -138,6 +138,8 @@ export const useRankings = () => {
                     if (scoreDiff !== 0) {
                         return scoreDiff
                     }
+
+                    // HIGH: what if the players drew against each other overall??
                 }
 
                 if (settings.tieBreaker === TieBreaker.Runouts) {
