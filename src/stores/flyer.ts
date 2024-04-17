@@ -250,12 +250,13 @@ export const useFlyerStore = defineStore("flyer", () => {
                     const winnerId = getWinner(r.fixtures[idx])
                     const loserId = getLoser(r.fixtures[idx])
 
-                    if (!winnerId || !loserId) {
-                        throw `Could not compute winner or loser of finished fixture ${fixtureId}!`
+                    if (winnerId) {
+                        tryPropagate(phase, fixtureId, winnerId, false)
                     }
 
-                    tryPropagate(phase, fixtureId, winnerId, false)
-                    tryPropagate(phase, fixtureId, loserId, true)
+                    if (loserId) {
+                        tryPropagate(phase, fixtureId, loserId, true)
+                    }
                 }
             }
         }
