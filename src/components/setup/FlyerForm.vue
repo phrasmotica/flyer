@@ -2,6 +2,7 @@
 import { computed, onUpdated } from "vue"
 import type { MenuItem } from "primevue/menuitem"
 
+import DurationSection from "./DurationSection.vue"
 import PlayersSection from "./PlayersSection.vue"
 import PrizesSection from "./PrizesSection.vue"
 import SettingsSection from "./SettingsSection.vue"
@@ -12,7 +13,6 @@ import { useTweaks } from "@/composables/useTweaks"
 import { FlyerFormSection } from "@/data/UiSettings"
 
 import { useUiStore } from "@/stores/ui"
-import DurationSection from "./DurationSection.vue"
 
 const uiStore = useUiStore()
 

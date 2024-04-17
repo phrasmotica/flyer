@@ -34,91 +34,92 @@ const {
 </script>
 
 <template>
-    <div>
-        <!-- HIGH: improve layout -->
-        <div class="p-fluid mb-1">
-            <MatchLengthModelSelect />
-        </div>
+    <div class="p-fluid">
+        <MatchLengthModelSelect />
 
-        <div class="mb-2">
-            <div v-if="isRoundRobin || (isKnockout && isFixedMatchLength)" class="p-fluid mb-2">
+        <div v-if="isRoundRobin">
+            <div>
                 <label for="matchLengthStepper" class="font-bold">
                     {{ t("matchLengthModel.allRounds") }}
                 </label>
 
                 <Stepper
-                    v-if="isRoundRobin"
                     inputId="matchLengthStepper"
                     v-model="settingsStore.settings.specification.bestOf"
                     :min="1" :max="maxBestOfEnv"
                     :prefix="t('matchLengthModel.bestOfPrefix')" />
+            </div>
+
+            <div class="mt-2">
+                <label for="stageCountStepper" class="font-bold">
+                    {{ t('stages.numberOfStages') }}
+                </label>
 
                 <Stepper
-                    v-if="isKnockout"
-                    inputId="matchLengthStepper"
-                    v-model="settingsStore.settings.specification.raceTo"
-                    :min="1" :max="maxRaceEnv"
-                    :prefix="t('matchLengthModel.raceToPrefix')" />
+                    inputId="stageCountStepper"
+                    v-model="settingsStore.settings.specification.stageCount"
+                    :min="1" :max="4"
+                    :suffix="settingsStore.settings.specification.stageCount > 1 ? t('stages.stagesSuffix') : t('stages.stageSuffix')" />
+
+                <Message class="m-0 mt-2" severity="info" :closable="false">
+                    {{ t('stages.stagesDescription') }}
+                </Message>
             </div>
 
-            <div v-else-if="isKnockout && isVariableMatchLength">
-                <div v-for="r, i of roundNames" class="p-fluid mb-2">
-                    <label :for="'raceToRoundStepper' + i" class="font-bold">
-                        {{ r }}
-                    </label>
-
-                    <Stepper
-                        :inputId="'raceToRoundStepper' + i"
-                        v-model="settingsStore.settings.raceToPerRound[i]"
-                        :min="1" :max="maxRaceEnv"
-                        :prefix="t('matchLengthModel.raceToPrefix')" />
-                </div>
-            </div>
-
-            <div v-if="isRoundRobin">
+            <div class="mt-2">
                 <LabelledCheckbox
                     :label="t('form.allowDraws')"
                     v-model="settingsStore.settings.specification.allowDraws"
                     :disabled="!fixturesCanBeDrawn" />
 
-                <Message v-if="allowDraws" class="m-0 mb-2" :closable="false">
+                <Message v-if="allowDraws" class="m-0" :closable="false">
                     {{ t('matchLengthModel.nDrawsAllowed', bestOf! / 2) }}
                 </Message>
-
-                <div class="p-fluid mb-2">
-                    <label for="stageCountStepper" class="font-bold">
-                        {{ t('stages.numberOfStages') }}
-                    </label>
-
-                    <Stepper
-                        inputId="stageCountStepper"
-                        v-model="settingsStore.settings.specification.stageCount"
-                        :min="1" :max="4"
-                        :suffix="settingsStore.settings.specification.stageCount > 1 ? t('stages.stagesSuffix') : t('stages.stageSuffix')" />
-
-                    <Message class="m-0 mt-2" severity="info" :closable="false">
-                        {{ t('stages.stagesDescription') }}
-                    </Message>
-                </div>
             </div>
+        </div>
 
-            <div v-if="isWinnerStaysOn" class="p-fluid mb-2">
-                <label for="winsRequiredStepper" class="font-bold">
-                    {{ t('matchLengthModel.winsRequired') }}
+        <div v-else-if="isKnockout && isFixedMatchLength">
+            <label for="matchLengthStepper" class="font-bold">
+                {{ t("matchLengthModel.allRounds") }}
+            </label>
+
+            <Stepper
+                inputId="matchLengthStepper"
+                v-model="settingsStore.settings.specification.raceTo"
+                :min="1" :max="maxRaceEnv"
+                :prefix="t('matchLengthModel.raceToPrefix')" />
+        </div>
+
+        <div v-else-if="isKnockout && isVariableMatchLength">
+            <div v-for="r, i of roundNames" class="mb-2">
+                <label :for="'raceToRoundStepper' + i" class="font-bold">
+                    {{ r }}
                 </label>
 
                 <Stepper
-                    inputId="winsRequiredStepper"
-                    v-model="settingsStore.settings.specification.winsRequired"
-                    :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
-                    :suffix="t(settingsStore.settings.specification.winsRequired !== 1 ? 'matchLengthModel.winsSuffix' : 'matchLengthModel.winSuffix')" />
-
-                <Message class="m-0 mt-2" severity="info" :closable="false">
-                    {{ t('matchLengthModel.winsRequiredLimit', {
-                        limit: settingsStore.settings.playerCount - 1,
-                    }) }}
-                </Message>
+                    :inputId="'raceToRoundStepper' + i"
+                    v-model="settingsStore.settings.raceToPerRound[i]"
+                    :min="1" :max="maxRaceEnv"
+                    :prefix="t('matchLengthModel.raceToPrefix')" />
             </div>
+        </div>
+
+        <div v-else-if="isWinnerStaysOn">
+            <label for="winsRequiredStepper" class="font-bold">
+                {{ t('matchLengthModel.winsRequired') }}
+            </label>
+
+            <Stepper
+                inputId="winsRequiredStepper"
+                v-model="settingsStore.settings.specification.winsRequired"
+                :min="settingsStore.settings.playerCount - 1" :max="maxRaceEnv"
+                :suffix="t(settingsStore.settings.specification.winsRequired !== 1 ? 'matchLengthModel.winsSuffix' : 'matchLengthModel.winSuffix')" />
+
+            <Message class="m-0 mt-2" severity="info" :closable="false">
+                {{ t('matchLengthModel.winsRequiredLimit', {
+                    limit: settingsStore.settings.playerCount - 1,
+                }) }}
+            </Message>
         </div>
     </div>
 </template>
