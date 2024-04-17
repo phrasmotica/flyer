@@ -77,14 +77,12 @@ const autoComplete = () => {
 
     const fixtureRaceTo = raceTo.value || 1
 
-    const isDraw = fixturesCanBeDrawn.value ? Math.floor(Math.random() * 3) === 0 : false
-
     flyerStore.autoCompleteFixture(
         currentPhase.value,
         nextFixture.value,
         tables.value[0].id,
         fixtureRaceTo,
-        isDraw)
+        fixturesCanBeDrawn.value)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
 }
@@ -96,13 +94,11 @@ const autoCompleteRemaining = () => {
 
     const fixtureRaceTo = raceTo.value || 1
 
-    const isDraw = fixturesCanBeDrawn.value && Math.floor(Math.random() * 3) === 0
-
     flyerStore.autoCompletePhase(
         currentPhase.value,
         tables.value[0].id,
         fixtureRaceTo,
-        isDraw)
+        fixturesCanBeDrawn.value)
 
     const message = phaseEvents.phaseAutoCompleted()
     flyerStore.addPhaseEvent(currentPhase.value, message)

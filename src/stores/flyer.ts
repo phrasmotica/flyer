@@ -386,11 +386,13 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-started.`, PhaseEventLevel.Internal)
     }
 
-    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, dummyScore: number, isDraw: boolean) => {
+    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, dummyScore: number, allowDraws: boolean) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
         const breakerId = getRandom(fixture.scores).playerId
         const winnerId = getRandom(fixture.scores).playerId
+
+        const isDraw = allowDraws && Math.floor(Math.random() * 3) === 0
 
         const newScores = fixture.scores.map(s => ({
             ...s,
@@ -411,8 +413,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         const fixtures = phase.rounds.flatMap(r => r.fixtures)
 
         for (const f of fixtures.filter(f => !f.startTime)) {
-            const isDraw = allowDraws && Math.floor(Math.random() * 3) === 0
-            autoCompleteFixture(phase, f, tableId, dummyScore, isDraw)
+            autoCompleteFixture(phase, f, tableId, dummyScore, allowDraws)
         }
 
         addPhaseEvent(phase, `${phase.settings.name} was auto-completed.`, PhaseEventLevel.Internal)
