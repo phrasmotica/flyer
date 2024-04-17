@@ -12,6 +12,7 @@ import { useTweaks } from "@/composables/useTweaks"
 import { FlyerFormSection } from "@/data/UiSettings"
 
 import { useUiStore } from "@/stores/ui"
+import DurationSection from "./DurationSection.vue"
 
 const uiStore = useUiStore()
 
@@ -21,6 +22,10 @@ const items = computed(() => <MenuItem[]>[
     {
         icon: 'pi pi-user',
         command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Players,
+    },
+    {
+        icon: 'pi pi-stopwatch',
+        command: _ => uiStore.settings.flyerFormSection = FlyerFormSection.Duration,
     },
     {
         icon: 'pi pi-book',
@@ -52,6 +57,10 @@ onUpdated(() => {
         <div id="form-content">
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Players">
                 <PlayersSection />
+            </div>
+
+            <div v-if="uiStore.flyerFormSection === FlyerFormSection.Duration">
+                <DurationSection />
             </div>
 
             <div v-if="uiStore.flyerFormSection === FlyerFormSection.Settings">

@@ -14,6 +14,7 @@ export enum SidebarPosition {
 
 export enum FlyerFormSection {
     Players,
+    Duration,
     Settings,
     Tables,
     Prizes,
