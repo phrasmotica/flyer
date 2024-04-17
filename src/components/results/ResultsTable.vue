@@ -116,6 +116,7 @@ const showPlayOffIndex = (playerId: string) => {
 
         <Column v-if="showPlayOffRank" :header="t('results.playOffRankHeader')">
             <template #body="slotData">
+                <!-- HIGH: don't show rank if play-off was skipped -->
                 {{ getPlayOffRank(slotData.data.playerId) || t('results.noPlayOffRank') }}
             </template>
         </Column>

@@ -372,6 +372,20 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
+    const skipPlayOff = (playOff: PlayOff, forPhase: Phase) => {
+        if (flyer.value) {
+            const playOffPhase = createPlayOffPhase(forPhase, playOff)
+
+            const now = Date.now()
+            playOffPhase.startTime = now
+            playOffPhase.finishTime = now
+
+            addPhaseEvent(playOffPhase, `${playOffPhase.settings.name} was skipped.`, PhaseEventLevel.Internal)
+
+            flyer.value.phases = [...flyer.value.phases, playOffPhase]
+        }
+    }
+
     const clear = () => flyer.value = null
 
     const autoStartFixture = (phase: Phase, fixture: Fixture, tableId: string) => {
@@ -460,6 +474,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         finish,
         cancelRemaining,
         addPlayOff,
+        skipPlayOff,
         clear,
 
         autoStartFixture,

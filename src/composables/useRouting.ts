@@ -35,11 +35,16 @@ export const useRouting = (router: Router, query?: LocationQuery) => {
         })
     }
 
+    const reload = () => {
+        router.go(0)
+    }
+
     return {
         toSetup,
         toPlay,
         toPlayHistoric,
         toResults,
         toHistory,
+        reload,
     }
 }

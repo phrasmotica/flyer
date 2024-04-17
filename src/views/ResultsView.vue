@@ -12,6 +12,7 @@ import Podium from "@/components/results/Podium.vue"
 import ResultsButtons from "@/components/results/ResultsButtons.vue"
 import ResultsMessages from "@/components/results/ResultsMessages.vue"
 import ResultsTable from "@/components/results/ResultsTable.vue"
+import SkipPlayOffModal from "@/components/modals/SkipPlayOffModal.vue"
 import StartPlayOffModal from "@/components/modals/StartPlayOffModal.vue"
 import WinningsList from "@/components/results/WinningsList.vue"
 
@@ -77,6 +78,7 @@ const {
 
 const [showGoToSetupModal, setShowGoToSetupModal] = useToggle()
 const [showStartPlayOffModal, setShowStartPlayOffModal] = useToggle()
+const [showSkipPlayOffModal, setShowSkipPlayOffModal] = useToggle()
 
 const {
     value: imageSaved,
@@ -119,6 +121,20 @@ const startPlayOff = () => {
     setShowStartPlayOffModal(false)
 
     routing.toPlay()
+}
+
+const skipPlayOff = () => {
+    if (!nextPlayOff.value || !mainPhase.value) {
+        console.debug("No play-offs remaining!")
+        return
+    }
+
+    flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value)
+
+    setShowSkipPlayOffModal(false)
+
+    // HIGH: ensure the requiresPlayOff state is refreshed without reloading
+    routing.reload()
 }
 
 const saveResults = () => {
@@ -190,6 +206,7 @@ const save = () => {
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
+                @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
                 @goToPastFlyers="routing.toHistory"
                 @save="save"
                 @saveResults="saveResults" />
@@ -205,6 +222,11 @@ const save = () => {
                 v-model:visible="showStartPlayOffModal"
                 @confirm="startPlayOff"
                 @hide="() => setShowStartPlayOffModal(false)" />
+
+            <SkipPlayOffModal
+                v-model:visible="showSkipPlayOffModal"
+                @confirm="skipPlayOff"
+                @hide="() => setShowSkipPlayOffModal(false)" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>
@@ -212,6 +234,7 @@ const save = () => {
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
+                @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
                 @goToPastFlyers="routing.toHistory"
                 @save="save"
                 @saveResults="saveResults" />
