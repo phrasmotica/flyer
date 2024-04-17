@@ -90,7 +90,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
 
         for (const r of phase.rounds) {
-            const walkovers = completeWalkovers(r, settings.specification.bestOf)
+            const walkovers = completeWalkovers(r, settings.specification.raceTo)
 
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
@@ -119,7 +119,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
 
         for (const r of newPhase.rounds) {
-            const walkovers = completeWalkovers(r, settings.bestOf)
+            const walkovers = completeWalkovers(r, settings.raceTo)
 
             for (const [fixtureId, winnerId] of walkovers) {
                 // doing this just once is sufficient because we're not creating any fixtures
@@ -149,10 +149,8 @@ export const useFlyerStore = defineStore("flyer", () => {
         })
     }
 
-    const completeWalkovers = (round: Round, bestOf: number) => {
+    const completeWalkovers = (round: Round, raceTo: number) => {
         const ids: [string, string][] = []
-
-        const raceTo = Math.ceil((bestOf + 1) / 2)
 
         for (let f of round.fixtures) {
             const isWalkover = f.scores.some(s => s.isBye)

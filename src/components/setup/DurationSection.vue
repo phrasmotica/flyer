@@ -10,6 +10,7 @@ import { useSettings } from "@/composables/useSettings"
 
 import { useSettingsStore } from "@/stores/settings"
 
+const maxBestOfEnv = Number(import.meta.env.VITE_MAX_BEST_OF)
 const maxRaceEnv = Number(import.meta.env.VITE_MAX_RACE)
 
 const { t } = useI18n()
@@ -41,15 +42,23 @@ const {
 
         <div class="mb-2">
             <div v-if="isRoundRobin || (isKnockout && isFixedMatchLength)" class="p-fluid mb-2">
-                <label for="raceToStepper" class="font-bold">
+                <label for="matchLengthStepper" class="font-bold">
                     {{ t("matchLengthModel.allRounds") }}
                 </label>
 
                 <Stepper
-                    inputId="raceToStepper"
+                    v-if="isRoundRobin"
+                    inputId="matchLengthStepper"
                     v-model="settingsStore.settings.specification.bestOf"
-                    :min="1" :max="maxRaceEnv"
+                    :min="1" :max="maxBestOfEnv"
                     :prefix="t('matchLengthModel.bestOfPrefix')" />
+
+                <Stepper
+                    v-if="isKnockout"
+                    inputId="matchLengthStepper"
+                    v-model="settingsStore.settings.specification.raceTo"
+                    :min="1" :max="maxRaceEnv"
+                    :prefix="t('matchLengthModel.raceToPrefix')" />
             </div>
 
             <div v-else-if="isKnockout && isVariableMatchLength">
@@ -60,9 +69,9 @@ const {
 
                     <Stepper
                         :inputId="'raceToRoundStepper' + i"
-                        v-model="settingsStore.settings.bestOfPerRound[i]"
+                        v-model="settingsStore.settings.raceToPerRound[i]"
                         :min="1" :max="maxRaceEnv"
-                        :prefix="t('matchLengthModel.bestOfPrefix')" />
+                        :prefix="t('matchLengthModel.raceToPrefix')" />
                 </div>
             </div>
 

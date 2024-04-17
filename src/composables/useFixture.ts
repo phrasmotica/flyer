@@ -26,12 +26,12 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const {
         round,
-        bestOf,
         raceTo,
     } = useRound(r, p)
 
     const {
         settings,
+        bestOf,
     } = usePhaseSettings(p)
 
     const {
@@ -66,11 +66,13 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
 
     const canBeFinished = computed(() => {
         const framesPlayed = scores.value.reduce((a, b) => a + b)
-        if (framesPlayed > bestOf.value) {
+        const maxFrames = bestOf.value || 2 * raceTo.value - 1
+
+        if (framesPlayed > maxFrames) {
             return false
         }
 
-        if (settings.value.allowDraws && areDrawing.value && framesPlayed === bestOf.value) {
+        if (settings.value.allowDraws && areDrawing.value && framesPlayed === maxFrames) {
             return true
         }
 
@@ -169,7 +171,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         round,
         breakerId,
         tableId,
-        bestOf,
         raceTo,
         scores,
         areDrawing,

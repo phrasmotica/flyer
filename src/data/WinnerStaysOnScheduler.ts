@@ -74,7 +74,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
             const newRound: Round = {
                 fixtures: [],
                 index: roundIndex,
-                bestOf: null,
+                raceTo: null,
                 isGenerated: true,
                 name: "Round " + roundIndex,
             }

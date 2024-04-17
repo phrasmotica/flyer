@@ -7,10 +7,9 @@ export const useRounds = (p: Phase | null) => {
 
     const rounds = computed(() => phase.value?.rounds || [])
 
-    const bestOfs = computed(() => rounds.value.map(r => ({
+    const raceTos = computed(() => rounds.value.map(r => ({
         name: r.name,
-        bestOf: r.bestOf,
-        raceTo: r.bestOf ? Math.ceil((r.bestOf + 1) / 2) : null,
+        raceTo: r.raceTo ? Math.ceil((r.raceTo + 1) / 2) : null,
     })))
 
     const startedRounds = computed(() => rounds.value.filter(r => r.fixtures.some(f => f.startTime)))
@@ -55,7 +54,7 @@ export const useRounds = (p: Phase | null) => {
     return {
         rounds,
 
-        bestOfs,
+        raceTos,
         currentRound,
         nextRoundToGenerate,
         readyToGenerateNextRound,

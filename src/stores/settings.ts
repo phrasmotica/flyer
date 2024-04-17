@@ -109,12 +109,13 @@ const defaultTables = new Array(maxTableCount).fill(0).map<Table>((_, i) => ({
 const defaultSettings: FlyerSettings = {
     playerCount: defaultPlayerCount,
     playerNames: defaultPlayers,
-    bestOfPerRound: [],
+    raceToPerRound: [],
     tableCount: defaultTableCount,
     tables: defaultTables,
     specification: {
         matchLengthModel: MatchLengthModel.Fixed,
         bestOf: 1,
+        raceTo: 1,
         winsRequired: 1,
         format: Format.Knockout,
         ruleSet: RuleSet.Blackball,
@@ -133,7 +134,7 @@ const defaultSettings: FlyerSettings = {
 }
 
 const expectedKnockoutRoundsCount = Math.ceil(Math.log2(maxPlayersEnv))
-defaultSettings.bestOfPerRound = new Array(expectedKnockoutRoundsCount).fill(defaultSettings.specification.bestOf)
+defaultSettings.raceToPerRound = new Array(expectedKnockoutRoundsCount).fill(defaultSettings.specification.raceTo)
 
 export const useSettingsStore = defineStore("settings", () => {
     const settings = useStorage("settings", defaultSettings)

@@ -17,10 +17,9 @@ export const useSettings = (s: FlyerSettings) => {
 
     const roundNames = computed(() => scheduler.value.computeRoundNames(settings.value))
 
-    const bestOfs = computed(() => roundNames.value.map((n, i) => ({
+    const raceTos = computed(() => roundNames.value.map((n, i) => ({
         name: n,
-        bestOf: settings.value.bestOfPerRound[i],
-        raceTo: Math.ceil((settings.value.bestOfPerRound[i] + 1) / 2),
+        raceTo: settings.value.raceToPerRound[i],
     })))
 
     const estimatedCost = computed(() => {
@@ -40,7 +39,7 @@ export const useSettings = (s: FlyerSettings) => {
         durationPerFrame,
         estimatedDurationMinutes,
         roundNames,
-        bestOfs,
+        raceTos,
         estimatedCost,
 
         isInvalid,

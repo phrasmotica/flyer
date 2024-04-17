@@ -21,7 +21,7 @@ const {
 } = usePlayers(currentPhase.value)
 
 const {
-    bestOfs,
+    raceTos,
 } = useRounds(currentPhase.value)
 
 const {
@@ -39,7 +39,7 @@ const {
             :settings="settings"
             :playerCount="players.length"
             :tableCount="tables.length"
-            :bestOfs="bestOfs" />
+            :raceTos="raceTos" />
 
         <div
             v-if="settings.entryFeeRequired"

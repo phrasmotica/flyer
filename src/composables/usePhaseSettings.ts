@@ -18,16 +18,10 @@ export const usePhaseSettings = (p: Phase | null) => {
 export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const settings = ref(s)
 
-    const bestOf = computed(() => {
-        return isFixedMatchLength.value ? settings.value.bestOf : null
-    })
+    const bestOf = computed(() => settings.value.bestOf)
 
     const raceTo = computed(() => {
-        if (bestOf.value) {
-            return Math.ceil((bestOf.value + 1) / 2)
-        }
-
-        return null
+        return isFixedMatchLength.value ? settings.value.raceTo : null
     })
 
     const formatName = computed(() => {

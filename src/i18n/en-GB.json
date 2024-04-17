@@ -109,6 +109,7 @@
         "nDrawsAllowed": "Matches finish once the score is {n}-{n}.",
         "firstToNWins": "First to 1 win | First to {n} wins",
         "bestOfPrefix": "Best of ",
+        "raceToPrefix": "Race to ",
         "racesToPrefix": "Races to ",
         "winsRequired": "Wins required",
         "winSuffix": " win",

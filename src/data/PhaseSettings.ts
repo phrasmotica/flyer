@@ -4,6 +4,7 @@ import type { PlayOff } from "./PlayOff"
 export interface PhaseSettings {
     matchLengthModel: MatchLengthModel
     bestOf: number
+    raceTo: number
     winsRequired: number
     ruleSet: RuleSet
     format: Format
@@ -59,6 +60,7 @@ export const createPlayOffSettings = (phase: Phase, playOff: PlayOff): PhaseSett
     matchLengthModel: MatchLengthModel.Fixed,
     moneySplit: MoneySplit.WinnerTakesAll,
     name: playOff.name,
+    raceTo: 1,
     randomlyDrawAllRounds: false,
     requireCompletedRounds: true,
     ruleSet: phase.settings.ruleSet,
