@@ -48,6 +48,16 @@ const {
                     v-model="settingsStore.settings.specification.bestOf"
                     :min="1" :max="maxBestOfEnv"
                     :prefix="t('matchLengthModel.bestOfPrefix')" />
+
+                <Message v-if="bestOf > 1" class="m-0 mt-2" :closable="false">
+                    <p class="m-0">
+                        {{ t('matchLengthModel.raceToDescription', Math.ceil((bestOf + 1) / 2)) }}
+                    </p>
+
+                    <p v-if="bestOf % 2 === 0" class="m-0">
+                        {{ t('matchLengthModel.nDrawsAllowed', bestOf / 2) }}
+                    </p>
+                </Message>
             </div>
 
             <div class="mt-2">
@@ -63,17 +73,6 @@ const {
 
                 <Message class="m-0 mt-2" severity="info" :closable="false">
                     {{ t('stages.stagesDescription') }}
-                </Message>
-            </div>
-
-            <div class="mt-2">
-                <LabelledCheckbox
-                    :label="t('form.allowDraws')"
-                    v-model="settingsStore.settings.specification.allowDraws"
-                    :disabled="!fixturesCanBeDrawn" />
-
-                <Message v-if="allowDraws" class="m-0" :closable="false">
-                    {{ t('matchLengthModel.nDrawsAllowed', bestOf! / 2) }}
                 </Message>
             </div>
         </div>

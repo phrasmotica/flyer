@@ -188,9 +188,8 @@ export const useSettingsStore = defineStore("settings", () => {
     })
 
     watch(() => settings.value.specification.bestOf, () => {
-        if (settings.value.specification.bestOf % 2 !== 0) {
-            settings.value.specification.allowDraws = false
-        }
+        const isEven = settings.value.specification.bestOf % 2 === 0
+        settings.value.specification.allowDraws = isEven
     })
 
     const moneySplitOptions = computed(() => [
