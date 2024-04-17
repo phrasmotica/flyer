@@ -36,7 +36,7 @@ const {
 
 const {
     raceTo,
-    allowDraws,
+    fixturesCanBeDrawn,
 } = usePhaseSettings(currentPhase.value)
 
 const {
@@ -77,7 +77,7 @@ const autoComplete = () => {
 
     const fixtureRaceTo = raceTo.value || 1
 
-    const isDraw = allowDraws.value ? Math.floor(Math.random() * 3) === 0 : false
+    const isDraw = fixturesCanBeDrawn.value ? Math.floor(Math.random() * 3) === 0 : false
 
     flyerStore.autoCompleteFixture(
         currentPhase.value,
@@ -96,7 +96,7 @@ const autoCompleteRemaining = () => {
 
     const fixtureRaceTo = raceTo.value || 1
 
-    const isDraw = allowDraws.value && Math.floor(Math.random() * 3) === 0
+    const isDraw = fixturesCanBeDrawn.value && Math.floor(Math.random() * 3) === 0
 
     flyerStore.autoCompletePhase(
         currentPhase.value,

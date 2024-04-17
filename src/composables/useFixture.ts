@@ -32,6 +32,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const {
         settings,
         bestOf,
+        fixturesCanBeDrawn,
     } = usePhaseSettings(p)
 
     const {
@@ -72,7 +73,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
             return false
         }
 
-        if (settings.value.allowDraws && areDrawing.value && framesPlayed === maxFrames) {
+        if (fixturesCanBeDrawn.value && areDrawing.value && framesPlayed === maxFrames) {
             return true
         }
 

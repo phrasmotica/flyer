@@ -87,8 +87,7 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const usesPlayOff = computed(() => settings.value.tieBreaker === TieBreaker.PlayOff)
     const usesRunouts = computed(() => isRoundRobin.value && settings.value.tieBreaker === TieBreaker.Runouts)
 
-    const fixturesCanBeDrawn = computed(() => isRoundRobin.value && !!bestOf.value && bestOf.value % 2 === 0)
-    const allowDraws = computed(() => fixturesCanBeDrawn.value && settings.value.allowDraws)
+    const fixturesCanBeDrawn = computed(() => isRoundRobin.value && bestOf.value % 2 === 0)
 
     return {
         settings,
@@ -118,6 +117,5 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
         usesRunouts,
 
         fixturesCanBeDrawn,
-        allowDraws,
     }
 }

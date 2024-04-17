@@ -35,6 +35,7 @@ const {
     settings,
     isWinnerStaysOn,
     usesRunouts,
+    fixturesCanBeDrawn,
 } = usePhaseSettings(mainPhase.value)
 
 const expandedRows = ref(<DataTableExpandedRows>{})
@@ -44,7 +45,7 @@ const showExpander = computed(() => !props.isPinned)
 const showName = computed(() => true)
 const showPlayed = computed(() => props.isInProgress && !props.isPinned)
 const showWins = computed(() => !props.isPinned)
-const showDraws = computed(() => settings.value.allowDraws && !props.isPinned)
+const showDraws = computed(() => fixturesCanBeDrawn.value && !props.isPinned)
 const showLosses = computed(() => !isWinnerStaysOn.value && !props.isPinned)
 const showRunouts = computed(() => usesRunouts.value && (isNotSmallScreen.value || isWinnerStaysOn.value) && !props.isPinned)
 const showPoints = computed(() => !isWinnerStaysOn.value)

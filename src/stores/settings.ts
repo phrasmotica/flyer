@@ -121,7 +121,6 @@ const defaultSettings: FlyerSettings = {
         ruleSet: RuleSet.Blackball,
         randomlyDrawAllRounds: false,
         requireCompletedRounds: true,
-        allowDraws: false,
         allowEarlyFinish: false,
         stageCount: 1,
         entryFeeRequired: false,
@@ -164,7 +163,6 @@ export const useSettingsStore = defineStore("settings", () => {
         if (isKnockout.value) {
             settings.value.specification.requireCompletedRounds = true
             settings.value.specification.allowEarlyFinish = false
-            settings.value.specification.allowDraws = false
         }
 
         if (isRoundRobin.value) {
@@ -182,14 +180,8 @@ export const useSettingsStore = defineStore("settings", () => {
 
             settings.value.specification.randomlyDrawAllRounds = false
             settings.value.specification.requireCompletedRounds = false
-            settings.value.specification.allowDraws = false
             settings.value.specification.allowEarlyFinish = true
         }
-    })
-
-    watch(() => settings.value.specification.bestOf, () => {
-        const isEven = settings.value.specification.bestOf % 2 === 0
-        settings.value.specification.allowDraws = isEven
     })
 
     const moneySplitOptions = computed(() => [

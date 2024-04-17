@@ -11,7 +11,6 @@ export interface PhaseSettings {
     stageCount: number
     randomlyDrawAllRounds: boolean
     requireCompletedRounds: boolean
-    allowDraws: boolean
     allowEarlyFinish: boolean
     tieBreaker: TieBreaker
     entryFeeRequired: boolean
@@ -51,7 +50,6 @@ export enum MoneySplit {
 }
 
 export const createPlayOffSettings = (phase: Phase, playOff: PlayOff): PhaseSettings => ({
-    allowDraws: false,
     allowEarlyFinish: false,
     bestOf: 1,
     entryFee: 0,

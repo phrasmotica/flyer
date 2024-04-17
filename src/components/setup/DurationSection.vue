@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 
-import LabelledCheckbox from "./LabelledCheckbox.vue"
 import MatchLengthModelSelect from "./MatchLengthModelSelect.vue"
 import Stepper from "./Stepper.vue"
 
@@ -28,8 +27,6 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-    fixturesCanBeDrawn,
-    allowDraws,
 } = usePhaseSettingsInternal(settingsStore.settings.specification)
 </script>
 
