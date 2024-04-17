@@ -40,7 +40,7 @@ const winsRequiredSummary = computed(() => {
 })
 
 const bestOfSummary = computed(() => {
-    if (!isRoundRobin.value || !bestOf.value) {
+    if (!isRoundRobin.value) {
         return ""
     }
 

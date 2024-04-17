@@ -32,6 +32,8 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const {
         settings,
         bestOf,
+        isKnockout,
+        isRoundRobin,
         fixturesCanBeDrawn,
     } = usePhaseSettings(p)
 
@@ -65,15 +67,26 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const hasFinished = computed(() => !!fixture.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
+    const maxFrames = computed(() => {
+        if (isKnockout.value) {
+            return 2 * raceTo.value - 1
+        }
+
+        if (isRoundRobin.value) {
+            return bestOf.value
+        }
+
+        return 1
+    })
+
     const canBeFinished = computed(() => {
         const framesPlayed = scores.value.reduce((a, b) => a + b)
-        const maxFrames = bestOf.value || 2 * raceTo.value - 1
 
-        if (framesPlayed > maxFrames) {
+        if (framesPlayed > maxFrames.value) {
             return false
         }
 
-        if (fixturesCanBeDrawn.value && areDrawing.value && framesPlayed === maxFrames) {
+        if (fixturesCanBeDrawn.value && areDrawing.value && framesPlayed === maxFrames.value) {
             return true
         }
 

@@ -21,6 +21,10 @@ export const usePhaseSettingsInternal = (s: PhaseSettings) => {
     const bestOf = computed(() => settings.value.bestOf)
 
     const raceTo = computed(() => {
+        if (isRoundRobin.value) {
+            return Math.ceil((bestOf.value + 1) / 2)
+        }
+
         return isFixedMatchLength.value ? settings.value.raceTo : null
     })
 

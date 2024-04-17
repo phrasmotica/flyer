@@ -22,6 +22,7 @@ const {
 
 const {
     bestOf,
+    raceTo,
     isFixedMatchLength,
     isVariableMatchLength,
     isKnockout,
@@ -48,7 +49,7 @@ const {
 
                 <Message v-if="bestOf > 1" class="m-0 mt-2" :closable="false">
                     <p class="m-0">
-                        {{ t('matchLengthModel.raceToDescription', Math.ceil((bestOf + 1) / 2)) }}
+                        {{ t('matchLengthModel.raceToDescription', raceTo!) }}
                     </p>
 
                     <p v-if="bestOf % 2 === 0" class="m-0">
