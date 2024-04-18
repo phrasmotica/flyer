@@ -14,7 +14,6 @@ export const useFlyer = (f: Flyer | null) => {
 
     const {
         completedPlayOffs,
-        getPlayOffRank,
         processStandings,
         getMoneyRecipients,
     } = usePlayOffs(flyer.value)
@@ -69,7 +68,6 @@ export const useFlyer = (f: Flyer | null) => {
         overallMoneyRecipients,
         incompleteCount,
 
-        getPlayOffRank,
         phaseIsComplete,
     }
 }

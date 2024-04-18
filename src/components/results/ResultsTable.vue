@@ -9,6 +9,7 @@ import { useScreenSizes } from "@/composables/useScreenSizes"
 
 import { useFlyerStore } from "@/stores/flyer"
 import PlayerRecord from "./PlayerRecord.vue"
+import { usePlayOffs } from "@/composables/usePlayOffs"
 
 const { t } = useI18n()
 
@@ -22,12 +23,12 @@ const { isNotSmallScreen } = useScreenSizes()
 const flyerStore = useFlyerStore()
 
 const {
+    flyer,
     mainPhase,
     overallStandings,
     playOffs,
     completedPlayOffs,
     allPlayOffsComplete,
-    getPlayOffRank,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -36,6 +37,11 @@ const {
     usesRunouts,
     fixturesCanBeDrawn,
 } = usePhaseSettings(mainPhase.value)
+
+const {
+    playOffWasSkipped,
+    getPlayOffRank,
+} = usePlayOffs(flyer.value)
 
 const expandedRows = ref(<DataTableExpandedRows>{})
 
@@ -115,8 +121,17 @@ const showPlayOffIndex = (playerId: string) => {
 
         <Column v-if="showPlayOffRank" :header="t('results.playOffRankHeader')">
             <template #body="slotData">
-                <!-- HIGH: don't show rank if play-off was skipped -->
-                {{ getPlayOffRank(slotData.data.playerId) || t('results.noPlayOffRank') }}
+                <span v-if="playOffWasSkipped(slotData.data.playerId)" class="font-italic">
+                    {{ t('playOff.skippedAbbr') }}
+                </span>
+
+                <span v-else-if="getPlayOffRank(slotData.data.playerId)">
+                    {{ getPlayOffRank(slotData.data.playerId) }}
+                </span>
+
+                <span v-else>
+                    {{ t('results.noPlayOffRank') }}
+                </span>
             </template>
         </Column>
 

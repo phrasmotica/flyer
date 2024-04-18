@@ -47,13 +47,18 @@ export const usePlayOffs = (f: Flyer | null) => {
         return playOffPhases.value.findIndex(p => p.players.some(x => x.id === playerId))
     }
 
+    const playOffWasSkipped = (playerId: string) => {
+        const playOffIdx = findPlayOffIndex(playerId)
+        if (playOffIdx < 0) {
+            return false
+        }
+
+        return !!playOffPhases.value[playOffIdx].skippedTime
+    }
+
     const getPlayOffRank = (playerId: string) => {
         const playOffIdx = findPlayOffIndex(playerId)
         if (playOffIdx < 0) {
-            return null
-        }
-
-        if (playOffPhases.value[playOffIdx].skippedTime) {
             return null
         }
 
@@ -110,6 +115,7 @@ export const usePlayOffs = (f: Flyer | null) => {
         standings,
         completedPlayOffs,
 
+        playOffWasSkipped,
         getPlayOffRank,
         processStandings,
         getMoneyRecipients,
