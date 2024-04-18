@@ -33,7 +33,9 @@ export const usePlayOffs = (f: Flyer | null) => {
         prizeColours,
     } = usePrizes(settings.value, players.value.length)
 
-    const completedPlayOffs = computed(() => playOffPhases.value.filter(p => p.startTime && p.finishTime))
+    const completedPlayOffs = computed(() => playOffPhases.value.filter(p => {
+        return p.skippedTime || (p.startTime && p.finishTime)
+    }))
 
     const standings = computed(() => playOffPhases.value.map(p => computeStandings(
         p.rounds.flatMap(r => r.fixtures),

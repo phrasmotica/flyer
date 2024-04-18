@@ -45,7 +45,11 @@ export const useFlyer = (f: Flyer | null) => {
 
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
-        return !!phase?.startTime && !!phase.finishTime
+        if (!phase) {
+            return false
+        }
+
+        return !!phase.skippedTime || (!!phase.startTime && !!phase.finishTime)
     }
 
     return {

@@ -46,7 +46,7 @@ export const usePodium = (p: Phase | null) => {
     } = usePrizes(settings.value, players.value.length)
 
     const finalists = computed<[string, string]>(() => {
-        if (!phase.value) {
+        if (!phase.value || phase.value.skippedTime) {
             return ["", ""]
         }
 

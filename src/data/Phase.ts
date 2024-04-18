@@ -13,6 +13,7 @@ export interface Phase {
     settings: PhaseSettings
     startTime: number | null
     finishTime: number | null
+    skippedTime: number | null
     rounds: Round[]
     fixtureSwaps: FixtureSwap[]
     eventLog: PhaseEvent[]

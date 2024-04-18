@@ -84,6 +84,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             settings: {...settings.specification},
             startTime: Date.now(),
             finishTime: null,
+            skippedTime: null,
             rounds: scheduler.generateFixtures(settings, players),
             fixtureSwaps: [],
             eventLog: createEventLog(settings.specification.name),
@@ -113,6 +114,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             settings: {...settings},
             startTime: Date.now(),
             finishTime: null,
+            skippedTime: null,
             rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
             fixtureSwaps: [],
             eventLog: createEventLog(settings.name),
@@ -376,9 +378,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         if (flyer.value) {
             const playOffPhase = createPlayOffPhase(forPhase, playOff)
 
-            const now = Date.now()
-            playOffPhase.startTime = now
-            playOffPhase.finishTime = now
+            playOffPhase.skippedTime = Date.now()
 
             addPhaseEvent(playOffPhase, `${playOffPhase.settings.name} was skipped.`, PhaseEventLevel.Internal)
 

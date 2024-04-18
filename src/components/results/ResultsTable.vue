@@ -32,7 +32,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    settings,
     isWinnerStaysOn,
     usesRunouts,
     fixturesCanBeDrawn,

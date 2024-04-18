@@ -29,8 +29,10 @@ export const usePhaseTiming = (p: Phase | null) => {
         clockable.value = phase.value
     })
 
-    const hasStarted = computed(() => !!phase.value?.startTime)
-    const hasFinished = computed(() => !!phase.value?.finishTime)
+    const wasSkipped = computed(() => !!phase.value?.skippedTime)
+
+    const hasStarted = computed(() => !wasSkipped.value && !!phase.value?.startTime)
+    const hasFinished = computed(() => wasSkipped.value || !!phase.value?.finishTime)
     const isInProgress = computed(() => hasStarted.value && !hasFinished.value)
 
     const estimatedDurationMinutes = computed(() => {
@@ -46,6 +48,10 @@ export const usePhaseTiming = (p: Phase | null) => {
     })
 
     const durationMinutes = computed(() => {
+        if (wasSkipped.value) {
+            return null
+        }
+
         if (!phase.value?.startTime || !phase.value.finishTime) {
             return null
         }
@@ -54,6 +60,10 @@ export const usePhaseTiming = (p: Phase | null) => {
     })
 
     const durationMilliseconds = computed(() => {
+        if (wasSkipped.value) {
+            return null
+        }
+
         if (!phase.value?.startTime || !phase.value.finishTime) {
             return null
         }
