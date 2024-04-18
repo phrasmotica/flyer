@@ -17,7 +17,7 @@ export const useFlyer = (f: Flyer | null) => {
         getPlayOffRank,
         processStandings,
         getMoneyRecipients,
-    } = usePlayOffs(playOffPhases.value, mainPhase.value)
+    } = usePlayOffs(flyer.value)
 
     const {
         standings,

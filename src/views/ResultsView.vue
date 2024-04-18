@@ -133,9 +133,6 @@ const skipPlayOff = () => {
     flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value)
 
     setShowSkipPlayOffModal(false)
-
-    // HIGH: ensure the requiresPlayOff state is refreshed without reloading
-    routing.reload()
 }
 
 const saveResults = () => {

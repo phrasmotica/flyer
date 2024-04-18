@@ -1,25 +1,24 @@
 import { computed, ref } from "vue"
 
-import { usePhase } from "./usePhase"
+import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
 
-import type { Phase } from "@/data/Phase"
+import type { Flyer } from "@/data/Flyer"
 import type { PlayerRecord } from "@/data/PlayerRecord"
 import type { Winnings } from "@/data/Winnings"
-import { usePhaseSettings } from "./usePhaseSettings"
 
-export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
-    const playOffs = ref(p)
+export const usePlayOffs = (f: Flyer | null) => {
+    const flyer = ref(f)
 
-    const {
-        phase,
-    } = usePhase(mp)
+    const mainPhase = computed(() => flyer.value?.phases[0] || null)
+
+    const playOffPhases = computed(() => flyer.value?.phases.slice(1) || [])
 
     const {
         players,
-    } = usePlayers(phase.value)
+    } = usePlayers(mainPhase.value)
 
     const {
         computeStandings,
@@ -27,23 +26,23 @@ export const usePlayOffs = (p: Phase[], mp: Phase | null) => {
 
     const {
         settings,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSettings(mainPhase.value)
 
     const {
         prizeMonies,
         prizeColours,
     } = usePrizes(settings.value, players.value.length)
 
-    const completedPlayOffs = computed(() => playOffs.value.filter(p => p.startTime && p.finishTime))
+    const completedPlayOffs = computed(() => playOffPhases.value.filter(p => p.startTime && p.finishTime))
 
-    const standings = computed(() => playOffs.value.map(p => computeStandings(
+    const standings = computed(() => playOffPhases.value.map(p => computeStandings(
         p.rounds.flatMap(r => r.fixtures),
         p.players,
         p.settings,
     )))
 
     const findPlayOffIndex = (playerId: string) => {
-        return playOffs.value.findIndex(p => p.players.some(x => x.id === playerId))
+        return playOffPhases.value.findIndex(p => p.players.some(x => x.id === playerId))
     }
 
     const getPlayOffRank = (playerId: string) => {
