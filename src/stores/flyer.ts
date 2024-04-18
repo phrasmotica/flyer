@@ -14,6 +14,7 @@ import type { Phase } from "@/data/Phase"
 import { PhaseEventLevel, type PhaseEvent } from "@/data/PhaseEvent"
 import { createPlayOffSettings, Format } from "@/data/PhaseSettings"
 import type { Player } from "@/data/Player"
+import type { PlayerRecord } from "@/data/PlayerRecord"
 import type { PlayOff } from "@/data/PlayOff"
 import type { Round } from "@/data/Round"
 import { RoundRobinScheduler } from "@/data/RoundRobinScheduler"
@@ -88,6 +89,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             rounds: scheduler.generateFixtures(settings, players),
             fixtureSwaps: [],
             eventLog: createEventLog(settings.specification.name),
+            ranking: [],
         }
 
         for (const r of phase.rounds) {
@@ -118,6 +120,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
             fixtureSwaps: [],
             eventLog: createEventLog(settings.name),
+            ranking: [],
         }
 
         for (const r of newPhase.rounds) {
@@ -374,11 +377,12 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const skipPlayOff = (playOff: PlayOff, forPhase: Phase) => {
+    const skipPlayOff = (playOff: PlayOff, forPhase: Phase, ranking: PlayerRecord[]) => {
         if (flyer.value) {
             const playOffPhase = createPlayOffPhase(forPhase, playOff)
 
             playOffPhase.skippedTime = Date.now()
+            playOffPhase.ranking = ranking
 
             addPhaseEvent(playOffPhase, `${playOffPhase.settings.name} was skipped.`, PhaseEventLevel.Internal)
 

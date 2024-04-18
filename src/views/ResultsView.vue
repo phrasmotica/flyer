@@ -27,6 +27,8 @@ import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useStandings } from "@/composables/useStandings"
 import { useTimedRef } from "@/composables/useTimedRef"
 
+import type { PlayerRecord } from "@/data/PlayerRecord"
+
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 
@@ -124,13 +126,17 @@ const startPlayOff = () => {
     routing.toPlay()
 }
 
-const skipPlayOff = () => {
+const skipPlayOff = (winnerId: string) => {
     if (!nextPlayOff.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
-    flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value)
+    // HIGH: compute a ranking in which the specified winner is top,
+    // and the rest are in the same order as in the current table
+    const ranking: PlayerRecord[] = []
+
+    flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value, ranking)
 
     setShowSkipPlayOffModal(false)
 }
@@ -223,7 +229,7 @@ const save = () => {
 
             <SkipPlayOffModal
                 v-model:visible="showSkipPlayOffModal"
-                @confirm="skipPlayOff"
+                @confirmWinner="skipPlayOff"
                 @hide="() => setShowSkipPlayOffModal(false)" />
         </template>
 

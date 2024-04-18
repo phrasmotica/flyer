@@ -2,6 +2,7 @@ import type { FixtureSwap } from "./FixtureSwap"
 import type { PhaseEvent } from "./PhaseEvent"
 import type { PhaseSettings } from "./PhaseSettings"
 import type { Player } from "./Player"
+import type { PlayerRecord } from "./PlayerRecord"
 import type { Round } from "./Round"
 import type { Table } from "./Table"
 
@@ -17,4 +18,5 @@ export interface Phase {
     rounds: Round[]
     fixtureSwaps: FixtureSwap[]
     eventLog: PhaseEvent[]
+    ranking: PlayerRecord[]
 }

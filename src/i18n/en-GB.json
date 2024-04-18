@@ -14,7 +14,8 @@
         "finish": "Finish",
         "error": "Error",
         "assign": "Assign",
-        "on": "on"
+        "on": "on",
+        "confirm": "Confirm"
     },
     "fixture": {
         "unknownStatus": "???",
@@ -209,7 +210,7 @@
         "newFlyerAreYouSure": "Are you sure you want to start a new flyer? The current one has not been saved!",
         "startPlayOffButton": "Start the {name}",
         "skipPlayOff": "Skip Play-Off",
-        "skipPlayOffName": "Are you sure you want to skip the {name}?",
+        "pleaseChoosePlayOffWinner": "Please choose a winner of {name}:",
         "startPlayOff": "Start Play-Off",
         "startPlayOffName": "Are you sure you want to start the {name}?"
     },
