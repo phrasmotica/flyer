@@ -53,6 +53,10 @@ export const usePlayOffs = (f: Flyer | null) => {
             return null
         }
 
+        if (playOffPhases.value[playOffIdx].skippedTime) {
+            return null
+        }
+
         const relevantStandings = standings.value[playOffIdx]
 
         const idx = relevantStandings.findIndex(d => d.playerId === playerId)
