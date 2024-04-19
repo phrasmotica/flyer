@@ -22,12 +22,13 @@ import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePodium } from "@/composables/usePodium"
 import { useQueryParams } from "@/composables/useQueryParams"
+import { useRankings } from "@/composables/useRankings"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useStandings } from "@/composables/useStandings"
 import { useTimedRef } from "@/composables/useTimedRef"
 
-import type { PlayerRecord } from "@/data/PlayerRecord"
+import type { Player } from "@/data/Player"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
@@ -70,6 +71,10 @@ const {
     requiresPlayOff,
     orderedPlayOffs,
 } = useStandings(mainPhase.value)
+
+const {
+    computeDummyStandings,
+} = useRankings()
 
 const {
     isHistoric,
@@ -126,15 +131,13 @@ const startPlayOff = () => {
     routing.toPlay()
 }
 
-const skipPlayOff = (winnerId: string) => {
+const skipPlayOff = (players: Player[]) => {
     if (!nextPlayOff.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
-    // HIGH: compute a ranking in which the specified winner is top,
-    // and the rest are in the same order as in the current table
-    const ranking: PlayerRecord[] = []
+    const ranking = computeDummyStandings(players)
 
     flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value, ranking)
 
@@ -229,7 +232,7 @@ const save = () => {
 
             <SkipPlayOffModal
                 v-model:visible="showSkipPlayOffModal"
-                @confirmWinner="skipPlayOff"
+                @confirmRanking="skipPlayOff"
                 @hide="() => setShowSkipPlayOffModal(false)" />
         </template>
 

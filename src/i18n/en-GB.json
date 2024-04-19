@@ -210,7 +210,7 @@
         "newFlyerAreYouSure": "Are you sure you want to start a new flyer? The current one has not been saved!",
         "startPlayOffButton": "Start the {name}",
         "skipPlayOff": "Skip Play-Off",
-        "pleaseChoosePlayOffWinner": "Please choose a winner of {name}:",
+        "pleaseConfirmPlayOffRanking": "Please confirm a ranking for {name}:",
         "startPlayOff": "Start Play-Off",
         "startPlayOffName": "Are you sure you want to start the {name}?"
     },

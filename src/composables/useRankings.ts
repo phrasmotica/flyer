@@ -155,6 +155,22 @@ export const useRankings = () => {
         return tableData
     }
 
+    const computeDummyStandings = (players: Player[]) => {
+        return players.map<PlayerRecord>((p, i) => ({
+            playerId: p.id,
+            name: p.name,
+            played: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0,
+            diff: 0,
+            runouts: 0,
+            points: 0,
+            incomplete: false,
+            rank: i + 1,
+        }))
+    }
+
     const recordsAreEqual = (r: PlayerRecord, s: PlayerRecord) => {
         return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
     }
@@ -193,6 +209,7 @@ export const useRankings = () => {
         getWinner,
         getLoser,
         computeStandings,
+        computeDummyStandings,
         computePlayOffs,
     }
 }

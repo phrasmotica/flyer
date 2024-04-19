@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted } from "vue"
 import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
-import PlayerDropdown from "../results/PlayerDropdown.vue"
+import PlayerRanker from "../results/PlayerRanker.vue"
 
+import { useArray } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
 import { useStandings } from "@/composables/useStandings"
+
+import type { Player } from "@/data/Player"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -17,7 +20,7 @@ const visible = defineModel<boolean>("visible", {
 })
 
 const emit = defineEmits<{
-    confirmWinner: [playerId: string]
+    confirmRanking: [players: Player[]]
     hide: []
 }>()
 
@@ -32,7 +35,9 @@ const {
     orderedPlayOffs,
 } = useStandings(mainPhase.value)
 
-const defaultWinner = ref("")
+const {
+    arr: finalOrder,
+} = useArray<Player>()
 
 const nextPlayOff = computed(() => {
     const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
@@ -41,14 +46,12 @@ const nextPlayOff = computed(() => {
 
 const players = computed(() => nextPlayOff.value?.players || [])
 
-const message = computed(() => t('results.pleaseChoosePlayOffWinner', {
+const message = computed(() => t('results.pleaseConfirmPlayOffRanking', {
     name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
 }))
 
 onMounted(() => {
-    if (players.value[0]) {
-        defaultWinner.value = players.value[0].id
-    }
+    finalOrder.value = players.value
 })
 </script>
 
@@ -59,10 +62,8 @@ onMounted(() => {
         :message="message"
         :confirmLabel="t('common.confirm')"
         :cancelLabel="t('common.cancel')"
-        @confirm="emit('confirmWinner', defaultWinner)"
+        @confirm="emit('confirmRanking', finalOrder)"
         @hide="emit('hide')">
-        <div class="p-fluid mb-2">
-            <PlayerDropdown v-model="defaultWinner" :players="players" />
-        </div>
+        <PlayerRanker v-model="finalOrder" />
     </ConfirmModal>
 </template>
