@@ -60,10 +60,12 @@ const variableRacesSummary = computed(() => {
         return ""
     }
 
-    // HIGH: localise
-    return "Races to " + props.raceTos
-        .map(r => `${r.raceTo!} (${r.name})`)
-        .join(", then ")
+    return props.raceTos
+        .map(r => t('races.roundToN', {
+            round: r.name,
+            n: r.raceTo!,
+        }))
+        .join(", ")
 })
 
 const drawSummary = computed(() => {
@@ -89,12 +91,17 @@ const stagesSummary = computed(() => {
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">
-        <strong v-if="isWinnerStaysOn">{{ winsRequiredSummary }}</strong>
-        <strong v-else-if="variableRacesSummary">{{ variableRacesSummary }}</strong>
-        <span v-else>
-            <strong v-if="bestOfSummary">{{ bestOfSummary }}</strong>
-            <strong v-if="raceSummary">{{ raceSummary }}</strong>
-        </span>
+        <div v-if="isWinnerStaysOn" class="font-bold">
+            {{ winsRequiredSummary }}
+        </div>
+        <div v-else-if="variableRacesSummary">
+            <div class="font-bold">{{ t('races.variableRaces') }}</div>
+            <div>{{ variableRacesSummary }}</div>
+        </div>
+        <div v-else class="font-bold">
+            <span v-if="bestOfSummary">{{ bestOfSummary }}</span>
+            <span v-if="raceSummary">{{ raceSummary }}</span>
+        </div>
     </div>
 
     <div class="pt-2 border-top-1 border-gray-200 mb-2">

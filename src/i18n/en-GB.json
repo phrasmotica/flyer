@@ -177,7 +177,9 @@
     },
     "races": {
         "raceToN": "Race to {n}",
-        "racesToN": "Races to {n}"
+        "racesToN": "Races to {n}",
+        "variableRaces": "Variable races",
+        "roundToN": "{round} to {n}"
     },
     "results": {
         "results": "Results",
