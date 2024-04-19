@@ -15,13 +15,15 @@ export const useRound = (r: Round | undefined, p: Phase | null) => {
     } = useRankings()
 
     const {
-        settings,
         isWinnerStaysOn,
+        raceTo: phaseRaceTo,
     } = usePhaseSettings(p)
 
     const name = computed(() => round.value?.name)
     const fixtures = computed(() => round.value?.fixtures || [])
-    const raceTo = computed(() => round.value?.raceTo || settings.value.raceTo)
+
+    // if the round has no raceTo, we're in a fixed-length phase
+    const raceTo = computed(() => round.value?.raceTo || phaseRaceTo.value!)
 
     const playableFixtures = computed(() => {
         if (isWinnerStaysOn.value) {

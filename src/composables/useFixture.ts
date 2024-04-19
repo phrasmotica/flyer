@@ -49,6 +49,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         set: setScore,
     } = useArray(fixture.value?.scores.map(s => s.score))
 
+    const uniqueProvisionalScores = useArrayUnique(scores)
     const uniqueScores = useArrayUnique(() => fixture.value?.scores.map(s => s.score) || [])
 
     const {
@@ -61,7 +62,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     const players = computed(() => fixture.value?.scores.map(s => s.playerId) || [])
     const isWalkover = computed(() => fixture.value?.scores.some(s => s.isBye) || false)
 
-    const areDrawing = computed(() => uniqueScores.value.length <= 1)
+    const areDrawing = computed(() => uniqueProvisionalScores.value.length <= 1)
 
     const hasStarted = computed(() => !!fixture.value?.startTime)
     const hasFinished = computed(() => !!fixture.value?.finishTime)
@@ -187,7 +188,6 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         tableId,
         raceTo,
         scores,
-        areDrawing,
         runouts,
         comment,
         players,
