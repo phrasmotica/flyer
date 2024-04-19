@@ -285,12 +285,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             return false
         }
 
-        const standings = computeStandings(
-            phase.rounds.flatMap(r => r.fixtures),
-            phase.players,
-            phase.settings
-        )
-
+        const standings = computeStandings(phase, false)
         return standings[0].wins >= phase.settings.winsRequired
     }
 

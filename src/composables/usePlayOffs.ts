@@ -37,11 +37,7 @@ export const usePlayOffs = (f: Flyer | null) => {
         return p.skippedTime || (p.startTime && p.finishTime)
     }))
 
-    const standings = computed(() => playOffPhases.value.map(p => computeStandings(
-        p.rounds.flatMap(r => r.fixtures),
-        p.players,
-        p.settings,
-    )))
+    const standings = computed(() => playOffPhases.value.map(p => computeStandings(p, true)))
 
     const findPlayOffIndex = (playerId: string) => {
         return playOffPhases.value.findIndex(p => p.players.some(x => x.id === playerId))

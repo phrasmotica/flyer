@@ -1,7 +1,6 @@
 import { computed } from "vue"
 import { useSorted } from "@vueuse/core"
 
-import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
@@ -19,11 +18,6 @@ export const useStandings = (p: Phase | null) => {
     } = usePlayers(phase.value)
 
     const {
-        fixtures,
-    } = useFixtureList(phase.value)
-
-    const {
-        settings,
         isKnockout,
         isRoundRobin,
         usesPlayOff,
@@ -34,9 +28,9 @@ export const useStandings = (p: Phase | null) => {
         computePlayOffs,
     } = useRankings()
 
-    const standings = computed(() => computeStandings(fixtures.value, players.value, settings.value))
+    const standings = computed(() => computeStandings(phase.value, true))
 
-    const playOffs = computed(() => computePlayOffs(fixtures.value, players.value, settings.value))
+    const playOffs = computed(() => computePlayOffs(phase.value))
 
     const orderedPlayOffs = useSorted(playOffs, (a, b) => b.forRank - a.forRank)
 
@@ -51,8 +45,7 @@ export const useStandings = (p: Phase | null) => {
             return null
         }
 
-        const standings = computeStandings(fixtures.value, players.value, settings.value)
-        return players.value.find(p => p.id === standings[0].playerId)!
+        return players.value.find(p => p.id === standings.value[0].playerId)!
     })
 
     return {

@@ -121,17 +121,22 @@ const showPlayOffIndex = (playerId: string) => {
 
         <Column v-if="showPlayOffRank" :header="t('results.playOffRankHeader')">
             <template #body="slotData">
-                <span v-if="playOffWasSkipped(slotData.data.playerId)" class="font-italic">
-                    {{ t('playOff.skippedAbbr') }}
-                </span>
-
-                <span v-else-if="getPlayOffRank(slotData.data.playerId)">
-                    {{ getPlayOffRank(slotData.data.playerId) }}
-                </span>
-
-                <span v-else>
-                    {{ t('results.noPlayOffRank') }}
-                </span>
+                <div v-if="playOffWasSkipped(slotData.data.playerId)" class="font-italic">
+                    <span v-if="getPlayOffRank(slotData.data.playerId)">
+                        {{ getPlayOffRank(slotData.data.playerId) }}
+                    </span>
+                    <span v-else>
+                        {{ t('playOff.skippedAbbr') }}
+                    </span>
+                </div>
+                <div v-else>
+                    <span v-if="getPlayOffRank(slotData.data.playerId)">
+                        {{ getPlayOffRank(slotData.data.playerId) }}
+                    </span>
+                    <span v-else>
+                        {{ t('results.noPlayOffRank') }}
+                    </span>
+                </div>
             </template>
         </Column>
 

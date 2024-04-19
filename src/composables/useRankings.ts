@@ -1,4 +1,5 @@
 import type { Fixture } from "@/data/Fixture"
+import type { Phase } from "@/data/Phase"
 import { TieBreaker, Format, type PhaseSettings } from "@/data/PhaseSettings"
 import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
@@ -111,8 +112,18 @@ export const useRankings = () => {
         return 0
     }
 
-    const computeStandings = (fixtures: Fixture[], players: Player[], settings: PhaseSettings) => {
-        const records = players.map<PlayerRecord>(p => ({
+    const computeStandings = (phase: Phase | null, considerDefaultRanking: boolean) => {
+        if (!phase) {
+            return []
+        }
+
+        if (considerDefaultRanking && phase.ranking.length > 0) {
+            return phase.ranking
+        }
+
+        const fixtures = phase.rounds.flatMap(r => r.fixtures)
+
+        const records = phase.players.map<PlayerRecord>(p => ({
             playerId: p.id,
             name: p.name,
             played: getPlayed(fixtures, p.id),
@@ -133,7 +144,7 @@ export const useRankings = () => {
                     return firstSort
                 }
 
-                if (settings.tieBreaker === TieBreaker.HeadToHead) {
+                if (phase.settings.tieBreaker === TieBreaker.HeadToHead) {
                     const scoreDiff = sortHeadToHead(p, q, fixtures)
                     if (scoreDiff !== 0) {
                         return scoreDiff
@@ -142,7 +153,7 @@ export const useRankings = () => {
                     // HIGH: what if the players drew against each other overall??
                 }
 
-                if (settings.tieBreaker === TieBreaker.Runouts) {
+                if (phase.settings.tieBreaker === TieBreaker.Runouts) {
                     if (p.runouts !== q.runouts) {
                         return q.runouts - p.runouts
                     }
@@ -175,17 +186,21 @@ export const useRankings = () => {
         return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
     }
 
-    const computePlayOffs = (fixtures: Fixture[], players: Player[], settings: PhaseSettings) => {
-        if (settings.format === Format.Knockout) {
+    const computePlayOffs = (phase: Phase | null) => {
+        if (!phase) {
+            return []
+        }
+
+        if (phase.settings.format === Format.Knockout) {
             return []
         }
 
         const playOffs = <PlayOff[]>[]
 
-        const standings = computeStandings(fixtures, players, settings)
+        const standings = computeStandings(phase, false)
 
         for (const record of standings) {
-            const player = players.find(p => p.id === record.playerId)!
+            const player = phase.players.find(p => p.id === record.playerId)!
             const matchingPlayOff = playOffs.find(p => recordsAreEqual(record, p.records[0]))
 
             if (matchingPlayOff) {
