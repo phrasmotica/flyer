@@ -118,7 +118,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         const newPhase: Phase = {
             id: playOff.id,
-            order: 1,
+            order: 1, // HIGH: assign this properly, perhaps when (if) it gets added to the flyer
             players: playOff.players,
             tables: forPhase.tables,
             settings: {...settings},

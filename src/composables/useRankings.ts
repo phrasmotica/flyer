@@ -153,8 +153,6 @@ export const useRankings = () => {
 
                         return scoreDiff
                     }
-
-                    // HIGH: what if the players drew against each other overall??
                 }
 
                 if (phase.settings.tieBreaker === TieBreaker.Runouts) {
@@ -211,8 +209,15 @@ export const useRankings = () => {
                 matchingPlayOff.players.push(player)
             }
             else {
+                // HIGH: this needs to be something that doesn't change between calls, because
+                // this function gets called every time the results page reloads to compute play-offs
+                // for the main flyer phase.
+                // We can use a GUID instead if we can ensure this method doesn't get re-called
+                // after a page reload...
+                const id = "play-off-" + playOffs.length
+
                 playOffs.push({
-                    id: "play-off-" + playOffs.length,
+                    id,
                     name: "Play-Off for Position " + record.rank,
                     index: 0,
                     forRank: record.rank,
