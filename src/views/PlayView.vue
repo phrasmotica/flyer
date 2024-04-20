@@ -25,6 +25,8 @@ import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
+import { usePhase } from "@/composables/usePhase"
+import { useStandings } from "@/composables/useStandings"
 
 const { t } = useI18n()
 
@@ -53,6 +55,10 @@ const {
     currentRound,
     nextRoundToGenerate,
 } = useRounds(currentPhase.value)
+
+const {
+    standings: currentStandings,
+} = useStandings(currentPhase.value)
 
 useTitle("Flyer - " + settings.value.name)
 
@@ -110,7 +116,7 @@ const finish = () => {
         throw "No phase to finish!"
     }
 
-    const success = flyerStore.finish(currentPhase.value)
+    const success = flyerStore.finish(currentPhase.value, currentStandings.value)
     if (!success) {
         throw "Failed to finish phase!"
     }

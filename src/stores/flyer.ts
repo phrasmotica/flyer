@@ -233,7 +233,14 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const updateScores = (phase: Phase, fixtureId: string, scores: Score[], finishFixture: boolean, addEvent = true) => {
+    const updateScores = (
+        phase: Phase,
+        fixtureId: string,
+        scores: Score[],
+        finishFixture: boolean,
+        currentRanking: PlayerRecord[],
+        addEvent = true,
+    ) => {
         for (const r of phase.rounds) {
             const idx = r.fixtures.findIndex(f => f.id === fixtureId)
             if (idx >= 0) {
@@ -248,7 +255,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                     if (winsRequiredReached(phase)) {
                         cancelRemaining()
-                        finish(phase)
+                        finish(phase, currentRanking)
                         return
                     }
 
@@ -354,9 +361,10 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const finish = (phase: Phase) => {
+    const finish = (phase: Phase, ranking: PlayerRecord[]) => {
         if (!phase.finishTime) {
             phase.finishTime = Date.now()
+            phase.ranking = ranking
 
             addPhaseEvent(phase, `${phase.settings.name} was finished.`)
         }
@@ -399,7 +407,14 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-started.`, PhaseEventLevel.Internal)
     }
 
-    const autoCompleteFixture = (phase: Phase, fixture: Fixture, tableId: string, dummyScore: number, allowDraws: boolean) => {
+    const autoCompleteFixture = (
+        phase: Phase,
+        fixture: Fixture,
+        tableId: string,
+        dummyScore: number,
+        currentRanking: PlayerRecord[],
+        allowDraws: boolean,
+    ) => {
         console.debug("Auto-completing fixture " + fixture.id)
 
         const breakerId = getRandom(fixture.scores).playerId
@@ -417,16 +432,22 @@ export const useFlyerStore = defineStore("flyer", () => {
         startFixture(phase, fixture.id, false)
 
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
-        updateScores(phase, fixture.id, newScores, true, false)
+        updateScores(phase, fixture.id, newScores, true, currentRanking, false)
 
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
     }
 
-    const autoCompletePhase = (phase: Phase, tableId: string, dummyScore: number, allowDraws: boolean) => {
+    const autoCompletePhase = (
+        phase: Phase,
+        tableId: string,
+        dummyScore: number,
+        currentRanking: PlayerRecord[],
+        allowDraws: boolean,
+    ) => {
         const fixtures = phase.rounds.flatMap(r => r.fixtures)
 
         for (const f of fixtures.filter(f => !f.startTime)) {
-            autoCompleteFixture(phase, f, tableId, dummyScore, allowDraws)
+            autoCompleteFixture(phase, f, tableId, dummyScore, currentRanking, allowDraws)
         }
 
         addPhaseEvent(phase, `${phase.settings.name} was auto-completed.`, PhaseEventLevel.Internal)

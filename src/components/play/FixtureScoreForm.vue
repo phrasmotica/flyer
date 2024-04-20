@@ -17,6 +17,7 @@ import { useTweaks } from "@/composables/useTweaks"
 import type { Fixture, Score } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+import { useStandings } from "@/composables/useStandings"
 
 const { t } = useI18n()
 
@@ -41,6 +42,10 @@ const {
 const {
     isWinnerStaysOn,
 } = usePhaseSettings(currentPhase.value)
+
+const {
+    standings,
+} = useStandings(currentPhase.value)
 
 const {
     fixture,
@@ -102,7 +107,12 @@ const updateScores = (finish: boolean) => {
         isBye: false,
     }))
 
-    flyerStore.updateScores(currentPhase.value, fixture.value.id, newScores, finish)
+    flyerStore.updateScores(
+        currentPhase.value,
+        fixture.value.id,
+        newScores,
+        finish,
+        standings.value)
 
     hide()
 }

@@ -10,6 +10,7 @@ import { useTables } from "@/composables/useTables"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
+import { useStandings } from "@/composables/useStandings"
 
 const props = defineProps<{
     hideInstead?: boolean
@@ -38,6 +39,10 @@ const {
     raceTo,
     fixturesCanBeDrawn,
 } = usePhaseSettings(currentPhase.value)
+
+const {
+    standings,
+} = useStandings(currentPhase.value)
 
 const {
     tables,
@@ -82,6 +87,7 @@ const autoComplete = () => {
         nextFixture.value,
         tables.value[0].id,
         fixtureRaceTo,
+        standings.value,
         fixturesCanBeDrawn.value)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
@@ -98,6 +104,7 @@ const autoCompleteRemaining = () => {
         currentPhase.value,
         tables.value[0].id,
         fixtureRaceTo,
+        standings.value,
         fixturesCanBeDrawn.value)
 
     const message = phaseEvents.phaseAutoCompleted()
