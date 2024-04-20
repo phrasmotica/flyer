@@ -21,6 +21,7 @@ const {
     mainPhase,
     playOffs,
     inseparablePlayers,
+    phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -31,9 +32,11 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const groupedTieBreakers = useArrayGroupBy<PlayOff, TieBreakerState>(playOffs.value, p => {
-    return p.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved'
-})
+const groupedTieBreakers = useArrayGroupBy<PlayOff, TieBreakerState>(
+    playOffs.value.filter(p => !phaseIsComplete(p.id)),
+    p => {
+        return p.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved'
+    })
 
 const getSeverity = (state: TieBreakerState) => state === 'unresolved' ? "warn" : "info"
 

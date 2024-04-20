@@ -41,8 +41,11 @@ export const useFlyer = (f: Flyer | null) => {
     const inseparablePlayers = computed(() => {
         const recordsToConsider = standings.value.filter(s => !s.tieBroken)
         const playerIds = recordsToConsider.map(s => s.playerId)
-        const playersInPlayOffs = playOffs.value.flatMap(p => p.players).map(p => p.id)
-        return playerIds.filter(x => playersInPlayOffs.includes(x))
+
+        const playOffsToConsider = playOffs.value.filter(p => !phaseIsComplete(p.id))
+        const playersIdsInPlayOffs = playOffsToConsider.flatMap(p => p.players).map(p => p.id)
+
+        return playerIds.filter(x => playersIdsInPlayOffs.includes(x))
     })
 
     const overallMoneyRecipients = computed(() => getMoneyRecipients(standings.value))
