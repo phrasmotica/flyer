@@ -5,7 +5,7 @@ import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
 import AbandonFlyerModal from "@/components/modals/AbandonFlyerModal.vue"
-import FinishFlyerModal from "@/components/modals/FinishFlyerModal.vue"
+import FinishPhaseModal from "@/components/modals/FinishPhaseModal.vue"
 import FixtureModal from "@/components/modals/FixtureModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
 import PageTemplate from "@/components/PageTemplate.vue"
@@ -20,13 +20,12 @@ import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
+import { useStandings } from "@/composables/useStandings"
 
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
-import { usePhase } from "@/composables/usePhase"
-import { useStandings } from "@/composables/useStandings"
 
 const { t } = useI18n()
 
@@ -186,7 +185,7 @@ const hideFixtureModal = () => {
                 :fixture="selectedFixture"
                 @hide="hideFixtureModal" />
 
-            <FinishFlyerModal
+            <FinishPhaseModal
                 v-model:visible="showFinishModal"
                 @confirm="finishPhase"
                 @hide="() => setShowFinishModal(false)" />

@@ -130,8 +130,10 @@
         "tableX": "Table X",
         "generateNextRound": "Generate next round",
         "generateRound": "Generate {round}",
+        "finishPhase": "Finish",
+        "finishPhaseAreYouSure": "Are you ready to finish?",
         "finishFlyer": "Finish flyer",
-        "finishAreYouSure": "Are you ready to finish the flyer?",
+        "finishFlyerAreYouSure": "Are you ready to finish the flyer? This cannot be undone!",
         "viewResults": "View results"
     },
     "player": {

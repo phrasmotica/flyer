@@ -19,6 +19,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     confirmStartPlayOff: []
     confirmSkipPlayOff: []
+    confirmFinishFlyer: []
     save: []
     saveResults: []
     confirmGoToSetup: []
@@ -31,7 +32,6 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const {
     flyer,
     mainPhase,
-    overallStandings,
     isComplete,
     isFinished,
     phaseIsComplete,
@@ -63,10 +63,6 @@ const saveButtonText = computed(() => t(alreadySaved.value ? 'results.flyerSaved
 const playOffButtonText = computed(() => t('results.startPlayOffButton', {
     name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
 }))
-
-const finishFlyer = () => {
-    flyerStore.finish(overallStandings.value)
-}
 </script>
 
 <template>
@@ -74,7 +70,7 @@ const finishFlyer = () => {
         <div v-if="!isFinished">
             <Button
                 :label="t('common.finish')"
-                @click="finishFlyer" />
+                @click="emit('confirmFinishFlyer')" />
         </div>
 
         <div v-else-if="!hasPlayedOff && !isComplete">

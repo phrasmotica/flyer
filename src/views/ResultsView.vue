@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
+import FinishFlyerModal from "@/components/modals/FinishFlyerModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
 import LightsCalculator from "@/components/results/LightsCalculator.vue"
 import NewFlyerModal from "@/components/modals/NewFlyerModal.vue"
@@ -47,6 +48,7 @@ const {
 const {
     flyer,
     mainPhase,
+    overallStandings,
     isFinished,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
@@ -68,7 +70,6 @@ const {
 } = usePodium(mainPhase.value)
 
 const {
-    requiresPlayOff,
     orderedPlayOffs,
 } = useStandings(mainPhase.value)
 
@@ -87,6 +88,7 @@ const {
 const [showGoToSetupModal, setShowGoToSetupModal] = useToggle()
 const [showStartPlayOffModal, setShowStartPlayOffModal] = useToggle()
 const [showSkipPlayOffModal, setShowSkipPlayOffModal] = useToggle()
+const [showFinishFlyerModal, setShowFinishFlyerModal] = useToggle()
 
 const {
     value: imageSaved,
@@ -142,6 +144,12 @@ const skipPlayOff = (players: Player[]) => {
     flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value, ranking)
 
     setShowSkipPlayOffModal(false)
+}
+
+const finishFlyer = () => {
+    flyerStore.finish(overallStandings.value)
+
+    setShowFinishFlyerModal(false)
 }
 
 const saveResults = () => {
@@ -214,6 +222,7 @@ const save = () => {
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
+                @confirmFinishFlyer="() => setShowFinishFlyerModal(true)"
                 @goToPastFlyers="routing.toHistory"
                 @save="save"
                 @saveResults="saveResults" />
@@ -234,6 +243,11 @@ const save = () => {
                 v-model:visible="showSkipPlayOffModal"
                 @confirmRanking="skipPlayOff"
                 @hide="() => setShowSkipPlayOffModal(false)" />
+
+            <FinishFlyerModal
+                v-model:visible="showFinishFlyerModal"
+                @confirm="finishFlyer"
+                @hide="() => setShowFinishFlyerModal(false)" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>
@@ -242,6 +256,7 @@ const save = () => {
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
+                @confirmFinishFlyer="() => setShowFinishFlyerModal(true)"
                 @goToPastFlyers="routing.toHistory"
                 @save="save"
                 @saveResults="saveResults" />

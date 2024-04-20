@@ -18,8 +18,8 @@ const emit = defineEmits<{
 <template>
     <ConfirmModal
         v-model:visible="visible"
-        :header="t('play.finishFlyer')"
-        :message="t('play.finishFlyerAreYouSure')"
+        :header="t('play.finishPhase')"
+        :message="t('play.finishPhaseAreYouSure')"
         @confirm="emit('confirm')"
         @hide="emit('hide')" />
 </template>
