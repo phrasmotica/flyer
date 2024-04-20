@@ -5,11 +5,17 @@ import LabelledSlider from "./LabelledSlider.vue"
 import NameInput from "./NameInput.vue"
 import Stepper from "./Stepper.vue"
 
+import { useScreenSizes } from "@/composables/useScreenSizes"
+
 import { useSettingsStore } from "@/stores/settings"
 
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 
 const { t } = useI18n()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const settingsStore = useSettingsStore()
 </script>
@@ -21,8 +27,7 @@ const settingsStore = useSettingsStore()
                 {{ t("form.players") }}
             </label>
 
-            <!-- MEDIUM: show/hide these via useScreenSizes() -->
-            <div class="md:hidden mb-2">
+            <div v-if="isSmallScreen" class="mb-2">
                 <Stepper
                     v-model="settingsStore.settings.playerCount"
                     :min="2" :max="maxPlayersEnv"
@@ -30,7 +35,7 @@ const settingsStore = useSettingsStore()
                     inputId="playersStepper" />
             </div>
 
-            <div class="hidden md:block">
+            <div v-else>
                 <LabelledSlider
                     v-model="settingsStore.settings.playerCount"
                     :min="2" :max="maxPlayersEnv" />

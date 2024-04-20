@@ -7,11 +7,16 @@ import Stepper from "./Stepper.vue"
 import TableInput from "./TableInput.vue"
 
 import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
+import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useSettings } from "@/composables/useSettings"
 
 import { useSettingsStore } from "@/stores/settings"
 
 const { n, t } = useI18n()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const settingsStore = useSettingsStore()
 
@@ -40,8 +45,7 @@ const maxTableCount = computed(() => {
             </label>
 
             <div v-if="!isWinnerStaysOn">
-                <!-- MEDIUM: show/hide these via useScreenSizes() -->
-                <div class="md:hidden mb-2">
+                <div v-if="isSmallScreen" class="mb-2">
                     <Stepper
                         v-model="settingsStore.settings.tableCount"
                         :min="1" :max="maxTableCount"
@@ -49,7 +53,7 @@ const maxTableCount = computed(() => {
                         inputId="tablesStepper" />
                 </div>
 
-                <div class="hidden md:block">
+                <div v-else>
                     <LabelledSlider
                         v-model="settingsStore.settings.tableCount"
                         :min="1" :max="maxTableCount" />
