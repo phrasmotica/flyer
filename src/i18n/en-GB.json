@@ -139,6 +139,9 @@
         "pendingIndicator": "TBD",
         "unknownIndicator": "???"
     },
+    "playerRecord": {
+        "noFixturesPlayed": "No fixtures played yet!"
+    },
     "playOff": {
         "skippedAbbr": "S",
         "unknownIndicator": "???"
