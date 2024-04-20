@@ -66,6 +66,8 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
 <template>
     <div class="p-fluid">
         <div v-if="!hasPlayedOff && requiresPlayOff">
+            <!-- HIGH: force a play-off phase if a tie-breaker is still unresolved -->
+
             <Button
                 :label="playOffButtonText"
                 @click="emit('confirmStartPlayOff')" />
