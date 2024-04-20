@@ -8,6 +8,7 @@ const finalOrder = defineModel<Player[]>()
 
 <template>
     <div class="p-fluid">
+        <!-- MEDIUM: try this out with a reorderable PrimeVue DataTable -->
         <Draggable :list="finalOrder" itemKey="id" ghostClass="opacity-40">
             <template #item="{ index, element: player }">
                 <div class="grid m-0 border-1 border-round-md border-gray-300 p-1 my-1 cursor-move">
