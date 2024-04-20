@@ -190,10 +190,6 @@ export const useRankings = () => {
         }))
     }
 
-    const recordsAreEqual = (r: PlayerRecord, s: PlayerRecord) => {
-        return r.wins === s.wins && r.losses === s.losses && r.diff === s.diff
-    }
-
     const computePlayOffs = (phase: Phase | null) => {
         if (!phase) {
             return []
@@ -209,7 +205,7 @@ export const useRankings = () => {
 
         for (const record of standings) {
             const player = phase.players.find(p => p.id === record.playerId)!
-            const matchingPlayOff = playOffs.find(p => recordsAreEqual(record, p.records[0]))
+            const matchingPlayOff = playOffs.find(p => sortRecords(record, p.records[0]) === 0)
 
             if (matchingPlayOff) {
                 matchingPlayOff.players.push(player)
