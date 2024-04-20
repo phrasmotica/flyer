@@ -21,6 +21,7 @@ import InputIcon from "primevue/inputicon"
 import InputNumber from "primevue/inputnumber"
 import InputSwitch from 'primevue/inputswitch'
 import InputText from "primevue/inputtext"
+import Listbox from 'primevue/listbox'
 import Message from 'primevue/message'
 import MeterGroup from 'primevue/metergroup'
 import OverlayPanel from 'primevue/overlaypanel'
@@ -86,6 +87,7 @@ app.component("InputIcon", InputIcon)
 app.component("InputNumber", InputNumber)
 app.component("InputSwitch", InputSwitch)
 app.component("InputText", InputText)
+app.component("Listbox", Listbox)
 app.component("Message", Message)
 app.component("MeterGroup", MeterGroup)
 app.component("OverlayPanel", OverlayPanel)
