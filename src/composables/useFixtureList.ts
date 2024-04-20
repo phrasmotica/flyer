@@ -7,6 +7,8 @@ export const useFixtureList = (p: Phase | null) => {
 
     const fixtures = computed(() => phase.value?.rounds.flatMap(r => r.fixtures) || [])
 
+    const isStarted = computed(() => fixtures.value.some(f => f.startTime))
+
     const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
     const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
@@ -27,6 +29,7 @@ export const useFixtureList = (p: Phase | null) => {
     return {
         fixtures,
 
+        isStarted,
         isComplete,
         remainingCount,
         nextFixture,

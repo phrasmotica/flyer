@@ -58,15 +58,11 @@ const showDiff = computed(() => !isWinnerStaysOn.value)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
 const rowClass = (data: any) => {
-    if (props.isInProgress) {
-        return ""
-    }
-
     return [
         {
-            'bg-primary': !data.incomplete && data.rank === 1,
+            'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
             'play-off-row': showPlayOffIndex(data.playerId),
-            'incomplete-row': data.incomplete,
+            'incomplete-row': !props.isInProgress && data.incomplete,
         },
     ]
 }
@@ -77,7 +73,8 @@ const getPlayOffIndex = (playerId: string) => {
 }
 
 const showPlayOffIndex = (playerId: string) => {
-    return !props.isInProgress && !allPlayOffsComplete.value && getPlayOffIndex(playerId) >= 0
+    // HIGH: don't show if a play-off cannot separate any of its players
+    return !props.isPinned && !allPlayOffsComplete.value && getPlayOffIndex(playerId) >= 0
 }
 </script>
 

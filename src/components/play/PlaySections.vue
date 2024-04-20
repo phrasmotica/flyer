@@ -6,6 +6,7 @@ import type { MenuItem } from "primevue/menuitem"
 import FixtureList from "./FixtureList.vue"
 import PhaseEventLogSection from "./PhaseEventLogSection.vue"
 import PhaseInfoSection from "./PhaseInfoSection.vue"
+import ResultsMessages from "../results/ResultsMessages.vue"
 import ResultsTable from "../results/ResultsTable.vue"
 import TablesSummary from "./TablesSummary.vue"
 
@@ -116,9 +117,14 @@ const showSection = (section: PlayViewSection) => {
             <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
-            <ResultsTable v-if="showSection(PlayViewSection.Standings)"
-                isInProgress
-                :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
+            <div v-if="showSection(PlayViewSection.Standings)">
+                <ResultsTable
+                    isInProgress
+                    :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
+
+                <ResultsMessages v-if="uiStore.pinnedSection !== PlayViewSection.Standings"
+                    isInProgress />
+            </div>
 
             <TablesSummary v-if="showSection(PlayViewSection.Tables)"
                 @showFixtureModal="f => emit('selectFixture', f)" />
@@ -127,8 +133,6 @@ const showSection = (section: PlayViewSection) => {
 
             <PhaseEventLogSection v-if="showSection(PlayViewSection.EventLog)" />
         </div>
-
-        <!-- MEDIUM: show tie-breaker messages for results table -->
     </div>
 </template>
 

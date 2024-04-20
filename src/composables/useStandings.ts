@@ -1,6 +1,7 @@
 import { computed } from "vue"
 import { useSorted } from "@vueuse/core"
 
+import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
@@ -24,13 +25,23 @@ export const useStandings = (p: Phase | null) => {
     } = usePhaseSettings(phase.value)
 
     const {
+        isStarted,
+    } = useFixtureList(phase.value)
+
+    const {
         computeStandings,
         computePlayOffs,
     } = useRankings()
 
     const standings = computed(() => computeStandings(phase.value, true))
 
-    const playOffs = computed(() => computePlayOffs(phase.value))
+    const playOffs = computed(() => {
+        if (!isStarted.value) {
+            return []
+        }
+
+        return computePlayOffs(phase.value)
+    })
 
     const orderedPlayOffs = useSorted(playOffs, (a, b) => b.forRank - a.forRank)
 

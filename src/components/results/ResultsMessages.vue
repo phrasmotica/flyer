@@ -12,6 +12,10 @@ import { useStandings } from "@/composables/useStandings"
 
 import { useFlyerStore } from "@/stores/flyer"
 
+const props = defineProps<{
+    isInProgress?: boolean
+}>()
+
 const flyerStore = useFlyerStore()
 
 const {
@@ -29,9 +33,19 @@ const {
     requiresPlayOff,
 } = useStandings(mainPhase.value)
 
-const showIncompleteMessage = computed(() => incompleteCount.value > 0 && !isWinnerStaysOn.value)
+const showIncompleteMessage = computed(() => {
+    if (props.isInProgress) {
+        return false
+    }
+
+    return incompleteCount.value > 0 && !isWinnerStaysOn.value
+})
 
 const showPlayOffsRequiredMessage = computed(() => {
+    if (props.isInProgress) {
+        return false
+    }
+
     if (!requiresPlayOff.value) {
         return false
     }
@@ -47,7 +61,13 @@ const showTiesBrokenMessage = computed(() => {
     return playOffs.value.length > 0 && !isWinnerStaysOn.value
 })
 
-const showWinningsSummary = computed(() => !requiresPlayOff.value || allPlayOffsComplete.value)
+const showWinningsSummary = computed(() => {
+    if (props.isInProgress) {
+        return false
+    }
+
+    return !requiresPlayOff.value || allPlayOffsComplete.value
+})
 </script>
 
 <template>
