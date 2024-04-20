@@ -69,6 +69,10 @@ const variableRacesSummary = computed(() => {
 })
 
 const drawSummary = computed(() => {
+    if (!isKnockout.value) {
+        return ""
+    }
+
     if (isRandomDraw.value) {
         return t('format.randomDraw')
     }
