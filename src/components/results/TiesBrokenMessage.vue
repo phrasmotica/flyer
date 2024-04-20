@@ -2,11 +2,16 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
+import { useArrayGroupBy } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 
+import type { PlayOff } from "@/data/PlayOff"
+
 import { useFlyerStore } from "@/stores/flyer"
+
+type TieBreakerState = 'resolved' | 'unresolved'
 
 const { t } = useI18n()
 
@@ -26,29 +31,40 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const severity = computed(() => {
-    if (inseparablePlayers.value.length > 0) {
-        return "warn"
-    }
-
-    return "info"
+const groupedTieBreakers = useArrayGroupBy<PlayOff, TieBreakerState>(playOffs.value, p => {
+    return p.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved'
 })
 
-const message = computed(() => {
+const getSeverity = (state: TieBreakerState) => state === 'unresolved' ? "warn" : "info"
+
+const getMessage = (state: TieBreakerState) => {
     let key = isHistoric.value ? 'results.tiesBrokenMessageHistoric' : 'results.tiesBrokenMessage'
-    if (inseparablePlayers.value.length > 0) {
+
+    if (state === 'unresolved') {
         key = 'results.inseparablePlayers'
     }
 
     return t(key, { name: t(tieBreakerName.value) })
-})
+}
+
+const sortedGroups = computed(() => [...groupedTieBreakers.value]
+    .map(g => ({
+        key: g[0],
+        // group with lower-indexed first tie breaker comes first
+        tieBreakers: g[1].sort((p, q) => q.index - p.index),
+        severity: getSeverity(g[0]),
+        message: getMessage(g[0]),
+    }))
+    .sort((g, h) => g.tieBreakers[0].index - h.tieBreakers[0].index))
 </script>
 
 <template>
-    <Message :severity="severity" :closable="false">
-        <p v-for="_, i in playOffs" class="m-0">
-            <sup class="text-xs">{{ i + 1 }}&nbsp;</sup>
-            <span>{{ message }}</span>
-        </p>
-    </Message>
+    <div>
+        <Message v-for="group in sortedGroups" :severity="group.severity" :closable="false">
+            <p v-for="p in group.tieBreakers" class="m-0">
+                <sup class="text-xs">{{ p.index }}&nbsp;</sup>
+                <span>{{ group.message }}</span>
+            </p>
+        </Message>
+    </div>
 </template>

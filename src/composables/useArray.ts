@@ -1,4 +1,4 @@
-import { type Ref, ref } from "vue"
+import { type Ref, ref, computed } from "vue"
 
 export const useArray = <T>(initial?: T[]) => {
     const arr = ref(initial || []) as Ref<T[]>
@@ -24,4 +24,21 @@ export const useArray = <T>(initial?: T[]) => {
         includes,
         clear,
     }
+}
+
+export const useArrayGroupBy = <T, TKey extends string = string>(
+    initial: T[],
+    selector: (x: T) => TKey,
+) => {
+    const {
+        arr,
+    } = useArray<T>(initial)
+
+    // adapted from https://stackoverflow.com/a/47752730
+    const groupedMap = computed(() => arr.value.reduce(
+        (entryMap, e) => entryMap.set(selector(e), [...entryMap.get(selector(e)) || [], e]),
+        new Map<TKey, T[]>()
+    ))
+
+    return groupedMap
 }

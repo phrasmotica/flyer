@@ -71,11 +71,11 @@ const rowClass = (data: any) => {
 
 const getPlayOffIndex = (playerId: string) => {
     const incompletePlayOffs = playOffs.value.filter(x => !phaseIsComplete(x.id))
-    return incompletePlayOffs.findIndex(p => p.players.some(x => x.id === playerId))
+    return incompletePlayOffs.find(p => p.players.some(x => x.id === playerId))?.index
 }
 
 const showPlayOffIndex = (playerId: string) => {
-    return !props.isPinned && !allPlayOffsComplete.value && getPlayOffIndex(playerId) >= 0
+    return !props.isPinned && !allPlayOffsComplete.value && getPlayOffIndex(playerId)
 }
 </script>
 
@@ -94,7 +94,7 @@ const showPlayOffIndex = (playerId: string) => {
             <template #body="slotData">
                 {{ slotData.data.name }}
                 <span v-if="showPlayOffIndex(slotData.data.playerId)">
-                    <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId) + 1 }}</sup>
+                    <sup class="text-xs">{{ getPlayOffIndex(slotData.data.playerId)! }}</sup>
                 </span>
             </template>
         </Column>

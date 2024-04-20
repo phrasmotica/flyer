@@ -214,6 +214,7 @@ export const useRankings = () => {
                 playOffs.push({
                     id: "play-off-" + playOffs.length,
                     name: "Play-Off for Position " + record.rank,
+                    index: 0,
                     forRank: record.rank,
                     records: [record],
                     players: [player],
@@ -221,7 +222,12 @@ export const useRankings = () => {
             }
         }
 
-        return playOffs.filter(p => p.players.length > 1)
+        const relevantPlayOffs = playOffs.filter(p => p.players.length > 1)
+
+        return relevantPlayOffs.map<PlayOff>((p, i) => ({
+            ...p,
+            index: i + 1,
+        }))
     }
 
     return {
