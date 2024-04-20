@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 
+import CreatePlayOffModal from "@/components/modals/CreatePlayOffModal.vue"
 import FinishFlyerModal from "@/components/modals/FinishFlyerModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
 import LightsCalculator from "@/components/results/LightsCalculator.vue"
@@ -30,6 +31,7 @@ import { useStandings } from "@/composables/useStandings"
 import { useTimedRef } from "@/composables/useTimedRef"
 
 import type { Player } from "@/data/Player"
+import type { PlayerRecord } from "@/data/PlayerRecord"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
@@ -71,6 +73,7 @@ const {
 
 const {
     orderedPlayOffs,
+    createPlayOffFor,
 } = useStandings(mainPhase.value)
 
 const {
@@ -88,6 +91,7 @@ const {
 const [showGoToSetupModal, setShowGoToSetupModal] = useToggle()
 const [showStartPlayOffModal, setShowStartPlayOffModal] = useToggle()
 const [showSkipPlayOffModal, setShowSkipPlayOffModal] = useToggle()
+const [showCreatePlayOffModal, setShowCreatePlayOffModal] = useToggle()
 const [showFinishFlyerModal, setShowFinishFlyerModal] = useToggle()
 
 const {
@@ -144,6 +148,22 @@ const skipPlayOff = (players: Player[]) => {
     flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value, ranking)
 
     setShowSkipPlayOffModal(false)
+}
+
+const createPlayOff = (records: PlayerRecord[]) => {
+    if (!mainPhase.value) {
+        console.debug("No phase to create a play-off for!")
+        return
+    }
+
+    const forRank = Math.min(...records.map(r => r.rank))
+    const playOff = createPlayOffFor(records, forRank)
+
+    flyerStore.addPlayOff(playOff, mainPhase.value)
+
+    setShowCreatePlayOffModal(false)
+
+    routing.toPlay()
 }
 
 const finishFlyer = () => {
@@ -222,6 +242,7 @@ const save = () => {
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
+                @confirmCreatePhase="() => setShowCreatePlayOffModal(true)"
                 @confirmFinishFlyer="() => setShowFinishFlyerModal(true)"
                 @goToPastFlyers="routing.toHistory"
                 @save="save"
@@ -244,6 +265,11 @@ const save = () => {
                 @confirmRanking="skipPlayOff"
                 @hide="() => setShowSkipPlayOffModal(false)" />
 
+            <CreatePlayOffModal
+                v-model:visible="showCreatePlayOffModal"
+                @create="createPlayOff"
+                @hide="() => setShowCreatePlayOffModal(false)" />
+
             <FinishFlyerModal
                 v-model:visible="showFinishFlyerModal"
                 @confirm="finishFlyer"
@@ -256,6 +282,7 @@ const save = () => {
                 @confirmGoToSetup="confirmGoToSetup"
                 @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
+                @confirmCreatePhase="() => setShowCreatePlayOffModal(true)"
                 @confirmFinishFlyer="() => setShowFinishFlyerModal(true)"
                 @goToPastFlyers="routing.toHistory"
                 @save="save"

@@ -19,6 +19,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     confirmStartPlayOff: []
     confirmSkipPlayOff: []
+    confirmCreatePhase: []
     confirmFinishFlyer: []
     save: []
     saveResults: []
@@ -69,6 +70,12 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
     <div class="p-fluid">
         <div v-if="!isFinished">
             <Button
+                severity="warning"
+                :label="t('results.createPlayOff')"
+                @click="emit('confirmCreatePhase')" />
+
+            <Button
+                class="mt-2"
                 :label="t('common.finish')"
                 @click="emit('confirmFinishFlyer')" />
         </div>

@@ -15,7 +15,8 @@
         "error": "Error",
         "assign": "Assign",
         "on": "on",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "create": "Create"
     },
     "fixture": {
         "unknownStatus": "???",
@@ -145,6 +146,7 @@
         "noFixturesPlayed": "No fixtures played yet!"
     },
     "playOff": {
+        "selectPlayers": "Select participants:",
         "skippedAbbr": "S",
         "unknownIndicator": "???"
     },
@@ -220,7 +222,8 @@
         "skipPlayOff": "Skip Play-Off",
         "pleaseConfirmPlayOffRanking": "Please confirm a ranking for {name}:",
         "startPlayOff": "Start Play-Off",
-        "startPlayOffName": "Are you sure you want to start the {name}?"
+        "startPlayOffName": "Are you sure you want to start the {name}?",
+        "createPlayOff": "Create Play-Off"
     },
     "round": {
         "unknownIndicator": "???"
