@@ -10,6 +10,10 @@ import { useFlyerStore } from "@/stores/flyer"
 
 const { t } = useI18n()
 
+const props = defineProps<{
+    inseparablePlayers: string[]
+}>()
+
 const flyerStore = useFlyerStore()
 
 const {
@@ -26,7 +30,11 @@ const {
 } = useQueryParams()
 
 const message = computed(() => {
-    const key = isHistoric.value ? 'results.tiesBrokenMessageHistoric' : 'results.tiesBrokenMessage'
+    let key = isHistoric.value ? 'results.tiesBrokenMessageHistoric' : 'results.tiesBrokenMessage'
+    if (props.inseparablePlayers.length > 0) {
+        key = 'results.inseparablePlayers'
+    }
+
     return t(key, { name: t(tieBreakerName.value) })
 })
 </script>

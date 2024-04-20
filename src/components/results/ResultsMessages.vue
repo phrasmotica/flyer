@@ -31,6 +31,7 @@ const {
 
 const {
     requiresPlayOff,
+    standings,
 } = useStandings(mainPhase.value)
 
 const showIncompleteMessage = computed(() => {
@@ -68,6 +69,13 @@ const showWinningsSummary = computed(() => {
 
     return !requiresPlayOff.value || allPlayOffsComplete.value
 })
+
+const inseparablePlayers = computed(() => {
+    const recordsToConsider = standings.value.filter(s => !s.tieBroken)
+    const playerIds = recordsToConsider.map(s => s.playerId)
+    const playersInPlayOffs = playOffs.value.flatMap(p => p.players).map(p => p.id)
+    return playerIds.filter(x => playersInPlayOffs.includes(x))
+})
 </script>
 
 <template>
@@ -81,7 +89,8 @@ const showWinningsSummary = computed(() => {
         </div>
 
         <div v-if="showTiesBrokenMessage" class="mt-1">
-            <TiesBrokenMessage />
+            <TiesBrokenMessage
+                :inseparablePlayers="inseparablePlayers" />
         </div>
 
         <div v-if="showWinningsSummary" class="mt-1">

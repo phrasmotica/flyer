@@ -73,7 +73,6 @@ const getPlayOffIndex = (playerId: string) => {
 }
 
 const showPlayOffIndex = (playerId: string) => {
-    // HIGH: don't show if a play-off cannot separate any of its players
     return !props.isPinned && !allPlayOffsComplete.value && getPlayOffIndex(playerId) >= 0
 }
 </script>
