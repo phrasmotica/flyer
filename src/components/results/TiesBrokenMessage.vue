@@ -10,15 +10,12 @@ import { useFlyerStore } from "@/stores/flyer"
 
 const { t } = useI18n()
 
-const props = defineProps<{
-    inseparablePlayers: string[]
-}>()
-
 const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
     playOffs,
+    inseparablePlayers,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -29,9 +26,17 @@ const {
     isHistoric,
 } = useQueryParams()
 
+const severity = computed(() => {
+    if (inseparablePlayers.value.length > 0) {
+        return "warn"
+    }
+
+    return "info"
+})
+
 const message = computed(() => {
     let key = isHistoric.value ? 'results.tiesBrokenMessageHistoric' : 'results.tiesBrokenMessage'
-    if (props.inseparablePlayers.length > 0) {
+    if (inseparablePlayers.value.length > 0) {
         key = 'results.inseparablePlayers'
     }
 
@@ -40,7 +45,7 @@ const message = computed(() => {
 </script>
 
 <template>
-    <Message severity="info" :closable="false">
+    <Message :severity="severity" :closable="false">
         <p v-for="_, i in playOffs" class="m-0">
             <sup class="text-xs">{{ i + 1 }}&nbsp;</sup>
             <span>{{ message }}</span>

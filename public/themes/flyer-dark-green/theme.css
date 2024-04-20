@@ -23,6 +23,11 @@ footer,
     color: #3b82f6;
 }
 
+.tie-break-unresolved-row {
+    background: rgba(234, 179, 8, 0.16);
+    color: #eab308;
+}
+
 .incomplete-row {
     background: rgba(234, 179, 8, 0.16);
     color: #eab308;

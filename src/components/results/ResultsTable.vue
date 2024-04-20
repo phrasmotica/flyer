@@ -26,6 +26,7 @@ const {
     flyer,
     mainPhase,
     overallStandings,
+    inseparablePlayers,
     playOffs,
     completedPlayOffs,
     allPlayOffsComplete,
@@ -61,8 +62,9 @@ const rowClass = (data: any) => {
     return [
         {
             'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
-            'play-off-row': showPlayOffIndex(data.playerId),
             'incomplete-row': !props.isInProgress && data.incomplete,
+            'play-off-row': showPlayOffIndex(data.playerId),
+            'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
         },
     ]
 }
