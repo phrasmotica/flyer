@@ -47,7 +47,7 @@ const {
 const {
     flyer,
     mainPhase,
-    allPlayOffsComplete,
+    isFinished,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -202,7 +202,7 @@ const save = () => {
                 </div>
             </div>
 
-            <div v-if="(!requiresPlayOff || allPlayOffsComplete) && !isHistoric" class="border-top-1 mt-1 pt-1">
+            <div v-if="isFinished && !isHistoric" class="border-top-1 mt-1 pt-1">
                 <LightsCalculator />
             </div>
         </template>

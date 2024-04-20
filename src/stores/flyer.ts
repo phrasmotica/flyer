@@ -59,9 +59,17 @@ export const useFlyerStore = defineStore("flyer", () => {
                 throw `Invalid flyer format ${settings.specification.format}!`
         }
 
+        const mainPhase = createPhase(settings, scheduler, [])
+
+        const now = Date.now()
+        mainPhase.startTime = now
+
         flyer.value = {
             id: uuidv4(),
-            phases: [createPhase(settings, scheduler, [])],
+            startTime: now,
+            finishTime: null,
+            phases: [mainPhase],
+            ranking: [],
         }
     }
 
@@ -83,7 +91,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             players,
             tables: actualTables.map<Table>(t => ({ ...t, id: uuidv4() })),
             settings: {...settings.specification},
-            startTime: Date.now(),
+            startTime: null,
             finishTime: null,
             skippedTime: null,
             rounds: scheduler.generateFixtures(settings, players),
@@ -393,6 +401,13 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
+    const finish = (ranking: PlayerRecord[]) => {
+        if (flyer.value) {
+            flyer.value.finishTime = Date.now()
+            flyer.value.ranking = ranking
+        }
+    }
+
     const clear = () => flyer.value = null
 
     const autoStartFixture = (phase: Phase, fixture: Fixture, tableId: string) => {
@@ -495,6 +510,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         cancelRemaining,
         addPlayOff,
         skipPlayOff,
+        finish,
         clear,
 
         autoStartFixture,

@@ -57,6 +57,8 @@ export const useFlyer = (f: Flyer | null) => {
 
     const isComplete = computed(() => !requiresPlayOff.value && allPlayOffsComplete.value && inseparablePlayers.value.length <= 0)
 
+    const isFinished = computed(() => !!flyer.value?.finishTime)
+
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
         if (!phase) {
@@ -84,6 +86,7 @@ export const useFlyer = (f: Flyer | null) => {
         overallMoneyRecipients,
         incompleteCount,
         isComplete,
+        isFinished,
 
         phaseIsComplete,
     }
