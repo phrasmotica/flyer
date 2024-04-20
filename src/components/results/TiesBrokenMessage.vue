@@ -34,9 +34,7 @@ const {
 
 const groupedTieBreakers = useArrayGroupBy<PlayOff, TieBreakerState>(
     playOffs.value.filter(p => !phaseIsComplete(p.id)),
-    p => {
-        return p.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved'
-    })
+    p => p.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved')
 
 const getSeverity = (state: TieBreakerState) => state === 'unresolved' ? "warn" : "info"
 
@@ -53,11 +51,11 @@ const getMessage = (state: TieBreakerState) => {
 const sortedGroups = computed(() => [...groupedTieBreakers.value]
     .map(g => ({
         key: g[0],
-        // group with lower-indexed first tie breaker comes first
-        tieBreakers: g[1].sort((p, q) => q.index - p.index),
+        tieBreakers: g[1].sort((p, q) => p.index - q.index),
         severity: getSeverity(g[0]),
         message: getMessage(g[0]),
     }))
+    // group with lower-indexed first tie breaker comes first
     .sort((g, h) => g.tieBreakers[0].index - h.tieBreakers[0].index))
 </script>
 
