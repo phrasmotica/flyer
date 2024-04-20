@@ -1,5 +1,5 @@
 import { computed } from "vue"
-import { useSorted } from "@vueuse/core"
+import { useArrayFilter, useSorted } from "@vueuse/core"
 
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
@@ -43,6 +43,10 @@ export const useStandings = (p: Phase | null) => {
         return computePlayOffs(phase.value)
     })
 
+    const unresolvedPlayOffs = useArrayFilter(
+        playOffs,
+        p => p.records.some(r => !r.tieBroken))
+
     const orderedPlayOffs = useSorted(playOffs, (a, b) => b.forRank - a.forRank)
 
     const requiresPlayOff = computed(() => {
@@ -62,6 +66,7 @@ export const useStandings = (p: Phase | null) => {
     return {
         standings,
         playOffs,
+        unresolvedPlayOffs,
         orderedPlayOffs,
         requiresPlayOff,
         firstPlace,

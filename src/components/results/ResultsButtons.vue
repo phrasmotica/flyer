@@ -31,11 +31,11 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const {
     flyer,
     mainPhase,
+    isComplete,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
-    requiresPlayOff,
     orderedPlayOffs,
 } = useStandings(mainPhase.value)
 
@@ -65,9 +65,7 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
 
 <template>
     <div class="p-fluid">
-        <div v-if="!hasPlayedOff && requiresPlayOff">
-            <!-- HIGH: force a play-off phase if a tie-breaker is still unresolved -->
-
+        <div v-if="!hasPlayedOff && !isComplete">
             <Button
                 :label="playOffButtonText"
                 @click="emit('confirmStartPlayOff')" />

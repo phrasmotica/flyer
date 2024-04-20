@@ -75,7 +75,7 @@ const getPlayOffIndex = (playerId: string) => {
 }
 
 const showPlayOffIndex = (playerId: string) => {
-    return !props.isPinned && !allPlayOffsComplete.value && getPlayOffIndex(playerId)
+    return !props.isPinned && getPlayOffIndex(playerId)
 }
 </script>
 

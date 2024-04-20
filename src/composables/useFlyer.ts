@@ -21,6 +21,7 @@ export const useFlyer = (f: Flyer | null) => {
     const {
         standings,
         playOffs,
+        unresolvedPlayOffs,
         requiresPlayOff,
     } = useStandings(mainPhase.value)
 
@@ -34,7 +35,9 @@ export const useFlyer = (f: Flyer | null) => {
         return newestPhases.find(p => p.startTime) || null
     })
 
-    const allPlayOffsComplete = computed(() => completedPlayOffs.value.length >= playOffs.value.length)
+    const allPlayOffsComplete = computed(() => {
+        return completedPlayOffs.value.length >= unresolvedPlayOffs.value.length
+    })
 
     const overallStandings = computed(() => processStandings(standings.value))
 
@@ -51,6 +54,8 @@ export const useFlyer = (f: Flyer | null) => {
     const overallMoneyRecipients = computed(() => getMoneyRecipients(standings.value))
 
     const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
+
+    const isComplete = computed(() => !requiresPlayOff.value && allPlayOffsComplete.value && inseparablePlayers.value.length <= 0)
 
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
@@ -78,6 +83,7 @@ export const useFlyer = (f: Flyer | null) => {
         inseparablePlayers,
         overallMoneyRecipients,
         incompleteCount,
+        isComplete,
 
         phaseIsComplete,
     }
