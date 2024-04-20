@@ -135,6 +135,7 @@ export const useRankings = () => {
             points: getPoints(fixtures, p.id),
             incomplete: isIncomplete(fixtures, p.id),
             rank: 0,
+            tieBroken: false,
         }))
 
         const tableData = records
@@ -147,6 +148,9 @@ export const useRankings = () => {
                 if (phase.settings.tieBreaker === TieBreaker.HeadToHead) {
                     const scoreDiff = sortHeadToHead(p, q, fixtures)
                     if (scoreDiff !== 0) {
+                        p.tieBroken = true
+                        q.tieBroken = true
+
                         return scoreDiff
                     }
 
@@ -155,6 +159,9 @@ export const useRankings = () => {
 
                 if (phase.settings.tieBreaker === TieBreaker.Runouts) {
                     if (p.runouts !== q.runouts) {
+                        p.tieBroken = true
+                        q.tieBroken = true
+
                         return q.runouts - p.runouts
                     }
                 }
@@ -179,6 +186,7 @@ export const useRankings = () => {
             points: 0,
             incomplete: false,
             rank: i + 1,
+            tieBroken: false,
         }))
     }
 

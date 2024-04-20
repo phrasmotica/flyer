@@ -10,4 +10,5 @@ export interface PlayerRecord {
     points: number
     incomplete: boolean
     rank: number
+    tieBroken: boolean
 }
