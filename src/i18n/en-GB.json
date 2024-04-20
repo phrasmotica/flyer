@@ -201,7 +201,7 @@
         "playOffRequiredMessage": "these players must take part in the {name}",
         "tiesBrokenMessage": "these players have been tie-broken via {name}",
         "tiesBrokenMessageHistoric": "these players were tie-broken via {name}",
-        "inseparablePlayers": "these players could not be tie-broken via {name}!",
+        "inseparablePlayers": "these players could not be tie-broken via {name}! They must play off instead.",
         "winningsMessage": "{name} wins ",
         "winningsMessageHistoric": "{name} won ",
         "otherPrizeMoney": "Other prize money:",

@@ -60,7 +60,7 @@ const sortedGroups = computed(() => [...groupedTieBreakers.value]
 
 <template>
     <div>
-        <Message v-for="group in sortedGroups" :severity="group.severity" :closable="false">
+        <Message v-for="group in sortedGroups" class="my-1" :severity="group.severity" :closable="false">
             <p v-for="p in group.tieBreakers" class="m-0">
                 <sup class="text-xs">{{ p.index }}&nbsp;</sup>
                 <span>{{ group.message }}</span>
