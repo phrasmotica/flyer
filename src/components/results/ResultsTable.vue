@@ -139,7 +139,7 @@ const showPlayOffIndex = (playerId: string) => {
         </Column>
 
         <template #expansion="slotProps">
-            <div class="p-2">
+            <div>
                 <PlayerRecord :playerId="slotProps.data.playerId" />
             </div>
         </template>
