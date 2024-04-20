@@ -1,6 +1,8 @@
+import { v4 as uuidv4 } from "uuid"
+
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
-import { TieBreaker, Format, type PhaseSettings } from "@/data/PhaseSettings"
+import { TieBreaker, Format } from "@/data/PhaseSettings"
 import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
 import type { PlayOff } from "@/data/PlayOff"
@@ -212,7 +214,7 @@ export const useRankings = () => {
             }
             else {
                 playOffs.push({
-                    id: "play-off-" + playOffs.length,
+                    id: uuidv4(),
                     name: "Play-Off for Position " + record.rank,
                     index: 0,
                     forRank: record.rank,
