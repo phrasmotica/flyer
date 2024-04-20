@@ -255,7 +255,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
                     if (winsRequiredReached(phase)) {
                         cancelRemaining()
-                        finish(phase, currentRanking)
+                        finishPhase(phase, currentRanking)
                         return
                     }
 
@@ -361,7 +361,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const finish = (phase: Phase, ranking: PlayerRecord[]) => {
+    const finishPhase = (phase: Phase, ranking: PlayerRecord[]) => {
         if (!phase.finishTime) {
             phase.finishTime = Date.now()
             phase.ranking = ranking
@@ -491,7 +491,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateScores,
         addTable,
         generateRound,
-        finish,
+        finishPhase,
         cancelRemaining,
         addPlayOff,
         skipPlayOff,

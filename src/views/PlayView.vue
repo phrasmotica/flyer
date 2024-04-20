@@ -104,19 +104,19 @@ const generateNextRound = () => {
 
 const confirmFinish = () => {
     if (hasFinished.value) {
-        finish()
+        finishPhase()
     }
     else {
         setShowFinishModal(true)
     }
 }
 
-const finish = () => {
+const finishPhase = () => {
     if (!currentPhase.value) {
         throw "No phase to finish!"
     }
 
-    const success = flyerStore.finish(currentPhase.value, currentStandings.value)
+    const success = flyerStore.finishPhase(currentPhase.value, currentStandings.value)
     if (!success) {
         throw "Failed to finish phase!"
     }
@@ -188,7 +188,7 @@ const hideFixtureModal = () => {
 
             <FinishFlyerModal
                 v-model:visible="showFinishModal"
-                @confirm="finish"
+                @confirm="finishPhase"
                 @hide="() => setShowFinishModal(false)" />
 
             <AbandonFlyerModal
