@@ -72,7 +72,7 @@ export const useStandings = (p: Phase | null) => {
         const playOff: PlayOff = {
             id: uuidv4(),
             forRank,
-            index: 0, // HIGH: assign this properly, perhaps when (if) it gets added to the flyer
+            index: 0, // HIGH: do we need this for anything?
             name: "Play-Off for Position " + forRank,
             players: players.value.filter(p => playerIds.includes(p.id)),
             records,

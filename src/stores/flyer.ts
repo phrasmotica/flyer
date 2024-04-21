@@ -118,7 +118,7 @@ export const useFlyerStore = defineStore("flyer", () => {
 
         const newPhase: Phase = {
             id: playOff.id,
-            order: 1, // HIGH: assign this properly, perhaps when (if) it gets added to the flyer
+            order: 1, // this will be assigned if the phase gets added to the flyer
             players: playOff.players,
             tables: forPhase.tables,
             settings: {...settings},
@@ -384,6 +384,9 @@ export const useFlyerStore = defineStore("flyer", () => {
         if (flyer.value) {
             const playOffPhase = createPlayOffPhase(forPhase, playOff)
 
+            const maxOrder = flyer.value.phases.map(p => p.order).reduce((x, y) => Math.max(x, y))
+            playOffPhase.order = maxOrder + 1
+
             flyer.value.phases = [...flyer.value.phases, playOffPhase]
         }
     }
@@ -391,6 +394,9 @@ export const useFlyerStore = defineStore("flyer", () => {
     const skipPlayOff = (playOff: PlayOff, forPhase: Phase, ranking: PlayerRecord[]) => {
         if (flyer.value) {
             const playOffPhase = createPlayOffPhase(forPhase, playOff)
+
+            const maxOrder = flyer.value.phases.map(p => p.order).reduce((x, y) => Math.max(x, y))
+            playOffPhase.order = maxOrder + 1
 
             playOffPhase.skippedTime = Date.now()
             playOffPhase.ranking = ranking
