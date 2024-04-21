@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
+import type { MeterItem } from "primevue/metergroup"
 
 import { usePrizes } from "@/composables/usePrizes"
 
-import type { PhaseSettings } from "@/data/PhaseSettings"
-import type { MeterItem } from "primevue/metergroup"
+import type { Specification } from "@/data/Specification"
 
 const props = defineProps<{
-    settings: PhaseSettings
+    settings: Specification
     playerCount: number
 }>()
 

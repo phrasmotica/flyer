@@ -1,9 +1,9 @@
 import type { FixtureSwap } from "./FixtureSwap"
 import type { PhaseEvent } from "./PhaseEvent"
-import type { PhaseSettings } from "./PhaseSettings"
 import type { Player } from "./Player"
 import type { PlayerRecord } from "./PlayerRecord"
 import type { Round } from "./Round"
+import type { Specification } from "./Specification"
 import type { Table } from "./Table"
 
 export interface Phase {
@@ -11,7 +11,7 @@ export interface Phase {
     order: number
     players: Player[]
     tables: Table[]
-    settings: PhaseSettings
+    settings: Specification
     startTime: number | null
     finishTime: number | null
     skippedTime: number | null

@@ -1,8 +1,8 @@
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
-import { TieBreaker, Format } from "@/data/PhaseSettings"
 import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
+import { TieBreaker, Format } from "@/data/Specification"
 import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 
 const POINTS_PER_WIN = 3

@@ -4,12 +4,12 @@ import { useI18n } from "vue-i18n"
 
 import { useSpecification } from "@/composables/usePhaseSettings"
 
-import type { PhaseSettings } from "@/data/PhaseSettings"
+import type { Specification } from "@/data/Specification"
 
 const { t } = useI18n()
 
 const props = defineProps<{
-    settings: PhaseSettings
+    settings: Specification
     playerCount: number
     tableCount: number
     raceTos: {

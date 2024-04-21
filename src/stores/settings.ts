@@ -3,11 +3,19 @@ import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
 
 import { useListFallback } from "@/composables/useListFallback"
-import { usePhaseSettings, useSpecification } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/usePhaseSettings"
 
 import type { FlyerSettings } from "@/data/FlyerSettings"
-import { Format, RuleSet, MoneySplit, TieBreaker, MatchLengthModel } from "@/data/PhaseSettings"
 import type { SettingsDetails } from "@/data/SettingsDetails"
+
+import {
+    Format,
+    RuleSet,
+    MoneySplit,
+    TieBreaker,
+    MatchLengthModel,
+} from "@/data/Specification"
+
 import type { Table } from "@/data/Table"
 
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS

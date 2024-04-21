@@ -1,4 +1,4 @@
-import type { PhaseSettings } from "./PhaseSettings"
+import type { Specification } from "./Specification"
 import type { Table } from "./Table"
 
 export type FlyerSettings = {
@@ -7,5 +7,5 @@ export type FlyerSettings = {
     raceToPerRound: number[]
     tableCount: number
     tables: Table[]
-    specification: PhaseSettings
+    specification: Specification
 }

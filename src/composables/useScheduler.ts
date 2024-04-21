@@ -2,11 +2,11 @@ import { computed, ref } from "vue"
 
 import type { IScheduler } from "@/data/IScheduler"
 import { KnockoutScheduler } from "@/data/KnockoutScheduler"
-import { Format, type PhaseSettings } from "@/data/PhaseSettings"
 import { RoundRobinScheduler } from "@/data/RoundRobinScheduler"
+import { Format, type Specification } from "@/data/Specification"
 import { WinnerStaysOnScheduler } from "@/data/WinnerStaysOnScheduler"
 
-export const useScheduler = (s: PhaseSettings) => {
+export const useScheduler = (s: Specification) => {
     const settings = ref(s)
 
     const scheduler = computed<IScheduler>(() => {

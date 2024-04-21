@@ -4,9 +4,9 @@ import type { Fixture } from "./Fixture"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Phase } from "./Phase"
-import { MatchLengthModel } from "./PhaseSettings"
 import type { Player } from "./Player"
 import type { Round } from "./Round"
+import { MatchLengthModel } from "./Specification"
 
 export class KnockoutScheduler implements IScheduler {
     frameTimeEstimateMins: number = 7

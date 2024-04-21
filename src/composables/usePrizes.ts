@@ -3,9 +3,9 @@ import type { MeterItem } from "primevue/metergroup"
 
 import { useSpecification } from "./usePhaseSettings"
 
-import { MoneySplit, type PhaseSettings } from "@/data/PhaseSettings"
+import { MoneySplit, type Specification } from "@/data/Specification"
 
-export const usePrizes = (s: PhaseSettings, c: number) => {
+export const usePrizes = (s: Specification, c: number) => {
     const playerCount = ref(c)
 
     const {

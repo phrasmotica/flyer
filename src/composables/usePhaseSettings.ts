@@ -1,20 +1,30 @@
 import { computed, ref } from "vue"
 
 import type { Phase } from "@/data/Phase"
-import { Format, TieBreaker, MatchLengthModel, type PhaseSettings } from "@/data/PhaseSettings"
 
-import { formatList, ruleSetList, tieBreakerList } from "@/stores/settings"
+import {
+    Format,
+    TieBreaker,
+    MatchLengthModel,
+    type Specification,
+} from "@/data/Specification"
+
+import {
+    formatList,
+    ruleSetList,
+    tieBreakerList,
+} from "@/stores/settings"
 
 export const usePhaseSettings = (p: Phase | null) => {
     const phase = ref(p)
 
     // LOW: do something better here than casting an empty object to PhaseSettings
-    const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
+    const settings = computed(() => phase.value?.settings || <Specification>{})
 
     return useSpecification(settings.value)
 }
 
-export const useSpecification = (s: PhaseSettings) => {
+export const useSpecification = (s: Specification) => {
     const settings = ref(s)
 
     const bestOf = computed(() => settings.value.bestOf)
