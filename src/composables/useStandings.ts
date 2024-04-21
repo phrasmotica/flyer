@@ -38,6 +38,8 @@ export const useStandings = (p: Phase | null) => {
 
     const standings = computed(() => computeStandings(phase.value, true))
 
+    // HIGH: rename this, and everything related, to "tieBreakers". Only things
+    // that are actually play-offs should be named such
     const playOffs = computed(() => {
         if (!isStarted.value) {
             return []

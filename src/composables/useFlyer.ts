@@ -51,6 +51,14 @@ export const useFlyer = (f: Flyer | null) => {
         return playerIds.filter(x => playersIdsInPlayOffs.includes(x))
     })
 
+    const playersAlreadyPlayedOff = computed(() => completedPlayOffs.value
+        .flatMap(p => p.players)
+        .map(x => x.id))
+
+    const hasAlreadyPlayedOff = (playerId: string) => {
+        return playersAlreadyPlayedOff.value.includes(playerId)
+    }
+
     const overallMoneyRecipients = computed(() => getMoneyRecipients(standings.value))
 
     const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
@@ -88,6 +96,7 @@ export const useFlyer = (f: Flyer | null) => {
         isComplete,
         isFinished,
 
+        hasAlreadyPlayedOff,
         phaseIsComplete,
     }
 }

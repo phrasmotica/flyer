@@ -29,8 +29,8 @@ const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
+    hasAlreadyPlayedOff,
     overallStandings,
-    completedPlayOffs,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -47,10 +47,6 @@ const {
 
 const raceTo = ref(1)
 
-const playersAlreadyPlayedOff = computed(() => completedPlayOffs.value
-    .flatMap(p => p.players)
-    .map(x => x.id))
-
 const options = computed(() => {
     return overallStandings.value.map(s => {
         const record = [s.wins, s.draws, s.losses]
@@ -60,7 +56,7 @@ const options = computed(() => {
 
         return {
             ...getPlayer(s.playerId)!,
-            disabled: playersAlreadyPlayedOff.value.includes(s.playerId),
+            disabled: hasAlreadyPlayedOff(s.playerId),
             record: record.join("-"),
         }
     })

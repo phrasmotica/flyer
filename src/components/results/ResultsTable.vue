@@ -3,13 +3,16 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import type { DataTableExpandedRows } from "primevue/datatable"
 
+import PlayerRecord from "./PlayerRecord.vue"
+
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePlayOffs } from "@/composables/usePlayOffs"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
+import type { PlayerRecord as TableData } from "@/data/PlayerRecord"
+
 import { useFlyerStore } from "@/stores/flyer"
-import PlayerRecord from "./PlayerRecord.vue"
-import { usePlayOffs } from "@/composables/usePlayOffs"
 
 const { t } = useI18n()
 
@@ -29,7 +32,7 @@ const {
     inseparablePlayers,
     playOffs,
     completedPlayOffs,
-    allPlayOffsComplete,
+    hasAlreadyPlayedOff,
     phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
@@ -58,7 +61,7 @@ const showPoints = computed(() => !isWinnerStaysOn.value)
 const showDiff = computed(() => !isWinnerStaysOn.value)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
-const rowClass = (data: any) => {
+const rowClass = (data: TableData) => {
     return [
         {
             'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
@@ -75,7 +78,7 @@ const getPlayOffIndex = (playerId: string) => {
 }
 
 const showPlayOffIndex = (playerId: string) => {
-    return !props.isPinned && getPlayOffIndex(playerId)
+    return !props.isPinned && !hasAlreadyPlayedOff(playerId) && getPlayOffIndex(playerId)
 }
 </script>
 
@@ -85,7 +88,7 @@ const showPlayOffIndex = (playerId: string) => {
         size="small" dataKey="playerId"
         v-model:expandedRows="expandedRows"
         :value="overallStandings"
-        :rowClass="rowClass">
+        :rowClass="data => rowClass(data as TableData)">
         <Column v-if="showRank" field="rank" :header="t('results.rankHeader')" />
 
         <Column v-if="showExpander" expander class="w-1rem" />
