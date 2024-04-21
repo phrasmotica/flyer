@@ -113,8 +113,8 @@ export const useFlyerStore = defineStore("flyer", () => {
         return phase
     }
 
-    const createPlayOffPhase = (forPhase: Phase, playOff: PlayOff) => {
-        const settings = createPlayOffSettings(forPhase, playOff)
+    const createPlayOffPhase = (forPhase: Phase, playOff: PlayOff, raceTo: number) => {
+        const settings = createPlayOffSettings(forPhase, playOff, raceTo)
 
         const newPhase: Phase = {
             id: playOff.id,
@@ -125,7 +125,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             startTime: Date.now(),
             finishTime: null,
             skippedTime: null,
-            rounds: new KnockoutScheduler().generateFixturesForPhase(forPhase, playOff.players),
+            rounds: new KnockoutScheduler().generatePlayOffFixtures(forPhase, playOff.players, raceTo),
             fixtureSwaps: [],
             eventLog: createEventLog(settings.name),
             ranking: [],
@@ -380,9 +380,9 @@ export const useFlyerStore = defineStore("flyer", () => {
         return true
     }
 
-    const addPlayOff = (playOff: PlayOff, forPhase: Phase) => {
+    const addPlayOff = (forPhase: Phase, playOff: PlayOff, raceTo: number) => {
         if (flyer.value) {
-            const playOffPhase = createPlayOffPhase(forPhase, playOff)
+            const playOffPhase = createPlayOffPhase(forPhase, playOff, raceTo)
 
             const maxOrder = flyer.value.phases.map(p => p.order).reduce((x, y) => Math.max(x, y))
             playOffPhase.order = maxOrder + 1
@@ -391,9 +391,9 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const skipPlayOff = (playOff: PlayOff, forPhase: Phase, ranking: PlayerRecord[]) => {
+    const skipPlayOff = (forPhase: Phase, playOff: PlayOff, ranking: PlayerRecord[]) => {
         if (flyer.value) {
-            const playOffPhase = createPlayOffPhase(forPhase, playOff)
+            const playOffPhase = createPlayOffPhase(forPhase, playOff, 1)
 
             const maxOrder = flyer.value.phases.map(p => p.order).reduce((x, y) => Math.max(x, y))
             playOffPhase.order = maxOrder + 1

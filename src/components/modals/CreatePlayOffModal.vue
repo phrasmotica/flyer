@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
+import Stepper from "../setup/Stepper.vue"
 
 import { useArray } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
@@ -21,7 +22,7 @@ const visible = defineModel<boolean>("visible", {
 
 const emit = defineEmits<{
     hide: []
-    create: [records: PlayerRecord[]]
+    create: [records: PlayerRecord[], raceTo: number]
 }>()
 
 const flyerStore = useFlyerStore()
@@ -43,6 +44,8 @@ const {
 const {
     arr: playerIds,
 } = useArray<string>()
+
+const raceTo = ref(1)
 
 const playersAlreadyPlayedOff = computed(() => completedPlayOffs.value
     .flatMap(p => p.players)
@@ -76,9 +79,17 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
         :confirmLabel="t('common.create')"
         :confirmDisabled="playerIds.length <= 0"
         :cancelLabel="t('common.cancel')"
-        @confirm="emit('create', selectedRecords)"
+        @confirm="emit('create', selectedRecords, raceTo)"
         @hide="emit('hide')">
         <div class="p-fluid mb-2">
+            <div class="mb-2">
+                <Stepper
+                    inputId="matchLengthStepper"
+                    v-model="raceTo"
+                    :min="1" :max="3"
+                    :prefix="t('matchLengthModel.raceToPrefix')" />
+            </div>
+
             <p class="m-0 font-bold">
                 {{ t('playOff.selectPlayers') }}
             </p>

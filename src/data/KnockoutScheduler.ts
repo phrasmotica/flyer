@@ -169,7 +169,7 @@ export class KnockoutScheduler implements IScheduler {
         return this.generatedRounds
     }
 
-    generateFixturesForPhase(phase: Phase, players: Player[]) {
+    generatePlayOffFixtures(phase: Phase, players: Player[], raceTo: number) {
         if (this.generatedRounds !== undefined) {
             throw "Fixtures have already been generated!"
         }
@@ -190,10 +190,6 @@ export class KnockoutScheduler implements IScheduler {
         while (r < numRounds) {
             // ensure the final round (match) always draws from the two semi-finals
             const takeFromParents = !phase.settings.randomlyDrawAllRounds || r === numRounds - 1
-
-            const raceTo = phase.settings.matchLengthModel === MatchLengthModel.Variable
-                ? phase.rounds[r].raceTo!
-                : phase.settings.raceTo
 
             const round = this.generateRound(r, overallPool, raceTo, numSpaces, takeFromParents)
             this.generatedRounds.push(round)

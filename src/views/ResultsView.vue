@@ -130,7 +130,7 @@ const startPlayOff = () => {
         return
     }
 
-    flyerStore.addPlayOff(nextPlayOff.value, mainPhase.value)
+    flyerStore.addPlayOff(mainPhase.value, nextPlayOff.value, 1)
 
     setShowStartPlayOffModal(false)
 
@@ -145,12 +145,12 @@ const skipPlayOff = (players: Player[]) => {
 
     const ranking = computeDummyStandings(players)
 
-    flyerStore.skipPlayOff(nextPlayOff.value, mainPhase.value, ranking)
+    flyerStore.skipPlayOff(mainPhase.value, nextPlayOff.value, ranking)
 
     setShowSkipPlayOffModal(false)
 }
 
-const createPlayOff = (records: PlayerRecord[]) => {
+const createPlayOff = (records: PlayerRecord[], raceTo: number) => {
     if (!mainPhase.value) {
         console.debug("No phase to create a play-off for!")
         return
@@ -159,7 +159,7 @@ const createPlayOff = (records: PlayerRecord[]) => {
     const forRank = Math.min(...records.map(r => r.rank))
     const playOff = createPlayOffFor(records, forRank)
 
-    flyerStore.addPlayOff(playOff, mainPhase.value)
+    flyerStore.addPlayOff(mainPhase.value, playOff, raceTo)
 
     setShowCreatePlayOffModal(false)
 
