@@ -7,7 +7,6 @@ import TableBadge from "./TableBadge.vue"
 import { useFixture } from "@/composables/useFixture"
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { usePlayers } from "@/composables/usePlayers"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRounds } from "@/composables/useRounds"
@@ -32,10 +31,6 @@ const flyerStore = useFlyerStore()
 const {
     currentPhase,
 } = useFlyer(flyerStore.flyer)
-
-const {
-    isInProgress,
-} = usePhaseTiming(currentPhase.value)
 
 const {
     getFixtureOnTable,
@@ -82,7 +77,7 @@ onUnmounted(() => {
 
 <template>
     <div class="flex">
-        <div class="flex-grow-1">
+        <div>
             <div>
                 <TableBadge :showBusy="!isHistoric" :table="props.table" />
             </div>
@@ -101,13 +96,5 @@ onUnmounted(() => {
                 </Badge>
             </div>
         </div>
-
-        <!-- LOW: allow pausing (deactivating) the table if it is not being used -->
-        <Button v-if="isInProgress"
-            class="ml-2"
-            icon="pi pi-pause-circle"
-            severity="warning"
-            :disabled="true"
-            @click="" />
     </div>
 </template>
