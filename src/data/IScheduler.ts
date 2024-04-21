@@ -10,5 +10,4 @@ export interface IScheduler {
     estimateFixtureDuration(raceTo: number): number
     computeRoundNames(settings: FlyerSettings): string[]
     generateFixtures(settings: FlyerSettings, players: Player[]): Round[]
-    generateFixturesForPhase(phase: Phase, players: Player[]): Round[]
 }

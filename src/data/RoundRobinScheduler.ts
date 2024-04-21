@@ -95,10 +95,6 @@ export class RoundRobinScheduler implements IScheduler {
         return this.generatedRounds
     }
 
-    generateFixturesForPhase(phase: Phase, players: Player[]): Round[] {
-        throw new Error("Method not implemented.")
-    }
-
     private createRound(index: number, players: Player[], omissionIndex: number): [boolean, Round] {
         // 1. create an overall pool of all players. If the number of players is odd, omit one player who has NOT yet been omitted from a round from this round
         // 2. select a random player ID from the overall pool as player A. E.g. 1 from [1, 2, 3, 4]

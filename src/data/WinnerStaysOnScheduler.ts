@@ -117,10 +117,6 @@ export class WinnerStaysOnScheduler implements IScheduler {
         return this.generatedRounds
     }
 
-    generateFixturesForPhase(phase: Phase, players: Player[]): Round[] {
-        throw new Error("Method not implemented.")
-    }
-
     private addEmptyFixture(round: Round, parentFixtures: ParentFixture[]) {
         const newFixture: Fixture = {
             id: uuidv4(),
