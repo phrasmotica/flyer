@@ -20,6 +20,7 @@ import { useUiStore } from "@/stores/ui"
 const { t } = useI18n()
 
 const props = defineProps<{
+    sections?: PlayViewSection[]
     overflow?: boolean
     pinnable?: boolean
     pinnedOnly?: boolean
@@ -35,30 +36,43 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const items = computed(() => <MenuItem[]>[
-    // MEDIUM: reinstate logic for hiding certain sections, once we've removed
-    // the dependency on the underlying enum values for tracking the active index
+const defaultSections = [
     {
         icon: 'pi pi-calendar',
-        command: _ => uiStore.settings.currentSection = PlayViewSection.Fixtures,
+        value: PlayViewSection.Fixtures,
     },
     {
         icon: 'pi pi-chart-bar',
-        command: _ => uiStore.settings.currentSection = PlayViewSection.Standings,
+        value: PlayViewSection.Standings,
     },
     {
         icon: 'pi pi-building',
-        command: _ => uiStore.settings.currentSection = PlayViewSection.Tables,
+        value: PlayViewSection.Tables,
     },
     {
         icon: 'pi pi-info-circle',
-        command: _ => uiStore.settings.currentSection = PlayViewSection.Info,
+        value: PlayViewSection.Info,
     },
     {
         icon: 'pi pi-receipt',
-        command: _ => uiStore.settings.currentSection = PlayViewSection.EventLog,
+        value: PlayViewSection.EventLog,
     },
-])
+]
+
+const relevantSections = computed(() => defaultSections.filter(x => {
+    return !props.sections || props.sections.includes(x.value)
+}))
+
+const items = computed(() => {
+    return relevantSections.value.map<MenuItem>(f => ({
+        icon: f.icon,
+        command: _ => uiStore.settings.currentSection = f.value,
+    }))
+})
+
+const activeIndex = computed(() => {
+    return relevantSections.value.findIndex(s => s.value === uiStore.currentSection)
+})
 
 const pinButtonLabel = computed(() => {
     if (uiStore.pinnedSection === uiStore.currentSection) {
@@ -96,7 +110,7 @@ const showSection = (section: PlayViewSection) => {
         <TabMenu v-if="!props.pinnedOnly"
             class="mb-2"
             :model="items"
-            :activeIndex="uiStore.currentSection" />
+            :activeIndex="activeIndex" />
 
         <div v-if="!isHistoric && props.pinnable">
             <div v-if="canPin" class="p-fluid pb-2 border-bottom-1 mb-1">

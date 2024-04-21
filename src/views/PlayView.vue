@@ -23,6 +23,7 @@ import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useStandings } from "@/composables/useStandings"
 
 import type { Fixture } from "@/data/Fixture"
+import { PlayViewSection } from "@/data/UiSettings"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
@@ -82,6 +83,22 @@ const [showFinishModal, setShowFinishModal] = useToggle()
 const [showAbandonModal, setShowAbandonModal] = useToggle()
 
 const selectedFixture = ref<Fixture>()
+
+const sections = computed(() => {
+    const relevantSections = [
+        PlayViewSection.Fixtures,
+        PlayViewSection.Standings,
+        PlayViewSection.Tables,
+        PlayViewSection.Info,
+        PlayViewSection.EventLog,
+    ]
+
+    if (isKnockout.value) {
+        relevantSections.splice(1, 1)
+    }
+
+    return relevantSections
+})
 
 const header = computed(() => {
     if (currentPlayOffPhase.value) {
@@ -160,6 +177,7 @@ const hideFixtureModal = () => {
 
         <template #content>
             <PlaySections
+                :sections="sections"
                 :overflow="!isSmallScreen"
                 :pinnable="!isSmallScreen"
                 @selectFixture="selectForRecording" />
@@ -175,6 +193,7 @@ const hideFixtureModal = () => {
 
             <div v-if="!isHistoric" class="border-top-1 pt-2">
                 <PlaySections v-if="uiStore.pinnedSection"
+                    :sections="[uiStore.pinnedSection]"
                     overflow
                     pinnedOnly />
 
