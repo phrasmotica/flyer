@@ -64,7 +64,10 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
                 {{ t('playOff.selectPlayers') }}
             </p>
 
-            <PlayerSelector v-model="playerIds" />
+            <PlayerSelector
+                class="overflow-y-auto"
+                style="height: 200px;"
+                v-model="playerIds" />
         </div>
     </ConfirmModal>
 </template>

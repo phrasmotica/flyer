@@ -4,6 +4,7 @@ import { computed } from "vue"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
+import { useScreenSizes } from "@/composables/useScreenSizes"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -12,6 +13,10 @@ const playerIds = defineModel<string[]>({
 })
 
 const flyerStore = useFlyerStore()
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const {
     mainPhase,
@@ -46,6 +51,7 @@ const options = computed(() => {
 <template>
     <Listbox
         multiple
+        :class="isSmallScreen && 'compact'"
         v-model="playerIds"
         :options="options"
         optionValue="id"
@@ -69,3 +75,9 @@ const options = computed(() => {
         </template>
     </Listbox>
 </template>
+
+<style>
+.p-listbox.compact .p-listbox-list .p-listbox-item {
+    padding: 0.25rem 0.5rem;
+}
+</style>
