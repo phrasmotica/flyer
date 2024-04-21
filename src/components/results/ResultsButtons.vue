@@ -68,19 +68,7 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
 
 <template>
     <div class="p-fluid">
-        <div v-if="!isFinished">
-            <Button
-                severity="warning"
-                :label="t('results.createPlayOff')"
-                @click="emit('confirmCreatePhase')" />
-
-            <Button
-                class="mt-2"
-                :label="t('common.finish')"
-                @click="emit('confirmFinishFlyer')" />
-        </div>
-
-        <div v-else-if="!hasPlayedOff && !isComplete">
+        <div v-if="!hasPlayedOff && !isComplete">
             <Button
                 :label="playOffButtonText"
                 @click="emit('confirmStartPlayOff')" />
@@ -90,6 +78,18 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
                 severity="warning"
                 :label="'Skip this play-off'"
                 @click="emit('confirmSkipPlayOff')" />
+        </div>
+
+        <div v-else-if="!isFinished">
+            <Button
+                severity="warning"
+                :label="t('results.createPlayOff')"
+                @click="emit('confirmCreatePhase')" />
+
+            <Button
+                class="mt-2"
+                :label="t('common.finish')"
+                @click="emit('confirmFinishFlyer')" />
         </div>
 
         <div v-else>
