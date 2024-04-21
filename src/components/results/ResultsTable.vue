@@ -60,15 +60,6 @@ const showPoints = computed(() => !isWinnerStaysOn.value)
 const showDiff = computed(() => !isWinnerStaysOn.value)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
-const rowClass = (data: TableData) => [
-    {
-        'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
-        'incomplete-row': !props.isInProgress && data.incomplete,
-        'play-off-row': showTieBreakerIndex(data.playerId),
-        'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
-    },
-]
-
 const getTieBreakerIndex = (playerId: string) => {
     return unplayedTieBreakers.value.findIndex(p => p.players.some(x => x.id === playerId)) + 1
 }
@@ -76,6 +67,15 @@ const getTieBreakerIndex = (playerId: string) => {
 const showTieBreakerIndex = (playerId: string) => {
     return !props.isPinned && !hasAlreadyPlayedOff(playerId) && getTieBreakerIndex(playerId) > 0
 }
+
+const rowClass = (data: TableData) => [
+    {
+        'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
+        'incomplete-row': !props.isInProgress && data.incomplete,
+        'tie-break-row': showTieBreakerIndex(data.playerId),
+        'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
+    },
+]
 </script>
 
 <template>
