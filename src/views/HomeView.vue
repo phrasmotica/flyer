@@ -14,8 +14,11 @@ import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useSettings } from "@/composables/useSettings"
 
+import { PlayViewSection } from "@/data/UiSettings"
+
 import { useFlyerStore } from "@/stores/flyer"
 import { useSettingsStore } from "@/stores/settings"
+import { useUiStore } from "@/stores/ui"
 
 const { t } = useI18n()
 
@@ -25,6 +28,7 @@ const routing = useRouting(useRouter())
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
+const uiStore = useUiStore()
 
 const {
     isSmallScreen,
@@ -55,6 +59,9 @@ const start = () => {
 
         return
     }
+
+    uiStore.settings.currentSection = PlayViewSection.Fixtures
+    uiStore.settings.pinnedSection = PlayViewSection.Info
 
     setShowModal(false)
 
