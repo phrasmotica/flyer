@@ -3,12 +3,11 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
+import PlayerSelector from "../results/PlayerSelector.vue"
 import Stepper from "../setup/Stepper.vue"
 
 import { useArray } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
-import { usePlayers } from "@/composables/usePlayers"
 
 import type { PlayerRecord } from "@/data/PlayerRecord"
 
@@ -28,39 +27,14 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
-    mainPhase,
-    hasAlreadyPlayedOff,
     overallStandings,
 } = useFlyer(flyerStore.flyer)
-
-const {
-    fixturesCanBeDrawn,
-} = usePhaseSettings(mainPhase.value)
-
-const {
-    getPlayer,
-} = usePlayers(mainPhase.value)
 
 const {
     arr: playerIds,
 } = useArray<string>()
 
 const raceTo = ref(1)
-
-const options = computed(() => {
-    return overallStandings.value.map(s => {
-        const record = [s.wins, s.draws, s.losses]
-        if (!fixturesCanBeDrawn.value) {
-            record.splice(1, 1)
-        }
-
-        return {
-            ...getPlayer(s.playerId)!,
-            disabled: hasAlreadyPlayedOff(s.playerId),
-            record: record.join("-"),
-        }
-    })
-})
 
 const selectedRecords = computed(() => overallStandings.value.filter(s => {
     return playerIds.value.includes(s.playerId)
@@ -90,30 +64,7 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
                 {{ t('playOff.selectPlayers') }}
             </p>
 
-            <Listbox
-                multiple
-                v-model="playerIds"
-                :options="options"
-                optionValue="id"
-                optionDisabled="disabled">
-                <template #option="{ index, option: player }">
-                    <div class="flex align-items-center">
-                        <div class="mr-2">
-                            <span class="text-right text-sm text-color-secondary font-italic w-1rem">
-                                #{{ index + 1 }}
-                            </span>
-                        </div>
-                        <span class="flex-grow-1" :class="player.disabled && 'line-through'">
-                            {{ player.name }}
-                        </span>
-                        <div class="ml-2">
-                            <span class="text-right text-sm text-color-secondary font-italic w-1rem">
-                                {{ player.record }}
-                            </span>
-                        </div>
-                    </div>
-                </template>
-            </Listbox>
+            <PlayerSelector v-model="playerIds" />
         </div>
     </ConfirmModal>
 </template>
