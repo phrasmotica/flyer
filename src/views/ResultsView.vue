@@ -17,6 +17,7 @@ import ResultsTable from "@/components/results/ResultsTable.vue"
 import SkipPlayOffModal from "@/components/modals/SkipPlayOffModal.vue"
 import StartPlayOffModal from "@/components/modals/StartPlayOffModal.vue"
 import WinningsList from "@/components/results/WinningsList.vue"
+import WinningsSummary from "@/components/results/WinningsSummary.vue"
 
 import { useDownloadImage } from "@/composables/useDownloadImage"
 import { useFlyer } from "@/composables/useFlyer"
@@ -213,6 +214,10 @@ const save = () => {
                     <ResultsTable />
 
                     <ResultsMessages />
+
+                    <div v-if="isFinished" class="mt-1">
+                        <WinningsSummary />
+                    </div>
                 </div>
 
                 <div v-if="isKnockout">

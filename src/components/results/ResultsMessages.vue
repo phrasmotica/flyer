@@ -3,7 +3,6 @@ import { computed } from "vue"
 
 import IncompleteResultsMessage from "./IncompleteResultsMessage.vue"
 import TieBreakerMessages from "./TieBreakerMessages.vue"
-import WinningsSummary from "./WinningsSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
@@ -20,7 +19,6 @@ const {
     mainPhase,
     tieBreakers,
     incompleteCount,
-    isFinished,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -38,8 +36,6 @@ const showIncompleteMessage = computed(() => {
 const showTieBreakerMessages = computed(() => {
     return tieBreakers.value.length > 0 && !isWinnerStaysOn.value
 })
-
-const showWinningsSummary = computed(() => isFinished.value)
 </script>
 
 <template>
@@ -50,10 +46,6 @@ const showWinningsSummary = computed(() => isFinished.value)
 
         <div v-if="showTieBreakerMessages" class="mt-1">
             <TieBreakerMessages />
-        </div>
-
-        <div v-if="showWinningsSummary" class="mt-1">
-            <WinningsSummary />
         </div>
     </div>
 </template>
