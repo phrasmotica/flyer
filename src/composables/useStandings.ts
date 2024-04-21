@@ -9,8 +9,8 @@ import { usePlayers } from "./usePlayers"
 import { useRankings } from "./useRankings"
 
 import type { Phase } from "@/data/Phase"
-import type { PlayOff } from "@/data/PlayOff"
 import type { PlayerRecord } from "@/data/PlayerRecord"
+import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 
 export const useStandings = (p: Phase | null) => {
     const {
@@ -69,7 +69,7 @@ export const useStandings = (p: Phase | null) => {
     const createPlayOffFor = (records: PlayerRecord[], forRank: number) => {
         const playerIds = records.map(r => r.playerId)
 
-        const tieBreaker: PlayOff = {
+        const tieBreaker: TieBreakerInfo = {
             id: uuidv4(),
             forRank,
             index: 0,

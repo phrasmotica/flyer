@@ -15,10 +15,10 @@ import { PhaseEventLevel, type PhaseEvent } from "@/data/PhaseEvent"
 import { createPlayOffSettings, Format } from "@/data/PhaseSettings"
 import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
-import type { PlayOff } from "@/data/PlayOff"
 import type { Round } from "@/data/Round"
 import { RoundRobinScheduler } from "@/data/RoundRobinScheduler"
 import type { Table } from "@/data/Table"
+import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 import { WinnerStaysOnScheduler } from "@/data/WinnerStaysOnScheduler"
 
 export const useFlyerStore = defineStore("flyer", () => {
@@ -113,7 +113,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         return phase
     }
 
-    const createPlayOffPhase = (forPhase: Phase, tieBreaker: PlayOff, raceTo: number) => {
+    const createPlayOffPhase = (forPhase: Phase, tieBreaker: TieBreakerInfo, raceTo: number) => {
         const settings = createPlayOffSettings(forPhase, tieBreaker, raceTo)
 
         const newPhase: Phase = {
@@ -380,7 +380,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         return true
     }
 
-    const addPlayOff = (forPhase: Phase, tieBreaker: PlayOff, raceTo: number) => {
+    const addPlayOff = (forPhase: Phase, tieBreaker: TieBreakerInfo, raceTo: number) => {
         if (flyer.value) {
             const playOffPhase = createPlayOffPhase(forPhase, tieBreaker, raceTo)
 
@@ -391,7 +391,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const skipPlayOff = (forPhase: Phase, tieBreaker: PlayOff, ranking: PlayerRecord[]) => {
+    const skipPlayOff = (forPhase: Phase, tieBreaker: TieBreakerInfo, ranking: PlayerRecord[]) => {
         if (flyer.value) {
             const playOffPhase = createPlayOffPhase(forPhase, tieBreaker, 1)
 

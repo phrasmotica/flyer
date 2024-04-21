@@ -7,7 +7,7 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 
-import type { PlayOff } from "@/data/PlayOff"
+import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -33,7 +33,7 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const groupedTieBreakers = useArrayGroupBy<PlayOff, TieBreakerState>(
+const groupedTieBreakers = useArrayGroupBy<TieBreakerInfo, TieBreakerState>(
     tieBreakers.value.filter(t => {
         return !phaseIsComplete(t.id) && t.players.every(x => !hasAlreadyPlayedOff(x.id))
     }),

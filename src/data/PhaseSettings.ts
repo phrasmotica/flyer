@@ -1,5 +1,5 @@
 import type { Phase } from "./Phase"
-import type { PlayOff } from "./PlayOff"
+import type { TieBreakerInfo } from "./TieBreakerInfo"
 
 export interface PhaseSettings {
     matchLengthModel: MatchLengthModel
@@ -49,7 +49,7 @@ export enum MoneySplit {
     SemiFinalists,
 }
 
-export const createPlayOffSettings = (forPhase: Phase, tieBreaker: PlayOff, raceTo: number): PhaseSettings => ({
+export const createPlayOffSettings = (forPhase: Phase, tieBreaker: TieBreakerInfo, raceTo: number): PhaseSettings => ({
     allowEarlyFinish: false,
     bestOf: 1,
     entryFee: 0,

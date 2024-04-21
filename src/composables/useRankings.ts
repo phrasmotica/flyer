@@ -1,9 +1,9 @@
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
-import { TieBreaker, Format, type PhaseSettings } from "@/data/PhaseSettings"
+import { TieBreaker, Format } from "@/data/PhaseSettings"
 import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
-import type { PlayOff } from "@/data/PlayOff"
+import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 
 const POINTS_PER_WIN = 3
 const POINTS_PER_DRAW = 1
@@ -197,7 +197,7 @@ export const useRankings = () => {
             return []
         }
 
-        const tieBreakers = <PlayOff[]>[]
+        const tieBreakers = <TieBreakerInfo[]>[]
 
         const standings = computeStandings(phase, false)
 
@@ -229,7 +229,7 @@ export const useRankings = () => {
 
         const relevantTieBreakers = tieBreakers.filter(p => p.players.length > 1)
 
-        return relevantTieBreakers.map<PlayOff>((p, i) => ({
+        return relevantTieBreakers.map<TieBreakerInfo>((p, i) => ({
             ...p,
             index: i + 1,
         }))
