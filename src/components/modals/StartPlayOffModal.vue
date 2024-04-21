@@ -5,7 +5,6 @@ import { useI18n } from "vue-i18n"
 import ConfirmModal from "./ConfirmModal.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { useStandings } from "@/composables/useStandings"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -23,22 +22,11 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
-    mainPhase,
-    phaseIsComplete,
+    nextTieBreaker,
 } = useFlyer(flyerStore.flyer)
 
-const {
-    orderedTieBreakers,
-} = useStandings(mainPhase.value)
-
-// HIGH: put this inside useFlyer() and consume it in all the other places too
-const nextPlayOff = computed(() => {
-    const remaining = orderedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
-    return remaining.length > 0 ? remaining[0] : null
-})
-
 const message = computed(() => t('results.startPlayOffName', {
-    name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
+    name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
 </script>
 

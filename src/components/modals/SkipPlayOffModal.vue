@@ -7,7 +7,6 @@ import PlayerRanker from "../results/PlayerRanker.vue"
 
 import { useArray } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
-import { useStandings } from "@/composables/useStandings"
 
 import type { Player } from "@/data/Player"
 
@@ -27,27 +26,17 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
-    mainPhase,
-    phaseIsComplete,
+    nextTieBreaker,
 } = useFlyer(flyerStore.flyer)
-
-const {
-    orderedTieBreakers,
-} = useStandings(mainPhase.value)
 
 const {
     arr: finalOrder,
 } = useArray<Player>()
 
-const nextPlayOff = computed(() => {
-    const remaining = orderedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
-    return remaining.length > 0 ? remaining[0] : null
-})
-
-const players = computed(() => nextPlayOff.value?.players || [])
+const players = computed(() => nextTieBreaker.value?.players || [])
 
 const message = computed(() => t('results.pleaseConfirmPlayOffRanking', {
-    name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
+    name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
 
 // BUG: final order is not refreshed when skipping a second play-off, after

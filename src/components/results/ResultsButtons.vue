@@ -4,7 +4,6 @@ import { useI18n } from "vue-i18n"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { useQueryParams } from "@/composables/useQueryParams"
-import { useStandings } from "@/composables/useStandings"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
@@ -32,26 +31,14 @@ const flyerHistoryStore = useFlyerHistoryStore()
 
 const {
     flyer,
-    mainPhase,
+    nextTieBreaker,
     isComplete,
     isFinished,
-    phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
-
-const {
-    orderedTieBreakers,
-} = useStandings(mainPhase.value)
 
 const {
     isHistoric,
 } = useQueryParams()
-
-const nextPlayOff = computed(() => {
-    const remaining = orderedTieBreakers.value.filter(t => !phaseIsComplete(t.id))
-    return remaining.length > 0 ? remaining[0] : null
-})
-
-const hasPlayedOff = computed(() => !nextPlayOff.value)
 
 const alreadySaved = computed(() => {
     return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)
@@ -62,13 +49,13 @@ const saveImageButtonText = computed(() => t(props.imageSaved ? "results.downloa
 const saveButtonText = computed(() => t(alreadySaved.value ? 'results.flyerSaved' : 'results.saveFlyer'))
 
 const playOffButtonText = computed(() => t('results.startPlayOffButton', {
-    name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
+    name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
 </script>
 
 <template>
     <div class="p-fluid">
-        <div v-if="!hasPlayedOff && !isComplete">
+        <div v-if="nextTieBreaker && !isComplete">
             <Button
                 :label="playOffButtonText"
                 @click="emit('confirmStartPlayOff')" />

@@ -21,6 +21,7 @@ export const useFlyer = (f: Flyer | null) => {
     const {
         standings,
         tieBreakers,
+        orderedTieBreakers,
         unresolvedTieBreakers,
         requiresPlayOff,
     } = useStandings(mainPhase.value)
@@ -33,6 +34,11 @@ export const useFlyer = (f: Flyer | null) => {
     const currentPlayOffPhase = computed(() => {
         const newestPhases = [...playOffPhases.value].reverse()
         return newestPhases.find(p => p.startTime) || null
+    })
+
+    const nextTieBreaker = computed(() => {
+        const remaining = orderedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
+        return remaining.length > 0 ? remaining[0] : null
     })
 
     const allPlayOffsComplete = computed(() => {
@@ -86,6 +92,7 @@ export const useFlyer = (f: Flyer | null) => {
         allPlayOffsComplete,
 
         tieBreakers,
+        nextTieBreaker,
         requiresPlayOff,
         completedPlayOffs,
 

@@ -20,7 +20,6 @@ import WinningsList from "@/components/results/WinningsList.vue"
 
 import { useDownloadImage } from "@/composables/useDownloadImage"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePodium } from "@/composables/usePodium"
 import { useQueryParams } from "@/composables/useQueryParams"
@@ -50,13 +49,10 @@ const {
 const {
     flyer,
     mainPhase,
+    nextTieBreaker,
     overallStandings,
     isFinished,
-    phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
-
-const {
-} = usePhase(mainPhase.value)
 
 const {
     settings,
@@ -72,7 +68,6 @@ const {
 } = usePodium(mainPhase.value)
 
 const {
-    orderedTieBreakers,
     createPlayOffFor,
 } = useStandings(mainPhase.value)
 
@@ -115,22 +110,17 @@ const goToSetup = () => {
     routing.toSetup()
 }
 
-const nextPlayOff = computed(() => {
-    const remaining = orderedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
-    return remaining.length > 0 ? remaining[0] : null
-})
-
 const alreadySaved = computed(() => {
     return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)
 })
 
 const startPlayOff = () => {
-    if (!nextPlayOff.value || !mainPhase.value) {
+    if (!nextTieBreaker.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
-    flyerStore.addPlayOff(mainPhase.value, nextPlayOff.value, 1)
+    flyerStore.addPlayOff(mainPhase.value, nextTieBreaker.value, 1)
 
     setShowStartPlayOffModal(false)
 
@@ -138,14 +128,14 @@ const startPlayOff = () => {
 }
 
 const skipPlayOff = (players: Player[]) => {
-    if (!nextPlayOff.value || !mainPhase.value) {
+    if (!nextTieBreaker.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
     const ranking = computeDummyStandings(players)
 
-    flyerStore.skipPlayOff(mainPhase.value, nextPlayOff.value, ranking)
+    flyerStore.skipPlayOff(mainPhase.value, nextTieBreaker.value, ranking)
 
     setShowSkipPlayOffModal(false)
 }
