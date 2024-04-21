@@ -30,7 +30,7 @@ const {
     mainPhase,
     overallStandings,
     inseparablePlayers,
-    unplayedTieBreakers,
+    stillRelevantTieBreakers,
     completedPlayOffs,
     isFinished,
     hasAlreadyPlayedOff,
@@ -62,13 +62,7 @@ const showDiff = computed(() => !isWinnerStaysOn.value)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
 const getTieBreakerIndex = (playerId: string) => {
-    // don't want to show tie-breakers where too many players have already
-    // been drafted into a play-off
-    const stillRelevantTieBreakers = unplayedTieBreakers.value.filter(t => {
-        return t.players.filter(p => !hasAlreadyPlayedOff(p.id)).length > 1
-    })
-
-    return stillRelevantTieBreakers.findIndex(p => p.players.some(x => x.id === playerId)) + 1
+    return stillRelevantTieBreakers.value.findIndex(p => p.players.some(x => x.id === playerId)) + 1
 }
 
 const showTieBreakerIndex = (playerId: string) => {
