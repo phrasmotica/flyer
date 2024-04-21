@@ -67,10 +67,10 @@ const canCreatePlayOff = computed(() => {
 
 <template>
     <div class="p-fluid">
-        <DebugButtons v-if="!isHistoric && isDebug"
-            class="mb-2" />
-
         <div v-if="!isFinished">
+            <DebugButtons v-if="!isHistoric && isDebug && !isFinished"
+                class="mb-2" />
+
             <Button
                 severity="warning"
                 :label="t('results.createPlayOff')"
