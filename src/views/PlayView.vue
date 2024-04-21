@@ -48,6 +48,7 @@ const {
 
 const {
     settings,
+    isKnockout,
 } = usePhaseSettings(currentPhase.value)
 
 const {
@@ -118,6 +119,10 @@ const finishPhase = () => {
     const success = flyerStore.finishPhase(currentPhase.value, currentStandings.value)
     if (!success) {
         throw "Failed to finish phase!"
+    }
+
+    if (isKnockout.value) {
+        flyerStore.finish(currentStandings.value)
     }
 
     setShowFinishModal(false)
