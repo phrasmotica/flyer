@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue"
+import { computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import ConfirmModal from "./ConfirmModal.vue"
@@ -31,19 +31,15 @@ const {
 
 const {
     arr: finalOrder,
-} = useArray<Player>()
+} = useArray<Player>(nextTieBreaker.value?.players || [])
 
-const players = computed(() => nextTieBreaker.value?.players || [])
+watch(nextTieBreaker, () => {
+    finalOrder.value = nextTieBreaker.value?.players || []
+})
 
 const message = computed(() => t('results.pleaseConfirmPlayOffRanking', {
     name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
-
-// BUG: final order is not refreshed when skipping a second play-off, after
-// modal has already been used to skip a prior play-off
-onMounted(() => {
-    finalOrder.value = players.value
-})
 </script>
 
 <template>
