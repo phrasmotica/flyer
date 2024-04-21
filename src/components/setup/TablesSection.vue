@@ -6,7 +6,7 @@ import LabelledSlider from "./LabelledSlider.vue"
 import Stepper from "./Stepper.vue"
 import TableInput from "./TableInput.vue"
 
-import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/usePhaseSettings"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useSettings } from "@/composables/useSettings"
 
@@ -26,7 +26,7 @@ const {
 
 const {
     isWinnerStaysOn,
-} = usePhaseSettingsInternal(settingsStore.settings.specification)
+} = useSpecification(settingsStore.settings.specification)
 
 const maxTableCount = computed(() => {
     if (isWinnerStaysOn.value) {

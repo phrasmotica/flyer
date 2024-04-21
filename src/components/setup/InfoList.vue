@@ -2,7 +2,7 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
-import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/usePhaseSettings"
 
 import type { PhaseSettings } from "@/data/PhaseSettings"
 
@@ -33,7 +33,7 @@ const {
     isRoundRobin,
     isWinnerStaysOn,
     isFixedMatchLength,
-} = usePhaseSettingsInternal(props.settings)
+} = useSpecification(props.settings)
 
 const winsRequiredSummary = computed(() => {
     return t('matchLengthModel.firstToNWins', settings.value.winsRequired)

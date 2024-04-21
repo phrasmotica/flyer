@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledDropdown from "./LabelledDropdown.vue"
 
-import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/usePhaseSettings"
 
 import { useSettingsStore } from "@/stores/settings"
 
@@ -15,7 +15,7 @@ const settingsStore = useSettingsStore()
 const {
     isKnockout,
     isRoundRobin,
-} = usePhaseSettingsInternal(settingsStore.settings.specification)
+} = useSpecification(settingsStore.settings.specification)
 </script>
 
 <template>

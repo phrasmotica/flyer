@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n"
 import MatchLengthModelSelect from "./MatchLengthModelSelect.vue"
 import Stepper from "./Stepper.vue"
 
-import { usePhaseSettingsInternal } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/usePhaseSettings"
 import { useSettings } from "@/composables/useSettings"
 
 import { useSettingsStore } from "@/stores/settings"
@@ -28,7 +28,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-} = usePhaseSettingsInternal(settingsStore.settings.specification)
+} = useSpecification(settingsStore.settings.specification)
 </script>
 
 <template>

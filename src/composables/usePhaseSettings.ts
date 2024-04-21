@@ -11,11 +11,10 @@ export const usePhaseSettings = (p: Phase | null) => {
     // LOW: do something better here than casting an empty object to PhaseSettings
     const settings = computed(() => phase.value?.settings || <PhaseSettings>{})
 
-    return usePhaseSettingsInternal(settings.value)
+    return useSpecification(settings.value)
 }
 
-// MEDIUM: name this something better...
-export const usePhaseSettingsInternal = (s: PhaseSettings) => {
+export const useSpecification = (s: PhaseSettings) => {
     const settings = ref(s)
 
     const bestOf = computed(() => settings.value.bestOf)
