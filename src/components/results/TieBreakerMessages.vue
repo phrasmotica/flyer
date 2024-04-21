@@ -19,9 +19,8 @@ const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
-    unplayedTieBreakers,
+    stillRelevantTieBreakers,
     inseparablePlayers,
-    hasAlreadyPlayedOff,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -32,12 +31,8 @@ const {
     isHistoric,
 } = useQueryParams()
 
-const tieBreakersToShow = computed(() => unplayedTieBreakers.value.filter(t => {
-    return t.players.every(x => !hasAlreadyPlayedOff(x.id))
-}))
-
 const groupedTieBreakers = useArrayGroupBy<TieBreakerInfo, TieBreakerState>(
-    tieBreakersToShow,
+    stillRelevantTieBreakers,
     t => t.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved')
 
 const getSeverity = (state: TieBreakerState) => state === 'unresolved' ? "warn" : "info"
@@ -63,7 +58,7 @@ const sortedGroups = computed(() => [...groupedTieBreakers.value]
     .sort((g, h) => g.tieBreakers[0].index - h.tieBreakers[0].index))
 
 const getIndex = (tieBreaker: TieBreakerInfo) => {
-    return tieBreakersToShow.value.findIndex(t => t.id === tieBreaker.id) + 1
+    return stillRelevantTieBreakers.value.findIndex(t => t.id === tieBreaker.id) + 1
 }
 </script>
 

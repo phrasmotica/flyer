@@ -43,7 +43,13 @@ export const useFlyer = (f: Flyer | null) => {
 
     const unplayedTieBreakers = useArrayFilter(
         tieBreakers,
-        p => !phaseIsComplete(p.id))
+        t => !phaseIsComplete(t.id))
+
+    // tie-breakers where some players might have been drafted into a play-off,
+    // but where there are also still enough players to break ties between
+    const stillRelevantTieBreakers = useArrayFilter(
+        unplayedTieBreakers,
+        t => t.players.filter(p => !hasAlreadyPlayedOff(p.id)).length > 1)
 
     const allPlayOffsComplete = computed(() => {
         return completedPlayOffs.value.length >= unresolvedTieBreakers.value.length
@@ -97,6 +103,7 @@ export const useFlyer = (f: Flyer | null) => {
 
         tieBreakers,
         unplayedTieBreakers,
+        stillRelevantTieBreakers,
         nextUnresolvedTieBreaker,
         requiresPlayOff,
         completedPlayOffs,
