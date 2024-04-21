@@ -74,12 +74,6 @@ export const tieBreakerList: SettingsDetails<TieBreaker>[] = [
         details: "tieBreaker.headToHeadDetails",
     },
     {
-        value: TieBreaker.PlayOff,
-        name: "tieBreaker.playOffName",
-        summary: "tieBreaker.playOffSummary",
-        details: "tieBreaker.playOffDetails",
-    },
-    {
         value: TieBreaker.Runouts,
         name: "tieBreaker.runoutsName",
         summary: "tieBreaker.runoutsSummary",

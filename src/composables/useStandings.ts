@@ -24,7 +24,6 @@ export const useStandings = (p: Phase | null) => {
     const {
         isKnockout,
         isRoundRobin,
-        usesPlayOff,
     } = usePhaseSettings(phase.value)
 
     const {
@@ -51,12 +50,6 @@ export const useStandings = (p: Phase | null) => {
     const unresolvedTieBreakers = useArrayFilter(
         orderedTieBreakers,
         p => p.records.some(r => !r.tieBroken))
-
-    const requiresPlayOff = computed(() => {
-        return usesPlayOff.value
-            && isRoundRobin.value
-            && orderedTieBreakers.value.length > 0
-    })
 
     const firstPlace = computed(() => {
         if (isKnockout.value) {
@@ -87,7 +80,6 @@ export const useStandings = (p: Phase | null) => {
         tieBreakers,
         unresolvedTieBreakers,
 
-        requiresPlayOff,
         firstPlace,
 
         createPlayOffFor,

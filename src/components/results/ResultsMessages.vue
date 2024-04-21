@@ -8,7 +8,6 @@ import WinningsSummary from "./WinningsSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
-import { useStandings } from "@/composables/useStandings"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -30,10 +29,6 @@ const {
     isWinnerStaysOn,
 } = usePhaseSettings(mainPhase.value)
 
-const {
-    requiresPlayOff,
-} = useStandings(mainPhase.value)
-
 const showIncompleteMessage = computed(() => {
     if (props.isInProgress) {
         return false
@@ -47,18 +42,10 @@ const showPlayOffsRequiredMessage = computed(() => {
         return false
     }
 
-    if (!requiresPlayOff.value) {
-        return false
-    }
-
     return !allPlayOffsComplete.value && tieBreakers.value.length > 0
 })
 
 const showTieBreakerMessages = computed(() => {
-    if (requiresPlayOff.value) {
-        return false
-    }
-
     return tieBreakers.value.length > 0 && !isWinnerStaysOn.value
 })
 

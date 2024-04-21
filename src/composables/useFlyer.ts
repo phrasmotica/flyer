@@ -23,7 +23,6 @@ export const useFlyer = (f: Flyer | null) => {
         standings,
         tieBreakers,
         unresolvedTieBreakers,
-        requiresPlayOff,
     } = useStandings(mainPhase.value)
 
     const currentPhase = computed(() => {
@@ -79,7 +78,7 @@ export const useFlyer = (f: Flyer | null) => {
 
     const incompleteCount = computed(() => overallStandings.value.filter(d => d.incomplete).length)
 
-    const isComplete = computed(() => !requiresPlayOff.value && allPlayOffsComplete.value && inseparablePlayers.value.length <= 0)
+    const isComplete = computed(() => allPlayOffsComplete.value && inseparablePlayers.value.length <= 0)
 
     const isFinished = computed(() => !!flyer.value?.finishTime)
 
@@ -105,7 +104,6 @@ export const useFlyer = (f: Flyer | null) => {
         unplayedTieBreakers,
         stillRelevantTieBreakers,
         nextUnresolvedTieBreaker,
-        requiresPlayOff,
         completedPlayOffs,
 
         overallStandings,
