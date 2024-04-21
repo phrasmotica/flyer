@@ -9,8 +9,9 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
 
-import { useFlyerStore } from "@/stores/flyer"
 import type { PlayerRecord } from "@/data/PlayerRecord"
+
+import { useFlyerStore } from "@/stores/flyer"
 
 const { t } = useI18n()
 
@@ -28,6 +29,7 @@ const flyerStore = useFlyerStore()
 const {
     mainPhase,
     overallStandings,
+    completedPlayOffs,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -42,18 +44,24 @@ const {
     arr: playerIds,
 } = useArray<string>()
 
-// HIGH: disable options for players who've already been in a play-off
-const options = computed(() => overallStandings.value.map(s => {
-    const record = [s.wins, s.draws, s.losses]
-    if (!fixturesCanBeDrawn.value) {
-        record.splice(1, 1)
-    }
+const playersAlreadyPlayedOff = computed(() => completedPlayOffs.value
+    .flatMap(p => p.players)
+    .map(x => x.id))
 
-    return {
-        ...getPlayer(s.playerId)!,
-        record: record.join("-"),
-    }
-}))
+const options = computed(() => {
+    return overallStandings.value.map(s => {
+        const record = [s.wins, s.draws, s.losses]
+        if (!fixturesCanBeDrawn.value) {
+            record.splice(1, 1)
+        }
+
+        return {
+            ...getPlayer(s.playerId)!,
+            disabled: playersAlreadyPlayedOff.value.includes(s.playerId),
+            record: record.join("-"),
+        }
+    })
+})
 
 const selectedRecords = computed(() => overallStandings.value.filter(s => {
     return playerIds.value.includes(s.playerId)
@@ -79,7 +87,8 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
                 multiple
                 v-model="playerIds"
                 :options="options"
-                optionValue="id">
+                optionValue="id"
+                optionDisabled="disabled">
                 <template #option="{ index, option: player }">
                     <div class="flex align-items-center">
                         <div class="mr-2">
@@ -87,7 +96,7 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
                                 #{{ index + 1 }}
                             </span>
                         </div>
-                        <span class="flex-grow-1">
+                        <span class="flex-grow-1" :class="player.disabled && 'line-through'">
                             {{ player.name }}
                         </span>
                         <div class="ml-2">
