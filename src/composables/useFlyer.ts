@@ -85,6 +85,25 @@ export const useFlyer = (f: Flyer | null) => {
 
     const isFinished = computed(() => !!flyer.value?.finishTime)
 
+    const getPhase = (id: string) => {
+        const allPhases = flyer.value?.phases || []
+        return allPhases.find(p => p.id === id) || null
+    }
+
+    const getFinishedFixtures = (playerId: string) => {
+        const allPhases = flyer.value?.phases || []
+
+        return allPhases.map(p => ({
+            id: p.id,
+            name: p.settings.name,
+            fixtures: p.rounds
+                .flatMap(r => r.fixtures)
+                .filter(f => {
+                    return !!f.finishTime && f.scores.some(s => s.playerId === playerId)
+                }),
+        }))
+    }
+
     const phaseIsComplete = (id: string) => {
         const phase = flyer.value?.phases.find(p => p.id === id)
         if (!phase) {
@@ -116,6 +135,8 @@ export const useFlyer = (f: Flyer | null) => {
         isComplete,
         isFinished,
 
+        getPhase,
+        getFinishedFixtures,
         hasAlreadyPlayedOff,
         phaseIsComplete,
     }

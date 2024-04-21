@@ -15,28 +15,29 @@ import { useFlyerStore } from "@/stores/flyer"
 const { t } = useI18n()
 
 const props = defineProps<{
-    playerId: string
+    phaseId: string
     fixture: Fixture
+    playerId: string
 }>()
 
 const flyerStore = useFlyerStore()
 
 const {
-    mainPhase,
+    getPhase,
 } = useFlyer(flyerStore.flyer)
 
 const {
     getRound,
-} = useRounds(mainPhase.value)
+} = useRounds(getPhase(props.phaseId))
 
 const {
     getPlayerName,
-} = usePlayers(mainPhase.value)
+} = usePlayers(getPhase(props.phaseId))
 
 const {
     fixture,
     isWalkover,
-} = useFixture("matchText", props.fixture, getRound(props.fixture.id), mainPhase.value)
+} = useFixture("matchText", props.fixture, getRound(props.fixture.id), getPhase(props.phaseId))
 
 watch(props, () => {
     fixture.value = props.fixture

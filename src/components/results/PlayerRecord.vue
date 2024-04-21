@@ -4,7 +4,6 @@ import { useI18n } from "vue-i18n"
 
 import MatchText from "./MatchText.vue"
 
-import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 
 import { useFlyerStore } from "@/stores/flyer"
@@ -18,24 +17,28 @@ const props = defineProps<{
 const flyerStore = useFlyerStore()
 
 const {
-    mainPhase,
+    getFinishedFixtures,
 } = useFlyer(flyerStore.flyer)
 
-const {
-    // HIGH: show fixtures from all phases
-    getFixtures,
-} = useFixtureList(mainPhase.value)
-
-const fixtures = computed(() => getFixtures(props.playerId).filter(f => f.finishTime))
+const fixturesByPhase = computed(() => {
+    return getFinishedFixtures(props.playerId).filter(p => p.fixtures.length > 0)
+})
 </script>
 
 <template>
-    <div v-if="fixtures.length > 0">
-        <ul class="m-0">
-            <li v-for="f in fixtures" class="text-sm">
-                <MatchText :playerId="props.playerId" :fixture="f" />
-            </li>
-        </ul>
+    <div v-if="fixturesByPhase.length > 0">
+        <div v-for="p in fixturesByPhase">
+            <p class="m-0">{{ p.name }}</p>
+
+            <ul class="m-0">
+                <li v-for="f in p.fixtures" class="text-sm">
+                    <MatchText
+                        :phaseId="p.id"
+                        :fixture="f"
+                        :playerId="props.playerId" />
+                </li>
+            </ul>
+        </div>
     </div>
     <div v-else>
         <span class="text-sm">
