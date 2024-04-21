@@ -19,7 +19,7 @@ const props = defineProps<{
 const emit = defineEmits<{
     confirmStartPlayOff: []
     confirmSkipPlayOff: []
-    confirmCreatePhase: []
+    confirmCreatePlayOff: []
     confirmFinishFlyer: []
     save: []
     saveResults: []
@@ -84,7 +84,7 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
             <Button
                 severity="warning"
                 :label="t('results.createPlayOff')"
-                @click="emit('confirmCreatePhase')" />
+                @click="emit('confirmCreatePlayOff')" />
 
             <Button
                 class="mt-2"
