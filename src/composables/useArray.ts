@@ -1,6 +1,6 @@
-import { type Ref, ref, computed } from "vue"
+import { type Ref, ref, computed, type MaybeRefOrGetter } from "vue"
 
-export const useArray = <T>(initial?: T[]) => {
+export const useArray = <T>(initial?: MaybeRefOrGetter<T[]>) => {
     const arr = ref(initial || []) as Ref<T[]>
 
     const push = (value: T) => {
@@ -27,7 +27,7 @@ export const useArray = <T>(initial?: T[]) => {
 }
 
 export const useArrayGroupBy = <T, TKey extends string = string>(
-    initial: T[],
+    initial: MaybeRefOrGetter<T[]>,
     selector: (x: T) => TKey,
 ) => {
     const {

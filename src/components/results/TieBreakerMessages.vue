@@ -19,10 +19,9 @@ const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
-    tieBreakers,
+    unplayedTieBreakers,
     inseparablePlayers,
     hasAlreadyPlayedOff,
-    phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -33,10 +32,12 @@ const {
     isHistoric,
 } = useQueryParams()
 
+const tieBreakersToShow = computed(() => unplayedTieBreakers.value.filter(t => {
+    return t.players.every(x => !hasAlreadyPlayedOff(x.id))
+}))
+
 const groupedTieBreakers = useArrayGroupBy<TieBreakerInfo, TieBreakerState>(
-    tieBreakers.value.filter(t => {
-        return !phaseIsComplete(t.id) && t.players.every(x => !hasAlreadyPlayedOff(x.id))
-    }),
+    tieBreakersToShow,
     t => t.records.every(r => inseparablePlayers.value.includes(r.playerId)) ? 'unresolved' : 'resolved')
 
 const getSeverity = (state: TieBreakerState) => state === 'unresolved' ? "warn" : "info"
@@ -60,13 +61,17 @@ const sortedGroups = computed(() => [...groupedTieBreakers.value]
     }))
     // group with lower-indexed first tie breaker comes first
     .sort((g, h) => g.tieBreakers[0].index - h.tieBreakers[0].index))
+
+const getIndex = (tieBreaker: TieBreakerInfo) => {
+    return tieBreakersToShow.value.findIndex(t => t.id === tieBreaker.id) + 1
+}
 </script>
 
 <template>
     <div>
         <Message v-for="group in sortedGroups" class="my-1" :severity="group.severity" :closable="false">
-            <p v-for="p in group.tieBreakers" class="m-0">
-                <sup class="text-xs">{{ p.index }}&nbsp;</sup>
+            <p v-for="t in group.tieBreakers" class="m-0">
+                <sup class="text-xs">{{ getIndex(t) }}&nbsp;</sup>
                 <span>{{ group.message }}</span>
             </p>
         </Message>
