@@ -207,6 +207,7 @@ export const useRankings = () => {
 
             if (matchingTieBreaker) {
                 matchingTieBreaker.players.push(player)
+                matchingTieBreaker.records.push(record)
             }
             else {
                 // HIGH: this needs to be something that doesn't change between calls, because
