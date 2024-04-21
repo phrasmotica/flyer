@@ -1,9 +1,9 @@
-import { computed, ref, watch } from "vue"
 import { differenceInMilliseconds, differenceInMinutes } from "date-fns"
+import { computed, ref, watch } from "vue"
 
 import { useClock } from "./useClock"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { useScheduler } from "./useScheduler"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { Phase } from "@/data/Phase"
 
@@ -12,7 +12,7 @@ export const usePhaseTiming = (p: Phase | null) => {
 
     const {
         settings,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSpecification(phase.value)
 
     const {
         clockable,

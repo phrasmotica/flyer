@@ -2,7 +2,7 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
-import { useSpecification } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/useSpecification"
 
 import type { Specification } from "@/data/Specification"
 

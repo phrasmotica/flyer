@@ -7,9 +7,9 @@ import FixtureCard from "./FixtureCard.vue"
 import RaceToBadge from "./RaceToBadge.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { RoundStatus, useRound } from "@/composables/useRound"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import type { Fixture } from "@/data/Fixture"
 import type { Round } from "@/data/Round"
@@ -36,7 +36,7 @@ const {
 
 const {
     isVariableMatchLength,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     name,

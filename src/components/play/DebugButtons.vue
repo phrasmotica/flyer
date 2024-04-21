@@ -5,7 +5,7 @@ import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 import { useTables } from "@/composables/useTables"
 
 import { useFlyerStore } from "@/stores/flyer"
@@ -38,7 +38,7 @@ const {
 const {
     raceTo,
     fixturesCanBeDrawn,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     standings,

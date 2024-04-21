@@ -6,9 +6,9 @@ import ScoreCell from "./ScoreCell.vue"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
 import { useRounds } from "@/composables/useRounds"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import type { Fixture } from "@/data/Fixture"
 import { Prioritisation } from "@/data/FixtureSwap"
@@ -55,7 +55,7 @@ const {
 const {
     isWinnerStaysOn,
     isRandomDraw,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 watch(props, () => {
     fixture.value = props.fixture

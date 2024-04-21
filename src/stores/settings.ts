@@ -1,19 +1,19 @@
-import { computed, watch } from "vue"
 import { useStorage } from "@vueuse/core"
 import { defineStore } from "pinia"
+import { computed, watch } from "vue"
 
 import { useListFallback } from "@/composables/useListFallback"
-import { useSpecification } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/useSpecification"
 
 import type { FlyerSettings } from "@/data/FlyerSettings"
 import type { SettingsDetails } from "@/data/SettingsDetails"
 
 import {
     Format,
-    RuleSet,
-    MoneySplit,
-    TieBreaker,
     MatchLengthModel,
+    MoneySplit,
+    RuleSet,
+    TieBreaker,
 } from "@/data/Specification"
 
 import type { Table } from "@/data/Table"

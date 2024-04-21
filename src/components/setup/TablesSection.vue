@@ -6,9 +6,9 @@ import LabelledSlider from "./LabelledSlider.vue"
 import Stepper from "./Stepper.vue"
 import TableInput from "./TableInput.vue"
 
-import { useSpecification } from "@/composables/usePhaseSettings"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useSettings } from "@/composables/useSettings"
+import { useSpecification } from "@/composables/useSpecification"
 
 import { useSettingsStore } from "@/stores/settings"
 

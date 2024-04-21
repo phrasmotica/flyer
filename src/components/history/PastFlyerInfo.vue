@@ -6,9 +6,9 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePlayers } from "@/composables/usePlayers"
 import { usePodium } from "@/composables/usePodium"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useStandings } from "@/composables/useStandings"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import type { Flyer } from "@/data/Flyer"
 
@@ -51,7 +51,7 @@ const {
     settings,
     raceTo,
     formatName,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const {
     firstPlace,

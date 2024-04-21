@@ -4,8 +4,8 @@ import { useArray } from "./useArray"
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePhaseEvents } from "./usePhaseEvents"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { useRounds } from "./useRounds"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { FixtureSwap } from "@/data/FixtureSwap"
 import type { Phase } from "@/data/Phase"
@@ -29,7 +29,7 @@ export const useFixtureSwaps = (p: Phase | null) => {
 
     const {
         isRoundRobin,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSpecification(phase.value)
 
     const {
         push: acknowledgeSwap,

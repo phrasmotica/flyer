@@ -1,9 +1,9 @@
 import { computed, ref } from "vue"
 
-import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { Flyer } from "@/data/Flyer"
 import type { PlayerRecord } from "@/data/PlayerRecord"
@@ -26,7 +26,7 @@ export const usePlayOffs = (f: Flyer | null) => {
 
     const {
         settings,
-    } = usePhaseSettings(mainPhase.value)
+    } = usePhaseSpecification(mainPhase.value)
 
     const {
         prizeMonies,

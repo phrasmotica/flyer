@@ -2,9 +2,9 @@
 import { computed } from "vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
 import { useScreenSizes } from "@/composables/useScreenSizes"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -26,7 +26,7 @@ const {
 
 const {
     fixturesCanBeDrawn,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const {
     getPlayer,

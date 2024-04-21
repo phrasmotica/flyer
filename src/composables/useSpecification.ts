@@ -15,7 +15,7 @@ import {
     tieBreakerList,
 } from "@/stores/settings"
 
-export const usePhaseSettings = (p: Phase | null) => {
+export const usePhaseSpecification = (p: Phase | null) => {
     const phase = ref(p)
 
     // LOW: do something better here than casting an empty object to PhaseSettings

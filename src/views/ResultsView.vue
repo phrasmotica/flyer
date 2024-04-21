@@ -21,12 +21,12 @@ import WinningsSummary from "@/components/results/WinningsSummary.vue"
 
 import { useDownloadImage } from "@/composables/useDownloadImage"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePodium } from "@/composables/usePodium"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRankings } from "@/composables/useRankings"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 import { useStandings } from "@/composables/useStandings"
 import { useTimedRef } from "@/composables/useTimedRef"
 
@@ -60,7 +60,7 @@ const {
     isKnockout,
     isRoundRobin,
     isWinnerStaysOn,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 useTitle("Flyer - " + settings.value.name + " - " + t('results.results'))
 

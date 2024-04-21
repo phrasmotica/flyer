@@ -13,13 +13,13 @@ import PlayButtons from "@/components/play/PlayButtons.vue"
 import PlaySections from "@/components/play/PlaySections.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 import { useStandings } from "@/composables/useStandings"
 
 import type { Fixture } from "@/data/Fixture"
@@ -41,7 +41,7 @@ const {
 
 const {
     settings: mainPhaseSettings,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const {
     hasFinished,
@@ -50,7 +50,7 @@ const {
 const {
     settings,
     isKnockout,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     currentRound,

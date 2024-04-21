@@ -4,8 +4,8 @@ import { useI18n } from "vue-i18n"
 
 import { useArrayGroupBy } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useQueryParams } from "@/composables/useQueryParams"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 
@@ -25,7 +25,7 @@ const {
 
 const {
     tieBreakerName,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const {
     isHistoric,

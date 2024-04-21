@@ -7,11 +7,10 @@ import DebugButtons from "./DebugButtons.vue"
 import { useEnv } from "@/composables/useEnv"
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhase } from "@/composables/usePhase"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useQueryParams } from "@/composables/useQueryParams"
 import { useRounds } from "@/composables/useRounds"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -50,7 +49,7 @@ const {
 
 const {
     settings,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     hasStarted,

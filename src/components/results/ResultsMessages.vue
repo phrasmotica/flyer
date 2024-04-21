@@ -5,7 +5,7 @@ import IncompleteResultsMessage from "./IncompleteResultsMessage.vue"
 import TieBreakerMessages from "./TieBreakerMessages.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -23,7 +23,7 @@ const {
 
 const {
     isWinnerStaysOn,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const showIncompleteMessage = computed(() => {
     if (props.isInProgress) {

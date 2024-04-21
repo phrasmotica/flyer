@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import type { DataTableExpandedRows } from "primevue/datatable"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
-import type { DataTableExpandedRows } from "primevue/datatable"
 
 import PlayerRecord from "./PlayerRecord.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayOffs } from "@/composables/usePlayOffs"
 import { useScreenSizes } from "@/composables/useScreenSizes"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import type { PlayerRecord as TableData } from "@/data/PlayerRecord"
 
@@ -40,7 +40,7 @@ const {
     isWinnerStaysOn,
     usesRunouts,
     fixturesCanBeDrawn,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const {
     playOffWasSkipped,

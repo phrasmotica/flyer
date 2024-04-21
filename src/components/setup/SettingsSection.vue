@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n"
 import LabelledCheckbox from "./LabelledCheckbox.vue"
 import LabelledDropdown from "./LabelledDropdown.vue"
 
-import { useSpecification } from "@/composables/usePhaseSettings"
+import { useSpecification } from "@/composables/useSpecification"
 
 import { useSettingsStore } from "@/stores/settings"
 

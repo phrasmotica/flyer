@@ -2,11 +2,11 @@ import { computed } from "vue"
 
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
 import { usePrizes } from "./usePrizes"
 import { useRankings } from "./useRankings"
 import { useRounds } from "./useRounds"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { Phase } from "@/data/Phase"
 import type { Winnings } from "@/data/Winnings"
@@ -38,7 +38,7 @@ export const usePodium = (p: Phase | null) => {
         settings,
         isRoundRobin,
         isWinnerStaysOn,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSpecification(phase.value)
 
     const {
         prizeMonies,

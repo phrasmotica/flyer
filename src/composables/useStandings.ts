@@ -1,12 +1,12 @@
-import { computed } from "vue"
 import { useArrayFilter, useSorted } from "@vueuse/core"
 import { v4 as uuidv4 } from "uuid"
+import { computed } from "vue"
 
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
 import { useRankings } from "./useRankings"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { Phase } from "@/data/Phase"
 import type { PlayerRecord } from "@/data/PlayerRecord"
@@ -24,7 +24,7 @@ export const useStandings = (p: Phase | null) => {
     const {
         isKnockout,
         isRoundRobin,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSpecification(phase.value)
 
     const {
         isStarted,

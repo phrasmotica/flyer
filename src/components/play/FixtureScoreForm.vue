@@ -10,8 +10,8 @@ import PlayerWinInput from "./PlayerWinInput.vue"
 import { useFixture } from "@/composables/useFixture"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { useRounds } from "@/composables/useRounds"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 import { useTweaks } from "@/composables/useTweaks"
 
 import type { Fixture, Score } from "@/data/Fixture"
@@ -41,7 +41,7 @@ const {
 
 const {
     isWinnerStaysOn,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     standings,

@@ -1,11 +1,11 @@
 import { computed, ref } from "vue"
 
 import { useFixtureList } from "./useFixtureList"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { usePhaseTiming } from "./usePhaseTiming"
 import { usePlayers } from "./usePlayers"
 import { RoundStatus } from "./useRound"
 import { useRounds } from "./useRounds"
+import { usePhaseSpecification } from "./useSpecification"
 import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
@@ -40,7 +40,7 @@ export const usePhase = (p: Phase | null) => {
     const {
         settings,
         isWinnerStaysOn,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSpecification(phase.value)
 
     const {
         durationMilliseconds,

@@ -1,7 +1,7 @@
 import { computed, ref } from "vue"
 
-import { usePhaseSettings } from "./usePhaseSettings"
 import { useRankings } from "./useRankings"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
@@ -17,7 +17,7 @@ export const useRound = (r: Round | undefined, p: Phase | null) => {
     const {
         isWinnerStaysOn,
         raceTo: phaseRaceTo,
-    } = usePhaseSettings(p)
+    } = usePhaseSpecification(p)
 
     const name = computed(() => round.value?.name)
     const fixtures = computed(() => round.value?.fixtures || [])

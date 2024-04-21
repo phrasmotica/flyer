@@ -1,7 +1,7 @@
-import { computed, ref } from "vue"
 import type { MeterItem } from "primevue/metergroup"
+import { computed, ref } from "vue"
 
-import { useSpecification } from "./usePhaseSettings"
+import { useSpecification } from "./useSpecification"
 
 import { MoneySplit, type Specification } from "@/data/Specification"
 

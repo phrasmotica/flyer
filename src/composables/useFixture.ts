@@ -4,9 +4,9 @@ import { differenceInMilliseconds } from "date-fns"
 
 import { useArray } from "./useArray"
 import { useClock } from "./useClock"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { useRound } from "./useRound"
 import { useScheduler } from "./useScheduler"
+import { usePhaseSpecification } from "./useSpecification"
 
 import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
@@ -35,7 +35,7 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
         isKnockout,
         isRoundRobin,
         fixturesCanBeDrawn,
-    } = usePhaseSettings(p)
+    } = usePhaseSpecification(p)
 
     const {
         scheduler,

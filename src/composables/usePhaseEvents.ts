@@ -1,7 +1,7 @@
 import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
-import { usePhaseSettings } from "./usePhaseSettings"
 import { usePlayers } from "./usePlayers"
+import { usePhaseSpecification } from "./useSpecification"
 import { useTables } from "./useTables"
 
 import type { Fixture } from "@/data/Fixture"
@@ -24,7 +24,7 @@ export const usePhaseEvents = (p: Phase | null) => {
 
     const {
         settings,
-    } = usePhaseSettings(phase.value)
+    } = usePhaseSpecification(phase.value)
 
     const {
         tables,

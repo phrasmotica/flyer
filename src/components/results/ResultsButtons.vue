@@ -11,7 +11,7 @@ import { useQueryParams } from "@/composables/useQueryParams"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 const { t } = useI18n()
 
@@ -47,7 +47,7 @@ const {
 
 const {
     isRoundRobin,
-} = usePhaseSettings(mainPhase.value)
+} = usePhaseSpecification(mainPhase.value)
 
 const {
     players,

@@ -3,9 +3,9 @@ import InfoList from "../setup/InfoList.vue"
 import PrizePotSummary from "../setup/PrizePotSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
-import { usePhaseSettings } from "@/composables/usePhaseSettings"
 import { usePlayers } from "@/composables/usePlayers"
 import { useRounds } from "@/composables/useRounds"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 import { useTables } from "@/composables/useTables"
 
 import { useFlyerStore } from "@/stores/flyer"
@@ -26,7 +26,7 @@ const {
 
 const {
     settings,
-} = usePhaseSettings(currentPhase.value)
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     tables,
