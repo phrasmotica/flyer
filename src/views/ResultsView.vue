@@ -73,6 +73,7 @@ const {
 
 const {
     computeDummyStandings,
+    canPlayOff,
 } = useRankings()
 
 const {
@@ -146,7 +147,7 @@ const createPlayOff = (records: PlayerRecord[], raceTo: number) => {
         return
     }
 
-    if (records.length < 2) {
+    if (!canPlayOff(records)) {
         console.debug("Cannot create a play-off for less than 2 players!")
         return
     }

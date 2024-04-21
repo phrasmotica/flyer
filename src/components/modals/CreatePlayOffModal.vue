@@ -8,6 +8,7 @@ import Stepper from "../setup/Stepper.vue"
 
 import { useArray } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
+import { useRankings } from "@/composables/useRankings"
 
 import type { PlayerRecord } from "@/data/PlayerRecord"
 
@@ -31,6 +32,10 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    canPlayOff,
+} = useRankings()
+
+const {
     arr: playerIds,
 } = useArray<string>()
 
@@ -39,6 +44,8 @@ const raceTo = ref(1)
 const selectedRecords = computed(() => overallStandings.value.filter(s => {
     return playerIds.value.includes(s.playerId)
 }))
+
+const canCreate = computed(() => canPlayOff(selectedRecords.value))
 </script>
 
 <template>
@@ -47,7 +54,7 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
         v-model:visible="visible"
         :header="t('results.createPlayOff')"
         :confirmLabel="t('common.create')"
-        :confirmDisabled="playerIds.length < 2"
+        :confirmDisabled="!canCreate"
         :cancelLabel="t('common.cancel')"
         @confirm="emit('create', selectedRecords, raceTo)"
         @hide="emit('hide')">

@@ -236,11 +236,25 @@ export const useRankings = () => {
         }))
     }
 
+    const recordsAreEqual = (records: PlayerRecord[]) => {
+        if (records.length < 2) {
+            return true
+        }
+
+        const firstRecord = records[0]
+        return records.every(r => sortRecords(r, firstRecord) === 0)
+    }
+
+    const canPlayOff = (records: PlayerRecord[]) => {
+        return records.length >= 2 && recordsAreEqual(records)
+    }
+
     return {
         getWinner,
         getLoser,
         computeStandings,
         computeDummyStandings,
         computeTieBreakers,
+        canPlayOff,
     }
 }
