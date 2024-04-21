@@ -50,6 +50,8 @@ const message = computed(() => t('results.pleaseConfirmPlayOffRanking', {
     name: nextPlayOff.value?.name || t('playOff.unknownIndicator'),
 }))
 
+// BUG: final order is not refreshed when skipping a second play-off, after
+// modal has already been used to skip a prior play-off
 onMounted(() => {
     finalOrder.value = players.value
 })
