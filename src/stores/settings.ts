@@ -169,8 +169,6 @@ export const useSettingsStore = defineStore("settings", () => {
             settings.value.specification.matchLengthModel = MatchLengthModel.Fixed
             settings.value.tableCount = 1
 
-            // LOW: ensure wins required is (playerCount - 1) at minimum
-
             settings.value.specification.randomlyDrawAllRounds = false
             settings.value.specification.requireCompletedRounds = false
             settings.value.specification.allowEarlyFinish = true
