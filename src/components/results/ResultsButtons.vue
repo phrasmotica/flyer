@@ -40,8 +40,6 @@ const {
 const {
     flyer,
     mainPhase,
-    nextUnresolvedTieBreaker,
-    isComplete,
     isFinished,
     hasAlreadyPlayedOff,
 } = useFlyer(flyerStore.flyer)
@@ -62,10 +60,6 @@ const saveImageButtonText = computed(() => t(props.imageSaved ? "results.downloa
 
 const saveButtonText = computed(() => t(alreadySaved.value ? 'results.flyerSaved' : 'results.saveFlyer'))
 
-const playOffButtonText = computed(() => t('results.startPlayOffButton', {
-    name: nextUnresolvedTieBreaker.value?.name || t('playOff.unknownIndicator'),
-}))
-
 const canCreatePlayOff = computed(() => {
     return players.value.filter(p => !hasAlreadyPlayedOff(p.id)).length > 1
 })
@@ -76,19 +70,7 @@ const canCreatePlayOff = computed(() => {
         <DebugButtons v-if="!isHistoric && isDebug"
             class="mb-2" />
 
-        <div v-if="nextUnresolvedTieBreaker && !isComplete">
-            <Button
-                :label="playOffButtonText"
-                @click="emit('confirmStartPlayOff')" />
-
-            <Button
-                class="mt-2"
-                severity="warning"
-                :label="'Skip this play-off'"
-                @click="emit('confirmSkipPlayOff')" />
-        </div>
-
-        <div v-else-if="!isFinished">
+        <div v-if="!isFinished">
             <Button
                 severity="warning"
                 :label="t('results.createPlayOff')"
