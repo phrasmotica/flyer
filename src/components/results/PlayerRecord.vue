@@ -22,6 +22,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    // HIGH: show fixtures from all phases
     getFixtures,
 } = useFixtureList(mainPhase.value)
 
