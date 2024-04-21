@@ -2,6 +2,9 @@
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
+import DebugButtons from "./DebugButtons.vue"
+
+import { useEnv } from "@/composables/useEnv"
 import { useFlyer } from "@/composables/useFlyer"
 import { useQueryParams } from "@/composables/useQueryParams"
 
@@ -30,6 +33,10 @@ const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
 
 const {
+    isDebug,
+} = useEnv()
+
+const {
     flyer,
     nextUnresolvedTieBreaker,
     isComplete,
@@ -55,6 +62,9 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
 
 <template>
     <div class="p-fluid">
+        <DebugButtons v-if="!isHistoric && isDebug"
+            class="mb-2" />
+
         <div v-if="nextUnresolvedTieBreaker && !isComplete">
             <Button
                 :label="playOffButtonText"

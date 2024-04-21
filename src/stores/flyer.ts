@@ -495,6 +495,12 @@ export const useFlyerStore = defineStore("flyer", () => {
         return true
     }
 
+    const resetPlayOffs = () => {
+        if (flyer.value && flyer.value.phases.length >= 2) {
+            flyer.value.phases = [flyer.value.phases[0]]
+        }
+    }
+
     const getRandom = <T>(arr: T[]) => {
         return arr[Math.floor(Math.random() * arr.length)]
     }
@@ -523,5 +529,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         autoCompleteFixture,
         autoCompletePhase,
         swapFixtures,
+        resetPlayOffs,
     }
 })
