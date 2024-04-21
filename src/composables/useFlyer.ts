@@ -57,7 +57,10 @@ export const useFlyer = (f: Flyer | null) => {
     const overallStandings = computed(() => processStandings(standings.value))
 
     const inseparablePlayers = computed(() => {
-        const recordsToConsider = standings.value.filter(s => !s.tieBroken)
+        const recordsToConsider = standings.value.filter(s => {
+            return !s.tieBroken && !hasAlreadyPlayedOff(s.playerId)
+        })
+
         const playerIds = recordsToConsider.map(s => s.playerId)
 
         const tieBreakersToConsider = tieBreakers.value.filter(p => !phaseIsComplete(p.id))

@@ -90,7 +90,7 @@ const rowClass = (data: TableData) => [
         size="small" dataKey="playerId"
         v-model:expandedRows="expandedRows"
         :value="overallStandings"
-        :rowClass="data => rowClass(data as TableData)">
+        :rowClass="(data: TableData) => rowClass(data)">
         <Column v-if="showRank" field="rank" :header="t('results.rankHeader')" />
 
         <Column v-if="showExpander" expander class="w-1rem" />
