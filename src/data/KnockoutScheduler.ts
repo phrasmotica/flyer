@@ -35,7 +35,7 @@ export class KnockoutScheduler implements IScheduler {
             }
         })
 
-        // LOW: don't segregate fixtures of different race-tos into different
+        // BUG: don't segregate fixtures of different race-tos into different
         // groups. In a fixed draw flyer, they can be played in parallel
 
         // round number of fixtures UP to the next multiple of the number of
