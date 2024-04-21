@@ -46,11 +46,11 @@ export const useStandings = (p: Phase | null) => {
         return computeTieBreakers(phase.value)
     })
 
-    const unresolvedTieBreakers = useArrayFilter(
-        tieBreakers,
-        p => p.records.some(r => !r.tieBroken))
-
     const orderedTieBreakers = useSorted(tieBreakers, (a, b) => b.forRank - a.forRank)
+
+    const unresolvedTieBreakers = useArrayFilter(
+        orderedTieBreakers,
+        p => p.records.some(r => !r.tieBroken))
 
     const requiresPlayOff = computed(() => {
         return usesPlayOff.value

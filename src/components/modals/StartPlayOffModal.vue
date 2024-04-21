@@ -22,11 +22,11 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
-    nextTieBreaker,
+    nextUnresolvedTieBreaker,
 } = useFlyer(flyerStore.flyer)
 
 const message = computed(() => t('results.startPlayOffName', {
-    name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
+    name: nextUnresolvedTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
 </script>
 

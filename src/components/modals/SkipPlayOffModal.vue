@@ -26,19 +26,19 @@ const emit = defineEmits<{
 const flyerStore = useFlyerStore()
 
 const {
-    nextTieBreaker,
+    nextUnresolvedTieBreaker,
 } = useFlyer(flyerStore.flyer)
 
 const {
     arr: finalOrder,
-} = useArray<Player>(nextTieBreaker.value?.players || [])
+} = useArray<Player>(nextUnresolvedTieBreaker.value?.players || [])
 
-watch(nextTieBreaker, () => {
-    finalOrder.value = nextTieBreaker.value?.players || []
+watch(nextUnresolvedTieBreaker, () => {
+    finalOrder.value = nextUnresolvedTieBreaker.value?.players || []
 })
 
 const message = computed(() => t('results.pleaseConfirmPlayOffRanking', {
-    name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
+    name: nextUnresolvedTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
 </script>
 

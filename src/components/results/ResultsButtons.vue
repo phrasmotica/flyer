@@ -31,7 +31,7 @@ const flyerHistoryStore = useFlyerHistoryStore()
 
 const {
     flyer,
-    nextTieBreaker,
+    nextUnresolvedTieBreaker,
     isComplete,
     isFinished,
 } = useFlyer(flyerStore.flyer)
@@ -49,13 +49,13 @@ const saveImageButtonText = computed(() => t(props.imageSaved ? "results.downloa
 const saveButtonText = computed(() => t(alreadySaved.value ? 'results.flyerSaved' : 'results.saveFlyer'))
 
 const playOffButtonText = computed(() => t('results.startPlayOffButton', {
-    name: nextTieBreaker.value?.name || t('playOff.unknownIndicator'),
+    name: nextUnresolvedTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
 </script>
 
 <template>
     <div class="p-fluid">
-        <div v-if="nextTieBreaker && !isComplete">
+        <div v-if="nextUnresolvedTieBreaker && !isComplete">
             <Button
                 :label="playOffButtonText"
                 @click="emit('confirmStartPlayOff')" />

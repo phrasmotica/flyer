@@ -49,7 +49,7 @@ const {
 const {
     flyer,
     mainPhase,
-    nextTieBreaker,
+    nextUnresolvedTieBreaker,
     overallStandings,
     isFinished,
 } = useFlyer(flyerStore.flyer)
@@ -115,12 +115,12 @@ const alreadySaved = computed(() => {
 })
 
 const startPlayOff = () => {
-    if (!nextTieBreaker.value || !mainPhase.value) {
+    if (!nextUnresolvedTieBreaker.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
-    flyerStore.addPlayOff(mainPhase.value, nextTieBreaker.value, 1)
+    flyerStore.addPlayOff(mainPhase.value, nextUnresolvedTieBreaker.value, 1)
 
     setShowStartPlayOffModal(false)
 
@@ -128,14 +128,14 @@ const startPlayOff = () => {
 }
 
 const skipPlayOff = (players: Player[]) => {
-    if (!nextTieBreaker.value || !mainPhase.value) {
+    if (!nextUnresolvedTieBreaker.value || !mainPhase.value) {
         console.debug("No play-offs remaining!")
         return
     }
 
     const ranking = computeDummyStandings(players)
 
-    flyerStore.skipPlayOff(mainPhase.value, nextTieBreaker.value, ranking)
+    flyerStore.skipPlayOff(mainPhase.value, nextUnresolvedTieBreaker.value, ranking)
 
     setShowSkipPlayOffModal(false)
 }
