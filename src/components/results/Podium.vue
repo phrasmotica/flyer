@@ -30,7 +30,10 @@ const {
 
         <ul class="m-0">
             <li v-for="f in winnerFixtures">
-                <MatchText :playerId="winner.id" :fixture="f" />
+                <MatchText
+                    :phaseId="mainPhase!.id"
+                    :fixture="f"
+                    :playerId="winner.id" />
             </li>
         </ul>
     </div>
