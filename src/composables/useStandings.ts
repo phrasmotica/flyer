@@ -33,31 +33,29 @@ export const useStandings = (p: Phase | null) => {
 
     const {
         computeStandings,
-        computePlayOffs,
+        computeTieBreakers,
     } = useRankings()
 
     const standings = computed(() => computeStandings(phase.value, true))
 
-    // HIGH: rename this, and everything related, to "tieBreakers". Only things
-    // that are actually play-offs should be named such
-    const playOffs = computed(() => {
+    const tieBreakers = computed(() => {
         if (!isStarted.value) {
             return []
         }
 
-        return computePlayOffs(phase.value)
+        return computeTieBreakers(phase.value)
     })
 
-    const unresolvedPlayOffs = useArrayFilter(
-        playOffs,
+    const unresolvedTieBreakers = useArrayFilter(
+        tieBreakers,
         p => p.records.some(r => !r.tieBroken))
 
-    const orderedPlayOffs = useSorted(playOffs, (a, b) => b.forRank - a.forRank)
+    const orderedTieBreakers = useSorted(tieBreakers, (a, b) => b.forRank - a.forRank)
 
     const requiresPlayOff = computed(() => {
         return usesPlayOff.value
             && isRoundRobin.value
-            && orderedPlayOffs.value.length > 0
+            && orderedTieBreakers.value.length > 0
     })
 
     const firstPlace = computed(() => {
@@ -71,23 +69,25 @@ export const useStandings = (p: Phase | null) => {
     const createPlayOffFor = (records: PlayerRecord[], forRank: number) => {
         const playerIds = records.map(r => r.playerId)
 
-        const playOff: PlayOff = {
+        const tieBreaker: PlayOff = {
             id: uuidv4(),
             forRank,
-            index: 0, // HIGH: do we need this for anything?
+            index: 0,
             name: "Play-Off for Position " + forRank,
             players: players.value.filter(p => playerIds.includes(p.id)),
             records,
         }
 
-        return playOff
+        return tieBreaker
     }
 
     return {
         standings,
-        playOffs,
-        unresolvedPlayOffs,
-        orderedPlayOffs,
+
+        tieBreakers,
+        unresolvedTieBreakers,
+        orderedTieBreakers,
+
         requiresPlayOff,
         firstPlace,
 

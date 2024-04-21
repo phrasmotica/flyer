@@ -113,19 +113,19 @@ export const useFlyerStore = defineStore("flyer", () => {
         return phase
     }
 
-    const createPlayOffPhase = (forPhase: Phase, playOff: PlayOff, raceTo: number) => {
-        const settings = createPlayOffSettings(forPhase, playOff, raceTo)
+    const createPlayOffPhase = (forPhase: Phase, tieBreaker: PlayOff, raceTo: number) => {
+        const settings = createPlayOffSettings(forPhase, tieBreaker, raceTo)
 
         const newPhase: Phase = {
-            id: playOff.id,
+            id: tieBreaker.id,
             order: 1, // this will be assigned if the phase gets added to the flyer
-            players: playOff.players,
+            players: tieBreaker.players,
             tables: forPhase.tables,
             settings: {...settings},
             startTime: Date.now(),
             finishTime: null,
             skippedTime: null,
-            rounds: new KnockoutScheduler().generatePlayOffFixtures(forPhase, playOff.players, raceTo),
+            rounds: new KnockoutScheduler().generatePlayOffFixtures(forPhase, tieBreaker.players, raceTo),
             fixtureSwaps: [],
             eventLog: createEventLog(settings.name),
             ranking: [],
@@ -380,9 +380,9 @@ export const useFlyerStore = defineStore("flyer", () => {
         return true
     }
 
-    const addPlayOff = (forPhase: Phase, playOff: PlayOff, raceTo: number) => {
+    const addPlayOff = (forPhase: Phase, tieBreaker: PlayOff, raceTo: number) => {
         if (flyer.value) {
-            const playOffPhase = createPlayOffPhase(forPhase, playOff, raceTo)
+            const playOffPhase = createPlayOffPhase(forPhase, tieBreaker, raceTo)
 
             const maxOrder = flyer.value.phases.map(p => p.order).reduce((x, y) => Math.max(x, y))
             playOffPhase.order = maxOrder + 1
@@ -391,9 +391,9 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const skipPlayOff = (forPhase: Phase, playOff: PlayOff, ranking: PlayerRecord[]) => {
+    const skipPlayOff = (forPhase: Phase, tieBreaker: PlayOff, ranking: PlayerRecord[]) => {
         if (flyer.value) {
-            const playOffPhase = createPlayOffPhase(forPhase, playOff, 1)
+            const playOffPhase = createPlayOffPhase(forPhase, tieBreaker, 1)
 
             const maxOrder = flyer.value.phases.map(p => p.order).reduce((x, y) => Math.max(x, y))
             playOffPhase.order = maxOrder + 1

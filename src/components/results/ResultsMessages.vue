@@ -20,7 +20,7 @@ const flyerStore = useFlyerStore()
 
 const {
     mainPhase,
-    playOffs,
+    tieBreakers,
     allPlayOffsComplete,
     incompleteCount,
     isFinished,
@@ -51,7 +51,7 @@ const showPlayOffsRequiredMessage = computed(() => {
         return false
     }
 
-    return !allPlayOffsComplete.value && playOffs.value.length > 0
+    return !allPlayOffsComplete.value && tieBreakers.value.length > 0
 })
 
 const showTieBreakerMessages = computed(() => {
@@ -59,7 +59,7 @@ const showTieBreakerMessages = computed(() => {
         return false
     }
 
-    return playOffs.value.length > 0 && !isWinnerStaysOn.value
+    return tieBreakers.value.length > 0 && !isWinnerStaysOn.value
 })
 
 const showWinningsSummary = computed(() => isFinished.value)

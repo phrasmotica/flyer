@@ -188,7 +188,7 @@ export const useRankings = () => {
         }))
     }
 
-    const computePlayOffs = (phase: Phase | null) => {
+    const computeTieBreakers = (phase: Phase | null) => {
         if (!phase) {
             return []
         }
@@ -197,16 +197,16 @@ export const useRankings = () => {
             return []
         }
 
-        const playOffs = <PlayOff[]>[]
+        const tieBreakers = <PlayOff[]>[]
 
         const standings = computeStandings(phase, false)
 
         for (const record of standings) {
             const player = phase.players.find(p => p.id === record.playerId)!
-            const matchingPlayOff = playOffs.find(p => sortRecords(record, p.records[0]) === 0)
+            const matchingTieBreaker = tieBreakers.find(p => sortRecords(record, p.records[0]) === 0)
 
-            if (matchingPlayOff) {
-                matchingPlayOff.players.push(player)
+            if (matchingTieBreaker) {
+                matchingTieBreaker.players.push(player)
             }
             else {
                 // HIGH: this needs to be something that doesn't change between calls, because
@@ -214,9 +214,9 @@ export const useRankings = () => {
                 // for the main flyer phase.
                 // We can use a GUID instead if we can ensure this method doesn't get re-called
                 // after a page reload...
-                const id = "play-off-" + playOffs.length
+                const id = "play-off-" + tieBreakers.length
 
-                playOffs.push({
+                tieBreakers.push({
                     id,
                     name: "Play-Off for Position " + record.rank,
                     index: 0,
@@ -227,9 +227,9 @@ export const useRankings = () => {
             }
         }
 
-        const relevantPlayOffs = playOffs.filter(p => p.players.length > 1)
+        const relevantTieBreakers = tieBreakers.filter(p => p.players.length > 1)
 
-        return relevantPlayOffs.map<PlayOff>((p, i) => ({
+        return relevantTieBreakers.map<PlayOff>((p, i) => ({
             ...p,
             index: i + 1,
         }))
@@ -240,6 +240,6 @@ export const useRankings = () => {
         getLoser,
         computeStandings,
         computeDummyStandings,
-        computePlayOffs,
+        computeTieBreakers,
     }
 }

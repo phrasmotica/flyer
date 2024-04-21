@@ -20,8 +20,8 @@ export const useFlyer = (f: Flyer | null) => {
 
     const {
         standings,
-        playOffs,
-        unresolvedPlayOffs,
+        tieBreakers,
+        unresolvedTieBreakers,
         requiresPlayOff,
     } = useStandings(mainPhase.value)
 
@@ -36,7 +36,7 @@ export const useFlyer = (f: Flyer | null) => {
     })
 
     const allPlayOffsComplete = computed(() => {
-        return completedPlayOffs.value.length >= unresolvedPlayOffs.value.length
+        return completedPlayOffs.value.length >= unresolvedTieBreakers.value.length
     })
 
     const overallStandings = computed(() => processStandings(standings.value))
@@ -45,10 +45,10 @@ export const useFlyer = (f: Flyer | null) => {
         const recordsToConsider = standings.value.filter(s => !s.tieBroken)
         const playerIds = recordsToConsider.map(s => s.playerId)
 
-        const playOffsToConsider = playOffs.value.filter(p => !phaseIsComplete(p.id))
-        const playersIdsInPlayOffs = playOffsToConsider.flatMap(p => p.players).map(p => p.id)
+        const tieBreakersToConsider = tieBreakers.value.filter(p => !phaseIsComplete(p.id))
+        const playersIdsInTieBreakers = tieBreakersToConsider.flatMap(p => p.players).map(p => p.id)
 
-        return playerIds.filter(x => playersIdsInPlayOffs.includes(x))
+        return playerIds.filter(x => playersIdsInTieBreakers.includes(x))
     })
 
     const playersAlreadyPlayedOff = computed(() => completedPlayOffs.value
@@ -85,7 +85,7 @@ export const useFlyer = (f: Flyer | null) => {
         currentPlayOffPhase,
         allPlayOffsComplete,
 
-        playOffs,
+        tieBreakers,
         requiresPlayOff,
         completedPlayOffs,
 

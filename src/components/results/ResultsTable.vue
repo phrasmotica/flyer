@@ -30,7 +30,7 @@ const {
     mainPhase,
     overallStandings,
     inseparablePlayers,
-    playOffs,
+    tieBreakers,
     completedPlayOffs,
     hasAlreadyPlayedOff,
     phaseIsComplete,
@@ -73,7 +73,7 @@ const rowClass = (data: TableData) => {
 }
 
 const getPlayOffIndex = (playerId: string) => {
-    const incompletePlayOffs = playOffs.value.filter(x => !phaseIsComplete(x.id))
+    const incompletePlayOffs = tieBreakers.value.filter(t => !phaseIsComplete(t.id))
     return incompletePlayOffs.find(p => p.players.some(x => x.id === playerId))?.index
 }
 

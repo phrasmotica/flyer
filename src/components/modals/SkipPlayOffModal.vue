@@ -32,7 +32,7 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    orderedPlayOffs,
+    orderedTieBreakers,
 } = useStandings(mainPhase.value)
 
 const {
@@ -40,7 +40,7 @@ const {
 } = useArray<Player>()
 
 const nextPlayOff = computed(() => {
-    const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
+    const remaining = orderedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
     return remaining.length > 0 ? remaining[0] : null
 })
 

@@ -72,7 +72,7 @@ const {
 } = usePodium(mainPhase.value)
 
 const {
-    orderedPlayOffs,
+    orderedTieBreakers,
     createPlayOffFor,
 } = useStandings(mainPhase.value)
 
@@ -116,7 +116,7 @@ const goToSetup = () => {
 }
 
 const nextPlayOff = computed(() => {
-    const remaining = orderedPlayOffs.value.filter(p => !phaseIsComplete(p.id))
+    const remaining = orderedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
     return remaining.length > 0 ? remaining[0] : null
 })
 

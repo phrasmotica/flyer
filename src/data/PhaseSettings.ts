@@ -49,7 +49,7 @@ export enum MoneySplit {
     SemiFinalists,
 }
 
-export const createPlayOffSettings = (forPhase: Phase, playOff: PlayOff, raceTo: number): PhaseSettings => ({
+export const createPlayOffSettings = (forPhase: Phase, tieBreaker: PlayOff, raceTo: number): PhaseSettings => ({
     allowEarlyFinish: false,
     bestOf: 1,
     entryFee: 0,
@@ -57,7 +57,7 @@ export const createPlayOffSettings = (forPhase: Phase, playOff: PlayOff, raceTo:
     format: Format.Knockout,
     matchLengthModel: MatchLengthModel.Fixed,
     moneySplit: MoneySplit.WinnerTakesAll,
-    name: playOff.name,
+    name: tieBreaker.name,
     raceTo,
     randomlyDrawAllRounds: false,
     requireCompletedRounds: true,
