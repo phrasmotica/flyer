@@ -47,7 +47,7 @@ const selectedRecords = computed(() => overallStandings.value.filter(s => {
         v-model:visible="visible"
         :header="t('results.createPlayOff')"
         :confirmLabel="t('common.create')"
-        :confirmDisabled="playerIds.length <= 0"
+        :confirmDisabled="playerIds.length <= 1"
         :cancelLabel="t('common.cancel')"
         @confirm="emit('create', selectedRecords, raceTo)"
         @hide="emit('hide')">
