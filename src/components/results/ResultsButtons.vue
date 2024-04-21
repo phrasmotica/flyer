@@ -11,6 +11,7 @@ import { useQueryParams } from "@/composables/useQueryParams"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
+import { usePhaseSettings } from "@/composables/usePhaseSettings"
 
 const { t } = useI18n()
 
@@ -45,6 +46,10 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
+    isRoundRobin,
+} = usePhaseSettings(mainPhase.value)
+
+const {
     players,
 } = usePlayers(mainPhase.value)
 
@@ -68,17 +73,17 @@ const canCreatePlayOff = computed(() => {
 <template>
     <div class="p-fluid">
         <div v-if="!isFinished">
-            <DebugButtons v-if="!isHistoric && isDebug && !isFinished"
+            <DebugButtons v-if="!isHistoric && isDebug"
                 class="mb-2" />
 
-            <Button
+            <Button v-if="!isHistoric && isRoundRobin"
+                class="mb-2"
                 severity="warning"
                 :label="t('results.createPlayOff')"
                 :disabled="!canCreatePlayOff"
                 @click="emit('confirmCreatePlayOff')" />
 
-            <Button
-                class="mt-2"
+            <Button v-if="!isHistoric"
                 :label="t('common.finish')"
                 @click="emit('confirmFinishFlyer')" />
         </div>
