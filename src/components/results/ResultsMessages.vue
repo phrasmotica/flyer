@@ -23,6 +23,7 @@ const {
     playOffs,
     allPlayOffsComplete,
     incompleteCount,
+    isFinished,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -61,13 +62,7 @@ const showTieBreakerMessages = computed(() => {
     return playOffs.value.length > 0 && !isWinnerStaysOn.value
 })
 
-const showWinningsSummary = computed(() => {
-    if (props.isInProgress) {
-        return false
-    }
-
-    return !requiresPlayOff.value || allPlayOffsComplete.value
-})
+const showWinningsSummary = computed(() => isFinished.value)
 </script>
 
 <template>
