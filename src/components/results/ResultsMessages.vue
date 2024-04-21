@@ -3,7 +3,7 @@ import { computed } from "vue"
 
 import IncompleteResultsMessage from "./IncompleteResultsMessage.vue"
 import PlayOffsRequiredMessage from "./PlayOffsRequiredMessage.vue"
-import TiesBrokenMessage from "./TiesBrokenMessage.vue"
+import TieBreakerMessages from "./TieBreakerMessages.vue"
 import WinningsSummary from "./WinningsSummary.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
@@ -53,7 +53,7 @@ const showPlayOffsRequiredMessage = computed(() => {
     return !allPlayOffsComplete.value && playOffs.value.length > 0
 })
 
-const showTiesBrokenMessage = computed(() => {
+const showTieBreakerMessages = computed(() => {
     if (requiresPlayOff.value) {
         return false
     }
@@ -80,8 +80,8 @@ const showWinningsSummary = computed(() => {
             <PlayOffsRequiredMessage />
         </div>
 
-        <div v-if="showTiesBrokenMessage" class="mt-1">
-            <TiesBrokenMessage />
+        <div v-if="showTieBreakerMessages" class="mt-1">
+            <TieBreakerMessages />
         </div>
 
         <div v-if="showWinningsSummary" class="mt-1">
