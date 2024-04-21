@@ -30,10 +30,9 @@ const {
     mainPhase,
     overallStandings,
     inseparablePlayers,
-    tieBreakers,
+    unplayedTieBreakers,
     completedPlayOffs,
     hasAlreadyPlayedOff,
-    phaseIsComplete,
 } = useFlyer(flyerStore.flyer)
 
 const {
@@ -61,24 +60,21 @@ const showPoints = computed(() => !isWinnerStaysOn.value)
 const showDiff = computed(() => !isWinnerStaysOn.value)
 const showPlayOffRank = computed(() => completedPlayOffs.value.length > 0)
 
-const rowClass = (data: TableData) => {
-    return [
-        {
-            'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
-            'incomplete-row': !props.isInProgress && data.incomplete,
-            'play-off-row': showPlayOffIndex(data.playerId),
-            'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
-        },
-    ]
+const rowClass = (data: TableData) => [
+    {
+        'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
+        'incomplete-row': !props.isInProgress && data.incomplete,
+        'play-off-row': showTieBreakerIndex(data.playerId),
+        'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
+    },
+]
+
+const getTieBreakerIndex = (playerId: string) => {
+    return unplayedTieBreakers.value.findIndex(p => p.players.some(x => x.id === playerId)) + 1
 }
 
-const getPlayOffIndex = (playerId: string) => {
-    const incompletePlayOffs = tieBreakers.value.filter(t => !phaseIsComplete(t.id))
-    return incompletePlayOffs.find(p => p.players.some(x => x.id === playerId))?.index
-}
-
-const showPlayOffIndex = (playerId: string) => {
-    return !props.isPinned && !hasAlreadyPlayedOff(playerId) && getPlayOffIndex(playerId)
+const showTieBreakerIndex = (playerId: string) => {
+    return !props.isPinned && !hasAlreadyPlayedOff(playerId) && getTieBreakerIndex(playerId) > 0
 }
 </script>
 
@@ -96,8 +92,8 @@ const showPlayOffIndex = (playerId: string) => {
         <Column v-if="showName" field="name" :header="t('results.nameHeader')">
             <template #body="{ data: record }">
                 {{ record.name }}
-                <span v-if="showPlayOffIndex(record.playerId)">
-                    <sup class="text-xs">{{ getPlayOffIndex(record.playerId)! }}</sup>
+                <span v-if="showTieBreakerIndex(record.playerId)">
+                    <sup class="text-xs">{{ getTieBreakerIndex(record.playerId) }}</sup>
                 </span>
             </template>
         </Column>

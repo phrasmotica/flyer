@@ -86,7 +86,6 @@ export const useStandings = (p: Phase | null) => {
 
         tieBreakers,
         unresolvedTieBreakers,
-        orderedTieBreakers,
 
         requiresPlayOff,
         firstPlace,

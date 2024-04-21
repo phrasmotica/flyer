@@ -1,4 +1,5 @@
 import { computed, ref } from "vue"
+import { useArrayFilter } from "@vueuse/core"
 
 import { usePlayOffs } from "./usePlayOffs"
 import { useStandings } from "./useStandings"
@@ -39,6 +40,10 @@ export const useFlyer = (f: Flyer | null) => {
         const remaining = unresolvedTieBreakers.value.filter(p => !phaseIsComplete(p.id))
         return remaining.length > 0 ? remaining[0] : null
     })
+
+    const unplayedTieBreakers = useArrayFilter(
+        tieBreakers,
+        p => !phaseIsComplete(p.id))
 
     const allPlayOffsComplete = computed(() => {
         return completedPlayOffs.value.length >= unresolvedTieBreakers.value.length
@@ -91,6 +96,7 @@ export const useFlyer = (f: Flyer | null) => {
         allPlayOffsComplete,
 
         tieBreakers,
+        unplayedTieBreakers,
         nextUnresolvedTieBreaker,
         requiresPlayOff,
         completedPlayOffs,
