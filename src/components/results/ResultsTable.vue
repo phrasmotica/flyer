@@ -32,6 +32,7 @@ const {
     inseparablePlayers,
     unplayedTieBreakers,
     completedPlayOffs,
+    isFinished,
     hasAlreadyPlayedOff,
 } = useFlyer(flyerStore.flyer)
 
@@ -76,8 +77,8 @@ const showTieBreakerIndex = (playerId: string) => {
 
 const rowClass = (data: TableData) => [
     {
-        'bg-primary': !props.isInProgress && !data.incomplete && data.rank === 1,
-        'incomplete-row': !props.isInProgress && data.incomplete,
+        'bg-primary': isFinished.value && !data.incomplete && data.rank === 1,
+        'incomplete-row': isFinished.value && data.incomplete,
         'tie-break-row': showTieBreakerIndex(data.playerId),
         'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
     },
