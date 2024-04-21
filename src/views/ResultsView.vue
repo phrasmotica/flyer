@@ -146,6 +146,11 @@ const createPlayOff = (records: PlayerRecord[], raceTo: number) => {
         return
     }
 
+    if (records.length < 2) {
+        console.debug("Cannot create a play-off for less than 2 players!")
+        return
+    }
+
     const forRank = Math.min(...records.map(r => r.rank))
     const playOff = createPlayOffFor(records, forRank)
 

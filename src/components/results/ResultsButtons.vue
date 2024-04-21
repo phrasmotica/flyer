@@ -6,6 +6,7 @@ import DebugButtons from "./DebugButtons.vue"
 
 import { useEnv } from "@/composables/useEnv"
 import { useFlyer } from "@/composables/useFlyer"
+import { usePlayers } from "@/composables/usePlayers"
 import { useQueryParams } from "@/composables/useQueryParams"
 
 import { useFlyerStore } from "@/stores/flyer"
@@ -38,10 +39,16 @@ const {
 
 const {
     flyer,
+    mainPhase,
     nextUnresolvedTieBreaker,
     isComplete,
     isFinished,
+    hasAlreadyPlayedOff,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    players,
+} = usePlayers(mainPhase.value)
 
 const {
     isHistoric,
@@ -58,6 +65,10 @@ const saveButtonText = computed(() => t(alreadySaved.value ? 'results.flyerSaved
 const playOffButtonText = computed(() => t('results.startPlayOffButton', {
     name: nextUnresolvedTieBreaker.value?.name || t('playOff.unknownIndicator'),
 }))
+
+const canCreatePlayOff = computed(() => {
+    return players.value.filter(p => !hasAlreadyPlayedOff(p.id)).length > 1
+})
 </script>
 
 <template>
@@ -81,6 +92,7 @@ const playOffButtonText = computed(() => t('results.startPlayOffButton', {
             <Button
                 severity="warning"
                 :label="t('results.createPlayOff')"
+                :disabled="!canCreatePlayOff"
                 @click="emit('confirmCreatePlayOff')" />
 
             <Button
