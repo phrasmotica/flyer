@@ -61,10 +61,9 @@ const assignBreaker = () => {
             <PlayerBreakInput
                 v-for="p in players"
                 class="col-6"
+                v-model="breakerId"
                 :fixture="fixture!"
-                :playerId="p"
-                :breakerId="breakerId"
-                @setBreakerId="breakerId = p" />
+                :playerId="p" />
         </div>
 
         <Button
