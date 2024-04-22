@@ -47,7 +47,7 @@ const {
 
 const {
     value: isExported,
-} = useTimedRef(2000, false)
+} = useTimedRef(3000, false)
 
 const viewFlyer = (f: Flyer) => {
     flyerStore.setFlyer(f)
@@ -79,6 +79,13 @@ const importPastFlyers = () => {
 const exportPastFlyers = () => {
     const data = JSON.stringify(flyerHistoryStore.pastFlyers)
     copy(data)
+
+    toast.add({
+        severity: 'success',
+        summary: t("history.exportData"),
+        detail: t("history.dataExported"),
+        life: 3000,
+    })
 
     isExported.value = true
 }

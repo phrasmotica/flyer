@@ -21,8 +21,6 @@ const flyerHistoryStore = useFlyerHistoryStore()
 const importButtonLabel = computed(() => {
     return props.isImported ? t("history.dataImported") : t("history.importData")
 })
-
-const exportButtonLabel = computed(() => props.isExported ? t("history.dataExported") : t("history.exportData"))
 </script>
 
 <template>
@@ -35,7 +33,7 @@ const exportButtonLabel = computed(() => props.isExported ? t("history.dataExpor
             @click="emit('showImportModal')" />
 
         <Button
-            :label="exportButtonLabel"
+            :label="t('history.exportData')"
             :disabled="flyerHistoryStore.noHistory || isExported"
             severity="primary"
             @click="emit('exportPastFlyers')" />
