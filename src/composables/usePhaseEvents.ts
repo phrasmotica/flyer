@@ -30,6 +30,8 @@ export const usePhaseEvents = (p: Phase | null) => {
         tables,
     } = useTables(phase.value)
 
+    // HIGH: allow localising all of these strings!
+
     const getFixtureDescription = (fixture: Fixture | undefined) => {
         if (!fixture) {
             return "???"

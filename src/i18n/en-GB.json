@@ -120,6 +120,7 @@
         "winsRequiredLimit": "Must be at least one fewer than the player count ({limit})."
     },
     "play": {
+        "fixtureFinished": "Fixture finished",
         "pinThisSection": "Pin this section",
         "unpinThisSection": "Unpin this section",
         "thisSectionIsPinned": "This section is pinned",

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useToast } from "primevue/usetoast"
 import { computed, onMounted, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
@@ -16,8 +17,9 @@ import { useTweaks } from "@/composables/useTweaks"
 
 import type { Fixture, Score } from "@/data/Fixture"
 
-import { useFlyerStore } from "@/stores/flyer"
+import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useStandings } from "@/composables/useStandings"
+import { useFlyerStore } from "@/stores/flyer"
 
 const { t } = useI18n()
 
@@ -40,6 +42,10 @@ const {
 } = useRounds(currentPhase.value)
 
 const {
+    fixtureFinished,
+} = usePhaseEvents(currentPhase.value)
+
+const {
     isWinnerStaysOn,
 } = usePhaseSpecification(currentPhase.value)
 
@@ -58,6 +64,8 @@ const {
     setWinner,
     setRanOut,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
+
+const toast = useToast()
 
 const { blurActive } = useTweaks()
 
@@ -113,6 +121,13 @@ const updateScores = (finish: boolean) => {
         newScores,
         finish,
         standings.value)
+
+    toast.add({
+        severity: 'success',
+        summary: t('play.fixtureFinished'),
+        detail: fixtureFinished(fixture.value),
+        life: 3000,
+    })
 
     hide()
 }
