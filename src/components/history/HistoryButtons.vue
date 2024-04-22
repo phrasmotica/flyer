@@ -6,7 +6,6 @@ import { useFlyerHistoryStore } from "@/stores/flyerHistory"
 
 const props = defineProps<{
     isImported: boolean
-    failedToImport: boolean
     isExported: boolean
 }>()
 
@@ -20,12 +19,6 @@ const { t } = useI18n()
 const flyerHistoryStore = useFlyerHistoryStore()
 
 const importButtonLabel = computed(() => {
-    // MEDIUM: don't show the failed to import message here. Notify the user
-    // elsewhere, e.g. in a toast message
-    if (props.failedToImport) {
-        return t("history.failedToImport")
-    }
-
     return props.isImported ? t("history.dataImported") : t("history.importData")
 })
 
@@ -37,7 +30,7 @@ const exportButtonLabel = computed(() => props.isExported ? t("history.dataExpor
         <Button
             class="mb-2"
             :label="importButtonLabel"
-            :disabled="failedToImport || isImported"
+            :disabled="isImported"
             severity="primary"
             @click="emit('showImportModal')" />
 

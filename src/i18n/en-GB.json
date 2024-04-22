@@ -84,7 +84,7 @@
     "history": {
         "pastFlyers": "Past Flyers",
         "emptyHistory": "No past flyers!",
-        "failedToImport": "Failed to import!",
+        "failedToImport": "Failed to import data! Please try again.",
         "importData": "Import data",
         "exportData": "Export data",
         "dataImported": "Data imported!",

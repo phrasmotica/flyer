@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useClipboard, useTitle, useToggle } from "@vueuse/core"
+import { useToast } from "primevue/usetoast"
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
-import { useClipboard, useTitle, useToggle } from "@vueuse/core"
 
 import FlyerHistory from "@/components/history/FlyerHistory.vue"
 import HistoryButtons from "@/components/history/HistoryButtons.vue"
@@ -35,15 +36,13 @@ const {
 
 const routing = useRouting(useRouter())
 
+const toast = useToast()
+
 const importText = ref("")
 const [showImportModal, setShowImportModal] = useToggle(false)
 
 const {
     value: isImported,
-} = useTimedRef(2000, false)
-
-const {
-    value: failedToImport,
 } = useTimedRef(2000, false)
 
 const {
@@ -68,7 +67,12 @@ const importPastFlyers = () => {
     catch (e) {
         console.error(e)
 
-        failedToImport.value = true
+        toast.add({
+            severity: 'error',
+            summary: t('common.error'),
+            detail: t("history.failedToImport"),
+            life: 3000,
+        })
     }
 }
 
@@ -97,7 +101,6 @@ const exportPastFlyers = () => {
         <template v-if="!isSmallScreen" #sidebar>
             <HistoryButtons
                 :isImported="isImported"
-                :failedToImport="failedToImport"
                 :isExported="isExported"
                 @exportPastFlyers="exportPastFlyers"
                 @showImportModal="() => setShowImportModal(true)" />
@@ -114,7 +117,6 @@ const exportPastFlyers = () => {
         <template v-if="isSmallScreen" #buttons>
             <HistoryButtons
                 :isImported="isImported"
-                :failedToImport="failedToImport"
                 :isExported="isExported"
                 @exportPastFlyers="exportPastFlyers"
                 @showImportModal="() => setShowImportModal(true)" />
