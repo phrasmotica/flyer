@@ -91,13 +91,4 @@ const handleClick = () => {
     width: 4rem;
     height: 4rem;
 }
-
-/* MEDIUM: improve these colours for the colour themes */
-.loser {
-    background-color: red;
-}
-
-.in-progress {
-    background-color: #0ea5e9;
-}
 </style>
