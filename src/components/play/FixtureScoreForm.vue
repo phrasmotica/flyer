@@ -18,6 +18,7 @@ import { useTweaks } from "@/composables/useTweaks"
 import type { Fixture, Score } from "@/data/Fixture"
 
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
+import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useStandings } from "@/composables/useStandings"
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -64,6 +65,10 @@ const {
     setWinner,
     setRanOut,
 } = useFixture("modal", props.fixture, getRound(props.fixture?.id || ""), currentPhase.value)
+
+const {
+    isSmallScreen,
+} = useScreenSizes()
 
 const toast = useToast()
 
@@ -127,6 +132,7 @@ const updateScores = (finish: boolean) => {
         summary: t('play.fixtureFinished'),
         detail: fixtureFinished(fixture.value),
         life: 3000,
+        contentStyleClass: isSmallScreen.value ? 'flyer-toast-sm' : '',
     })
 
     hide()
@@ -217,3 +223,22 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style>
+/* MEDIUM: move these somewhere more central */
+.p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+    margin: 0;
+}
+
+.p-toast-message-content.flyer-toast-sm svg {
+    margin-top: 0.25rem;
+}
+
+.p-toast-message-content.flyer-toast-sm .p-toast-summary {
+    font-size: 0.875rem !important;
+}
+
+.p-toast-message-content.flyer-toast-sm .p-toast-detail {
+    font-size: 0.75rem !important;
+}
+</style>
