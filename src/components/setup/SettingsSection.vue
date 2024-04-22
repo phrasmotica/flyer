@@ -6,7 +6,12 @@ import LabelledDropdown from "./LabelledDropdown.vue"
 
 import { useSpecification } from "@/composables/useSpecification"
 
-import { useSettingsStore } from "@/stores/settings"
+import {
+    formatList,
+    ruleSetList,
+    tieBreakerList,
+    useSettingsStore,
+} from "@/stores/settings"
 
 const { t } = useI18n()
 
@@ -27,7 +32,7 @@ const {
                     <LabelledDropdown
                         :label="t('format.format')"
                         v-model="settingsStore.settings.specification.format"
-                        :options="settingsStore.formatList" />
+                        :options="formatList" />
                 </div>
             </div>
 
@@ -36,7 +41,7 @@ const {
                     <LabelledDropdown
                         :label="t('rules.rules')"
                         v-model="settingsStore.settings.specification.ruleSet"
-                        :options="settingsStore.ruleSetList" />
+                        :options="ruleSetList" />
                 </div>
             </div>
 
@@ -46,7 +51,7 @@ const {
                     <LabelledDropdown
                         :label="t('tieBreaker.tieBreaker')"
                         v-model="settingsStore.settings.specification.tieBreaker"
-                        :options="settingsStore.tieBreakerList" />
+                        :options="tieBreakerList" />
                 </div>
             </div>
         </div>

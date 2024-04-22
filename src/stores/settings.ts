@@ -21,7 +21,7 @@ import type { Table } from "@/data/Table"
 const defaultPlayersEnv = import.meta.env.VITE_DEFAULT_PLAYERS
 const maxPlayersEnv = Number(import.meta.env.VITE_MAX_PLAYERS)
 
-const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
+export const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
     {
         value: MatchLengthModel.Fixed,
         name: "matchLengthModel.fixedName",
@@ -36,8 +36,6 @@ const matchLengthModelList: SettingsDetails<MatchLengthModel>[] = [
     },
 ]
 
-// MEDIUM: either export these lists from here, or from the defineStore() call.
-// Not both...
 export const formatList: SettingsDetails<Format>[] = [
     {
         value: Format.Knockout,
@@ -246,10 +244,6 @@ export const useSettingsStore = defineStore("settings", () => {
     return {
         settings,
 
-        matchLengthModelList,
-        formatList,
-        ruleSetList,
-        tieBreakerList,
         moneySplitOptions,
 
         deletePlayer,

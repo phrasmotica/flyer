@@ -4,7 +4,7 @@ import { useI18n } from "vue-i18n"
 
 import { useSpecification } from "@/composables/useSpecification"
 
-import { useSettingsStore } from "@/stores/settings"
+import { matchLengthModelList, useSettingsStore } from "@/stores/settings"
 
 const { t } = useI18n()
 
@@ -14,7 +14,7 @@ const {
     isKnockout,
 } = useSpecification(settingsStore.settings.specification)
 
-const localisedOptions = computed(() => settingsStore.matchLengthModelList.map(x => ({
+const localisedOptions = computed(() => matchLengthModelList.map(x => ({
     ...x,
     summary: t(x.summary),
 })))
