@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n"
-import { useRouter } from "vue-router"
 import { useTitle, useToggle } from "@vueuse/core"
 import { useToast } from "primevue/usetoast"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
 
+import PageTemplate from "@/components/PageTemplate.vue"
+import StartFlyerModal from "@/components/modals/StartFlyerModal.vue"
 import FlyerForm from "@/components/setup/FlyerForm.vue"
 import FlyerFormSection from "@/components/setup/FlyerFormSection.vue"
 import FlyerSummary from "@/components/setup/FlyerSummary.vue"
-import PageTemplate from "@/components/PageTemplate.vue"
-import StartFlyerModal from "@/components/modals/StartFlyerModal.vue"
 
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
@@ -48,9 +48,7 @@ const start = () => {
     catch (e) {
         console.error(e)
 
-        // BUG: figure out why this doesn't appear
         toast.add({
-            group: "errors",
             severity: 'error',
             summary: t('common.error'),
             detail: t('form.failedToStart'),
