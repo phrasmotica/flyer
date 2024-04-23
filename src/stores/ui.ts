@@ -1,6 +1,6 @@
-import { computed } from "vue"
-import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
+import { defineStore } from "pinia"
+import { computed } from "vue"
 
 import { FlyerFormSection, PlayViewSection, SidebarPosition, type UiSettings } from "@/data/UiSettings"
 
@@ -11,6 +11,7 @@ const defaultSettings: UiSettings = {
     flyerFormSection: FlyerFormSection.Players,
     currentSection: PlayViewSection.Fixtures,
     pinnedSection: null,
+    debug: false,
 }
 
 export const sidebarPositionOptions = [
@@ -33,6 +34,7 @@ export const useUiStore = defineStore("ui", () => {
     const flyerFormSection = computed(() => settings.value.flyerFormSection)
     const currentSection = computed(() => settings.value.currentSection)
     const pinnedSection = computed(() => settings.value.pinnedSection)
+    const isDebugMode = computed(() => settings.value.debug)
 
     const isSidebarRight = computed(() => sidebarPosition.value === SidebarPosition.Right)
     const isSidebarLeft = computed(() => sidebarPosition.value === SidebarPosition.Left)
@@ -65,6 +67,7 @@ export const useUiStore = defineStore("ui", () => {
         flyerFormSection,
         currentSection,
         pinnedSection,
+        isDebugMode,
 
         isSidebarRight,
         isSidebarLeft,

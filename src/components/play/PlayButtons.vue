@@ -4,7 +4,6 @@ import { useI18n } from "vue-i18n"
 
 import DebugButtons from "./DebugButtons.vue"
 
-import { useEnv } from "@/composables/useEnv"
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseTiming } from "@/composables/usePhaseTiming"
@@ -13,6 +12,7 @@ import { useRounds } from "@/composables/useRounds"
 import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import { useFlyerStore } from "@/stores/flyer"
+import { useUiStore } from "@/stores/ui"
 
 const { t } = useI18n()
 
@@ -28,10 +28,7 @@ const emit = defineEmits<{
 }>()
 
 const flyerStore = useFlyerStore()
-
-const {
-    isDebug,
-} = useEnv()
+const uiStore = useUiStore()
 
 const {
     currentPhase,
@@ -85,7 +82,7 @@ const finishButtonText = computed(() => {
 
 <template>
     <div class="p-fluid">
-        <DebugButtons v-if="!isHistoric && isDebug"
+        <DebugButtons v-if="!isHistoric && uiStore.isDebugMode"
             :hideInstead="!props.sidebar" />
 
         <Button

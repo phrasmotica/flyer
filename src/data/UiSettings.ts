@@ -5,6 +5,7 @@ export interface UiSettings {
     flyerFormSection: FlyerFormSection
     currentSection: PlayViewSection
     pinnedSection: PlayViewSection | null
+    debug: boolean,
 }
 
 export enum SidebarPosition {

@@ -5,7 +5,6 @@ import CommentMessage from "./CommentMessage.vue"
 import ScoreCard from "./ScoreCard.vue"
 import TableBadge from "./TableBadge.vue"
 
-import { useEnv } from "@/composables/useEnv"
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
@@ -16,6 +15,7 @@ import { useTables } from "@/composables/useTables"
 import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
+import { useUiStore } from "@/stores/ui"
 
 const props = defineProps<{
     fixture: Fixture
@@ -28,11 +28,8 @@ const emit = defineEmits<{
     highlight: []
 }>()
 
-const {
-    isDebug,
-} = useEnv()
-
 const flyerStore = useFlyerStore()
+const uiStore = useUiStore()
 
 const {
     currentPhase,
@@ -70,8 +67,8 @@ const table = computed(() => getTable(fixture.value?.tableId || ""))
 
 const fixtureCardClass = (fixture: Fixture) => [
     fixture.id === props.highlightedFixtureId ? 'border-dashed' : 'border-transparent',
-    isDebug && canStartFixture(fixture, status.value) && 'border border-yellow-500',
-    isDebug && fixture.id === nextFreeFixture.value?.id && 'border border-red-500',
+    uiStore.isDebugMode && canStartFixture(fixture, status.value) && 'border border-yellow-500',
+    uiStore.isDebugMode && fixture.id === nextFreeFixture.value?.id && 'border border-red-500',
 ]
 </script>
 

@@ -4,14 +4,14 @@ import { useI18n } from "vue-i18n"
 
 import DebugButtons from "./DebugButtons.vue"
 
-import { useEnv } from "@/composables/useEnv"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePlayers } from "@/composables/usePlayers"
 import { useQueryParams } from "@/composables/useQueryParams"
+import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useFlyerHistoryStore } from "@/stores/flyerHistory"
-import { usePhaseSpecification } from "@/composables/useSpecification"
+import { useUiStore } from "@/stores/ui"
 
 const { t } = useI18n()
 
@@ -33,10 +33,7 @@ const emit = defineEmits<{
 
 const flyerStore = useFlyerStore()
 const flyerHistoryStore = useFlyerHistoryStore()
-
-const {
-    isDebug,
-} = useEnv()
+const uiStore = useUiStore()
 
 const {
     flyer,
@@ -73,7 +70,7 @@ const canCreatePlayOff = computed(() => {
 <template>
     <div class="p-fluid">
         <div v-if="!isFinished">
-            <DebugButtons v-if="!isHistoric && isDebug"
+            <DebugButtons v-if="!isHistoric && uiStore.isDebugMode"
                 class="mb-2" />
 
             <Button v-if="!isHistoric && isRoundRobin"
