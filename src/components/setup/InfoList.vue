@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import { useSpecification } from "@/composables/useSpecification"
@@ -34,6 +34,10 @@ const {
     isWinnerStaysOn,
     isFixedMatchLength,
 } = useSpecification(props.settings)
+
+watch(props, () => {
+    settings.value = props.settings
+})
 
 const winsRequiredSummary = computed(() => {
     return t('matchLengthModel.firstToNWins', settings.value.winsRequired)

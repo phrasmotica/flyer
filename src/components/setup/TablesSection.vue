@@ -25,8 +25,13 @@ const {
 } = useSettings(settingsStore.settings)
 
 const {
+    settings,
     isWinnerStaysOn,
 } = useSpecification(settingsStore.settings.specification)
+
+settingsStore.$subscribe(() => {
+    settings.value = settingsStore.settings.specification
+})
 
 const maxTableCount = computed(() => {
     if (isWinnerStaysOn.value) {
