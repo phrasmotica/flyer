@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import ScoreCell from "./ScoreCell.vue"
@@ -11,7 +11,6 @@ import { useRounds } from "@/composables/useRounds"
 import { usePhaseSpecification } from "@/composables/useSpecification"
 
 import type { Fixture } from "@/data/Fixture"
-import { Prioritisation } from "@/data/FixtureSwap"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -22,7 +21,6 @@ const props = defineProps<{
     scoreIndex: number
     position: "left" | "right"
     highlightedFixtureId: string
-    prioritisationStatus: Prioritisation
 }>()
 
 const emit = defineEmits<{
@@ -60,14 +58,9 @@ const {
 watch(props, () => {
     fixture.value = props.fixture
     round.value = getRound(props.fixture.id)
-    prioritisationStatus.value = props.prioritisationStatus
 })
 
-const prioritisationStatus = ref(props.prioritisationStatus)
-
 const score = computed(() => fixture.value!.scores[props.scoreIndex])
-const isUp = computed(() => prioritisationStatus.value === Prioritisation.Up)
-const isDown = computed(() => prioritisationStatus.value === Prioritisation.Down)
 
 const isHighlighted = computed(() => {
     const parentFixture = fixture.value!.parentFixtures[props.scoreIndex]
@@ -153,25 +146,13 @@ const handleClick = () => {
             severity="contrast"
             @click="handleClick" />
 
-        <div>
-            <i v-if="isUp"
-                class="pi pi-arrow-up font-bold"
-                :class="marginClass(2)"
-                style="color: green" />
-
-            <i v-else-if="isDown"
-                class="pi pi-arrow-down font-bold"
-                :class="marginClass(2)"
-                style="color: red" />
-
-            <ScoreCell v-else
-                :fixture="fixture!"
-                :score="score.score"
-                :runouts="score.runouts"
-                :isWinner="winner === score.playerId"
-                :isDraw="isDraw"
-                :simple="isWinnerStaysOn"
-                @clicked="handleClick" />
-        </div>
+        <ScoreCell
+            :fixture="fixture!"
+            :score="score.score"
+            :runouts="score.runouts"
+            :isWinner="winner === score.playerId"
+            :isDraw="isDraw"
+            :simple="isWinnerStaysOn"
+            @clicked="handleClick" />
     </div>
 </template>

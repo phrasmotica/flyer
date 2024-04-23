@@ -7,16 +7,13 @@ import TableBadge from "./TableBadge.vue"
 
 import { useEnv } from "@/composables/useEnv"
 import { useFixture } from "@/composables/useFixture"
-import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
 import { useTables } from "@/composables/useTables"
-import { useTimedRef } from "@/composables/useTimedRef"
 
 import type { Fixture } from "@/data/Fixture"
-import { Prioritisation } from "@/data/FixtureSwap"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -47,11 +44,6 @@ const {
 } = usePhase(currentPhase.value)
 
 const {
-    unacknowledgedSwap,
-    acknowledgeSwap,
-} = useFixtureSwaps(currentPhase.value)
-
-const {
     currentRound,
     getRound,
 } = useRounds(currentPhase.value)
@@ -72,34 +64,7 @@ const {
 watch(props, () => {
     fixture.value = props.fixture
     round.value = getRound(props.fixture.id)
-
-    if (!unacknowledgedSwap.value) {
-        return
-    }
-
-    let status = Prioritisation.None
-
-    if (unacknowledgedSwap.value.fixtureBId === props.fixture.id) {
-        status = Prioritisation.Up
-    }
-
-    if (unacknowledgedSwap.value.fixtureAId === props.fixture.id) {
-        status = Prioritisation.Down
-    }
-
-    prioritisationStatus.value = status
-
-    if (status !== Prioritisation.None) {
-        // MEDIUM: probably shouldn't be doing this in a UI component...
-        // do it after a swap happens in the flyer store, and respond to those
-        // swaps here.
-        acknowledgeSwap(unacknowledgedSwap.value.id)
-    }
 })
-
-const {
-    value: prioritisationStatus,
-} = useTimedRef(2000, Prioritisation.None)
 
 const table = computed(() => getTable(fixture.value?.tableId || ""))
 
@@ -125,7 +90,6 @@ const fixtureCardClass = (fixture: Fixture) => [
                 :scoreIndex="0"
                 position="left"
                 :highlightedFixtureId="props.highlightedFixtureId"
-                :prioritisationStatus="prioritisationStatus"
                 @showModal="emit('showModal')"
                 @highlight="emit('highlight')" />
 
@@ -134,7 +98,6 @@ const fixtureCardClass = (fixture: Fixture) => [
                 :scoreIndex="1"
                 position="right"
                 :highlightedFixtureId="props.highlightedFixtureId"
-                :prioritisationStatus="prioritisationStatus"
                 @showModal="emit('showModal')"
                 @highlight="emit('highlight')" />
         </div>

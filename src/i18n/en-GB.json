@@ -34,6 +34,9 @@
         "runouts": "Runouts",
         "addAComment": "Add a comment..."
     },
+    "fixtureSwaps": {
+        "fixturesSwapped": "Fixtures swapped"
+    },
     "form": {
         "newFlyer": "New Flyer",
         "players": "Players",

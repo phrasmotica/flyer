@@ -11,9 +11,3 @@ export interface FixtureSwap {
 
     timestamp: number
 }
-
-export enum Prioritisation {
-    None,
-    Up,
-    Down,
-}

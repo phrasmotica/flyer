@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { useTitle, useToggle } from "@vueuse/core"
+import { useToast } from "primevue/usetoast"
+import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
-import { useTitle, useToggle } from "@vueuse/core"
 
+import PageTemplate from "@/components/PageTemplate.vue"
 import AbandonFlyerModal from "@/components/modals/AbandonFlyerModal.vue"
 import FinishPhaseModal from "@/components/modals/FinishPhaseModal.vue"
 import FixtureModal from "@/components/modals/FixtureModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
-import PageTemplate from "@/components/PageTemplate.vue"
 import PlayButtons from "@/components/play/PlayButtons.vue"
 import PlaySections from "@/components/play/PlaySections.vue"
 
+import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useQueryParams } from "@/composables/useQueryParams"
@@ -25,6 +27,7 @@ import { useStandings } from "@/composables/useStandings"
 import type { Fixture } from "@/data/Fixture"
 import { PlayViewSection } from "@/data/UiSettings"
 
+import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
@@ -38,6 +41,10 @@ const {
     currentPhase,
     currentPlayOffPhase,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    fixturesSwapped,
+} = usePhaseEvents(currentPhase.value)
 
 const {
     settings: mainPhaseSettings,
@@ -61,6 +68,11 @@ const {
     standings: currentStandings,
 } = useStandings(currentPhase.value)
 
+const {
+    unacknowledgedSwap,
+    acknowledgeSwap,
+} = useFixtureSwaps(currentPhase.value)
+
 useTitle("Flyer - " + settings.value.name)
 
 const {
@@ -77,6 +89,23 @@ const routing = useRouting(useRouter(), queryParams.value)
 const {
     isSmallScreen,
 } = useScreenSizes()
+
+const toast = useToast()
+
+watch(unacknowledgedSwap, () => {
+    if (!unacknowledgedSwap.value) {
+        return
+    }
+
+    toast.add({
+        severity: 'info',
+        summary: t('fixtureSwaps.fixturesSwapped'),
+        detail: fixturesSwapped(unacknowledgedSwap.value),
+        life: 5000, // longer message, requires more than 3 seconds to read
+    })
+
+    acknowledgeSwap(unacknowledgedSwap.value.id)
+})
 
 const [showFixtureModal, setShowFixtureModal] = useToggle()
 const [showFinishModal, setShowFinishModal] = useToggle()
