@@ -59,6 +59,8 @@ const setName = () => {
                 :disabled="!name"
                 @click="setName" />
 
+            <!-- HIGH: allow updating the preset -->
+
             <Button v-if="!isEditMode"
                 icon="pi pi-upload"
                 severity="warning"
