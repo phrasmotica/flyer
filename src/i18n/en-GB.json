@@ -163,6 +163,10 @@
         "opponentFormat": " v {name}",
         "roundFormat": " ({name})"
     },
+    "presets": {
+        "noPresets": "No presets saved!",
+        "saveNewPreset": "Save new preset"
+    },
     "prizes": {
         "requireEntryFee": "Require entry fee",
         "entryFee": "Entry fee",

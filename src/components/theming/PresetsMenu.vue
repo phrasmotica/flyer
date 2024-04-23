@@ -6,7 +6,7 @@ const presetsStore = usePresetsStore()
 const settingsStore = useSettingsStore()
 
 const saveNewPreset = () => {
-    presetsStore.add("new preset", {
+    presetsStore.add("Preset " + (presetsStore.presets.length + 1), {
         ...settingsStore.settings
     })
 }
@@ -16,8 +16,27 @@ const saveNewPreset = () => {
     <div>
         <Button
             class="text-sm"
-            label="Save as new preset"
+            :label="$t('presets.saveNewPreset')"
             severity="warning"
             @click="saveNewPreset" />
+
+        <div v-if="presetsStore.noPresets" class="mt-2 text-sm text-color-secondary">
+            {{ $t('presets.noPresets') }}
+        </div>
+
+        <div v-else>
+            <div v-for="p of presetsStore.presets"
+                class="flex align-items-center justify-content-between mt-2">
+                <span class="text-sm">
+                    {{ p.name }}
+                </span>
+
+                <Button
+                    class="ml-2"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    @click="() => presetsStore.deletePreset(p.id)" />
+            </div>
+        </div>
     </div>
 </template>
