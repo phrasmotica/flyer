@@ -165,7 +165,9 @@
     },
     "presets": {
         "noPresets": "No presets saved!",
-        "saveNewPreset": "Save new preset"
+        "saveNewPreset": "Save new preset",
+        "loadedPreset": "Loaded preset",
+        "loadedPresetName": "Loaded the {name} preset."
     },
     "prizes": {
         "requireEntryFee": "Require entry fee",

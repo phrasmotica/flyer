@@ -1,11 +1,31 @@
 <script setup lang="ts">
+import { useToast } from "primevue/usetoast"
+import { useI18n } from "vue-i18n"
+
 import PresetInfo from "./PresetInfo.vue"
 
-import { usePresetsStore } from "@/stores/presets"
+import { usePresetsStore, type Preset } from "@/stores/presets"
 import { useSettingsStore } from "@/stores/settings"
+
+const { t } = useI18n()
 
 const presetsStore = usePresetsStore()
 const settingsStore = useSettingsStore()
+
+const toast = useToast()
+
+const loadPreset = (p: Preset) => {
+    settingsStore.importSettings(p.settings)
+
+    toast.add({
+        severity: 'info',
+        summary: t('presets.loadedPreset'),
+        detail: t('presets.loadedPresetName', {
+            name: p.name,
+        }),
+        life: 3000,
+    })
+}
 
 const saveNewPreset = () => {
     presetsStore.addPreset(
@@ -33,7 +53,7 @@ const saveNewPreset = () => {
                 class="mt-2">
                 <PresetInfo
                     :preset="p"
-                    @load="() => settingsStore.importSettings(p.settings)"
+                    @load="() => loadPreset(p)"
                     @setName="name => presetsStore.setName(p.id, name)"
                     @delete="() => presetsStore.deletePreset(p.id)" />
             </div>
