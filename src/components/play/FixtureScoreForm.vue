@@ -226,6 +226,14 @@ onMounted(() => {
 
 <style>
 /* MEDIUM: move these somewhere more central */
+.p-toast .p-toast-message {
+    /* ensures iOS Chrome/Safari compatibility:
+    https://stackoverflow.com/a/76359553 */
+    -webkit-backdrop-filter: blur(10px);
+
+    backdrop-filter: blur(10px);
+}
+
 .p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
     margin: 0;
 }
