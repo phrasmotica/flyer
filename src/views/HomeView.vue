@@ -16,6 +16,7 @@ import { useSettings } from "@/composables/useSettings"
 
 import { PlayViewSection } from "@/data/UiSettings"
 
+import PresetsButton from "@/components/theming/PresetsButton.vue"
 import { useFlyerStore } from "@/stores/flyer"
 import { useSettingsStore } from "@/stores/settings"
 import { useUiStore } from "@/stores/ui"
@@ -78,6 +79,8 @@ const start = () => {
                 icon="pi pi-history"
                 severity="info"
                 @click="routing.toHistory" />
+
+            <PresetsButton />
         </template>
 
         <template #content>
