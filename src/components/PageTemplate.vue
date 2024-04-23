@@ -25,7 +25,7 @@ const headerSize = computed(() => isSmallScreen.value ? "text-2xl" : "text-4xl")
     <main class="flex flex-column justify-content-between">
         <Toast />
 
-        <div class="content overflow-y-auto mt-3 mx-3 pt-3 px-3">
+        <div class="content overflow-y-auto pt-3 px-3">
             <div v-if="slots.header" class="border-bottom-1 mb-2">
                 <div v-if="isSmallScreen && slots.subHeaderLeft">
                     <div :class="headerSize">
