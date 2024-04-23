@@ -1,6 +1,14 @@
 <script setup lang="ts">
-const saveNewPreset = () => {
+import { usePresetsStore } from "@/stores/presets"
+import { useSettingsStore } from "@/stores/settings"
 
+const presetsStore = usePresetsStore()
+const settingsStore = useSettingsStore()
+
+const saveNewPreset = () => {
+    presetsStore.add("new preset", {
+        ...settingsStore.settings
+    })
 }
 </script>
 
