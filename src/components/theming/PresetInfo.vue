@@ -35,7 +35,7 @@ const setName = () => {
 
 <template>
     <div class="flex align-items-center justify-content-between">
-        <div class="w-7rem flex-grow-1">
+        <div class="flex-grow-1">
             <div v-if="!isEditMode"
                 class="name-container text-sm">
                 {{ props.preset.name }}
@@ -47,7 +47,7 @@ const setName = () => {
                 v-model="name" />
         </div>
 
-        <div class="flex gap-2 ml-2">
+        <div class="flex gap-1 ml-2">
             <Button v-if="!isEditMode"
                 icon="pi pi-file-edit"
                 severity="info"

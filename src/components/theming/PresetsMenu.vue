@@ -35,7 +35,7 @@ const saveNewPreset = () => {
 </script>
 
 <template>
-    <div>
+    <div style="width: 240px;">
         <div class="p-fluid">
             <Button
                 class="text-sm"
@@ -44,18 +44,20 @@ const saveNewPreset = () => {
                 @click="saveNewPreset" />
         </div>
 
-        <div v-if="presetsStore.noPresets" class="mt-2 text-sm text-color-secondary">
-            {{ $t('presets.noPresets') }}
-        </div>
+        <div class="overflow-y-auto" style="max-height: 200px;">
+            <div v-if="presetsStore.noPresets" class="mt-2 text-sm text-color-secondary">
+                {{ $t('presets.noPresets') }}
+            </div>
 
-        <div v-else>
-            <div v-for="p of presetsStore.presets"
-                class="mt-2">
-                <PresetInfo
-                    :preset="p"
-                    @load="() => loadPreset(p)"
-                    @setName="name => presetsStore.setName(p.id, name)"
-                    @delete="() => presetsStore.deletePreset(p.id)" />
+            <div v-else>
+                <div v-for="p of presetsStore.presets"
+                    class="mt-2">
+                    <PresetInfo
+                        :preset="p"
+                        @load="() => loadPreset(p)"
+                        @setName="name => presetsStore.setName(p.id, name)"
+                        @delete="() => presetsStore.deletePreset(p.id)" />
+                </div>
             </div>
         </div>
     </div>
