@@ -24,6 +24,15 @@ export const usePresetsStore = defineStore("presets", () => {
         }]
     }
 
+    const setName = (id: string, name: string) => {
+        const idx = presets.value.findIndex(p => p.id === id)
+        if (idx < 0) {
+            return
+        }
+
+        presets.value[idx].name = name
+    }
+
     const deletePreset = (id: string) => {
         const idx = presets.value.findIndex(p => p.id === id)
         if (idx >= 0) {
@@ -39,6 +48,7 @@ export const usePresetsStore = defineStore("presets", () => {
         noPresets,
 
         addPreset,
+        setName,
         deletePreset,
     }
 })

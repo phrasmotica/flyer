@@ -30,10 +30,11 @@ const saveNewPreset = () => {
 
         <div v-else>
             <div v-for="p of presetsStore.presets"
-                class="flex align-items-center justify-content-between mt-2">
+                class="mt-2">
                 <PresetInfo
                     :preset="p"
                     @load="() => settingsStore.importSettings(p.settings)"
+                    @setName="name => presetsStore.setName(p.id, name)"
                     @delete="() => presetsStore.deletePreset(p.id)" />
             </div>
         </div>
