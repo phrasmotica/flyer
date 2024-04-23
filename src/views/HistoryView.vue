@@ -63,6 +63,13 @@ const importPastFlyers = () => {
         isImported.value = true
         importText.value = ""
         setShowImportModal(false)
+
+        toast.add({
+            severity: 'success',
+            summary: t('history.importData'),
+            detail: t('history.dataImported'),
+            life: 3000,
+        })
     }
     catch (e) {
         console.error(e)
@@ -70,7 +77,7 @@ const importPastFlyers = () => {
         toast.add({
             severity: 'error',
             summary: t('common.error'),
-            detail: t("history.failedToImport"),
+            detail: t('history.failedToImport'),
             life: 3000,
         })
     }

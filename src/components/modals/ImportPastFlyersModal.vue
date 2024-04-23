@@ -25,6 +25,7 @@ const emit = defineEmits<{
         :header="t('history.importData')"
         :message="t('history.pleasePasteData')"
         :confirmLabel="t('history.import')"
+        :confirmDisabled="!text"
         :cancelLabel="t('common.cancel')"
         @confirm="emit('importPastFlyers')"
         @hide="emit('hide')">

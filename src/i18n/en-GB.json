@@ -90,7 +90,7 @@
         "failedToImport": "Failed to import data! Please try again.",
         "importData": "Import data",
         "exportData": "Export data",
-        "dataImported": "Data imported!",
+        "dataImported": "Data imported successfully!",
         "dataExported": "Data copied to clipboard!",
         "formatDescription": "{formatName} between {playerCount} players, races to {raceTo}.",
         "tookNMinutes": "Took 1 minute, won by {winner}. | Took {n} minutes, won by {winner}.",
