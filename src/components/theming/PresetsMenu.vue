@@ -37,14 +37,18 @@ const saveNewPreset = () => {
 <template>
     <div style="width: 240px;">
         <div class="p-fluid">
+            <p class="m-0 mb-1 text-sm">
+                {{ t('presets.presetsExplanation') }}
+            </p>
+
             <Button
-                class="text-sm"
+                class="text-sm mb-1"
                 :label="$t('presets.saveNewPreset')"
                 severity="warning"
                 @click="saveNewPreset" />
         </div>
 
-        <div class="overflow-y-auto" style="max-height: 200px;">
+        <div class="overflow-y-auto mt-1 border-top-1" style="max-height: 200px;">
             <div v-if="presetsStore.noPresets" class="mt-2 text-sm text-color-secondary">
                 {{ $t('presets.noPresets') }}
             </div>
