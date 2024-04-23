@@ -3,11 +3,9 @@ import { defineStore } from "pinia"
 import { v4 as uuidv4 } from "uuid"
 import { computed } from "vue"
 
-import { useSettingsStore } from "./settings"
+import { copy, type FlyerSettings } from "@/data/FlyerSettings"
 
-import type { FlyerSettings } from "@/data/FlyerSettings"
-
-interface Preset {
+export interface Preset {
     id: string
     name: string
     settings: FlyerSettings
@@ -16,26 +14,14 @@ interface Preset {
 export const usePresetsStore = defineStore("presets", () => {
     const presets = useStorage("presets", <Preset[]>[])
 
-    const settingsStore = useSettingsStore()
-
     const noPresets = computed(() => presets.value.length <= 0)
 
-    const add = (name: string, settings: FlyerSettings) => {
+    const addPreset = (name: string, settings: FlyerSettings) => {
         presets.value = [...presets.value, {
             id: uuidv4(),
             name,
-            settings,
+            settings: copy(settings),
         }]
-    }
-
-    const loadPreset = (id: string) => {
-        const preset = presets.value.find(p => p.id === id)
-        if (!preset) {
-            console.log(`No preset ${id} exists!`)
-            return
-        }
-
-        settingsStore.settings = preset.settings
     }
 
     const deletePreset = (id: string) => {
@@ -52,8 +38,7 @@ export const usePresetsStore = defineStore("presets", () => {
 
         noPresets,
 
-        add,
-        loadPreset,
+        addPreset,
         deletePreset,
     }
 })

@@ -5,7 +5,7 @@ import { computed, watch } from "vue"
 import { useListFallback } from "@/composables/useListFallback"
 import { useSpecification } from "@/composables/useSpecification"
 
-import type { FlyerSettings } from "@/data/FlyerSettings"
+import { copy, type FlyerSettings } from "@/data/FlyerSettings"
 import type { SettingsDetails } from "@/data/SettingsDetails"
 
 import {
@@ -241,6 +241,14 @@ export const useSettingsStore = defineStore("settings", () => {
         settings.value.tables = newTables
     }
 
+    const importSettings = (importedSettings: FlyerSettings) => {
+        const settingsCopy = copy(importedSettings)
+
+        settings.value = settingsCopy
+    }
+
+    const exportSettings = () => copy(settings.value)
+
     return {
         settings,
 
@@ -248,5 +256,8 @@ export const useSettingsStore = defineStore("settings", () => {
 
         deletePlayer,
         deleteTable,
+
+        importSettings,
+        exportSettings,
     }
 })
