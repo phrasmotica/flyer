@@ -58,7 +58,9 @@ const setName = () => {
                 :disabled="!name"
                 @click="setName" />
 
-            <!-- HIGH: allow updating the preset -->
+            <!-- HIGH: allow updating the preset. Add an "Update preset" button
+            to the PresetsMenu component, use that to make these info components
+            show an update button next to their name instead -->
 
             <Button v-if="!isEditMode"
                 icon="pi pi-upload"
