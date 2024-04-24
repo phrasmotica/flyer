@@ -35,19 +35,18 @@ const setName = () => {
 
 <template>
     <div class="flex align-items-center justify-content-between">
-        <div class="flex-grow-1">
-            <div v-if="!isEditMode"
-                class="name-container text-sm">
-                {{ props.preset.name }}
-            </div>
+        <div v-if="!isEditMode"
+            class="name-container text-sm mr-2">
+            {{ props.preset.name }}
+        </div>
 
-            <InputText v-else
+        <div v-else>
+            <InputText
                 class="text-sm"
-                style="width: 100%"
                 v-model="name" />
         </div>
 
-        <div class="flex gap-1 ml-2">
+        <div class="flex gap-1">
             <Button v-if="!isEditMode"
                 icon="pi pi-file-edit"
                 severity="info"
@@ -76,6 +75,7 @@ const setName = () => {
 
 <style>
 .name-container {
+    flex: 0 1 50%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
