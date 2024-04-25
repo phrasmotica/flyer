@@ -1,11 +1,22 @@
 import type { OrganizationChartNode } from "primevue/organizationchart"
 import { computed } from "vue"
 
-
-import type { Phase } from "@/data/Phase"
+import { useFixtureList } from "./useFixtureList"
+import { useRounds } from "./useRounds"
 import { usePhaseSpecification } from "./useSpecification"
 
+import type { Fixture } from "@/data/Fixture"
+import type { Phase } from "@/data/Phase"
+
 export const useKnockout = (p: Phase | null) => {
+    const {
+        fixtures,
+    } = useFixtureList(p)
+
+    const {
+        rounds,
+    } = useRounds(p)
+
     const {
         isKnockout,
     } = usePhaseSpecification(p)
@@ -15,23 +26,35 @@ export const useKnockout = (p: Phase | null) => {
             return <OrganizationChartNode>{}
         }
 
-        return {
-            key: "final-0",
-            label: "Final",
-            children: [
-                {
-                    key: "semi-final-0",
-                    label: "Semi-Final 1",
-                    children: [],
-                },
-                {
-                    key: "semi-final-1",
-                    label: "Semi-Final 2",
-                    children: [],
-                },
-            ],
+        const finalRound = rounds.value[rounds.value.length - 1]
+        if (!finalRound) {
+            return <OrganizationChartNode>{}
         }
+
+        const final = finalRound.fixtures[finalRound.fixtures.length - 1]
+
+        return computeNode(final, fixtures.value)
     })
+
+    const computeNode = (f: Fixture, allFixtures: Fixture[]): OrganizationChartNode => {
+        const childFixtures = f.parentFixtures.map(pf => allFixtures.find(x => x.id === pf.fixtureId))
+        if (childFixtures.some(cf => !cf)) {
+            // could not find some child fixtures
+            return {
+                key: f.id,
+                label: f.id,
+                data: f,
+                children: [],
+            }
+        }
+
+        return {
+            key: f.id,
+            label: f.id,
+            data: f,
+            children: childFixtures.map(cf => computeNode(cf!, allFixtures))
+        }
+    }
 
     return {
         bracketData,
