@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useFlyer } from "@/composables/useFlyer"
+import { useKnockout } from "@/composables/useKnockout"
 
 import { useFlyerStore } from "@/stores/flyer"
-import type { OrganizationChartNode } from "primevue/organizationchart"
-import { ref } from "vue"
 
 const flyerStore = useFlyerStore()
 
@@ -11,15 +10,13 @@ const {
     currentPhase,
 } = useFlyer(flyerStore.flyer)
 
-const treeData = ref<OrganizationChartNode>({
-    key: "final-0",
-    label: "Final",
-    children: [],
-})
+const {
+    bracketData,
+} = useKnockout(currentPhase.value)
 </script>
 
 <template>
-    <OrganizationChart :value="treeData">
+    <OrganizationChart :value="bracketData">
         <template #default="{ node }">
             <span>{{ node.label }}</span>
         </template>
