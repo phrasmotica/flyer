@@ -100,8 +100,13 @@ const paddingClass = (size: 1 | 2) => {
 const playerNameClass = computed(() => {
     let c = ""
 
-    if (fixture.value?.breakerId === score.value.playerId) {
-        c += " underline"
+    if (score.value.playerId) {
+        if (fixture.value?.breakerId === score.value.playerId) {
+            c += " underline"
+        }
+    }
+    else {
+        c += 'text-gray-400 font-italic'
     }
 
     if (winner.value) {
@@ -128,7 +133,7 @@ const getPlayerDescription = (fixture: Fixture, slot: number) => {
         return ids.map(getPlayerName).join("/")
     }
 
-    return t('player.unknownIndicator')
+    return t('player.pendingIndicator')
 }
 
 const handleClick = () => {
@@ -150,14 +155,8 @@ const handleClick = () => {
                 <em>{{ t('player.byeIndicator') }}</em>
             </span>
 
-            <span v-else-if="score.playerId" :class="playerNameClass">
+            <span v-else :class="playerNameClass">
                 {{ getPlayerDescription(fixture, props.scoreIndex) }}
-            </span>
-
-            <span v-else-if="parentFixture?.fixtureId || isRandomDraw">
-                <em class="text-gray-400">
-                    {{ t('player.pendingIndicator') }}
-                </em>
             </span>
         </div>
 
