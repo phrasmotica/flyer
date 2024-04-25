@@ -122,9 +122,9 @@ const sections = computed(() => {
         PlayViewSection.EventLog,
     ]
 
-    if (isKnockout.value) {
-        relevantSections.splice(1, 1)
-    }
+    // if (isKnockout.value) {
+    //     relevantSections.splice(1, 1)
+    // }
 
     return relevantSections
 })

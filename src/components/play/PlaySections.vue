@@ -1,20 +1,24 @@
 <script setup lang="ts">
+import type { MenuItem } from "primevue/menuitem"
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
-import type { MenuItem } from "primevue/menuitem"
 
-import FixtureList from "./FixtureList.vue"
-import PhaseEventLogSection from "./PhaseEventLogSection.vue"
-import PhaseInfoSection from "./PhaseInfoSection.vue"
 import ResultsMessages from "../results/ResultsMessages.vue"
 import ResultsTable from "../results/ResultsTable.vue"
+import FixtureList from "./FixtureList.vue"
+import KnockoutBracket from "./KnockoutBracket.vue"
+import PhaseEventLogSection from "./PhaseEventLogSection.vue"
+import PhaseInfoSection from "./PhaseInfoSection.vue"
 import TablesSummary from "./TablesSummary.vue"
 
+import { useFlyer } from "@/composables/useFlyer"
 import { useQueryParams } from "@/composables/useQueryParams"
 
 import type { Fixture } from "@/data/Fixture"
 import { PlayViewSection } from "@/data/UiSettings"
 
+import { usePhaseSpecification } from "@/composables/useSpecification"
+import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
 const { t } = useI18n()
@@ -26,11 +30,20 @@ const props = defineProps<{
     pinnedOnly?: boolean
 }>()
 
+const flyerStore = useFlyerStore()
 const uiStore = useUiStore()
 
 const emit = defineEmits<{
     selectFixture: [fixture: Fixture]
 }>()
+
+const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
+    isKnockout,
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     isHistoric,
@@ -132,12 +145,17 @@ const showSection = (section: PlayViewSection) => {
                 @showFixtureModal="f => emit('selectFixture', f)" />
 
             <div v-if="showSection(PlayViewSection.Standings)">
-                <ResultsTable
-                    isInProgress
-                    :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
+                <div v-if="isKnockout">
+                    <KnockoutBracket />
+                </div>
+                <div v-else>
+                    <ResultsTable
+                        isInProgress
+                        :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
 
-                <ResultsMessages v-if="uiStore.pinnedSection !== PlayViewSection.Standings"
-                    isInProgress />
+                    <ResultsMessages v-if="uiStore.pinnedSection !== PlayViewSection.Standings"
+                        isInProgress />
+                </div>
             </div>
 
             <TablesSummary v-if="showSection(PlayViewSection.Tables)"
