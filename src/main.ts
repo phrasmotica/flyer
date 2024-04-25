@@ -1,9 +1,9 @@
 import './assets/main.css'
 import '/node_modules/primeflex/primeflex.css'
 
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
-import { createPinia } from 'pinia'
 
 import 'primeicons/primeicons.css'
 
@@ -24,11 +24,12 @@ import InputText from "primevue/inputtext"
 import Listbox from 'primevue/listbox'
 import Message from 'primevue/message'
 import MeterGroup from 'primevue/metergroup'
+import OrganizationChart from 'primevue/organizationchart'
 import OverlayPanel from 'primevue/overlaypanel'
 import RadioButton from 'primevue/radiobutton'
 import SelectButton from "primevue/selectbutton"
-import SplitButton from 'primevue/splitbutton'
 import Slider from "primevue/slider"
+import SplitButton from 'primevue/splitbutton'
 import TabMenu from 'primevue/tabmenu'
 import Textarea from 'primevue/textarea'
 import Toast from 'primevue/toast'
@@ -90,6 +91,7 @@ app.component("InputText", InputText)
 app.component("Listbox", Listbox)
 app.component("Message", Message)
 app.component("MeterGroup", MeterGroup)
+app.component("OrganizationChart", OrganizationChart)
 app.component("OverlayPanel", OverlayPanel)
 app.component("RadioButton", RadioButton)
 app.component("SelectButton", SelectButton)
