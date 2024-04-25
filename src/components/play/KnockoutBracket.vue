@@ -53,7 +53,7 @@ const getPlayersDescription = (scores: Score[]) => {
 </script>
 
 <template>
-    <OrganizationChart :value="localisedBracketData">
+    <OrganizationChart collapsible :value="localisedBracketData">
         <template #default="{ node }">
             <span class="text-xs">
                 {{ node.label }}
