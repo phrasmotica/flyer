@@ -146,6 +146,8 @@ const showSection = (section: PlayViewSection) => {
 
             <div v-if="showSection(PlayViewSection.Standings)">
                 <div v-if="isKnockout">
+                    <!-- HIGH: put this in a modal, activated by a button above
+                    the fixture list -->
                     <KnockoutBracket />
                 </div>
                 <div v-else>
