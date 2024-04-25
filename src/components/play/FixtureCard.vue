@@ -22,6 +22,7 @@ const props = defineProps<{
     highlightedFixtureId: string
     showComment: boolean
     vertical?: boolean
+    static?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -85,6 +86,7 @@ const fixtureCardClass = (fixture: Fixture) => [
         <div class="grid m-0 py-1">
             <div class="col-6 p-0" :class="props.vertical && 'col-12'">
                 <ScoreCard
+                    :static="props.static"
                     :fixture="fixture"
                     :scoreIndex="0"
                     position="left"
@@ -95,6 +97,7 @@ const fixtureCardClass = (fixture: Fixture) => [
 
             <div class="col-6 p-0" :class="props.vertical && 'col-12 mt-2'">
                 <ScoreCard
+                    :static="props.static"
                     :fixture="fixture"
                     :scoreIndex="1"
                     :position="props.vertical ? 'left' : 'right'"

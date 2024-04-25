@@ -22,6 +22,7 @@ const {
         <template #default="{ node }">
             <FixtureCard
                 vertical
+                static
                 :fixture="node.data"
                 highlightedFixtureId=""
                 :showComment="false" />

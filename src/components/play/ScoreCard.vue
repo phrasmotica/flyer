@@ -22,6 +22,7 @@ const props = defineProps<{
     scoreIndex: number
     position: "left" | "right"
     highlightedFixtureId: string
+    static?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -77,7 +78,7 @@ const parentFixture = computed(() => fixture.value!.parentFixtures.at(props.scor
 const playerCellClass = computed(() => [
     isHighlighted.value && parentFixture.value?.takeLoser && 'loser',
     isHighlighted.value && 'highlight text-white',
-    'cursor-pointer',
+    !props.static && 'cursor-pointer',
 ])
 
 const textAlignClass = computed(() => `text-${props.position}`)
@@ -161,13 +162,14 @@ const handleClick = () => {
         </div>
 
         <Badge v-if="score.runouts > 0"
-            class="p-badge-sm cursor-pointer"
-            :class="marginClass(1)"
+            class="p-badge-sm"
+            :class="[marginClass(1), !props.static && 'cursor-pointer']"
             :value="isWinnerStaysOn ? t('score.runout') : score.runouts"
             severity="contrast"
             @click="handleClick" />
 
         <ScoreCell
+            :static="props.static"
             :fixture="fixture"
             :score="score.score"
             :runouts="score.runouts"
