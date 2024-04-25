@@ -21,6 +21,7 @@ const {
 } = useSettings(settingsStore.settings)
 
 const {
+    settings,
     bestOf,
     raceTo,
     isFixedMatchLength,
@@ -29,6 +30,10 @@ const {
     isRoundRobin,
     isWinnerStaysOn,
 } = useSpecification(settingsStore.settings.specification)
+
+settingsStore.$subscribe(() => {
+    settings.value = settingsStore.settings.specification
+})
 </script>
 
 <template>

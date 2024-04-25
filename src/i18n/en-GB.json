@@ -163,6 +163,13 @@
         "opponentFormat": " v {name}",
         "roundFormat": " ({name})"
     },
+    "presets": {
+        "presetsExplanation": "Use presets to save the current settings and load them again later.",
+        "noPresets": "No presets saved!",
+        "saveNewPreset": "Save new preset",
+        "loadedPreset": "Loaded preset",
+        "loadedPresetName": "Loaded the {name} preset."
+    },
     "prizes": {
         "requireEntryFee": "Require entry fee",
         "entryFee": "Entry fee",

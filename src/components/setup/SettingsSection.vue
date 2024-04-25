@@ -18,9 +18,14 @@ const { t } = useI18n()
 const settingsStore = useSettingsStore()
 
 const {
+    settings,
     isKnockout,
     isRoundRobin,
 } = useSpecification(settingsStore.settings.specification)
+
+settingsStore.$subscribe(() => {
+    settings.value = settingsStore.settings.specification
+})
 </script>
 
 <template>

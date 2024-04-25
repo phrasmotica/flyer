@@ -29,6 +29,10 @@ const {
     estimatedDurationMinutes,
     isInvalid,
 } = useSettings(settingsStore.settings)
+
+settingsStore.$subscribe(() => {
+    settings.value = settingsStore.settings
+})
 </script>
 
 <template>
