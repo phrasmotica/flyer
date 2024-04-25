@@ -1,5 +1,6 @@
 import { computed, ref } from "vue"
 
+import type { Fixture } from "@/data/Fixture"
 import type { Phase } from "@/data/Phase"
 
 export const useFixtureList = (p: Phase | null) => {
@@ -26,6 +27,26 @@ export const useFixtureList = (p: Phase | null) => {
         return fixtures.value.find(f => !f.finishTime && f.tableId === tableId)
     }
 
+    const getPossiblePlayers = (fixture: Fixture, slot: number) => {
+        const score = fixture.scores[slot]
+
+        if (score.isBye) {
+            return []
+        }
+
+        if (fixture.parentFixtures[slot]) {
+            const parentFixture = fixtures.value.find(f => {
+                return fixture.parentFixtures[slot].fixtureId === f.id
+            })
+
+            if (parentFixture && parentFixture.scores.every(s => s.playerId)) {
+                return parentFixture.scores.map(s => s.playerId)
+            }
+        }
+
+        return score.playerId ? [score.playerId] : []
+    }
+
     return {
         fixtures,
 
@@ -37,5 +58,6 @@ export const useFixtureList = (p: Phase | null) => {
         getFixtures,
         getFixture,
         getFixtureOnTable,
+        getPossiblePlayers,
     }
 }

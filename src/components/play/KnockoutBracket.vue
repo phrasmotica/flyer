@@ -3,11 +3,12 @@ import type { OrganizationChartNode } from "primevue/organizationchart"
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
+import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { useKnockout } from "@/composables/useKnockout"
 import { usePlayers } from "@/composables/usePlayers"
 
-import type { Fixture, Score } from "@/data/Fixture"
+import type { Fixture } from "@/data/Fixture"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -18,6 +19,11 @@ const flyerStore = useFlyerStore()
 const {
     currentPhase,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    fixtures,
+    getPossiblePlayers,
+} = useFixtureList(currentPhase.value)
 
 const {
     getPlayerName,
@@ -35,20 +41,26 @@ const localiseNode = (node: OrganizationChartNode): OrganizationChartNode => {
 
     return {
         key: node.key,
-        label: getPlayersDescription(fixture.scores),
+        label: getPlayersDescription(fixture),
         children: children.map(localiseNode)
     }
 }
 
-// HIGH: deduplicate this - see FixtureModal.vue
-const getPlayersDescription = (scores: Score[]) => {
-    return scores.map(s => {
-        if (s.isBye) {
-            return t("player.byeIndicator")
-        }
+const getPlayersDescription = (fixture: Fixture) => {
+    return fixture.scores
+        .map((s, i) => {
+            if (s.isBye) {
+                return t('player.byeIndicator')
+            }
 
-        return getPlayerName(s.playerId) || t("player.unknownIndicator")
-    }).join(t("fixture.playerJoiner"))
+            const ids = getPossiblePlayers(fixture, i)
+            if (ids.length > 0) {
+                return ids.map(getPlayerName).join("/")
+            }
+
+            return t('player.unknownIndicator')
+        })
+        .join(t('fixture.playerJoiner'))
 }
 </script>
 
