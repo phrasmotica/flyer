@@ -21,6 +21,7 @@ const props = defineProps<{
     fixture: Fixture
     highlightedFixtureId: string
     showComment: boolean
+    vertical?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -82,21 +83,25 @@ const fixtureCardClass = (fixture: Fixture) => [
         </div>
 
         <div class="grid m-0 py-1">
-            <ScoreCard
-                :fixture="fixture"
-                :scoreIndex="0"
-                position="left"
-                :highlightedFixtureId="props.highlightedFixtureId"
-                @showModal="emit('showModal')"
-                @highlight="emit('highlight')" />
+            <div class="col-6 p-0" :class="props.vertical && 'col-12'">
+                <ScoreCard
+                    :fixture="fixture"
+                    :scoreIndex="0"
+                    position="left"
+                    :highlightedFixtureId="props.highlightedFixtureId"
+                    @showModal="emit('showModal')"
+                    @highlight="emit('highlight')" />
+            </div>
 
-            <ScoreCard
-                :fixture="fixture"
-                :scoreIndex="1"
-                position="right"
-                :highlightedFixtureId="props.highlightedFixtureId"
-                @showModal="emit('showModal')"
-                @highlight="emit('highlight')" />
+            <div class="col-6 p-0" :class="props.vertical && 'col-12 mt-2'">
+                <ScoreCard
+                    :fixture="fixture"
+                    :scoreIndex="1"
+                    :position="props.vertical ? 'left' : 'right'"
+                    :highlightedFixtureId="props.highlightedFixtureId"
+                    @showModal="emit('showModal')"
+                    @highlight="emit('highlight')" />
+            </div>
         </div>
 
         <div v-if="props.showComment && fixture.comment">

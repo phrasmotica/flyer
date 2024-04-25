@@ -39,7 +39,7 @@ export const useFixtureList = (p: Phase | null) => {
                 return fixture.parentFixtures[slot].fixtureId === f.id
             })
 
-            if (parentFixture && parentFixture.scores.every(s => s.playerId)) {
+            if (parentFixture && parentFixture.scores.every(s => s.playerId) && !parentFixture.finishTime) {
                 return parentFixture.scores.map(s => s.playerId)
             }
         }

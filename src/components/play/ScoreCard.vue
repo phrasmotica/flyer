@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n"
 import ScoreCell from "./ScoreCell.vue"
 
 import { useFixture } from "@/composables/useFixture"
+import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePlayers } from "@/composables/usePlayers"
 import { useRounds } from "@/composables/useRounds"
@@ -33,6 +34,10 @@ const flyerStore = useFlyerStore()
 const {
     currentPhase,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    getPossiblePlayers,
+} = useFixtureList(currentPhase.value)
 
 const {
     getPlayerName,
@@ -110,6 +115,21 @@ const playerNameClass = computed(() => {
     return c.trim()
 })
 
+const getPlayerDescription = (fixture: Fixture, slot: number) => {
+    const score = fixture.scores[slot]
+
+    if (score.isBye) {
+        return t('player.byeIndicator')
+    }
+
+    const ids = getPossiblePlayers(fixture, slot)
+    if (ids.length > 0) {
+        return ids.map(getPlayerName).join("/")
+    }
+
+    return t('player.unknownIndicator')
+}
+
 const handleClick = () => {
     if (!isWalkover.value) {
         emit("showModal")
@@ -118,7 +138,8 @@ const handleClick = () => {
 </script>
 
 <template>
-    <div class="flex align-items-center justify-content-between col-6 p-0"
+    <div v-if="fixture"
+        class="flex align-items-center justify-content-between"
         :class="[directionClass, paddingClass(1)]">
         <div
             class="p-1 border-round-md flex-1"
@@ -129,7 +150,7 @@ const handleClick = () => {
             </span>
 
             <span v-else-if="score.playerId" :class="playerNameClass">
-                {{ getPlayerName(score.playerId) || t('player.unknownIndicator') }}
+                {{ getPlayerDescription(fixture, props.scoreIndex) }}
             </span>
 
             <span v-else-if="parentFixture?.fixtureId || isRandomDraw">
@@ -147,7 +168,7 @@ const handleClick = () => {
             @click="handleClick" />
 
         <ScoreCell
-            :fixture="fixture!"
+            :fixture="fixture"
             :score="score.score"
             :runouts="score.runouts"
             :isWinner="winner === score.playerId"
