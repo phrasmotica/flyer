@@ -6,7 +6,6 @@ import { useI18n } from "vue-i18n"
 import ResultsMessages from "../results/ResultsMessages.vue"
 import ResultsTable from "../results/ResultsTable.vue"
 import FixtureList from "./FixtureList.vue"
-import KnockoutBracket from "./KnockoutBracket.vue"
 import PhaseEventLogSection from "./PhaseEventLogSection.vue"
 import PhaseInfoSection from "./PhaseInfoSection.vue"
 import TablesSummary from "./TablesSummary.vue"
@@ -17,6 +16,7 @@ import { useQueryParams } from "@/composables/useQueryParams"
 import type { Fixture } from "@/data/Fixture"
 import { PlayViewSection } from "@/data/UiSettings"
 
+import { useScreenSizes } from "@/composables/useScreenSizes"
 import { usePhaseSpecification } from "@/composables/useSpecification"
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
@@ -35,6 +35,7 @@ const uiStore = useUiStore()
 
 const emit = defineEmits<{
     selectFixture: [fixture: Fixture]
+    viewBracket: []
 }>()
 
 const {
@@ -48,6 +49,10 @@ const {
 const {
     isHistoric,
 } = useQueryParams()
+
+const {
+    isLargeScreen,
+} = useScreenSizes()
 
 const defaultSections = [
     {
@@ -141,23 +146,25 @@ const showSection = (section: PlayViewSection) => {
         </div>
 
         <div v-if="showCurrentSection" :class="props.overflow && 'overflow'">
-            <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
-                @showFixtureModal="f => emit('selectFixture', f)" />
+            <div v-if="showSection(PlayViewSection.Fixtures)">
+                <div v-if="isLargeScreen && isKnockout"
+                    class="p-fluid">
+                    <Button
+                        :label="t('bracket.viewBracket')"
+                        severity="info"
+                        @click="() => emit('viewBracket')" />
+                </div>
+
+                <FixtureList @showFixtureModal="f => emit('selectFixture', f)" />
+            </div>
 
             <div v-if="showSection(PlayViewSection.Standings)">
-                <div v-if="isKnockout">
-                    <!-- HIGH: put this in a modal, activated by a button above
-                    the fixture list -->
-                    <KnockoutBracket />
-                </div>
-                <div v-else>
-                    <ResultsTable
-                        isInProgress
-                        :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
+                <ResultsTable
+                    isInProgress
+                    :isPinned="uiStore.pinnedSection === PlayViewSection.Standings" />
 
-                    <ResultsMessages v-if="uiStore.pinnedSection !== PlayViewSection.Standings"
-                        isInProgress />
-                </div>
+                <ResultsMessages v-if="uiStore.pinnedSection !== PlayViewSection.Standings"
+                    isInProgress />
             </div>
 
             <TablesSummary v-if="showSection(PlayViewSection.Tables)"

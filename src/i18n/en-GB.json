@@ -18,6 +18,10 @@
         "confirm": "Confirm",
         "create": "Create"
     },
+    "bracket": {
+        "viewBracket": "View bracket",
+        "knockoutBracket": "Knockout bracket"
+    },
     "fixture": {
         "unknownStatus": "???",
         "waitingForRoundGenerationStatus": "Waiting for round to be generated",

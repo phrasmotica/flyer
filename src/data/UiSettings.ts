@@ -21,7 +21,6 @@ export enum FlyerFormSection {
     Prizes,
 }
 
-// HIGH: add a value here for "bracket"
 export enum PlayViewSection {
     Fixtures,
     Standings,

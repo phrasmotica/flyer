@@ -21,7 +21,6 @@ const {
 } = useFlyer(flyerStore.flyer)
 
 const {
-    fixtures,
     getPossiblePlayers,
 } = useFixtureList(currentPhase.value)
 
