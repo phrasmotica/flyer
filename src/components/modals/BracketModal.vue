@@ -13,11 +13,17 @@ const visible = defineModel<boolean>("visible", {
 <template>
     <Dialog
         modal
-        class="mx-4"
+        class="bracket-modal mx-4"
         v-model:visible="visible"
         :header="t('bracket.knockoutBracket')">
-        <div>
+        <div class="overflow-x-auto">
             <KnockoutBracket />
         </div>
     </Dialog>
 </template>
+
+<style>
+.bracket-modal {
+    max-width: 90vw;
+}
+</style>
