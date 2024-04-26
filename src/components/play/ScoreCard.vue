@@ -76,6 +76,7 @@ const isHighlighted = computed(() => {
 const parentFixture = computed(() => fixture.value!.parentFixtures.at(props.scoreIndex))
 
 const playerCellClass = computed(() => [
+    'player-cell',
     isHighlighted.value && parentFixture.value?.takeLoser && 'loser',
     isHighlighted.value && 'highlight text-white',
     !props.static && 'cursor-pointer',
@@ -148,10 +149,10 @@ const handleClick = () => {
         class="flex align-items-center justify-content-between"
         :class="[directionClass, paddingClass(1)]">
         <div
-            class="p-1 border-round-md flex-1"
+            class="p-1 border-round-md flex-1 text-gray-400"
             :class="[playerCellClass, textAlignClass, marginClass(1)]"
             @click="() => emit('highlight')">
-            <span v-if="score.isBye" class="text-gray-400">
+            <span v-if="score.isBye">
                 <em>{{ t('player.byeIndicator') }}</em>
             </span>
 
@@ -178,3 +179,11 @@ const handleClick = () => {
             @clicked="handleClick" />
     </div>
 </template>
+
+<style scoped>
+.player-cell {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+</style>

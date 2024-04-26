@@ -20,12 +20,14 @@ const {
 <template>
     <OrganizationChart :value="bracketData">
         <template #default="{ node }">
-            <FixtureCard
-                vertical
-                static
-                :fixture="node.data"
-                highlightedFixtureId=""
-                :showComment="false" />
+            <div style="width: 12vw;">
+                <FixtureCard
+                    vertical
+                    static
+                    :fixture="node.data"
+                    highlightedFixtureId=""
+                    :showComment="false" />
+            </div>
         </template>
     </OrganizationChart>
 </template>
