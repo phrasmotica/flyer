@@ -34,7 +34,6 @@ import TabMenu from 'primevue/tabmenu'
 import Textarea from 'primevue/textarea'
 import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
-import VueDragscroll from "vue-dragscroll"
 
 import App from './App.vue'
 import router from './router'
@@ -76,7 +75,6 @@ app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
-app.use(VueDragscroll)
 
 app.component("Badge", Badge)
 app.component("Button", Button)
