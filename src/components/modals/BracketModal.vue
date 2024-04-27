@@ -22,6 +22,7 @@ const {
     isMaxZoom,
     zoomIn,
     zoomOut,
+    resetZoom,
     // BUG: zoom levels less than 1 do not play nicely, due to the
     // contain: 'outside' option on line 52. Try to find a workaround...
 } = useZoomLevel([1, 1.25, 1.5, 1.75, 2], 1)
@@ -92,9 +93,11 @@ const createPanzoom = () => {
                     :disabled="isMinZoom"
                     @click="() => zoomOut()" />
 
-                <div class="flex align-items-center justify-content-center border-1 border-round-md w-5rem font-bold text-xl">
-                    {{ currentPercentage }}&percnt;
-                </div>
+                <Button
+                    class="w-5rem text-xl p-0"
+                    :label="currentPercentage + '%'"
+                    severity="secondary"
+                    @click="() => resetZoom()" />
 
                 <Button
                     class="w-5rem"

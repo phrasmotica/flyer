@@ -6,6 +6,7 @@ export const useZoomLevel = (zooms: number[], initialValue: number) => {
         state: currentLevel,
         next: zoomIn,
         prev: zoomOut,
+        go,
     } = useCycleList(zooms, { initialValue })
 
     const currentPercentage = computed(() => 100 * currentLevel.value)
@@ -16,6 +17,8 @@ export const useZoomLevel = (zooms: number[], initialValue: number) => {
     const isMinZoom = computed(() => currentLevel.value === minZoom.value)
     const isMaxZoom = computed(() => currentLevel.value === maxZoom.value)
 
+    const resetZoom = () => go(zooms.indexOf(initialValue))
+
     return {
         currentLevel,
         currentPercentage,
@@ -25,5 +28,6 @@ export const useZoomLevel = (zooms: number[], initialValue: number) => {
         isMaxZoom,
         zoomIn,
         zoomOut,
+        resetZoom,
     }
 }
