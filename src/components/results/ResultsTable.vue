@@ -72,7 +72,7 @@ const showTieBreakerIndex = (playerId: string) => {
 const rowClass = (data: TableData) => [
     {
         'bg-primary': isFinished.value && !data.incomplete && data.rank === 1,
-        'incomplete-row': isFinished.value && data.incomplete,
+        'incomplete-row': isFinished.value && !isWinnerStaysOn.value && data.incomplete,
         'tie-break-row': showTieBreakerIndex(data.playerId),
         'tie-break-unresolved-row': inseparablePlayers.value.includes(data.playerId),
     },
