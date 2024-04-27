@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
 import WinnerWinnings from "./WinnerWinnings.vue"
 import WinningsList from "./WinningsList.vue"
 
 import { useFlyer } from "@/composables/useFlyer"
+import { usePlayers } from "@/composables/usePlayers"
 
 import { useFlyerStore } from "@/stores/flyer"
 
@@ -13,15 +15,23 @@ const { t } = useI18n()
 const flyerStore = useFlyerStore()
 
 const {
+    mainPhase,
+    overallStandings,
     overallMoneyRecipients,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    getPlayer,
+} = usePlayers(mainPhase.value)
+
+const winner = computed(() => getPlayer(overallStandings.value[0].playerId))
 </script>
 
 <template>
     <div>
-        <div v-if="overallMoneyRecipients.length > 0" class="m-0 text-center text-xl">
+        <div class="m-0 text-center text-xl">
             <WinnerWinnings
-                :winner="overallMoneyRecipients[0].player"
+                :winner="winner"
                 :winnings="overallMoneyRecipients[0]" />
         </div>
 

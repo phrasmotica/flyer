@@ -89,6 +89,10 @@ export const usePlayOffs = (f: Flyer | null) => {
         const recipients: Winnings[] = []
         const remainingPrizeMonies = [...prizeMonies.value]
 
+        if (remainingPrizeMonies.length <= 0) {
+            return recipients
+        }
+
         let c = 0
 
         for (const s of finalStandings) {

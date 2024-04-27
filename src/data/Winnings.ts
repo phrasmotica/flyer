@@ -2,6 +2,6 @@ import type { Player } from "./Player"
 
 export interface Winnings {
     player: Player
-    amount: number
+    amount: number | null
     colour: string
 }

@@ -201,7 +201,6 @@ const save = () => {
                     <ResultsMessages />
 
                     <div v-if="isFinished" class="mt-1">
-                        <!-- BUG: this doesn't show up if there's no entry fee -->
                         <WinningsSummary />
                     </div>
                 </div>
