@@ -7,6 +7,7 @@ import { useRouter } from "vue-router"
 
 import PageTemplate from "@/components/PageTemplate.vue"
 import AbandonFlyerModal from "@/components/modals/AbandonFlyerModal.vue"
+import BracketModal from "@/components/modals/BracketModal.vue"
 import FinishPhaseModal from "@/components/modals/FinishPhaseModal.vue"
 import FixtureModal from "@/components/modals/FixtureModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
@@ -110,6 +111,7 @@ watch(unacknowledgedSwap, () => {
 const [showFixtureModal, setShowFixtureModal] = useToggle()
 const [showFinishModal, setShowFinishModal] = useToggle()
 const [showAbandonModal, setShowAbandonModal] = useToggle()
+const [showBracketModal, setShowBracketModal] = useToggle()
 
 const selectedFixture = ref<Fixture>()
 
@@ -189,6 +191,10 @@ const selectForRecording = (f: Fixture) => {
     setShowFixtureModal(true)
 }
 
+const viewBracket = () => {
+    setShowBracketModal(true)
+}
+
 const hideFixtureModal = () => {
     setShowFixtureModal(false)
 }
@@ -209,7 +215,8 @@ const hideFixtureModal = () => {
                 :sections="sections"
                 :overflow="!isSmallScreen"
                 :pinnable="!isSmallScreen"
-                @selectFixture="selectForRecording" />
+                @selectFixture="selectForRecording"
+                @viewBracket="viewBracket" />
         </template>
 
         <template v-if="!isSmallScreen" #sidebar>
@@ -247,6 +254,9 @@ const hideFixtureModal = () => {
                 v-model:visible="showAbandonModal"
                 @confirm="abandon"
                 @hide="() => setShowAbandonModal(false)" />
+
+            <BracketModal
+                v-model:visible="showBracketModal" />
         </template>
 
         <template v-if="isSmallScreen" #buttons>

@@ -1,20 +1,24 @@
 <script setup lang="ts">
+import type { MenuItem } from "primevue/menuitem"
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
-import type { MenuItem } from "primevue/menuitem"
 
+import ResultsMessages from "../results/ResultsMessages.vue"
+import ResultsTable from "../results/ResultsTable.vue"
 import FixtureList from "./FixtureList.vue"
 import PhaseEventLogSection from "./PhaseEventLogSection.vue"
 import PhaseInfoSection from "./PhaseInfoSection.vue"
-import ResultsMessages from "../results/ResultsMessages.vue"
-import ResultsTable from "../results/ResultsTable.vue"
 import TablesSummary from "./TablesSummary.vue"
 
+import { useFlyer } from "@/composables/useFlyer"
 import { useQueryParams } from "@/composables/useQueryParams"
 
 import type { Fixture } from "@/data/Fixture"
 import { PlayViewSection } from "@/data/UiSettings"
 
+import { useScreenSizes } from "@/composables/useScreenSizes"
+import { usePhaseSpecification } from "@/composables/useSpecification"
+import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
 const { t } = useI18n()
@@ -26,15 +30,29 @@ const props = defineProps<{
     pinnedOnly?: boolean
 }>()
 
+const flyerStore = useFlyerStore()
 const uiStore = useUiStore()
 
 const emit = defineEmits<{
     selectFixture: [fixture: Fixture]
+    viewBracket: []
 }>()
+
+const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
+
+const {
+    isKnockout,
+} = usePhaseSpecification(currentPhase.value)
 
 const {
     isHistoric,
 } = useQueryParams()
+
+const {
+    isLargeScreen,
+} = useScreenSizes()
 
 const defaultSections = [
     {
@@ -128,8 +146,17 @@ const showSection = (section: PlayViewSection) => {
         </div>
 
         <div v-if="showCurrentSection" :class="props.overflow && 'overflow'">
-            <FixtureList v-if="showSection(PlayViewSection.Fixtures)"
-                @showFixtureModal="f => emit('selectFixture', f)" />
+            <div v-if="showSection(PlayViewSection.Fixtures)">
+                <div v-if="isLargeScreen && isKnockout"
+                    class="p-fluid">
+                    <Button
+                        :label="t('bracket.viewBracket')"
+                        severity="info"
+                        @click="() => emit('viewBracket')" />
+                </div>
+
+                <FixtureList @showFixtureModal="f => emit('selectFixture', f)" />
+            </div>
 
             <div v-if="showSection(PlayViewSection.Standings)">
                 <ResultsTable

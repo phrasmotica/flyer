@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n"
 import ScoreCell from "./ScoreCell.vue"
 
 import { useFixture } from "@/composables/useFixture"
+import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
 import { usePlayers } from "@/composables/usePlayers"
 import { useRounds } from "@/composables/useRounds"
@@ -21,6 +22,7 @@ const props = defineProps<{
     scoreIndex: number
     position: "left" | "right"
     highlightedFixtureId: string
+    static?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -33,6 +35,10 @@ const flyerStore = useFlyerStore()
 const {
     currentPhase,
 } = useFlyer(flyerStore.flyer)
+
+const {
+    getPossiblePlayers,
+} = useFixtureList(currentPhase.value)
 
 const {
     getPlayerName,
@@ -70,9 +76,10 @@ const isHighlighted = computed(() => {
 const parentFixture = computed(() => fixture.value!.parentFixtures.at(props.scoreIndex))
 
 const playerCellClass = computed(() => [
+    'player-cell',
     isHighlighted.value && parentFixture.value?.takeLoser && 'loser',
     isHighlighted.value && 'highlight text-white',
-    'cursor-pointer',
+    !props.static && 'cursor-pointer',
 ])
 
 const textAlignClass = computed(() => `text-${props.position}`)
@@ -94,8 +101,13 @@ const paddingClass = (size: 1 | 2) => {
 const playerNameClass = computed(() => {
     let c = ""
 
-    if (fixture.value?.breakerId === score.value.playerId) {
-        c += " underline"
+    if (score.value.playerId) {
+        if (fixture.value?.breakerId === score.value.playerId) {
+            c += " underline"
+        }
+    }
+    else {
+        c += 'text-gray-400 font-italic'
     }
 
     if (winner.value) {
@@ -110,6 +122,21 @@ const playerNameClass = computed(() => {
     return c.trim()
 })
 
+const getPlayerDescription = (fixture: Fixture, slot: number) => {
+    const score = fixture.scores[slot]
+
+    if (score.isBye) {
+        return t('player.byeIndicator')
+    }
+
+    const ids = getPossiblePlayers(fixture, slot)
+    if (ids.length > 0) {
+        return ids.map(getPlayerName).join("/")
+    }
+
+    return t('player.pendingIndicator')
+}
+
 const handleClick = () => {
     if (!isWalkover.value) {
         emit("showModal")
@@ -118,36 +145,32 @@ const handleClick = () => {
 </script>
 
 <template>
-    <div class="flex align-items-center justify-content-between col-6 p-0"
+    <div v-if="fixture"
+        class="flex align-items-center justify-content-between"
         :class="[directionClass, paddingClass(1)]">
         <div
-            class="p-1 border-round-md flex-1"
+            class="p-1 border-round-md flex-1 text-gray-400"
             :class="[playerCellClass, textAlignClass, marginClass(1)]"
             @click="() => emit('highlight')">
-            <span v-if="score.isBye" class="text-gray-400">
+            <span v-if="score.isBye">
                 <em>{{ t('player.byeIndicator') }}</em>
             </span>
 
-            <span v-else-if="score.playerId" :class="playerNameClass">
-                {{ getPlayerName(score.playerId) || t('player.unknownIndicator') }}
-            </span>
-
-            <span v-else-if="parentFixture?.fixtureId || isRandomDraw">
-                <em class="text-gray-400">
-                    {{ t('player.pendingIndicator') }}
-                </em>
+            <span v-else :class="playerNameClass">
+                {{ getPlayerDescription(fixture, props.scoreIndex) }}
             </span>
         </div>
 
         <Badge v-if="score.runouts > 0"
-            class="p-badge-sm cursor-pointer"
-            :class="marginClass(1)"
+            class="p-badge-sm"
+            :class="[marginClass(1), !props.static && 'cursor-pointer']"
             :value="isWinnerStaysOn ? t('score.runout') : score.runouts"
             severity="contrast"
             @click="handleClick" />
 
         <ScoreCell
-            :fixture="fixture!"
+            :static="props.static"
+            :fixture="fixture"
             :score="score.score"
             :runouts="score.runouts"
             :isWinner="winner === score.playerId"
@@ -156,3 +179,11 @@ const handleClick = () => {
             @clicked="handleClick" />
     </div>
 </template>
+
+<style scoped>
+.player-cell {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+</style>
