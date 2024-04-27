@@ -1,21 +1,21 @@
 <script setup lang="ts">
+import { useTitle, useToggle } from "@vueuse/core"
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
-import { useTitle, useToggle } from "@vueuse/core"
 
+import PageTemplate from "@/components/PageTemplate.vue"
 import CreatePlayOffModal from "@/components/modals/CreatePlayOffModal.vue"
 import FinishFlyerModal from "@/components/modals/FinishFlyerModal.vue"
+import NewFlyerModal from "@/components/modals/NewFlyerModal.vue"
+import SkipPlayOffModal from "@/components/modals/SkipPlayOffModal.vue"
+import StartPlayOffModal from "@/components/modals/StartPlayOffModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
 import LightsCalculator from "@/components/results/LightsCalculator.vue"
-import NewFlyerModal from "@/components/modals/NewFlyerModal.vue"
-import PageTemplate from "@/components/PageTemplate.vue"
 import Podium from "@/components/results/Podium.vue"
 import ResultsButtons from "@/components/results/ResultsButtons.vue"
 import ResultsMessages from "@/components/results/ResultsMessages.vue"
 import ResultsTable from "@/components/results/ResultsTable.vue"
-import SkipPlayOffModal from "@/components/modals/SkipPlayOffModal.vue"
-import StartPlayOffModal from "@/components/modals/StartPlayOffModal.vue"
 import WinningsList from "@/components/results/WinningsList.vue"
 import WinningsSummary from "@/components/results/WinningsSummary.vue"
 
@@ -216,6 +216,7 @@ const save = () => {
                     <ResultsMessages />
 
                     <div v-if="isFinished" class="mt-1">
+                        <!-- BUG: this doesn't show up if there's no entry fee -->
                         <WinningsSummary />
                     </div>
                 </div>

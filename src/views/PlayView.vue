@@ -129,8 +129,9 @@ const sections = computed(() => {
         PlayViewSection.EventLog,
     ]
 
-    if (isKnockout.value) {
-        // BUG: should always show standings if the main phase was round-robin or winner stays on
+    if (isKnockout.value && currentPhase.value?.id === mainPhase.value?.id) {
+        // we don't really care about the phase IDs both being undefined
+        // on the line above.
         relevantSections.splice(1, 1)
     }
 
