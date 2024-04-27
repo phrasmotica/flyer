@@ -9,7 +9,6 @@ import CreatePlayOffModal from "@/components/modals/CreatePlayOffModal.vue"
 import FinishFlyerModal from "@/components/modals/FinishFlyerModal.vue"
 import NewFlyerModal from "@/components/modals/NewFlyerModal.vue"
 import SkipPlayOffModal from "@/components/modals/SkipPlayOffModal.vue"
-import StartPlayOffModal from "@/components/modals/StartPlayOffModal.vue"
 import FlyerClock from "@/components/play/FlyerClock.vue"
 import LightsCalculator from "@/components/results/LightsCalculator.vue"
 import Podium from "@/components/results/Podium.vue"
@@ -86,7 +85,6 @@ const {
 } = useScreenSizes()
 
 const [showGoToSetupModal, setShowGoToSetupModal] = useToggle()
-const [showStartPlayOffModal, setShowStartPlayOffModal] = useToggle()
 const [showSkipPlayOffModal, setShowSkipPlayOffModal] = useToggle()
 const [showCreatePlayOffModal, setShowCreatePlayOffModal] = useToggle()
 const [showFinishFlyerModal, setShowFinishFlyerModal] = useToggle()
@@ -115,19 +113,6 @@ const goToSetup = () => {
 const alreadySaved = computed(() => {
     return flyerHistoryStore.pastFlyers.some(f => f.id === flyer.value?.id)
 })
-
-const startPlayOff = () => {
-    if (!nextUnresolvedTieBreaker.value || !mainPhase.value) {
-        console.debug("No play-offs remaining!")
-        return
-    }
-
-    flyerStore.addPlayOff(mainPhase.value, nextUnresolvedTieBreaker.value, 1)
-
-    setShowStartPlayOffModal(false)
-
-    routing.toPlay()
-}
 
 const skipPlayOff = (players: Player[]) => {
     if (!nextUnresolvedTieBreaker.value || !mainPhase.value) {
@@ -242,7 +227,6 @@ const save = () => {
                 sidebar
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
-                @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
                 @confirmCreatePlayOff="() => setShowCreatePlayOffModal(true)"
                 @confirmFinishFlyer="() => setShowFinishFlyerModal(true)"
@@ -256,11 +240,6 @@ const save = () => {
                 v-model:visible="showGoToSetupModal"
                 @confirm="goToSetup"
                 @hide="() => setShowGoToSetupModal(false)" />
-
-            <StartPlayOffModal
-                v-model:visible="showStartPlayOffModal"
-                @confirm="startPlayOff"
-                @hide="() => setShowStartPlayOffModal(false)" />
 
             <SkipPlayOffModal
                 v-model:visible="showSkipPlayOffModal"
@@ -282,7 +261,6 @@ const save = () => {
             <ResultsButtons
                 :imageSaved="imageSaved"
                 @confirmGoToSetup="confirmGoToSetup"
-                @confirmStartPlayOff="() => setShowStartPlayOffModal(true)"
                 @confirmSkipPlayOff="() => setShowSkipPlayOffModal(true)"
                 @confirmCreatePlayOff="() => setShowCreatePlayOffModal(true)"
                 @confirmFinishFlyer="() => setShowFinishFlyerModal(true)"

@@ -21,7 +21,6 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    confirmStartPlayOff: []
     confirmSkipPlayOff: []
     confirmCreatePlayOff: []
     confirmFinishFlyer: []
