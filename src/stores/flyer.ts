@@ -16,7 +16,7 @@ import type { Player } from "@/data/Player"
 import type { PlayerRecord } from "@/data/PlayerRecord"
 import type { Round } from "@/data/Round"
 import { RoundRobinScheduler } from "@/data/RoundRobinScheduler"
-import { createPlayOffSettings, Format } from "@/data/Specification"
+import { Format, createPlayOffSettings } from "@/data/Specification"
 import type { Table } from "@/data/Table"
 import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
 import { WinnerStaysOnScheduler } from "@/data/WinnerStaysOnScheduler"
@@ -246,7 +246,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         fixtureId: string,
         scores: Score[],
         finishFixture: boolean,
-        currentRanking: PlayerRecord[],
         addEvent = true,
     ) => {
         for (const r of phase.rounds) {
@@ -262,9 +261,7 @@ export const useFlyerStore = defineStore("flyer", () => {
                     }
 
                     if (winsRequiredReached(phase)) {
-                        cancelRemaining()
-                        finishPhase(phase, currentRanking)
-                        return
+                        return true
                     }
 
                     const winnerId = getWinner(r.fixtures[idx])
@@ -280,6 +277,8 @@ export const useFlyerStore = defineStore("flyer", () => {
                 }
             }
         }
+
+        return false
     }
 
     const addTable = (name: string, costPerHour: number) => {
@@ -353,6 +352,15 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
 
         return false
+    }
+
+    const finishEarly = (phase: Phase, ranking: PlayerRecord[]) => {
+        if (phase.settings.format !== Format.WinnerStaysOn) {
+            return
+        }
+
+        cancelRemaining()
+        finish(ranking)
     }
 
     const cancelRemaining = () => {
@@ -453,9 +461,14 @@ export const useFlyerStore = defineStore("flyer", () => {
         startFixture(phase, fixture.id, false)
 
         updateComment(phase, fixture.id, "AUTO-COMPLETED")
-        updateScores(phase, fixture.id, newScores, true, currentRanking, false)
+
+        const isFinishedEarly = updateScores(phase, fixture.id, newScores, true, false)
 
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
+
+        if (isFinishedEarly) {
+            finishEarly(phase, currentRanking)
+        }
     }
 
     const autoCompletePhase = (
@@ -518,6 +531,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateScores,
         addTable,
         generateRound,
+        finishEarly,
         finishPhase,
         cancelRemaining,
         addPlayOff,

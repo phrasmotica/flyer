@@ -120,12 +120,11 @@ const updateScores = (finish: boolean) => {
         isBye: false,
     }))
 
-    flyerStore.updateScores(
+    const isFinishedEarly = flyerStore.updateScores(
         currentPhase.value,
         fixture.value.id,
         newScores,
-        finish,
-        standings.value)
+        finish)
 
     toast.add({
         severity: 'success',
@@ -134,6 +133,10 @@ const updateScores = (finish: boolean) => {
         life: 3000,
         contentStyleClass: isSmallScreen.value ? 'flyer-toast-sm' : '',
     })
+
+    if (isFinishedEarly) {
+        flyerStore.finishEarly(currentPhase.value, standings.value)
+    }
 
     hide()
 }
