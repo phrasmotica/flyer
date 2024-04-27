@@ -58,7 +58,6 @@ const {
 
 const {
     isWinnerStaysOn,
-    isRandomDraw,
 } = usePhaseSpecification(currentPhase.value)
 
 watch(props, () => {
@@ -102,12 +101,14 @@ const playerNameClass = computed(() => {
     let c = ""
 
     if (score.value.playerId) {
+        c += 'text-color'
+
         if (fixture.value?.breakerId === score.value.playerId) {
             c += " underline"
         }
     }
     else {
-        c += 'text-gray-400 font-italic'
+        c += 'font-italic'
     }
 
     if (winner.value) {
