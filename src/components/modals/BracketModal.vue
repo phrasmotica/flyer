@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
+import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 import KnockoutBracket from "../play/KnockoutBracket.vue"
@@ -14,17 +15,36 @@ const visible = defineModel<boolean>("visible", {
 })
 
 const {
-    cursorStyle,
+    cursorClass,
     setGrabbing,
 } = useCursorGrab()
 
 const {
+    currentLevel,
     currentPercentage,
     zoomIn,
     zoomOut,
 } = useZoomLevel()
 
-const zoomClass = computed(() => `zoom-${currentPercentage.value}`)
+watch(currentLevel, () => {
+    panzoom.value?.zoom(currentLevel.value, {
+        animate: true,
+    })
+})
+
+const panzoom = ref<PanzoomObject>()
+
+const createPanzoom = () => {
+    const elem = document.getElementById('bracketDiv')
+    if (!elem) {
+        return
+    }
+
+    panzoom.value = Panzoom(elem, {
+        minScale: 0.25,
+        maxScale: 2,
+    })
+}
 </script>
 
 <template>
@@ -32,8 +52,8 @@ const zoomClass = computed(() => `zoom-${currentPercentage.value}`)
         modal
         class="bracket-modal mx-4"
         v-model:visible="visible"
-        :header="t('bracket.knockoutBracket')">
-
+        :header="t('bracket.knockoutBracket')"
+        @show="createPanzoom">
         <template #header>
             <div class="flex-grow-1 flex gap-2 mr-2">
                 <Button
@@ -52,18 +72,13 @@ const zoomClass = computed(() => `zoom-${currentPercentage.value}`)
             </div>
         </template>
 
-        <!-- BUG: knockout bracket <table> element is cut off weirdly when
-        the zoom is not 100% -->
-        <div v-dragscroll class="overflow-x-auto overflow-y-auto">
-            <div
-                id="bracketDiv"
-                :class="zoomClass"
-                :style="cursorStyle"
-                @mousedown="setGrabbing(true)"
-                @mouseup="setGrabbing(false)"
-                @mouseleave="setGrabbing(false)">
-                <KnockoutBracket />
-            </div>
+        <div
+            id="bracketDiv"
+            :class="cursorClass"
+            @mousedown="setGrabbing(true)"
+            @mouseup="setGrabbing(false)"
+            @mouseleave="setGrabbing(false)">
+            <KnockoutBracket />
         </div>
     </Dialog>
 </template>
@@ -73,35 +88,12 @@ const zoomClass = computed(() => `zoom-${currentPercentage.value}`)
     max-width: 90vw;
 }
 
-#bracketDiv {
-    transform-origin: center center;
+.grab {
+    cursor: grab!important;
 }
 
-#bracketDiv.zoom-25 {
-    transform: scale(0.25);
-}
-
-#bracketDiv.zoom-50 {
-    transform: scale(0.5);
-}
-
-#bracketDiv.zoom-75 {
-    transform: scale(0.75);
-}
-
-#bracketDiv.zoom-125 {
-    transform: scale(1.25);
-}
-
-#bracketDiv.zoom-150 {
-    transform: scale(1.5);
-}
-
-#bracketDiv.zoom-175 {
-    transform: scale(1.75);
-}
-
-#bracketDiv.zoom-200 {
-    transform: scale(2);
+/* BUG: this is not applying when we put the mouse down on the panzoom child */
+.grabbing {
+    cursor: grabbing!important;
 }
 </style>
