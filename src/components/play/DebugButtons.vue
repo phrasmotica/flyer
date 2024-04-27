@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, watch } from "vue"
 
 import { useFixtureList } from "@/composables/useFixtureList"
 import { useFlyer } from "@/composables/useFlyer"
@@ -11,6 +11,8 @@ import { useTables } from "@/composables/useTables"
 
 import { FixtureStatus } from "@/data/FixtureStatus"
 
+import { useFixture } from "@/composables/useFixture"
+import { useRounds } from "@/composables/useRounds"
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
@@ -28,18 +30,25 @@ const {
 const phaseEvents = usePhaseEvents(currentPhase.value)
 
 const {
-    phase,
     freeTables,
     getFixtureStatus,
 } = usePhase(currentPhase.value)
 
 const {
-    remainingCount,
-    nextFixture,
-} = useFixtureList(phase.value)
+    getRound,
+} = useRounds(currentPhase.value)
 
 const {
+    remainingCount,
+    nextFixture,
+} = useFixtureList(currentPhase.value)
+
+const {
+    round,
     raceTo,
+} = useFixture("debug", nextFixture.value, getRound(nextFixture.value?.id || ""), currentPhase.value)
+
+const {
     fixturesCanBeDrawn,
 } = usePhaseSpecification(currentPhase.value)
 
@@ -50,6 +59,10 @@ const {
 const {
     tables,
 } = useTables(currentPhase.value)
+
+watch(nextFixture, () => {
+    round.value = getRound(nextFixture.value?.id || "")
+})
 
 const isFixtures = computed(() => uiStore.isFixtures)
 
@@ -111,6 +124,7 @@ const autoCompleteRemaining = () => {
         return
     }
 
+    // BUG: this could be different for each fixture
     const fixtureRaceTo = raceTo.value || 1
 
     flyerStore.autoCompletePhase(

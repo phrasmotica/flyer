@@ -1,6 +1,6 @@
-import { ref, computed, watch } from "vue"
 import { useArrayUnique } from "@vueuse/core"
 import { differenceInMilliseconds } from "date-fns"
+import { computed, ref, watch } from "vue"
 
 import { useArray } from "./useArray"
 import { useClock } from "./useClock"
@@ -16,6 +16,7 @@ import type { Round } from "@/data/Round"
 // where the argument can currently be undefined (see FixtureModal.vue)
 export const useFixture = (name: string, f: Fixture | undefined, r: Round | undefined, p: Phase | null) => {
     const fixture = ref(f)
+    const round = ref(r)
 
     const {
         clockable,
@@ -25,9 +26,13 @@ export const useFixture = (name: string, f: Fixture | undefined, r: Round | unde
     } = useClock("FixtureClock " + name, fixture.value || null)
 
     const {
-        round,
+        round: roundInternal,
         raceTo,
-    } = useRound(r, p)
+    } = useRound(round.value, p)
+
+    watch(round, () => {
+        roundInternal.value = round.value
+    })
 
     const {
         settings,
