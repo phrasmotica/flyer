@@ -6,6 +6,7 @@ import { usePlayers } from "@/composables/usePlayers"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { usePhaseSpecification } from "@/composables/useSpecification"
 
+import type { PlayerRecord } from "@/data/PlayerRecord"
 import { useFlyerStore } from "@/stores/flyer"
 
 const playerIds = defineModel<string[]>({
@@ -41,11 +42,19 @@ const options = computed(() => {
 
         return {
             ...getPlayer(s.playerId)!,
-            disabled: hasAlreadyPlayedOff(s.playerId),
+            disabled: isUniqueRecord(s) || hasAlreadyPlayedOff(s.playerId),
             record: record.join("-"),
         }
     })
 })
+
+const isUniqueRecord = (s: PlayerRecord) => {
+    return overallStandings.value.filter(x => {
+        return x.wins === s.wins
+            && x.draws === s.draws
+            && x.losses === s.losses
+    }).length === 1
+}
 </script>
 
 <template>
