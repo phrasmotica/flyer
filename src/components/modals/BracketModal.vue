@@ -5,7 +5,6 @@ import { useI18n } from "vue-i18n"
 
 import KnockoutBracket from "../play/KnockoutBracket.vue"
 
-import { useCursorGrab } from "@/composables/useCursorGrab"
 import { useZoomLevel } from "@/composables/useZoomLevel"
 
 const { t } = useI18n()
@@ -15,16 +14,17 @@ const visible = defineModel<boolean>("visible", {
 })
 
 const {
-    cursorClass,
-    setGrabbing,
-} = useCursorGrab()
-
-const {
     currentLevel,
     currentPercentage,
+    minZoom,
+    maxZoom,
+    isMinZoom,
+    isMaxZoom,
     zoomIn,
     zoomOut,
-} = useZoomLevel()
+    // BUG: zoom levels less than 1 do not play nicely, due to the
+    // contain: 'outside' option on line 52. Try to find a workaround...
+} = useZoomLevel([1, 1.25, 1.5, 1.75, 2], 1)
 
 watch(currentLevel, () => {
     panzoom.value?.zoom(currentLevel.value, {
@@ -35,14 +35,22 @@ watch(currentLevel, () => {
 const panzoom = ref<PanzoomObject>()
 
 const createPanzoom = () => {
-    const elem = document.getElementById('bracketDiv')
-    if (!elem) {
+    const orgChartTable = document
+        .getElementById('bracketDiv')
+        ?.getElementsByTagName("table")[0]
+
+    if (!orgChartTable) {
         return
     }
 
-    panzoom.value = Panzoom(elem, {
-        minScale: 0.25,
-        maxScale: 2,
+    // matches empty org chart line cell at the bottom of the bracket
+    orgChartTable.style.paddingTop = "20px"
+
+    panzoom.value = Panzoom(orgChartTable, {
+        minScale: minZoom.value,
+        maxScale: maxZoom.value,
+        contain: 'outside',
+        cursor: 'grab',
     })
 }
 </script>
@@ -59,6 +67,7 @@ const createPanzoom = () => {
                 <Button
                     class="w-5rem"
                     icon="pi pi-search-minus"
+                    :disabled="isMinZoom"
                     @click="() => zoomOut()" />
 
                 <div class="flex align-items-center justify-content-center border-1 border-round-md w-5rem font-bold text-xl">
@@ -68,16 +77,12 @@ const createPanzoom = () => {
                 <Button
                     class="w-5rem"
                     icon="pi pi-search-plus"
+                    :disabled="isMaxZoom"
                     @click="() => zoomIn()" />
             </div>
         </template>
 
-        <div
-            id="bracketDiv"
-            :class="cursorClass"
-            @mousedown="setGrabbing(true)"
-            @mouseup="setGrabbing(false)"
-            @mouseleave="setGrabbing(false)">
+        <div id="bracketDiv">
             <KnockoutBracket />
         </div>
     </Dialog>
