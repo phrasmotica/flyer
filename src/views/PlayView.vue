@@ -170,8 +170,10 @@ const finishPhase = () => {
         throw "No phase to finish!"
     }
 
-    // BUG: this doesn't seem to be setting tie-breakers for a phase after
-    // the main phase
+    // BUG: the last argument should be the tie breakers considering the results
+    // of all phases so far, i.e. main phase + all play-offs so far. Currently
+    // the (current) play-off phase's tie breaker field is being set to an empty
+    // array because it's solely a knockout format
     const success = flyerStore.finishPhase(
         currentPhase.value,
         currentStandings.value,
