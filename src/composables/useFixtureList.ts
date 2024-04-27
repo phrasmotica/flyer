@@ -13,7 +13,7 @@ export const useFixtureList = (p: Phase | null) => {
     const isComplete = computed(() => fixtures.value.every(x => x.startTime && x.finishTime))
     const remainingCount = computed(() => fixtures.value.filter(f => !f.finishTime && !f.cancelledTime).length)
 
-    const nextFixture = computed(() => fixtures.value.find(f => !f.tableId))
+    const nextFixture = computed(() => fixtures.value.find(f => !f.tableId && !f.finishTime))
 
     const getFixtures = (playerId: string) => {
         return fixtures.value.filter(f => f.scores.some(s => s.playerId === playerId))

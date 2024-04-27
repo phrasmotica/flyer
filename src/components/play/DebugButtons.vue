@@ -6,11 +6,13 @@ import { useFlyer } from "@/composables/useFlyer"
 import { usePhase } from "@/composables/usePhase"
 import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { usePhaseSpecification } from "@/composables/useSpecification"
+import { useStandings } from "@/composables/useStandings"
 import { useTables } from "@/composables/useTables"
+
+import { FixtureStatus } from "@/data/FixtureStatus"
 
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
-import { useStandings } from "@/composables/useStandings"
 
 const props = defineProps<{
     hideInstead?: boolean
@@ -28,6 +30,7 @@ const phaseEvents = usePhaseEvents(currentPhase.value)
 const {
     phase,
     freeTables,
+    getFixtureStatus,
 } = usePhase(currentPhase.value)
 
 const {
@@ -58,8 +61,18 @@ const showAutoCompleteButton = computed(() => {
     return remainingCount.value > 0 || !props.hideInstead
 })
 
+const canProgress = computed(() => {
+    const validStatuses = [
+        FixtureStatus.WaitingForAssignment,
+        FixtureStatus.WaitingForBreaker,
+        FixtureStatus.ReadyToStart,
+    ]
+
+    return validStatuses.includes(getFixtureStatus(nextFixture.value))
+})
+
 const autoStart = () => {
-    if (!currentPhase.value || !nextFixture.value || freeTables.value.length <= 0) {
+    if (!currentPhase.value || !nextFixture.value || !canProgress.value) {
         return
     }
 
@@ -74,7 +87,7 @@ const autoStart = () => {
 }
 
 const autoComplete = () => {
-    if (!currentPhase.value || !nextFixture.value) {
+    if (!currentPhase.value || !nextFixture.value || !canProgress.value) {
         return
     }
 
@@ -120,7 +133,7 @@ const autoCompleteRemaining = () => {
             class="mb-2"
             label="Auto-start"
             severity="help"
-            :disabled="!isFixtures || remainingCount <= 0"
+            :disabled="!isFixtures || !canProgress || remainingCount <= 0"
             @click="autoStart" />
 
         <Button
@@ -128,7 +141,7 @@ const autoCompleteRemaining = () => {
             class="mb-2"
             label="Auto-complete"
             severity="help"
-            :disabled="!isFixtures || remainingCount <= 0"
+            :disabled="!isFixtures || !canProgress || remainingCount <= 0"
             @click="autoComplete" />
 
         <Button
@@ -136,7 +149,7 @@ const autoCompleteRemaining = () => {
             class="mb-2"
             label="Auto-complete remaining"
             severity="help"
-            :disabled="!isFixtures || remainingCount <= 0"
+            :disabled="!isFixtures || !canProgress || remainingCount <= 0"
             @click="autoCompleteRemaining" />
     </div>
 </template>
