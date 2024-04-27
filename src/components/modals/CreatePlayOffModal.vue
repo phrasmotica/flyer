@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
-import ConfirmModal from "./ConfirmModal.vue"
 import PlayerSelector from "../results/PlayerSelector.vue"
 import Stepper from "../setup/Stepper.vue"
+import ConfirmModal from "./ConfirmModal.vue"
 
 import { useArray } from "@/composables/useArray"
 import { useFlyer } from "@/composables/useFlyer"
@@ -40,6 +40,22 @@ const {
 } = useArray<string>()
 
 const raceTo = ref(1)
+
+watch(playerIds, () => {
+    if (playerIds.value.length === 1) {
+        // select all the other players with the same record
+        const theirRecord = overallStandings.value.find(s => s.playerId === playerIds.value[0])!
+
+        const otherPlayers = overallStandings.value.filter(s => {
+            // MEDIUM: move this logic into composable, deduplicate in PlayerSelector.vue
+            return s.wins === theirRecord.wins
+                && s.draws === theirRecord.draws
+                && s.losses === theirRecord.losses
+        }).map(s => s.playerId)
+
+        playerIds.value = [...playerIds.value, ...otherPlayers]
+    }
+})
 
 const selectedRecords = computed(() => overallStandings.value.filter(s => {
     return playerIds.value.includes(s.playerId)
