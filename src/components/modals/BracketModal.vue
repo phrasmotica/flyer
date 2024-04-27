@@ -34,6 +34,25 @@ watch(currentLevel, () => {
 
 const panzoom = ref<PanzoomObject>()
 
+const show = () => {
+    fixButtonsWidth()
+
+    createPanzoom()
+}
+
+const fixButtonsWidth = () => {
+    // ensures the zoom buttons are in the actual centre of the modal header
+    const zoomButtons = document.getElementById('zoomButtons')
+    if (!zoomButtons) {
+        return
+    }
+
+    const modalButtons = <HTMLElement>document.getElementsByClassName('p-dialog-header-icons')[0]
+    const newMargin = modalButtons?.offsetWidth || 0
+
+    zoomButtons.style.marginLeft = `${newMargin}px`
+}
+
 const createPanzoom = () => {
     const orgChartTable = document
         .getElementById('bracketDiv')
@@ -58,12 +77,15 @@ const createPanzoom = () => {
 <template>
     <Dialog
         modal
-        class="bracket-modal mx-4"
+        maximizable
+        class="bracket-modal"
         v-model:visible="visible"
         :header="t('bracket.knockoutBracket')"
-        @show="createPanzoom">
+        @show="show">
         <template #header>
-            <div class="flex-grow-1 flex gap-2 mr-2">
+            <div
+                id="zoomButtons"
+                class="flex justify-content-center flex-grow-1 gap-2">
                 <Button
                     class="w-5rem"
                     icon="pi pi-search-minus"
@@ -91,6 +113,10 @@ const createPanzoom = () => {
 <style>
 .bracket-modal {
     max-width: 90vw;
+}
+
+.bracket-modal.p-dialog-maximized {
+    max-width: 100vw;
 }
 
 .grab {
