@@ -98,6 +98,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             fixtureSwaps: [],
             eventLog: createEventLog(settings.specification.name),
             ranking: [],
+            tieBreakers: [],
         }
 
         for (const r of phase.rounds) {
@@ -129,6 +130,7 @@ export const useFlyerStore = defineStore("flyer", () => {
             fixtureSwaps: [],
             eventLog: createEventLog(settings.name),
             ranking: [],
+            tieBreakers: [],
         }
 
         for (const r of newPhase.rounds) {

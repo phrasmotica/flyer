@@ -5,6 +5,7 @@ import type { PlayerRecord } from "./PlayerRecord"
 import type { Round } from "./Round"
 import type { Specification } from "./Specification"
 import type { Table } from "./Table"
+import type { TieBreakerInfo } from "./TieBreakerInfo"
 
 export interface Phase {
     id: string
@@ -19,4 +20,5 @@ export interface Phase {
     fixtureSwaps: FixtureSwap[]
     eventLog: PhaseEvent[]
     ranking: PlayerRecord[]
+    tieBreakers: TieBreakerInfo[]
 }
