@@ -181,8 +181,7 @@ const finishPhase = () => {
         throw "Failed to finish phase!"
     }
 
-    if (isKnockout.value) {
-        // BUG: this should only happen if it's also the main phase
+    if (isKnockout.value && currentPhase.value.id === mainPhase.value?.id) {
         flyerStore.finish(currentStandings.value)
     }
 
