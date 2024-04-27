@@ -2,7 +2,6 @@ import { useArrayFilter, useSorted } from "@vueuse/core"
 import { v4 as uuidv4 } from "uuid"
 import { computed } from "vue"
 
-import { useFixtureList } from "./useFixtureList"
 import { usePhase } from "./usePhase"
 import { usePlayers } from "./usePlayers"
 import { useRankings } from "./useRankings"
@@ -23,27 +22,15 @@ export const useStandings = (p: Phase | null) => {
 
     const {
         isKnockout,
-        isRoundRobin,
     } = usePhaseSpecification(phase.value)
 
     const {
-        isStarted,
-    } = useFixtureList(phase.value)
-
-    const {
         computeStandings,
-        computeTieBreakers,
     } = useRankings()
 
     const standings = computed(() => computeStandings(phase.value, true))
 
-    const tieBreakers = computed(() => {
-        if (!isStarted.value) {
-            return []
-        }
-
-        return computeTieBreakers(phase.value)
-    })
+    const tieBreakers = computed(() => phase.value?.tieBreakers || [])
 
     const orderedTieBreakers = useSorted(tieBreakers, (a, b) => b.forRank - a.forRank)
 

@@ -379,10 +379,11 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
-    const finishPhase = (phase: Phase, ranking: PlayerRecord[]) => {
+    const finishPhase = (phase: Phase, ranking: PlayerRecord[], tieBreakers: TieBreakerInfo[]) => {
         if (!phase.finishTime) {
             phase.finishTime = Date.now()
             phase.ranking = ranking
+            phase.tieBreakers = tieBreakers
 
             addPhaseEvent(phase, `${phase.settings.name} was finished.`)
         }

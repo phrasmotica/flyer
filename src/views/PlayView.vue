@@ -16,8 +16,10 @@ import PlaySections from "@/components/play/PlaySections.vue"
 
 import { useFixtureSwaps } from "@/composables/useFixtureSwaps"
 import { useFlyer } from "@/composables/useFlyer"
+import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { usePhaseTiming } from "@/composables/usePhaseTiming"
 import { useQueryParams } from "@/composables/useQueryParams"
+import { useRankings } from "@/composables/useRankings"
 import { useRound } from "@/composables/useRound"
 import { useRounds } from "@/composables/useRounds"
 import { useRouting } from "@/composables/useRouting"
@@ -28,7 +30,6 @@ import { useStandings } from "@/composables/useStandings"
 import type { Fixture } from "@/data/Fixture"
 import { PlayViewSection } from "@/data/UiSettings"
 
-import { usePhaseEvents } from "@/composables/usePhaseEvents"
 import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
@@ -64,6 +65,10 @@ const {
     currentRound,
     nextRoundToGenerate,
 } = useRounds(currentPhase.value)
+
+const {
+    computeTieBreakers,
+} = useRankings()
 
 const {
     standings: currentStandings,
@@ -125,6 +130,7 @@ const sections = computed(() => {
     ]
 
     if (isKnockout.value) {
+        // BUG: should always show standings if the main phase was round-robin or winner stays on
         relevantSections.splice(1, 1)
     }
 
@@ -164,12 +170,19 @@ const finishPhase = () => {
         throw "No phase to finish!"
     }
 
-    const success = flyerStore.finishPhase(currentPhase.value, currentStandings.value)
+    // BUG: this doesn't seem to be setting tie-breakers for a phase after
+    // the main phase
+    const success = flyerStore.finishPhase(
+        currentPhase.value,
+        currentStandings.value,
+        computeTieBreakers(currentPhase.value))
+
     if (!success) {
         throw "Failed to finish phase!"
     }
 
     if (isKnockout.value) {
+        // BUG: this should only happen if it's also the main phase
         flyerStore.finish(currentStandings.value)
     }
 
