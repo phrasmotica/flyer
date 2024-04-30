@@ -135,7 +135,7 @@ const updateScores = (finish: boolean) => {
     })
 
     if (isFinishedEarly) {
-        flyerStore.finishEarly(currentPhase.value, standings.value)
+        flyerStore.cancelRemaining()
     }
 
     hide()

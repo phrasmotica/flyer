@@ -43,6 +43,7 @@ const {
 
 const {
     isRoundRobin,
+    isWinnerStaysOn,
 } = usePhaseSpecification(mainPhase.value)
 
 const {
@@ -72,7 +73,7 @@ const canCreatePlayOff = computed(() => {
             <DebugButtons v-if="!isHistoric && uiStore.isDebugMode"
                 class="mb-2" />
 
-            <Button v-if="!isHistoric && isRoundRobin"
+            <Button v-if="!isHistoric && (isRoundRobin || isWinnerStaysOn)"
                 class="mb-2"
                 severity="warning"
                 :label="t('results.createPlayOff')"

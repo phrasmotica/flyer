@@ -356,15 +356,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         return false
     }
 
-    const finishEarly = (phase: Phase, ranking: PlayerRecord[]) => {
-        if (phase.settings.format !== Format.WinnerStaysOn) {
-            return
-        }
-
-        cancelRemaining()
-        finish(ranking)
-    }
-
     const cancelRemaining = () => {
         if (!flyer.value) {
             return
@@ -444,7 +435,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         fixture: Fixture,
         tableId: string,
         dummyScore: number,
-        currentRanking: PlayerRecord[],
         allowDraws: boolean,
     ) => {
         console.debug("Auto-completing fixture " + fixture.id)
@@ -470,21 +460,26 @@ export const useFlyerStore = defineStore("flyer", () => {
         addPhaseEvent(phase, `Fixture ${fixture.id} was auto-completed.`, PhaseEventLevel.Internal)
 
         if (isFinishedEarly) {
-            finishEarly(phase, currentRanking)
+            cancelRemaining()
+            return true
         }
+
+        return false
     }
 
     const autoCompletePhase = (
         phase: Phase,
         tableId: string,
         dummyScore: number,
-        currentRanking: PlayerRecord[],
         allowDraws: boolean,
     ) => {
         const fixtures = phase.rounds.flatMap(r => r.fixtures)
 
         for (const f of fixtures.filter(f => !f.startTime)) {
-            autoCompleteFixture(phase, f, tableId, dummyScore, currentRanking, allowDraws)
+            const isFinishedEarly = autoCompleteFixture(phase, f, tableId, dummyScore, allowDraws)
+            if (isFinishedEarly) {
+                break
+            }
         }
 
         addPhaseEvent(phase, `${phase.settings.name} was auto-completed.`, PhaseEventLevel.Internal)
@@ -534,7 +529,6 @@ export const useFlyerStore = defineStore("flyer", () => {
         updateScores,
         addTable,
         generateRound,
-        finishEarly,
         finishPhase,
         cancelRemaining,
         addPlayOff,

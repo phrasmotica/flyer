@@ -113,7 +113,6 @@ const autoComplete = () => {
         nextFixture.value,
         tables.value[0].id,
         fixtureRaceTo,
-        standings.value,
         fixturesCanBeDrawn.value)
 
     flyerStore.addPhaseEvent(currentPhase.value, message)
@@ -131,7 +130,6 @@ const autoCompleteRemaining = () => {
         currentPhase.value,
         tables.value[0].id,
         fixtureRaceTo,
-        standings.value,
         fixturesCanBeDrawn.value)
 
     const message = phaseEvents.phaseAutoCompleted()
