@@ -21,6 +21,7 @@ const {
     settings,
     isKnockout,
     isRoundRobin,
+    isWinnerStaysOn,
 } = useSpecification(settingsStore.settings.specification)
 
 settingsStore.$subscribe(() => {
@@ -50,7 +51,7 @@ settingsStore.$subscribe(() => {
                 </div>
             </div>
 
-            <div v-if="isRoundRobin"
+            <div v-if="isRoundRobin || isWinnerStaysOn"
                 class="col-12 md:col-6 p-0 p-fluid">
                 <div class="md:mr-1">
                     <LabelledDropdown
