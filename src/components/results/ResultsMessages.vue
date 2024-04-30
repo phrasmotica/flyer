@@ -33,9 +33,7 @@ const showIncompleteMessage = computed(() => {
     return incompleteCount.value > 0 && !isWinnerStaysOn.value
 })
 
-const showTieBreakerMessages = computed(() => {
-    return tieBreakers.value.length > 0 && !isWinnerStaysOn.value
-})
+const showTieBreakerMessages = computed(() => tieBreakers.value.length > 0)
 </script>
 
 <template>
