@@ -87,6 +87,8 @@ const canCreate = computed(() => canPlayOff(selectedRecords.value))
                 {{ t('playOff.selectPlayers') }}
             </p>
 
+            <!-- HIGH: if there's money on the line between some players,
+            show some appropriate icon next to their W/D/L records -->
             <PlayerSelector
                 class="overflow-y-auto"
                 style="height: 200px;"
