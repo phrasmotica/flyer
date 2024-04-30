@@ -31,6 +31,8 @@ const fixturesByPhase = computed(() => {
             <p class="m-0">{{ p.name }}</p>
 
             <ul class="m-0">
+                <!-- MEDIUM: compress this into a list of W/L records against
+                each other player, if it's winner stays on -->
                 <li v-for="f in p.fixtures" class="text-sm">
                     <MatchText
                         :phaseId="p.id"
