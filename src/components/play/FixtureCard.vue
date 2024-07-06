@@ -79,6 +79,10 @@ const fixtureCardClass = (fixture: Fixture) => [
         v-if="fixture"
         class="border-round-md border-1"
         :class="fixtureCardClass(fixture)">
+        <div v-if="uiStore.isDebugMode" class="text-center">
+            {{ fixture.id }}
+        </div>
+
         <div v-if="table && !fixture.finishTime" class="text-center">
             <TableBadge :table="table" />
         </div>

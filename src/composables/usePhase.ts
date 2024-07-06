@@ -73,7 +73,9 @@ export const usePhase = (p: Phase | null) => {
         const status = getFixtureStatus(fixture)
 
         const validStatuses = [
-            FixtureStatus.ReadyToStart,
+            // TODO: FixtureStatus.ReadyToStart, but only if this fixture would
+            // be brought forwards in time. Probably needs a check in the place
+            // that's calling this function...
             FixtureStatus.WaitingForAssignment,
         ]
 
