@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useSorted } from "@vueuse/core"
 import { computed, watch } from "vue"
 import { useI18n } from "vue-i18n"
-import { useSorted } from "@vueuse/core"
 
 import { useFixture } from "@/composables/useFixture"
 import { useFlyer } from "@/composables/useFlyer"
@@ -75,18 +75,28 @@ const roundName = computed(() => {
 
     return t('round.unknownIndicator')
 })
+
+const lineClass = computed(() => fixture.value?.isExcluded ? "line-through" : "")
 </script>
 
 <template>
     <span>
-        <span class="font-bold">{{ scoreText }}</span>
+        <span :class="[
+            'font-bold',
+            lineClass,
+        ]">{{ scoreText }}</span>
 
-        <span v-if="!isWalkover">{{ t('podium.opponentFormat', {
+        <span v-if="!isWalkover" :class="lineClass">{{ t('podium.opponentFormat', {
             name: opponentName,
         }) }}</span>
 
-        <span class="font-italic">{{ t('podium.roundFormat', {
+        <span :class="[
+            'font-italic',
+            lineClass,
+        ]">{{ t('podium.roundFormat', {
             name: roundName,
         }) }}</span>
+
+        <span v-if="fixture?.isExcluded" class="font-bold">{{ t('podium.excluded') }}</span>
     </span>
 </template>
