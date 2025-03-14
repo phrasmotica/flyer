@@ -243,6 +243,20 @@ export const useFlyerStore = defineStore("flyer", () => {
         }
     }
 
+    const updateIsExcluded = (p: Phase, fixtureId: string, isExcluded: boolean) => {
+        const phase = flyer.value!.phases.find(x => x.id === p.id)
+        if (!phase) {
+            return
+        }
+
+        for (const r of phase.rounds) {
+            const idx = r.fixtures.findIndex(f => f.id === fixtureId)
+            if (idx >= 0) {
+                r.fixtures[idx].isExcluded = isExcluded
+            }
+        }
+    }
+
     const updateScores = (
         phase: Phase,
         fixtureId: string,
@@ -526,6 +540,7 @@ export const useFlyerStore = defineStore("flyer", () => {
         startFixture,
         addPhaseEvent,
         updateComment,
+        updateIsExcluded,
         updateScores,
         addTable,
         generateRound,

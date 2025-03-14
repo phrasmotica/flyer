@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n"
 
 import AssignBreakerForm from "../play/AssignBreakerForm.vue"
 import AssignTableForm from "../play/AssignTableForm.vue"
+import FixtureExcludeToggle from "../play/FixtureExcludeToggle.vue"
 import FixtureInfo from "../play/FixtureInfo.vue"
 import FixtureScoreForm from "../play/FixtureScoreForm.vue"
 import StartFixtureButton from "../play/StartFixtureButton.vue"
@@ -82,6 +83,14 @@ const getPlayersDescription = (scores: Score[]) => {
     }).join(t("fixture.playerJoiner"))
 }
 
+const setExcluded = (isExcluded: boolean) => {
+    if (!currentPhase.value || !fixture.value) {
+        return
+    }
+
+    flyerStore.updateIsExcluded(currentPhase.value, fixture.value.id, isExcluded)
+}
+
 const header = computed(() => {
     let round = t("round.unknownIndicator")
     let players = getPlayersDescription(emptyScores(2))
@@ -111,6 +120,12 @@ const header = computed(() => {
             <FixtureScoreForm
                 :fixture="fixture"
                 @hide="hide" />
+
+            <div class="mt-2">
+                <FixtureExcludeToggle
+                    :fixture="fixture"
+                    @setExcluded="setExcluded" />
+            </div>
         </div>
 
         <div v-else-if="fixtureStatus === FixtureStatus.WaitingForAssignment">

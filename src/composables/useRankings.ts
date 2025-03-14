@@ -123,7 +123,9 @@ export const useRankings = () => {
             return phase.ranking
         }
 
-        const fixtures = phase.rounds.flatMap(r => r.fixtures)
+        const fixtures = phase.rounds
+            .flatMap(r => r.fixtures)
+            .filter(f => !f.isExcluded)
 
         const records = phase.players.map<PlayerRecord>(p => ({
             playerId: p.id,

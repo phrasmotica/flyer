@@ -8,6 +8,7 @@ export interface Fixture {
     finishTime: number | null
     cancelledTime: number | null
     comment: string
+    isExcluded: boolean
 }
 
 export interface ParentFixture {

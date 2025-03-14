@@ -165,7 +165,8 @@
         "walkover": "W/O",
         "scoreJoiner": "-",
         "opponentFormat": " v {name}",
-        "roundFormat": " ({name})"
+        "roundFormat": " ({name})",
+        "excluded": " EXCLUDED"
     },
     "presets": {
         "presetsExplanation": "Use presets to save the current settings and load them again later.",

@@ -279,6 +279,7 @@ export class KnockoutScheduler implements IScheduler {
             finishTime: null,
             cancelledTime: null,
             comment: "",
+            isExcluded: false,
         }
 
         for (let i = fixture.scores.length; i < playerCount; i++) {

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n"
 
-import type { Winnings } from "@/data/Winnings"
 import type { Player } from "@/data/Player"
+import type { Winnings } from "@/data/Winnings"
 
 const { n, t } = useI18n()
 
@@ -24,7 +24,7 @@ const props = defineProps<{
             {{ t('podium.whoWins') }}
 
             <span class="font-bold" :style="{color: props.winnings.colour,}">
-                {{ n(props.winnings.amount, "currency") }}
+                {{ n(props.winnings.amount || 0, "currency") }}
             </span>
         </p>
     </div>
