@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid"
 
-import type { ParentFixture, Fixture } from "./Fixture"
+import type { Fixture, ParentFixture } from "./Fixture"
 import type { FlyerSettings } from "./FlyerSettings"
 import type { IScheduler } from "./IScheduler"
 import type { Phase } from "./Phase"
@@ -133,6 +133,7 @@ export class WinnerStaysOnScheduler implements IScheduler {
             finishTime: null,
             cancelledTime: null,
             comment: "",
+            isExcluded: false,
         }
 
         round.fixtures.push(newFixture)
