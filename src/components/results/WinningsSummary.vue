@@ -31,7 +31,7 @@ const winner = computed(() => getPlayer(overallStandings.value[0].playerId))
     <div>
         <div class="m-0 text-center text-xl">
             <WinnerWinnings
-                :winner="winner"
+                :winner="winner!"
                 :winnings="overallMoneyRecipients[0]" />
         </div>
 

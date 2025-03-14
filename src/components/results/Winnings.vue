@@ -27,7 +27,7 @@ const message = computed(() => {
         <span>{{ message }}</span>
 
         <span class="font-bold" :style="{color: props.winnings.colour,}">
-            {{ n(props.winnings.amount, "currency") }}
+            {{ n(props.winnings.amount || 0, "currency") }}
         </span>
     </div>
 </template>
