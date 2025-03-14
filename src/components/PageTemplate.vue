@@ -1,19 +1,33 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue"
+import { computed, useSlots, watch } from "vue"
 
 import UiThemeButton from "./theming/UiThemeButton.vue"
 
 import { useScreenSizes } from "@/composables/useScreenSizes"
 
+import { useFlyer } from "@/composables/useFlyer"
+import { useFlyerStore } from "@/stores/flyer"
 import { useUiStore } from "@/stores/ui"
 
+const flyerStore = useFlyerStore()
 const uiStore = useUiStore()
+
+const {
+    currentPhase,
+} = useFlyer(flyerStore.flyer)
 
 const slots = useSlots()
 
 const {
     isSmallScreen,
 } = useScreenSizes()
+
+watch(() => currentPhase.value?.eventLog, () => {
+    // HIGH: create a toast for EVERY default-level event that
+    // gets created. Only store the relevant data in each phase event object,
+    // rather than a readable and localised message. Create the localised
+    // message here
+})
 
 const headerSize = computed(() => isSmallScreen.value ? "text-2xl" : "text-4xl")
 </script>

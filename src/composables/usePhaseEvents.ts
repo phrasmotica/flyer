@@ -30,12 +30,6 @@ export const usePhaseEvents = (p: Phase | null) => {
         tables,
     } = useTables(phase.value)
 
-    // HIGH: create a component whose sole responsibility is to watch the list
-    // of phase events, and create a toast for EVERY default-level event that
-    // gets created. Only store the relevant data in each phase event object,
-    // rather than a readable and localised message. Create that message in the
-    // new component, when adding the toast.
-
     const getFixtureDescription = (fixture: Fixture | undefined) => {
         if (!fixture) {
             return "???"
