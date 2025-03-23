@@ -87,7 +87,8 @@ const start = () => {
         </template>
 
         <template #headerButtons>
-            <AdminButton :hideText="true" />
+            <AdminButton v-if="!oidcEnabled"
+                :hideText="true" />
 
             <Button
                 icon="pi pi-history"
