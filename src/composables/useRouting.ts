@@ -35,11 +35,25 @@ export const useRouting = (router: Router, query?: LocationQuery) => {
         })
     }
 
+    const toProfile = () => {
+        router.push({
+            name: "profile",
+        })
+    }
+
+    const toAdmin = () => {
+        router.push({
+            name: "admin",
+        })
+    }
+
     return {
         toSetup,
         toPlay,
         toPlayHistoric,
         toResults,
         toHistory,
+        toProfile,
+        toAdmin,
     }
 }

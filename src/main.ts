@@ -38,6 +38,7 @@ import ToastService from 'primevue/toastservice'
 import App from './App.vue'
 import router from './router'
 
+import { mainOidc } from "./auth"
 import enGb from "./i18n/en-GB.json"
 
 const app = createApp(App)
@@ -101,4 +102,13 @@ app.component("TabMenu", TabMenu)
 app.component("Textarea", Textarea)
 app.component("Toast", Toast)
 
-app.mount('#app')
+if (mainOidc) {
+    mainOidc.startup().then(ok => {
+        if (ok) {
+            app.mount('#app')
+        }
+    })
+}
+else {
+    app.mount('#app')
+}

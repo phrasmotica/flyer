@@ -3,6 +3,10 @@ import { ref } from "vue"
 
 import PresetsMenu from "./PresetsMenu.vue"
 
+const props = defineProps<{
+    label?: string,
+}>()
+
 const op = ref()
 
 const toggleOp = (event: MouseEvent) => {
@@ -12,7 +16,10 @@ const toggleOp = (event: MouseEvent) => {
 
 <template>
     <Button
+        class="text-left"
+        :label="props.label"
         icon="pi pi-save"
+        iconPos="right"
         severity="warning"
         @click="toggleOp" />
 

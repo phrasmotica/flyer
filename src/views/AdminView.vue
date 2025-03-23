@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useTitle } from "@vueuse/core"
 import { computed } from "vue"
 import { useRouter } from "vue-router"
-import { useTitle } from "@vueuse/core"
 
 import PageTemplate from "@/components/PageTemplate.vue"
 
+import { useAuth } from "@/composables/useAuth"
+import { useEnv } from "@/composables/useEnv"
+import { useJwt } from "@/composables/useJwt"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useTimedRef } from "@/composables/useTimedRef"
@@ -14,6 +17,20 @@ import { useTimedRef } from "@/composables/useTimedRef"
 useTitle("Flyer - Admin")
 
 const routing = useRouting(useRouter())
+
+const {
+    oidcEnabled,
+} = useEnv()
+
+const {
+    isAuthenticated,
+    userProfile,
+} = useAuth()
+
+const {
+    roles,
+    isSuperuser,
+} = useJwt()
 
 const {
     isSmallScreen,
@@ -30,17 +47,40 @@ const clearLocalStorage = () => {
 
     isCleared.value = true
 }
+
+const goBack = () => {
+    if (oidcEnabled) {
+        routing.toProfile()
+    }
+    else {
+        routing.toSetup()
+    }
+}
 </script>
 
 <template>
     <PageTemplate>
         <template #header>
             <div class="flex flex-grow-1 align-items-center justify-content-between">
-                <h1>Admin</h1>
+                Admin
             </div>
         </template>
 
         <template #content>
+            <div v-if="oidcEnabled && isAuthenticated">
+                <div v-if="isSuperuser">
+                    <p>Roles</p>
+                    <pre class="text-sm">{{ roles }}</pre>
+
+                    <p>User Profile</p>
+                    <pre class="text-sm">{{ userProfile }}</pre>
+                </div>
+
+                <div v-else>
+                    <p>You do not have permission to view this page.</p>
+                </div>
+            </div>
+
             <div class="p-fluid">
                 <Button
                     :label="clearButtonLabel"
@@ -55,7 +95,7 @@ const clearLocalStorage = () => {
                 <Button
                     label="Go back"
                     severity="info"
-                    @click="routing.toSetup" />
+                    @click="goBack" />
             </div>
         </template>
 
@@ -63,7 +103,7 @@ const clearLocalStorage = () => {
             <Button
                 label="Go back"
                 severity="info"
-                @click="routing.toSetup" />
+                @click="goBack" />
         </template>
     </PageTemplate>
 </template>

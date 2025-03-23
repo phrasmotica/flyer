@@ -5,18 +5,22 @@ import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 
 import PageTemplate from "@/components/PageTemplate.vue"
+import AccountButton from "@/components/account/AccountButton.vue"
+import LoginButton from "@/components/account/LoginButton.vue"
 import StartFlyerModal from "@/components/modals/StartFlyerModal.vue"
 import FlyerForm from "@/components/setup/FlyerForm.vue"
 import FlyerFormSection from "@/components/setup/FlyerFormSection.vue"
 import FlyerSummary from "@/components/setup/FlyerSummary.vue"
 
+import { useAuth } from "@/composables/useAuth"
+import { useEnv } from "@/composables/useEnv"
 import { useRouting } from "@/composables/useRouting"
 import { useScreenSizes } from "@/composables/useScreenSizes"
 import { useSettings } from "@/composables/useSettings"
 
 import { PlayViewSection } from "@/data/UiSettings"
 
-import PresetsButton from "@/components/theming/PresetsButton.vue"
+import AdminButton from "@/components/account/AdminButton.vue"
 import { useFlyerStore } from "@/stores/flyer"
 import { useSettingsStore } from "@/stores/settings"
 import { useUiStore } from "@/stores/ui"
@@ -26,6 +30,14 @@ const { t } = useI18n()
 useTitle("Flyer - " + t('form.newFlyer'))
 
 const routing = useRouting(useRouter())
+
+const {
+    oidcEnabled,
+} = useEnv()
+
+const {
+    isAuthenticated,
+} = useAuth()
 
 const flyerStore = useFlyerStore()
 const settingsStore = useSettingsStore()
@@ -75,12 +87,20 @@ const start = () => {
         </template>
 
         <template #headerButtons>
+            <AdminButton :hideText="true" />
+
             <Button
                 icon="pi pi-history"
                 severity="info"
                 @click="routing.toHistory" />
 
-            <PresetsButton />
+            <div v-if="oidcEnabled">
+                <AccountButton v-if="isAuthenticated"
+                    :hideText="isSmallScreen"
+                    :showUsernameInDropdown="isSmallScreen" />
+
+                <LoginButton v-else />
+            </div>
         </template>
 
         <template #content>

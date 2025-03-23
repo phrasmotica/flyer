@@ -1,4 +1,8 @@
 {
+    "auth": {
+        "myProfile": "My profile",
+        "signout": "Sign out"
+    },
     "common": {
         "nTimes": "once | {n} times",
         "view": "View",
@@ -16,7 +20,9 @@
         "assign": "Assign",
         "on": "on",
         "confirm": "Confirm",
-        "create": "Create"
+        "create": "Create",
+        "createNewFlyer": "Create new flyer",
+        "viewAdminPage": "View admin page"
     },
     "bracket": {
         "viewBracket": "View bracket",
@@ -173,7 +179,13 @@
         "noPresets": "No presets saved!",
         "saveNewPreset": "Save new preset",
         "loadedPreset": "Loaded preset",
-        "loadedPresetName": "Loaded the {name} preset."
+        "loadedPresetName": "Loaded the {name} preset.",
+        "adjustPresets": "Adjust presets"
+    },
+    "profile": {
+        "username": "Username",
+        "email": "Email",
+        "roles": "Roles"
     },
     "prizes": {
         "requireEntryFee": "Require entry fee",
