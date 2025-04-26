@@ -4,6 +4,7 @@ import type { IScheduler } from "@/data/IScheduler"
 import { KnockoutScheduler } from "@/data/KnockoutScheduler"
 import { RoundRobinScheduler } from "@/data/RoundRobinScheduler"
 import { Format, type Specification } from "@/data/Specification"
+import { VsTheGhostScheduler } from "@/data/VsTheGhostScheduler"
 import { WinnerStaysOnScheduler } from "@/data/WinnerStaysOnScheduler"
 
 export const useScheduler = (s: Specification) => {
@@ -20,6 +21,10 @@ export const useScheduler = (s: Specification) => {
 
         if (settings.value.format === Format.WinnerStaysOn) {
             return new WinnerStaysOnScheduler()
+        }
+
+        if (settings.value.format === Format.VsTheGhost) {
+            return new VsTheGhostScheduler()
         }
 
         throw `Invalid flyer format ${settings.value.format}!`

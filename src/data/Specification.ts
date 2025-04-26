@@ -28,7 +28,7 @@ export enum Format {
     Knockout,
     RoundRobin,
     WinnerStaysOn,
-    // LOW: implement "vs The Ghost" format for one player
+    VsTheGhost,
 }
 
 export enum RuleSet {

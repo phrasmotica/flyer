@@ -55,6 +55,12 @@ export const formatList: SettingsDetails<Format>[] = [
         summary: "format.winnerStaysOnSummary",
         details: "format.winnerStaysOnDetails",
     },
+    {
+        value: Format.VsTheGhost,
+        name: "format.vsTheGhostName",
+        summary: "format.vsTheGhostSummary",
+        details: "format.vsTheGhostDetails",
+    },
 ]
 
 export const ruleSetList: SettingsDetails<RuleSet>[] = [

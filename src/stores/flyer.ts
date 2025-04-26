@@ -19,6 +19,7 @@ import { RoundRobinScheduler } from "@/data/RoundRobinScheduler"
 import { Format, createPlayOffSettings } from "@/data/Specification"
 import type { Table } from "@/data/Table"
 import type { TieBreakerInfo } from "@/data/TieBreakerInfo"
+import { VsTheGhostScheduler } from "@/data/VsTheGhostScheduler"
 import { WinnerStaysOnScheduler } from "@/data/WinnerStaysOnScheduler"
 
 export const useFlyerStore = defineStore("flyer", () => {
@@ -53,6 +54,10 @@ export const useFlyerStore = defineStore("flyer", () => {
 
             case Format.WinnerStaysOn:
                 scheduler = new WinnerStaysOnScheduler()
+                break
+
+            case Format.VsTheGhost:
+                scheduler = new VsTheGhostScheduler()
                 break
 
             default:
